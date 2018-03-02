@@ -4,8 +4,6 @@
  * To build it run:
  *     g++ `pkg-config --cflags gtk+-3.0` -o helloworld helloworld.cpp `pkg-config --libs gtk+-3.0`
  *
- * To run GTK+ on Windows you will need MSYS2. See:
- * https://www.gtk.org/download/windows.php
  */
 
 #include <gtk/gtk.h>
