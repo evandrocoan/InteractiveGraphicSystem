@@ -4,9 +4,6 @@
  * To build it run:
  *     g++ helloworld2.cpp -o helloworld2 `pkg-config gtkmm-3.0 --cflags --libs`
  *
- * To install GTKmm on windows, you will need to use MSYS2. See:
- * https://wiki.gnome.org/Projects/gtkmm/MSWindows
- *
  */
 
 #include <gtkmm.h>
