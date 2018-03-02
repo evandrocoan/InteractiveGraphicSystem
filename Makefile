@@ -12,11 +12,11 @@ TARGET      := main
 
 # The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
-INCDIR      := inc
+INCDIR      := incluces
 BUILDDIR    := objects
 DEPDIR      := dependencies
-TARGETDIR   := bin
-RESDIR      := res
+TARGETDIR   := binaries
+RESDIR      := resources
 SRCEXT      := cpp
 DEPEXT      := d
 OBJEXT      := o
@@ -28,12 +28,36 @@ INC         := -I$(INCDIR) -I/usr/local/include
 INCDEP      := -I$(INCDIR)
 
 
+##
+## Usage:
+##   make <target> [options]
+##
+## Targets:
+##   all               generate all assets
+##   clean             remove the objects and dependencies directories
+##   veryclean         same as `clean`, but also removes the `bin` folder
+##
+## Options:
+##   -p                show all commands run by make, including all variables
+##   -n                similar to --dry-run, it will only display the commands,
+##                     but not run them.
+##
+## For more explanations see:
+##   http://www.oreilly.com/openbook/make3/book/ch12.pdf
+##
+
 
 #---------------------------------------------------------------------------------
 # DO NOT EDIT BELOW THIS LINE
 #---------------------------------------------------------------------------------
 SOURCES     := $(shell find $(SRCDIR) -type f -name "*.$(SRCEXT)")
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+
+
+# Print the usage instructions
+# https://gist.github.com/prwhite/8168133
+help:
+	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 
 # Default Make
@@ -59,12 +83,12 @@ directories:
 # Clean only Objecst
 clean:
 	@$(RM) -rf $(BUILDDIR)
+	@$(RM) -rf $(DEPDIR)
 
 
 # Full Clean, Objects and Binaries
 cleaner: veryclean
 veryclean: cleaner
-	@$(RM) -rf $(DEPDIR)
 	@$(RM) -rf $(TARGETDIR)
 
 
@@ -79,6 +103,18 @@ $(TARGET): $(OBJECTS)
 
 # Compile
 # @echo "Building target: $@ from $<"
+#
+# Autodependencies with GNU make, Scott McPeak, November 2001
+# http://scottmcpeak.com/autodepend/autodepend.html
+#
+# Compile and generate dependency info;
+# More complicated dependency computation, so all prereqs listed
+# will also become command-less, prereq-less targets:
+#   sed:    strip the target (everything before colon)
+#   sed:    remove any continuation backslashes
+#   fmt -1: list words one per line
+#   sed:    strip leading spaces
+#   sed:    add trailing colons
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $< $(LIB)
