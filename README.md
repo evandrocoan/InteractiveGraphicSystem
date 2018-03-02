@@ -9,6 +9,27 @@
 Para configurar a IDE Eclipse 3.18.3 ou Neon.3 Release (4.6.3) para incluir GTK:
 
 
+### Required dependencies for MSYS2 on Windows
+
+To run `GTK+` and `GTKmm` on Windows you will need `MSYS2`,
+with a Unix-Shell complaint terminal.
+You can install all of them on the following links respectively:
+1. http://www.msys2.org/
+1. https://www.gtk.org/download/windows.php
+1. https://wiki.gnome.org/Projects/gtkmm/MSWindows
+
+These are the commands you need to run,
+to install everything on Windows MSYS2 Unit-Shell terminal:
+```
+pacman -S pkg-config
+pacman -S mingw-w64-x86_64-gtk3
+pacman -S mingw-w64-x86_64-boost
+pacman -S mingw-w64-x86_64-gcc
+pacman -S mingw-w64-x86_64-gtkmm3
+pacman -S mingw-w64-x86_64-toolchain base-devel
+```
+
+
 ### Para C:
 
 1. Clica com o botão direito no projeto, e clica em Propriedades.
@@ -39,15 +60,6 @@ To build it on `Windows` or `Linux`, just run:
 ```
 make
 ```
-
-Note:
-To run `GTK+` and `GTKmm` on Windows you will need `MSYS2`,
-with a shell complaint terminal.
-You can install all of them on the following links respectively:
-1. http://www.msys2.org/
-1. https://www.gtk.org/download/windows.php
-1. https://wiki.gnome.org/Projects/gtkmm/MSWindows
-
 
 Build output example:
 ```
