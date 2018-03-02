@@ -30,13 +30,13 @@ INCDEP      := -I$(INCDIR)
 CFLAGS      := -O0 -g $(GTK_FLAGS)
 # CFLAGS      := -Wall -O3 -g $(GTK_FLAGS)
 
-
 ##
 ## Usage:
 ##   make <target> [options]
 ##
 ## Targets:
 ##   all               generate all assets
+##   run               open the compiled program (you need to build it first)
 ##   clean             remove the objects and dependencies directory
 ##   veryclean         same as `clean`, but also removes the `bin` folder
 ##
@@ -49,6 +49,16 @@ CFLAGS      := -O0 -g $(GTK_FLAGS)
 ##   http://www.oreilly.com/openbook/make3/book/ch12.pdf
 ##
 
+#
+# Font:
+# https://tex.stackexchange.com/questions/40738/how-to-properly-make-a-latex-project
+#
+# You want latexmk to *always* run, because make does not have all the info.
+# Also, include non-file targets in .PHONY so they are run regardless of any
+# file of the given name existing.
+.PHONY: run
+
+
 
 #---------------------------------------------------------------------------------
 # DO NOT EDIT BELOW THIS LINE
@@ -56,51 +66,44 @@ CFLAGS      := -O0 -g $(GTK_FLAGS)
 SOURCES     := $(shell find $(SRCDIR) -type f -name "*.$(SRCEXT)")
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
-
 # Print the usage instructions
 # https://gist.github.com/prwhite/8168133
 help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-
 # Default Make
 all: resources $(TARGET)
 
+run:
+	./$(TARGETDIR)/$(TARGET)
 
 # Remake
 remake: cleaner all
 
-
 # Copy Resources from Resources Directory to Target Directory
 resources: directories
 	if [ -d $(RESDIR) ]; then cp $(RESDIR)/* $(TARGETDIR)/; fi;
-
 
 # Make the Directories
 directories:
 	@mkdir -p $(TARGETDIR)
 	@mkdir -p $(BUILDDIR)
 
-
 # Clean only Objecst
 clean:
 	@$(RM) -rf $(BUILDDIR)
-
 
 # Full Clean, Objects and Binaries
 cleaner: veryclean
 veryclean: cleaner
 	@$(RM) -rf $(TARGETDIR)
 
-
 # Pull in dependency info for *existing* .o files
 -include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
-
 
 # Link
 $(TARGET): $(OBJECTS)
 	$(CC) $(CFLAGS) -o $(TARGETDIR)/$(TARGET) $^ $(LIBS)
-
 
 # Compile
 # @echo "Building target: $@ from $<"
@@ -124,5 +127,4 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
 	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
 	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
-
 
