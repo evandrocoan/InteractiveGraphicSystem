@@ -2,8 +2,10 @@
 
 /**
  * To build it run:
- *     g++ helloworld2.cpp -o helloworld2 `pkg-config gtkmm-3.0 --cflags --libs`
+ *     g++ helloworld_gtkmm.cpp -o helloworld_gtkmm `pkg-config gtkmm-3.0 --cflags --libs`
  *
+ * Simple Example - Programming with gtkmm 3 / Basics
+ * https://developer.gnome.org/gtkmm-tutorial/stable/sec-basics-simple-example.html.en
  */
 
 #include <gtkmm.h>
