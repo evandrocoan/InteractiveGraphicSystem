@@ -12,9 +12,8 @@ TARGET      := main
 
 # The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
-INCDIR      := incluces
+INCDIR      := includes
 BUILDDIR    := objects
-DEPDIR      := dependencies
 TARGETDIR   := binaries
 RESDIR      := resources
 SRCEXT      := cpp
@@ -22,9 +21,9 @@ DEPEXT      := d
 OBJEXT      := o
 
 # Flags, Libraries and Includes
-CFLAGS      := -Wall -O3 -g
+CFLAGS      := -Wall -O0 -g
 LIB         := `pkg-config --cflags --libs gtk+-3.0 gtkmm-3.0 glibmm-2.4`
-INC         := -I$(INCDIR) -I/usr/local/include
+INC         := -I$(INCDIR) -I/usr/local/include -I/usr/include/gtk-3.0 -I/usr/include/gtkmm-3.0
 INCDEP      := -I$(INCDIR)
 
 
@@ -34,7 +33,7 @@ INCDEP      := -I$(INCDIR)
 ##
 ## Targets:
 ##   all               generate all assets
-##   clean             remove the objects and dependencies directories
+##   clean             remove the objects and dependencies directory
 ##   veryclean         same as `clean`, but also removes the `bin` folder
 ##
 ## Options:
@@ -76,14 +75,12 @@ resources: directories
 # Make the Directories
 directories:
 	@mkdir -p $(TARGETDIR)
-	@mkdir -p $(DEPDIR)
 	@mkdir -p $(BUILDDIR)
 
 
 # Clean only Objecst
 clean:
 	@$(RM) -rf $(BUILDDIR)
-	@$(RM) -rf $(DEPDIR)
 
 
 # Full Clean, Objects and Binaries
@@ -118,10 +115,10 @@ $(TARGET): $(OBJECTS)
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) $(INC) -c -o $@ $< $(LIB)
-	@$(CC) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > $(DEPDIR)/$*.$(DEPEXT)
-	@cp -f $(DEPDIR)/$*.$(DEPEXT) $(DEPDIR)/$*.$(DEPEXT).tmp
-	@sed -e 's|.*:|$(DEPDIR)/$*.$(OBJEXT):|' < $(DEPDIR)/$*.$(DEPEXT).tmp > $(DEPDIR)/$*.$(DEPEXT)
-	@sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(DEPDIR)/$*.$(DEPEXT)
-	@rm -f $(DEPDIR)/$*.$(DEPEXT).tmp
+	@$(CC) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
+	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
+	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
+	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
+	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
 
 
