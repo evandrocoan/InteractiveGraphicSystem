@@ -10,7 +10,7 @@ MainWindow::MainWindow()
 {
 
 	set_border_width(15);
-	set_title("CG - Trabalho01 - Karla Ap. Justen");
+	set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan");
 	set_default_size(700, 500);
 
 	add(main_box);
