@@ -1,14 +1,14 @@
 # Trabalho01CG
 
-Karla Aparecida Justen
-Evandro Coan
+1. Karla Aparecida Justen
+1. Evandro Coan
 
-Trabalho de Computação Gráfica - UFSC - 2018.2
-
+### Trabalho de Computação Gráfica - UFSC - 2018.2
 
 Para configurar a IDE Eclipse 3.18.3 ou Neon.3 Release (4.6.3) para incluir GTK:
 
-Para C:
+### Para C:
+
 	1º - Clica com o botão direito no projeto, e clica em Propriedades.
 	Expande as opções do C/C++ General e vai em "Paths and Symbols".
 	clica no GNU C e adiciona: "/usr/include/gtk-3.0" (sem as aspas)
@@ -18,7 +18,9 @@ Para C:
 
 	3º - Ainda nas opções do C/C++ Build, vai em "Settings", e em "GCC C Compiler" e em "GCC C Linker" adiciona em "Expert settings - Command line pattern o "${gtkc} por último.
 
-Para C++:
+
+### Para C++:
+
 	1º - Clica com o botão direito no projeto, e clica em Propriedades.
 	Expande as opções do C/C++ General e vai em "Paths and Symbols".
 	clica no GNU C++ e adiciona: "/usr/include/gtk-3.0" (sem as aspas) e adiciona "/usr/include/gtkmm-3.0".
@@ -27,6 +29,23 @@ Para C++:
 	Agora, coloca "Variable Name": gtkcmm (ou qualquer outro nome que queiras, mas vais usar depois), e em "Value" coloca o comando:  `pkg-config --cflags --libs gtk+-3.0 gtkmm-3.0` (copia e cola o comando aqui, inclusive com os acentos).
 
 	3º - Ainda nas opções do C/C++ Build, vai em "Settings", e em "GCC C++ Compiler" e em "GCC C++ Linker" adiciona em "Expert settings - Command line pattern"  o "${gtkcmm}" (sem aspas) por último.
+
+
+### For Windows
+
+To build it on `Windows` or `Linux`, just run:
+```
+make
+```
+
+Note:
+To run `GTK+` and `GTKmm` on Windows you will need `MSYS2`,
+with a shell complaint terminal.
+You can install all of them on the following links respectively:
+1. http://www.msys2.org/
+1. https://www.gtk.org/download/windows.php
+1. https://wiki.gnome.org/Projects/gtkmm/MSWindows
+
 
 
 Links de Docmentação do GTKmm:
