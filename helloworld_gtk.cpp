@@ -2,8 +2,10 @@
 
 /**
  * To build it run:
- *     g++ `pkg-config --cflags gtk+-3.0` -o helloworld helloworld.cpp `pkg-config --libs gtk+-3.0`
+ *     g++ `pkg-config --cflags gtk+-3.0` -o helloworld_gtk helloworld_gtk.cpp `pkg-config --libs gtk+-3.0`
  *
+ * Getting Started with GTK+
+ * https://developer.gnome.org/gtk3/stable/gtk-getting-started.html
  */
 
 #include <gtk/gtk.h>
