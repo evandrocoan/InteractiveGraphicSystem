@@ -49,6 +49,24 @@ You can install all of them on the following links respectively:
 1. https://wiki.gnome.org/Projects/gtkmm/MSWindows
 
 
+Build output example:
+```
+$ make all run
+if [ -d resources ]; then cp resources/* binaries/; fi;
+g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/addobjectwindow.o src/addobjectwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/displayfile.o src/displayfile.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/drawoptionsbox.o src/drawoptionsbox.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/line.o src/line.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/main.o src/main.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/mainwindow.o src/mainwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/point.o src/point.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/polygon.o src/polygon.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/viewport.o src/viewport.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/viewwindow.o src/viewwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -o binaries/main objects/addobjectwindow.o objects/displayfile.o objects/drawoptionsbox.o objects/line.o objects/main.o objects/mainwindow.o objects/point.o objects/polygon.o objects/viewport.o objects/viewwindow.o `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+./binaries/main
+```
+
 
 Links de Docmentação do GTKmm:
 - https://developer.gnome.org/gtkmm/stable/group__gtkmmEnums.html#gga83727a1b6fed51566dfd5c8e58890dbaa7b88e2329efd6367522358da92a3a736
