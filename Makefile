@@ -21,10 +21,14 @@ DEPEXT      := d
 OBJEXT      := o
 
 # Flags, Libraries and Includes
-CFLAGS      := -Wall -O0 -g
-LIB         := `pkg-config --cflags --libs gtk+-3.0 gtkmm-3.0 glibmm-2.4`
-INC         := -I$(INCDIR) -I/usr/local/include -I/usr/include/gtk-3.0 -I/usr/include/gtkmm-3.0
+# GTK_LIBS    := `pkg-config --libs gtkmm-3.0`
+# GTK_FLAGS   := `pkg-config --cflags gtkmm-3.0`
+# LIBS        := $(GTK_LIBS)
+LIBS        := `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+INC         := -I$(INCDIR) -I/usr/local/include
 INCDEP      := -I$(INCDIR)
+CFLAGS      := -O0 -g $(GTK_FLAGS)
+# CFLAGS      := -Wall -O3 -g $(GTK_FLAGS)
 
 
 ##
@@ -95,7 +99,7 @@ veryclean: cleaner
 
 # Link
 $(TARGET): $(OBJECTS)
-	$(CC) -o $(TARGETDIR)/$(TARGET) $^ $(LIB)
+	$(CC) $(CFLAGS) -o $(TARGETDIR)/$(TARGET) $^ $(LIBS)
 
 
 # Compile
@@ -114,7 +118,7 @@ $(TARGET): $(OBJECTS)
 #   sed:    add trailing colons
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INC) -c -o $@ $< $(LIB)
+	$(CC) $(CFLAGS) $(INC) -c -o $@ $< $(LIBS)
 	@$(CC) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
 	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
 	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
