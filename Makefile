@@ -5,30 +5,30 @@
 
 
 # Compiler and Linker
-CC          := g++
+CC := g++
 
 # The Target Binary Program
-TARGET      := main
+TARGET := main
 
 # The Directories, Source, Includes, Objects, Binary and Resources
-SRCDIR      := src
-INCDIR      := includes
-BUILDDIR    := objects
-TARGETDIR   := binaries
-RESDIR      := resources
-SRCEXT      := cpp
-DEPEXT      := d
-OBJEXT      := o
+SRCDIR:= src
+RESDIR:= resources
+SRCEXT:= cpp
+OBJEXT:= o
+DEPEXT:= d
+BUILDDIR:= objects
+TARGETDIR:= binaries
 
-# Flags, Libraries and Includes
-# GTK_LIBS    := `pkg-config --libs gtkmm-3.0`
-# GTK_FLAGS   := `pkg-config --cflags gtkmm-3.0`
-# LIBS        := $(GTK_LIBS)
-LIBS        := `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-INC         := -I$(INCDIR) -I/usr/local/include
-INCDEP      := -I$(INCDIR)
-CFLAGS      := -O0 -g $(GTK_FLAGS)
-# CFLAGS      := -Wall -O3 -g $(GTK_FLAGS)
+CFLAGS := -O0 -g -std=c++11
+# CFLAGS := -Wall -O3 -g -std=c++11
+
+LIBS := `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+FIND_EXCLUSIONS := \( ! -name "*test.cpp" \)
+
+INC := -I.
+# INC := -I. -I/usr/local/include
+INCDEP := -I.
+
 
 ##
 ## Usage:
@@ -63,7 +63,7 @@ CFLAGS      := -O0 -g $(GTK_FLAGS)
 #---------------------------------------------------------------------------------
 # DO NOT EDIT BELOW THIS LINE
 #---------------------------------------------------------------------------------
-SOURCES     := $(shell find $(SRCDIR) -type f -name "*.$(SRCEXT)")
+SOURCES     := $(shell find $(SRCDIR) -type f -name "*.$(SRCEXT)" $(FIND_EXCLUSIONS))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
 # Print the usage instructions
