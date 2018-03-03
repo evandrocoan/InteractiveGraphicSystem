@@ -73,14 +73,28 @@
   #include <iostream>
   #include <string>
   #include <cstdarg>
+  #include <chrono>
+  #include <ctime>
 
 
   // C like printf support on C++
   #include "tinyformat.h"
 
+  // C++ -> Utilities library -> Date and time utilities -> C-style date and time utilities -> std:clock
+  // http://en.cppreference.com/w/cpp/chrono/c/clock
+  //
+  // Measure time in Linux - time vs clock vs getrusage vs clock_gettime vs gettimeofday vs timespec_get?
+  // https://stackoverflow.com/questions/12392278/measure-time-in-linux-time-vs-clock-vs-getrusage-vs-clock-gettime-vs-gettimeof
+  extern std::clock_t _debugger_current_saved_c_time;
+  extern std::chrono::time_point< std::chrono::high_resolution_clock > _debugger_current_saved_chrono_time;
+
+
   /**
    * Print like function for logging putting a new line at the end of string. See the variables
    * 'g_debugLevel' for the available levels.
+   *
+   * On this function only, a time stamp as `7.484e+003 7.484e+003` will be used. It means the `CPU
+   * time used`time in milliseconds and the `Wall clock time passed` respectively.
    *
    * @param level     the debugging desired level to be printed.
    * @param ...       variable number os formating arguments parameters.
@@ -90,7 +104,16 @@
   { \
     if( __computeDeggingLevel( #level ) ) \
     { \
-      std::cout << __FILE__ << "/" << __FUNCTION__ << ":" << __LINE__ << " " << tfm::format( __VA_ARGS__ ) << std::endl; \
+      std::clock_t c_end = std::clock(); \
+      auto t_end = std::chrono::high_resolution_clock::now(); \
+      std::cout << tfm::format( "%.3e %.3e %s/%s:%s ", \
+              std::chrono::duration<double, std::milli>(t_end-_debugger_current_saved_chrono_time).count(), \
+              (1000.0 * (c_end - _debugger_current_saved_c_time)) / CLOCKS_PER_SEC, \
+              __FILE__, __FUNCTION__, __LINE__ \
+          ) \
+          << tfm::format( __VA_ARGS__ ) << std::endl; \
+      _debugger_current_saved_c_time = c_end; \
+      _debugger_current_saved_chrono_time = t_end; \
     } \
   } \
   while( 0 )
