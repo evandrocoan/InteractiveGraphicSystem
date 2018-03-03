@@ -31,22 +31,24 @@ void DisplayFile::removeObjectByName(string name)
 std::list<string> DisplayFile::getNamesList()
 {
   std::list<string> list;
+
   for(std::map<string, DrawableObject*>::iterator it = objectsMap.begin(); it != objectsMap.end(); it++)
   {
     list.push_back(it->first);
   }
-  return list;
 
+  return list;
 }
 
 std::list<DrawableObject*> DisplayFile::getObjects()
 {
   std::list<DrawableObject*> list;
+
   for(std::map<string, DrawableObject*>::iterator it = objectsMap.begin();
       it != objectsMap.end(); it++)
   {
     list.push_back(it->second);
   }
-  return list;
 
+  return list;
 }

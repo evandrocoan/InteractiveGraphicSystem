@@ -14,13 +14,16 @@ class Viewport : public Gtk::DrawingArea
 public:
   Viewport();
   virtual ~Viewport();
+
   ViewWindow * getViewWindow();
 
 protected:
   bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
   Gtk::Allocation* allocation;
+
   ViewWindow* viewWindow = NULL;
   int Xvpmin, Yvpmin, Xvpmax, Yvpmax;
+
   void updateViewport(Gtk::Allocation allocation);
   Coordinate convertCoordinateFromWindow(Coordinate cord);
 

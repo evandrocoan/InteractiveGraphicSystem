@@ -11,6 +11,7 @@ class Line : public DrawableObject
 public:
   Line(string name, Coordinate* line_cord1, Coordinate* line_cord2);
   ~Line();
+
   virtual list<Coordinate*> getCoordinates();
 };
 #endif // GTKMM_APP_RECT
