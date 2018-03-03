@@ -21,15 +21,20 @@ class DrawableObject
 {
 public:
   DrawableObject(string name)
-  : name(name) {}
+      : name(name) {}
+
   DrawableObject(string name, list<Coordinate*> Coordinates)
-  : name(name), Coordinates(Coordinates) {}
+      : name(name), Coordinates(Coordinates) {}
+
   ~DrawableObject() {}
+
   std::string getName()
   {
     return name;
   }
+
   virtual list<Coordinate*> getCoordinates() = 0;
+
 protected:
   string name;
   list<Coordinate*> Coordinates;
