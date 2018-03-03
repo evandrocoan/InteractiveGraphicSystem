@@ -90,7 +90,7 @@
   { \
     if( __computeDeggingLevel( #level ) ) \
     { \
-      std::cout << tfm::format( __VA_ARGS__ ) << std::endl; \
+      std::cout << __FILE__ << "/" << __FUNCTION__ << ":" << __LINE__ << " " << tfm::format( __VA_ARGS__ ) << std::endl; \
     } \
   } \
   while( 0 )
@@ -103,7 +103,7 @@
   { \
     if( __computeDeggingLevel( #level ) ) \
     { \
-        std::cout << tfm::format( __VA_ARGS__ ); \
+      std::cout << tfm::format( __VA_ARGS__ ); \
     } \
   } \
   while( 0 )
