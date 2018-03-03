@@ -1,7 +1,7 @@
 #include "line.h"
 
 Line::Line(string name, Coordinate* line_cord1, Coordinate* line_cord2)
-: DrawableObject(name)
+    : DrawableObject(name)
 {
   Coordinates.push_back(line_cord1);
   Coordinates.push_back(line_cord2);

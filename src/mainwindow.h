@@ -10,6 +10,7 @@
 #include <gtkmm/viewport.h>
 #include <gtkmm/adjustment.h>
 #include <glibmm/refptr.h>
+#include "debugger.h"
 #include "viewport.h"
 #include "viewwindow.h"
 
