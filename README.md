@@ -3,10 +3,7 @@
 1. Karla Aparecida Justen
 1. Evandro  Coan
 
-
-### Trabalho de Computação Gráfica - UFSC - 2018.2
-
-Para configurar a IDE Eclipse 3.18.3 ou Neon.3 Release (4.6.3) para incluir GTK:
+Trabalho de Computação Gráfica - UFSC - 2018.2
 
 
 ### Required dependencies for MSYS2 on Windows
@@ -21,6 +18,8 @@ You can install all of them on the following links respectively:
 These are the commands you need to run,
 to install everything on Windows MSYS2 Unit-Shell terminal:
 ```
+pacman -Syu   # After complete, it will ask you to kill the terminal window with your task manager
+pacman -Su    # Now run it again without y
 pacman -S pkg-config
 pacman -S mingw-w64-x86_64-gtk3
 pacman -S mingw-w64-x86_64-boost
@@ -30,7 +29,9 @@ pacman -S mingw-w64-x86_64-toolchain base-devel
 ```
 
 
-### Para C:
+Para configurar a IDE Eclipse 3.18.3 ou Neon.3 Release (4.6.3) para incluir GTK:
+
+#### Para C:
 
 1. Clica com o botão direito no projeto, e clica em Propriedades.
 Expande as opções do C/C++ General e vai em "Paths and Symbols".
@@ -42,7 +43,7 @@ Agora, coloca "Variable Name": gtkc (ou qualquer outro nome que queiras, mas vai
 3. Ainda nas opções do C/C++ Build, vai em "Settings", e em "GCC C Compiler" e em "GCC C Linker" adiciona em "Expert settings - Command line pattern o "${gtkc} por último.
 
 
-### Para C++:
+#### Para C++:
 
 1. Clica com o botão direito no projeto, e clica em Propriedades.
 Expande as opções do C/C++ General e vai em "Paths and Symbols".
