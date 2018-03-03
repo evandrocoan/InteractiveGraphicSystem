@@ -41,7 +41,7 @@
  *  Calculates a static array size.
  */
 #if !defined STATIC_ARRAY_SIZE
-    #define STATIC_ARRAY_SIZE( array ) ( sizeof( ( array ) ) / sizeof( ( array )[0] ) )
+  #define STATIC_ARRAY_SIZE( array ) ( sizeof( ( array ) ) / sizeof( ( array )[0] ) )
 
 #endif
 
@@ -57,29 +57,29 @@
  */
 inline std::string format(const char* fmt, ...)
 {
-    int   size   = 512;
-    char* buffer = new char[size];
+  int   size   = 512;
+  char* buffer = new char[size];
 
-    va_list var_args;
-    va_start(var_args, fmt);
+  va_list var_args;
+  va_start(var_args, fmt);
 
-    int nsize = vsnprintf(buffer, size, fmt, var_args);
+  int nsize = vsnprintf(buffer, size, fmt, var_args);
 
-    //fail delete buffer and try again
-    if(size<=nsize)
-    {
-        delete[] buffer;
-
-        buffer = 0;
-        buffer = new char[nsize+1]; //+1 for /0
-        nsize  = vsnprintf(buffer, size, fmt, var_args);
-    }
-
-    std::string ret(buffer);
-    va_end(var_args);
-
+  //fail delete buffer and try again
+  if(size<=nsize)
+  {
     delete[] buffer;
-    return ret;
+
+    buffer = 0;
+    buffer = new char[nsize+1]; //+1 for /0
+    nsize  = vsnprintf(buffer, size, fmt, var_args);
+  }
+
+  std::string ret(buffer);
+  va_end(var_args);
+
+  delete[] buffer;
+  return ret;
 }
 
 

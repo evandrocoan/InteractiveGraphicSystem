@@ -12,9 +12,11 @@ public:
   DisplayFile();
   virtual ~DisplayFile();
   void addObject(DrawableObject* object);
+
   DrawableObject* getObjectByName(string name);
   void removeObject(DrawableObject* object);
   void removeObjectByName(string name);
+
   std::list<string> getNamesList();
   std::list<DrawableObject*> getObjects();
 

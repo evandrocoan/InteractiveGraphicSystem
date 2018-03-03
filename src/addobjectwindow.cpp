@@ -1,30 +1,32 @@
 #include "addobjectwindow.h"
 
 AddObjectWindow::AddObjectWindow(MainWindow* mainWindow)
-: mainWindow(mainWindow),
-  m_vbox(Gtk::ORIENTATION_VERTICAL),
-  button_add_coordenate("Add Coordenate"),
-  button_save_point("Save Point"),
-  button_save_line("Save Line"),
-  button_save_wire("Save Polygon"),
-  button_close("Close"),
-  point_x_label("Coordinate X : "),
-  point_y_label("Coordinate Y : "),
-  line_x1_label("Coordinate X1 : "),
-  line_y1_label("Coordinate Y1 : "),
-  line_x2_label("Coordinate X2 : "),
-  line_y2_label("Coordinate Y2 : "),
-  polygon_x_label("Coordinate X : "),
-  polygon_y_label("Coordinate Y : "),
-  info_label("Insert a Coordinate :"),
-  point_name_field(), point_x_field(), point_y_field(),
-  line_name_field(), line_x1_field(), line_x2_field(),
-  polygon_name_field(), line_y1_field(), line_y2_field(),
-  polygon_x_field(), wire_y_field()
+    : mainWindow(mainWindow),
+      m_vbox(Gtk::ORIENTATION_VERTICAL),
+      button_add_coordenate("Add Coordenate"),
+      button_save_point("Save Point"),
+      button_save_line("Save Line"),
+      button_save_wire("Save Polygon"),
+      button_close("Close"),
+
+      point_x_label("Coordinate X : "),
+      point_y_label("Coordinate Y : "),
+      line_x1_label("Coordinate X1 : "),
+      line_y1_label("Coordinate Y1 : "),
+      line_x2_label("Coordinate X2 : "),
+      line_y2_label("Coordinate Y2 : "),
+      polygon_x_label("Coordinate X : "),
+      polygon_y_label("Coordinate Y : "),
+
+      info_label("Insert a Coordinate :"),
+      point_name_field(), point_x_field(), point_y_field(),
+      line_name_field(), line_x1_field(), line_x2_field(),
+
+      polygon_name_field(), line_y1_field(), line_y2_field(),
+      polygon_x_field(), wire_y_field()
 {
   set_title("Add Object");
   set_border_width(12);
-
   add(m_vbox);
 
   m_notebook.set_border_width(0);
@@ -90,19 +92,25 @@ AddObjectWindow::~AddObjectWindow()
 void AddObjectWindow::on_button_save_point()
 {
   std::string name = point_name_field.get_text().raw();
+
   if (name.empty())
   {
     point_name_field.grab_focus();
     return;
   }
+
   std::string x_string = point_x_field.get_text().raw();
   std::string y_string = point_y_field.get_text().raw();
+
   int x_cord = atoi(x_string.c_str());
   int y_cord = atoi(y_string.c_str());
+
   Coordinate *point_cord = new Coordinate(x_cord, y_cord);
   Point *point = new Point(name, point_cord);
+
   this->mainWindow->getViewport()->getViewWindow()->getDisplayFile()->addObject(point);
   this->mainWindow->getViewport()->queue_draw();
+
   close();
 }
 
@@ -114,19 +122,25 @@ void AddObjectWindow::on_button_save_line()
     line_name_field.grab_focus();
     return;
   }
+
   std::string x1_string = line_x1_field.get_text().raw();
   std::string y1_string = line_y1_field.get_text().raw();
   std::string x2_string = line_x2_field.get_text().raw();
   std::string y2_string = line_y2_field.get_text().raw();
+
   int x1_cord = atoi(x1_string.c_str());
   int y1_cord = atoi(y1_string.c_str());
   int x2_cord = atoi(x2_string.c_str());
   int y2_cord = atoi(y2_string.c_str());
+
   Coordinate *point_cord1 = new Coordinate(x1_cord, y1_cord);
   Coordinate *point_cord2 = new Coordinate(x2_cord, y2_cord);
+
   Line *line = new Line(name, point_cord1, point_cord2);
+
   this->mainWindow->getViewport()->getViewWindow()->getDisplayFile()->addObject(line);
   this->mainWindow->getViewport()->queue_draw();
+
   close();
 }
 
@@ -135,11 +149,13 @@ void AddObjectWindow::on_button_save_polygon()
   if (!polygon_cord_list.empty())
   {
     std::string name = polygon_name_field.get_text().raw();
+
     if (name.empty())
     {
       polygon_name_field.grab_focus();
       return;
     }
+
     Polygon *polygon = new Polygon(name, polygon_cord_list);
     this->mainWindow->getViewport()->getViewWindow()->getDisplayFile()->addObject(polygon);
     this->mainWindow->getViewport()->queue_draw();
@@ -162,16 +178,17 @@ void AddObjectWindow::on_button_add_coordinate()
 {
   std::string x_string = polygon_x_field.get_text().raw();
   std::string y_string = wire_y_field.get_text().raw();
+
   int x_cord = atoi(x_string.c_str());
   int y_cord = atoi(y_string.c_str());
+
   Coordinate *wire_cord = new Coordinate(x_cord, y_cord);
   polygon_cord_list.push_back(wire_cord);
 
   polygon_x_field.set_text("");
   wire_y_field.set_text("");
 
-  info_label.set_text("Added X : " + std::to_string(x_cord) +
-                      " Y : " + std::to_string(y_cord));
+  info_label.set_text("Added X : " + std::to_string(x_cord) + " Y : " + std::to_string(y_cord));
 }
 
 void AddObjectWindow::on_button_close()
