@@ -98,7 +98,7 @@
    * '_debugger_char_debug_level' for the available levels.
    *
    * On this function only, a time stamp as `7.484e+003 7.484e+003` will be used. It means the `CPU
-   * time used`time in milliseconds and the `Wall clock time passed` respectively.
+   * time used` in milliseconds and the `Wall clock time passed` respectively.
    *
    * @param level     the debugging desired level to be printed.
    * @param ...       variable number os formating arguments parameters.
@@ -108,10 +108,10 @@
   { \
     if( level & _debugger_int_debug_level ) \
     { \
-      std::clock_t c_end = std::clock(); \
-      auto t_end = std::chrono::high_resolution_clock::now(); \
-      std::chrono::time_point< std::chrono::system_clock > now = std::chrono::system_clock::now();  \
-      auto duration = now.time_since_epoch(); \
+      std::clock_t ctime_clock_now = std::clock(); \
+      auto chrono_clock_now = std::chrono::high_resolution_clock::now(); \
+      /* std::chrono::time_point< std::chrono::system_clock > chrono_clock_now = std::chrono::system_clock::now(); */ \
+      auto duration = chrono_clock_now.time_since_epoch(); \
       /* typedef std::chrono::duration< int, std::ratio_multiply< std::chrono::hours::period, std::ratio< 21 > >::type > Days; */ \
       /* Days days = std::chrono::duration_cast< Days >( duration ); */ \
       /* duration -= days; */ \
@@ -130,13 +130,13 @@
       struct tm *aTime = localtime(&theTime); \
       std::cout << tfm::format( "%02d:%02d:%02d:%03d:%03d %.3e %.3e %s/%s:%s ", \
               aTime->tm_hour, minutes.count(), seconds.count(), milliseconds.count(), microseconds.count(), /* nanoseconds.count(), */ \
-              std::chrono::duration<double, std::milli>(t_end-_debugger_current_saved_chrono_time).count(), \
-              (1000.0 * (c_end - _debugger_current_saved_c_time)) / CLOCKS_PER_SEC, \
+              std::chrono::duration<double, std::milli>(chrono_clock_now-_debugger_current_saved_chrono_time).count(), \
+              (1000.0 * (ctime_clock_now - _debugger_current_saved_c_time)) / CLOCKS_PER_SEC, \
               __FILE__, __FUNCTION__, __LINE__ \
           ) \
           << tfm::format( __VA_ARGS__ ) << std::endl; \
-      _debugger_current_saved_c_time = c_end; \
-      _debugger_current_saved_chrono_time = t_end; \
+      _debugger_current_saved_c_time = ctime_clock_now; \
+      _debugger_current_saved_chrono_time = chrono_clock_now; \
     } \
   } \
   while( 0 )
