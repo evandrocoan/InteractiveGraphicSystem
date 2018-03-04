@@ -76,10 +76,6 @@ help:
 # Default make target rule
 all: start_timer resources $(TARGET) print_elapsed_time
 
-# How do I write the 'cd' command in a makefile?
-# http://stackoverflow.com/questions/1789594/how-do-i-write-the-cd-command-in-a-makefile
-.ONESHELL: print_elapsed_time
-
 # GNU Make silent by default
 # https://stackoverflow.com/questions/24005166/gnu-make-silent-by-default
 .SILENT: start_timer print_elapsed_time
@@ -90,8 +86,7 @@ start_timer:
 
 # Calculate the elapsed seconds and print them to the screen
 print_elapsed_time:
-	. ./shell_scripts/timer_calculator.sh
-	showTheElapsedSeconds
+	@. ./shell_scripts/timer_calculator.sh; showTheElapsedSeconds
 
 
 run:
@@ -149,4 +144,5 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
 	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
 	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
+
 
