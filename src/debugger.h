@@ -35,16 +35,16 @@
  * This is to view internal program data while execution. Default value: 0
  *
  *  0  - Disables this feature.
- *  1  - Basic debugging.
- *  2  - Run the `doctest` Unit Tests.
+ *  1  - Basic debugging with time stamp.
+ *  2  - Basic debugging without time stamp.
  */
 #define DEBUG_LEVEL 1
 
 
 
-#define DEBUG_LEVEL_DISABLED_DEBUG 0
-#define DEBUG_LEVEL_BASIC_DEBUG    1
-#define DEBUG_LEVEL_RUN_UNIT_TESTS 2
+#define DEBUG_LEVEL_DISABLED_DEBUG     0
+#define DEBUG_LEVEL_WITH_TIME_STAMP    1
+#define DEBUG_LEVEL_WITHOUT_TIME_STAMP 2
 
 /**
  * MemoryManager debugging.
@@ -92,6 +92,34 @@
   extern std::clock_t _debugger_current_saved_c_time;
   extern std::chrono::time_point< std::chrono::high_resolution_clock > _debugger_current_saved_chrono_time;
 
+  #if DEBUG_LEVEL & DEBUG_LEVEL_WITH_TIME_STAMP
+    #define _DEBUGGER_TIME_STAMP_HEADER \
+      auto duration = chrono_clock_now.time_since_epoch(); \
+      /* typedef std::chrono::duration< int, std::ratio_multiply< std::chrono::hours::period, std::ratio< 21 > >::type > Days; */ \
+      /* Days days = std::chrono::duration_cast< Days >( duration ); */ \
+      /* duration -= days; */ \
+      auto hours = std::chrono::duration_cast< std::chrono::hours >( duration ); \
+      duration -= hours; \
+      auto minutes = std::chrono::duration_cast< std::chrono::minutes >( duration ); \
+      duration -= minutes; \
+      auto seconds = std::chrono::duration_cast< std::chrono::seconds >( duration ); \
+      duration -= seconds; \
+      auto milliseconds = std::chrono::duration_cast< std::chrono::milliseconds >( duration ); \
+      duration -= milliseconds; \
+      auto microseconds = std::chrono::duration_cast< std::chrono::microseconds >( duration ); \
+      /* duration -= microseconds; */ \
+      /* auto nanoseconds = std::chrono::duration_cast< std::chrono::nanoseconds >( duration ); */ \
+      time_t theTime = time(NULL); \
+      struct tm *aTime = localtime(&theTime); \
+      std::cout << tfm::format( "%02d:%02d:%02d:%03d:%03d %.3e %.3e ", \
+          aTime->tm_hour, minutes.count(), seconds.count(), milliseconds.count(), microseconds.count(), /* nanoseconds.count(), */ \
+          std::chrono::duration<double, std::milli>(chrono_clock_now-_debugger_current_saved_chrono_time).count(), \
+          (1000.0 * (ctime_clock_now - _debugger_current_saved_c_time)) / CLOCKS_PER_SEC \
+      );
+  #else
+    #define _DEBUGGER_TIME_STAMP_HEADER
+  #endif
+
 
   /**
    * Print like function for logging putting a new line at the end of string. See the variables
@@ -110,31 +138,11 @@
     { \
       std::clock_t ctime_clock_now = std::clock(); \
       auto chrono_clock_now = std::chrono::high_resolution_clock::now(); \
-      /* std::chrono::time_point< std::chrono::system_clock > chrono_clock_now = std::chrono::system_clock::now(); */ \
-      auto duration = chrono_clock_now.time_since_epoch(); \
-      /* typedef std::chrono::duration< int, std::ratio_multiply< std::chrono::hours::period, std::ratio< 21 > >::type > Days; */ \
-      /* Days days = std::chrono::duration_cast< Days >( duration ); */ \
-      /* duration -= days; */ \
-      auto hours = std::chrono::duration_cast< std::chrono::hours >( duration ); \
-      duration -= hours; \
-      auto minutes = std::chrono::duration_cast< std::chrono::minutes >( duration ); \
-      duration -= minutes; \
-      auto seconds = std::chrono::duration_cast< std::chrono::seconds >( duration ); \
-      duration -= seconds; \
-      auto milliseconds = std::chrono::duration_cast< std::chrono::milliseconds >( duration ); \
-      duration -= milliseconds; \
-      auto microseconds = std::chrono::duration_cast< std::chrono::microseconds >( duration ); \
-      /* duration -= microseconds; */ \
-      /* auto nanoseconds = std::chrono::duration_cast< std::chrono::nanoseconds >( duration ); */ \
-      time_t theTime = time(NULL); \
-      struct tm *aTime = localtime(&theTime); \
-      std::cout << tfm::format( "%02d:%02d:%02d:%03d:%03d %.3e %.3e %s/%s:%s ", \
-              aTime->tm_hour, minutes.count(), seconds.count(), milliseconds.count(), microseconds.count(), /* nanoseconds.count(), */ \
-              std::chrono::duration<double, std::milli>(chrono_clock_now-_debugger_current_saved_chrono_time).count(), \
-              (1000.0 * (ctime_clock_now - _debugger_current_saved_c_time)) / CLOCKS_PER_SEC, \
-              __FILE__, __FUNCTION__, __LINE__ \
-          ) \
-          << tfm::format( __VA_ARGS__ ) << std::endl; \
+      _DEBUGGER_TIME_STAMP_HEADER \
+      std::cout << tfm::format( "%s/%s:%s ", \
+          __FILE__, __FUNCTION__, __LINE__ \
+      ) \
+      << tfm::format( __VA_ARGS__ ) << std::endl; \
       _debugger_current_saved_c_time = ctime_clock_now; \
       _debugger_current_saved_chrono_time = chrono_clock_now; \
     } \
