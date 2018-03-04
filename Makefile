@@ -56,23 +56,43 @@ INCDEP := -I.
 # You want latexmk to *always* run, because make does not have all the info.
 # Also, include non-file targets in .PHONY so they are run regardless of any
 # file of the given name existing.
-.PHONY: run
+.PHONY: run start_timer print_elapsed_time
 
 
 
 #---------------------------------------------------------------------------------
 # DO NOT EDIT BELOW THIS LINE
 #---------------------------------------------------------------------------------
-SOURCES     := $(shell find $(SRCDIR) -type f -name "*.$(SRCEXT)" $(FIND_EXCLUSIONS))
-OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+SOURCES := $(shell find $(SRCDIR) -type f -name "*.$(SRCEXT)" $(FIND_EXCLUSIONS))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+
+CURRENT_DIR := $(shell pwd)
 
 # Print the usage instructions
 # https://gist.github.com/prwhite/8168133
 help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
-# Default Make
-all: resources $(TARGET)
+# Default make target rule
+all: start_timer resources $(TARGET) print_elapsed_time
+
+# How do I write the 'cd' command in a makefile?
+# http://stackoverflow.com/questions/1789594/how-do-i-write-the-cd-command-in-a-makefile
+.ONESHELL: print_elapsed_time
+
+# GNU Make silent by default
+# https://stackoverflow.com/questions/24005166/gnu-make-silent-by-default
+.SILENT: start_timer print_elapsed_time
+
+# Start counting the elapsed seconds to print them to the screen later
+start_timer:
+	@. ./shell_scripts/timer_calculator.sh "$(CURRENT_DIR)"
+
+# Calculate the elapsed seconds and print them to the screen
+print_elapsed_time:
+	. ./shell_scripts/timer_calculator.sh
+	showTheElapsedSeconds
+
 
 run:
 	./$(TARGETDIR)/$(TARGET)
@@ -89,6 +109,7 @@ directories:
 	@mkdir -p $(TARGETDIR)
 	@mkdir -p $(BUILDDIR)
 
+
 # Clean only Objecst
 clean:
 	@$(RM) -rf $(BUILDDIR)
@@ -97,6 +118,7 @@ clean:
 cleaner: veryclean
 veryclean: cleaner
 	@$(RM) -rf $(TARGETDIR)
+
 
 # Pull in dependency info for *existing* .o files
 -include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
