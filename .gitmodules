@@ -1,0 +1,3 @@
+[submodule "shell_scripts"]
+	path = shell_scripts
+	url = https://github.com/evandrocoan/shell_scripts
