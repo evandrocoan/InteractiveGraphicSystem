@@ -30,5 +30,9 @@
   // initialize `extern` variables shared across all source files
   std::clock_t _debugger_current_saved_c_time = std::clock();
   std::chrono::time_point<std::chrono::high_resolution_clock> _debugger_current_saved_chrono_time = std::chrono::high_resolution_clock::now();
+
+  // Default debug level, if not defined on any other file
+  int _debugger_int_debug_level = 3;
+  const char* _debugger_char_debug_level = "a1 a3 b7";
 #endif
 
