@@ -6,6 +6,20 @@
 Trabalho de Computação Gráfica - UFSC - 2018.2
 
 
+### Download
+
+To download it, you need to use the `git clone` with the `--recursive` option:
+```
+git clone --recursive repository_url
+```
+
+If you had already cloned it without the `--recursive` option, you need to run the command:
+```
+git submodule init
+git submodule update
+```
+
+
 ### Required dependencies for MSYS2 on Windows
 
 To run `GTK+` and `GTKmm` on Windows you will need `MSYS2`,
