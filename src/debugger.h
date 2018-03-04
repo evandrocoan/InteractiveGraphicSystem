@@ -52,9 +52,9 @@
 #if DEBUG_LEVEL > DEBUG_LEVEL_DISABLED_DEBUG
 
   /**
-   * A value like a127 (111111) for 'g_debugLevel' enables all 'a' mask debugging levels. To enable all
-   * debugging levels at once, use "a127 b127 c127" etc, supposing the level 64 is the highest to each
-   * mask 'a', 'b', 'c', etc.
+   * A value like a127 (111111) for '_debugger_char_debug_level' enables all 'a' mask
+   * debugging levels. To enable all debugging levels at once, use "a127 b127 c127" etc, supposing
+   * the level 64 is the highest to each mask 'a', 'b', 'c', etc.
    *
    * Level A debugging:
    * a1   - Basic debug messages.
@@ -63,7 +63,12 @@
    * Level B debugging:
    * b1   - Basic debug messages.
    */
-  const char* const g_debugLevel = "a1 a2 b1";
+  extern const char* _debugger_char_debug_level;
+
+  /**
+   * Same as `_debugger_char_debug_level`, but there is only one level defined by an integer.
+   */
+  extern int _debugger_int_debug_level;
 
 
   #define DEBUG
@@ -75,7 +80,6 @@
   #include <cstdarg>
   #include <chrono>
   #include <ctime>
-
 
   // C like printf support on C++
   #include "tinyformat.h"
@@ -91,7 +95,7 @@
 
   /**
    * Print like function for logging putting a new line at the end of string. See the variables
-   * 'g_debugLevel' for the available levels.
+   * '_debugger_char_debug_level' for the available levels.
    *
    * On this function only, a time stamp as `7.484e+003 7.484e+003` will be used. It means the `CPU
    * time used`time in milliseconds and the `Wall clock time passed` respectively.
@@ -102,7 +106,7 @@
   #define LOG( level, ... ) \
   do \
   { \
-    if( __computeDeggingLevel( #level ) ) \
+    if( level & _debugger_int_debug_level ) \
     { \
       std::clock_t c_end = std::clock(); \
       auto t_end = std::chrono::high_resolution_clock::now(); \
@@ -143,7 +147,7 @@
   #define LOGLN( level, ... ) \
   do \
   { \
-    if( __computeDeggingLevel( #level ) ) \
+    if( level & _debugger_int_debug_level ) \
     { \
       std::cout << tfm::format( __VA_ARGS__ ); \
     } \
@@ -156,7 +160,7 @@
   #define PRINT( level, ... ) \
   do \
   { \
-    if( __computeDeggingLevel( #level ) ) \
+    if( level & _debugger_int_debug_level ) \
     { \
       std::cout << tfm::format( __VA_ARGS__ ) << std::endl; \
     } \
@@ -169,7 +173,7 @@
   #define PRINTLN( level, ... ) \
   do \
   { \
-    if( __computeDeggingLevel( #level ) ) \
+    if( level & _debugger_int_debug_level ) \
     { \
       std::cout << tfm::format( __VA_ARGS__ ); \
     } \
@@ -208,7 +212,7 @@
     const char separator[2] = " ";
 
     inputLevelSize   = strlen( debugLevel );
-    builtInLevelSize = strlen( g_debugLevel );
+    builtInLevelSize = strlen( _debugger_char_debug_level );
 
     if( ( 2 > inputLevelSize && inputLevelSize > COMPUTE_DEBUGGING_DEBUG_INPUT_SIZE )
       || ( 2 > builtInLevelSize && builtInLevelSize > COMPUTE_DEBUGGING_DEBUG_INPUT_SIZE ) )
@@ -221,7 +225,7 @@
     }
 
     strcpy( inputLevelChar, debugLevel );
-    strcpy( builtInLevelChar, g_debugLevel );
+    strcpy( builtInLevelChar, _debugger_char_debug_level );
 
     // So, how do we debug the debugger?
   #if COMPUTE_DEBUGGING_LEVEL_DEBUG > 0
@@ -229,7 +233,7 @@
     int currentInternLoop = 0;
 
     std::cout << "\ndebugLevel: " << debugLevel << ", inputLevelSize: " << inputLevelSize << std::endl;
-    std::cout << "g_debugLevel: " << g_debugLevel << ", builtInLevelSize: " << builtInLevelSize << std::endl;
+    std::cout << "_debugger_char_debug_level: " << _debugger_char_debug_level << ", builtInLevelSize: " << builtInLevelSize << std::endl;
   #endif
 
     inputLevelToken = strtok( inputLevelChar, separator );
