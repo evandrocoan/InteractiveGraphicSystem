@@ -42,6 +42,13 @@ pacman -S mingw-w64-x86_64-gtkmm3
 pacman -S mingw-w64-x86_64-toolchain base-devel
 ```
 
+And fully install the https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases and add these value to path:
+```
+C:\Program Files\GTK3-Runtime Win64\bin
+D:\msys64\usr\bin
+D:\msys64\mingw64\bin
+```
+
 
 Para configurar a IDE Eclipse 3.18.3 ou Neon.3 Release (4.6.3) para incluir GTK:
 
