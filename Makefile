@@ -63,7 +63,7 @@ INCDEP := -I.
 #---------------------------------------------------------------------------------
 # DO NOT EDIT BELOW THIS LINE
 #---------------------------------------------------------------------------------
-SOURCES := $(shell find $(SRCDIR) -type f -name "*.$(SRCEXT)" $(FIND_EXCLUSIONS))
+SOURCES := $(shell /bin/find $(SRCDIR) -type f -name "*.$(SRCEXT)" $(FIND_EXCLUSIONS))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
 CURRENT_DIR := $(shell pwd)
@@ -111,7 +111,7 @@ clean:
 
 # Full Clean, Objects and Binaries
 cleaner: veryclean
-veryclean: cleaner
+veryclean: clean
 	@$(RM) -rf $(TARGETDIR)
 
 
