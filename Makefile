@@ -107,12 +107,12 @@ directories:
 
 # Clean only Objecst
 clean:
-	@$(RM) -rf $(BUILDDIR)
+	$(RM) -rfv $(BUILDDIR)
 
 # Full Clean, Objects and Binaries
 cleaner: veryclean
 veryclean: clean
-	@$(RM) -rf $(TARGETDIR)
+	$(RM) -rfv $(TARGETDIR)
 
 
 # Pull in dependency info for *existing* .o files
