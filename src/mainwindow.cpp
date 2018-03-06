@@ -8,26 +8,27 @@ MainWindow::MainWindow()
       right_frame("Viewport"),
       viewport()
 {
+  LOG(1, "Entering...");
   set_border_width(15);
   set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan");
 
   set_default_size(700, 500);
   add(main_box);
 
-  // draw options
+  LOG(1, "Draw options");
   main_box.pack_start(left_frame, Gtk::PACK_SHRINK, 10);
   left_box.set_border_width(10);
   left_frame.add(left_box);
 
-  // Adding the draw options box to left frame
+  LOG(1, "Adding the draw options box to left frame");
   left_box.pack_start(*Gtk::manage(new DrawOptionsBox("", 10, Gtk::BUTTONBOX_START, this)), Gtk::PACK_EXPAND_WIDGET);
 
-  // viewport
+  LOG(1, "Viewport");
   main_box.pack_start(right_frame, Gtk::PACK_EXPAND_WIDGET, 10);
   right_frame.add(viewport);
   viewport.show();
 
-  LOG(a1, "Show all components");
+  LOG(1, "Show all components");
   show_all_children();
 }
 

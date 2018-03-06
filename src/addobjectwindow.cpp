@@ -8,7 +8,6 @@ AddObjectWindow::AddObjectWindow(MainWindow* mainWindow)
       button_save_line("Save Line"),
       button_save_wire("Save Polygon"),
       button_close("Close"),
-
       point_x_label("Coordinate X : "),
       point_y_label("Coordinate Y : "),
       line_x1_label("Coordinate X1 : "),
@@ -17,14 +16,13 @@ AddObjectWindow::AddObjectWindow(MainWindow* mainWindow)
       line_y2_label("Coordinate Y2 : "),
       polygon_x_label("Coordinate X : "),
       polygon_y_label("Coordinate Y : "),
-
       info_label("Insert a Coordinate :"),
       point_name_field(), point_x_field(), point_y_field(),
       line_name_field(), line_x1_field(), line_x2_field(),
-
       polygon_name_field(), line_y1_field(), line_y2_field(),
       polygon_x_field(), wire_y_field()
 {
+  LOG(1, "Entering...");
   set_title("Add Object");
   set_border_width(12);
   add(m_vbox);
@@ -72,11 +70,11 @@ AddObjectWindow::AddObjectWindow(MainWindow* mainWindow)
   polygn_grid.attach(button_add_coordenate, 1, 4, 1, 1);
   polygn_grid.attach(button_save_wire, 2, 4, 1, 1);
 
-  button_close.signal_clicked().connect(sigc::mem_fun(*this, &AddObjectWindow::on_button_close) );
-  button_save_point.signal_clicked().connect(sigc::mem_fun(*this, &AddObjectWindow::on_button_save_point) );
-  button_save_line.signal_clicked().connect(sigc::mem_fun(*this, &AddObjectWindow::on_button_save_line) );
-  button_add_coordenate.signal_clicked().connect(sigc::mem_fun(*this, &AddObjectWindow::on_button_add_coordinate) );
-  button_save_wire.signal_clicked().connect(sigc::mem_fun(*this, &AddObjectWindow::on_button_save_polygon) );
+  button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_close) );
+  button_save_point.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_save_point) );
+  button_save_line.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_save_line) );
+  button_add_coordenate.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_add_coordinate) );
+  button_save_wire.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_save_polygon) );
 
   m_notebook.append_page(point_grid, "Point");
   m_notebook.append_page(line_grid, "Line");
@@ -92,6 +90,7 @@ AddObjectWindow::~AddObjectWindow()
 void AddObjectWindow::on_button_save_point()
 {
   std::string name = point_name_field.get_text().raw();
+  LOG(2, "Name: %s", name);
 
   if (name.empty())
   {
@@ -117,6 +116,8 @@ void AddObjectWindow::on_button_save_point()
 void AddObjectWindow::on_button_save_line()
 {
   std::string name = line_name_field.get_text().raw();
+  LOG(2, "Name: %s", name);
+
   if (name.empty())
   {
     line_name_field.grab_focus();
@@ -149,6 +150,7 @@ void AddObjectWindow::on_button_save_polygon()
   if (!polygon_cord_list.empty())
   {
     std::string name = polygon_name_field.get_text().raw();
+    LOG(2, "Name: %s", name);
 
     if (name.empty())
     {
@@ -171,7 +173,6 @@ void AddObjectWindow::on_button_save_polygon()
   {
     return ;
   }
-
 }
 
 void AddObjectWindow::on_button_add_coordinate()
