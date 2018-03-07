@@ -45,11 +45,5 @@ protected:
   void on_button_delete_object();
 };
 
-class draw_options_box
-{
-public:
-  draw_options_box();
-  virtual ~draw_options_box();
-};
 #endif // GTKMM_APP_DRAW_OPTIONS_BOX
 
