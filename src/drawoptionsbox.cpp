@@ -22,6 +22,8 @@ DrawOptionsBox::DrawOptionsBox(const Glib::ustring& title,
       objects_list(),
       button_delete_obj("Delete Object")
 {
+  LOG(1, "Entering...");
+
   // determinando ações quando clicado cada botão;
   button_move_up.signal_clicked().connect(sigc::mem_fun(*this, &DrawOptionsBox::on_button_move_up));
   button_move_down.signal_clicked().connect(sigc::mem_fun(*this, &DrawOptionsBox::on_button_move_down));
@@ -34,11 +36,11 @@ DrawOptionsBox::DrawOptionsBox(const Glib::ustring& title,
   button_add_object.signal_clicked().connect(sigc::mem_fun(*this, &DrawOptionsBox::on_button_add_object));
   button_delete_obj.signal_clicked().connect(sigc::mem_fun(*this, &DrawOptionsBox::on_button_delete_object));
 
-  // incializando dado da entrada do tamanho de movimentação
+  // inicializando dado da entrada do tamanho de movimentação
   entry_move_length.set_width_chars(1);
   entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
 
-  // incializando dado da entrada do tamanho do zoom
+  // inicializando dado da entrada do tamanho do zoom
   entry_zoom_scale.set_width_chars(1);
   char array[4];
 
@@ -182,6 +184,7 @@ void DrawOptionsBox::on_button_zoom_out()
 
 void DrawOptionsBox::update_list_object()
 {
+  LOG(1, "Entering...");
   //limpa a lista de objetos para reimprimi-la
   this->objects_list.remove_all();
   std::list<std::string> names = this->mainWindow->getViewport()->getViewWindow()->getDisplayFile()->getNamesList();
@@ -195,12 +198,13 @@ void DrawOptionsBox::update_list_object()
   for(auto object : names)
   {
     this->objects_list.append(object);
-    cout << object << endl;
+    LOG(2, object.c_str());
   }
 }
 
 void DrawOptionsBox::on_button_add_object()
 {
+  LOG(1, "Entering...");
   add_object_window = new AddObjectWindow(this->mainWindow);
   add_object_window->show();
 
