@@ -1,0 +1,9 @@
+
+@startuml
+  MainWindow .. Addasdfd
+  MainWindow <|-- Class02
+  Class03 *-- Class04ddddddddd
+  Class05 o-- Class06ddddddd
+  Class07 .. Class08
+  Class09 -- Class10
+@enduml
