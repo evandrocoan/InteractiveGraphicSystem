@@ -53,5 +53,6 @@ protected:
   void on_button_save_point();
   void on_button_save_line();
   void on_button_save_polygon();
+  void _close_updating_list();
 };
 #endif //GTKMM_APP_ADD_OBJECT_WINDOW
