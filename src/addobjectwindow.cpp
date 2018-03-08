@@ -110,7 +110,7 @@ void AddObjectWindow::on_button_save_point()
   this->mainWindow->getViewport()->getViewWindow()->getDisplayFile()->addObject(point);
   this->mainWindow->getViewport()->queue_draw();
 
-  close();
+  _close_updating_list();
 }
 
 void AddObjectWindow::on_button_save_line()
@@ -142,7 +142,7 @@ void AddObjectWindow::on_button_save_line()
   this->mainWindow->getViewport()->getViewWindow()->getDisplayFile()->addObject(line);
   this->mainWindow->getViewport()->queue_draw();
 
-  close();
+  _close_updating_list();
 }
 
 void AddObjectWindow::on_button_save_polygon()
@@ -167,7 +167,7 @@ void AddObjectWindow::on_button_save_polygon()
       polygon_cord_list.pop_back();
     }
 
-    close();
+    _close_updating_list();
   }
   else
   {
@@ -189,10 +189,19 @@ void AddObjectWindow::on_button_add_coordinate()
   polygon_x_field.set_text("");
   wire_y_field.set_text("");
 
-  info_label.set_text("Added X : " + std::to_string(x_cord) + " Y : " + std::to_string(y_cord));
+  std::string info_label_contents = "Added X : " + std::to_string(x_cord) + " Y : " + std::to_string(y_cord);
+
+  LOG(2, info_label_contents.c_str());
+  info_label.set_text(info_label_contents);
 }
 
 void AddObjectWindow::on_button_close()
 {
+  close();
+}
+
+void AddObjectWindow::_close_updating_list()
+{
+  // ->update_list_object();
   close();
 }

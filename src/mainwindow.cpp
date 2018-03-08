@@ -21,7 +21,8 @@ MainWindow::MainWindow()
   left_frame.add(left_box);
 
   LOG(1, "Adding the draw options box to left frame");
-  left_box.pack_start(*Gtk::manage(new DrawOptionsBox("", 10, Gtk::BUTTONBOX_START, this)), Gtk::PACK_EXPAND_WIDGET);
+  auto draw_options_box = new DrawOptionsBox("", 10, Gtk::BUTTONBOX_START, this);
+  left_box.pack_start(*Gtk::manage(draw_options_box), Gtk::PACK_EXPAND_WIDGET);
 
   LOG(1, "Viewport");
   main_box.pack_start(right_frame, Gtk::PACK_EXPAND_WIDGET, 10);
