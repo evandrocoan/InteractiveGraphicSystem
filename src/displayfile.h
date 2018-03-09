@@ -11,14 +11,15 @@ class DisplayFile
 public:
   DisplayFile();
   virtual ~DisplayFile();
-  void addObject(DrawableObject* object);
 
-  DrawableObject* getObjectByName(string name);
+  void addObject(DrawableObject* object);
   void removeObject(DrawableObject* object);
   void removeObjectByName(string name);
 
   std::list<string> getNamesList();
   std::list<DrawableObject*> getObjects();
+
+  DrawableObject* getObjectByName(string name);
 
 protected:
   std::map<string, DrawableObject*> objectsMap;
