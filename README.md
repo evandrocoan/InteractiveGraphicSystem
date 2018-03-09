@@ -106,3 +106,27 @@ Links de Docmentação do GTKmm:
 - https://developer.gnome.org/gtkmm/stable/group__gtkmmEnums.html#gga83727a1b6fed51566dfd5c8e58890dbaa7b88e2329efd6367522358da92a3a736
 - https://developer.gnome.org/gtkmm/stable/group__Widgets.html
 
+
+### Download GTK Sources
+
+
+You can access the page: https://www.gtkmm.org/en/git.html
+
+And run the commands:
+```
+git clone git://git.gnome.org/gtk+
+git clone git://git.gnome.org/gtkmm
+git clone git://git.gnome.org/glibmm
+
+cd gtk+; checkout 3.22.28; cd -
+cd gtkmm; checkout 3.22.0; cd -
+cd glibmm; checkout 2.54.1; cd -
+```
+
+To know you installed versions of these libraries, you can run the commands:
+```
+pkg-config --modversion gtk+-3.0
+pkg-config --modversion gtkmm-2.4
+pkg-config --modversion glibmm-2.4
+```
+
