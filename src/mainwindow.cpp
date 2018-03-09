@@ -30,7 +30,7 @@ MainWindow::MainWindow()
   viewport.show();
 
   LOG(4, "Show all components");
-  show_all_children();
+  this->show_all_children();
 }
 
 Viewport* MainWindow::getViewport()

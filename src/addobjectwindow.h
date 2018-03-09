@@ -28,34 +28,58 @@ public:
   ~AddObjectWindow();
 
 protected:
-  // Add here any components or frames
-  MainWindow* mainWindow;
+  MainWindow*     mainWindow;
   DrawOptionsBox* drawOptionsBox;
 
-  std::list<Coordinate*> polygon_cord_list;
-  Gtk::Grid point_grid, line_grid, polygn_grid;
-
+  Gtk::Box      m_vbox;
   Gtk::Notebook m_notebook;
-  Gtk::Box m_vbox;
 
-  Gtk::Button button_add_coordenate, button_save_line, button_close, button_save_wire, button_save_point;
+  string                 new_object_name;
+  std::list<Coordinate*> polygon_cord_list;
 
-  Gtk::Entry point_name_field, point_x_field, point_y_field;
-  Gtk::Entry line_name_field, line_x1_field, line_x2_field, line_y1_field, line_y2_field;
+  Gtk::Grid line_grid;
+  Gtk::Grid point_grid;
+  Gtk::Grid polygn_grid;
 
-  Gtk::Entry polygon_name_field, polygon_x_field, wire_y_field;
-  Gtk::Label point_x_label, point_y_label;
+  Gtk::Button button_close;
+  Gtk::Button button_save_line;
+  Gtk::Button button_save_wire;
+  Gtk::Button button_save_point;
+  Gtk::Button button_add_coordenate;
 
-  Gtk::Label line_x1_label, line_x2_label, line_y1_label, line_y2_label;
-  Gtk::Label polygon_x_label, polygon_y_label, info_label;
+  Gtk::Entry point_x_field;
+  Gtk::Entry point_y_field;
+  Gtk::Entry point_name_field;
 
-  string new_object_name;
+  Gtk::Entry line_x1_field;
+  Gtk::Entry line_y1_field;
+  Gtk::Entry line_y2_field;
+  Gtk::Entry line_x2_field;
+  Gtk::Entry line_name_field;
 
-  void on_button_add_coordinate();
+  Gtk::Label info_label;
+  Gtk::Label point_x_label;
+  Gtk::Label point_y_label;
+
+  Gtk::Entry wire_y_field;
+  Gtk::Entry polygon_x_field;
+  Gtk::Entry polygon_name_field;
+
+  Gtk::Label line_x1_label;
+  Gtk::Label line_y1_label;
+
+  Gtk::Label line_x2_label;
+  Gtk::Label line_y2_label;
+
+  Gtk::Label polygon_x_label;
+  Gtk::Label polygon_y_label;
+
   void on_button_close();
   void on_button_save_point();
   void on_button_save_line();
   void on_button_save_polygon();
+
+  void on_button_add_coordinate();
   void _close_updating_list();
 };
 #endif //GTKMM_APP_ADD_OBJECT_WINDOW
