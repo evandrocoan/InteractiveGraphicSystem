@@ -170,7 +170,7 @@ void AddObjectWindow::on_button_save_polygon()
       polygon_cord_list.pop_back();
     }
 
-    _close_updating_list();
+    this->_close_updating_list();
   }
   else
   {
@@ -200,11 +200,11 @@ void AddObjectWindow::on_button_add_coordinate()
 
 void AddObjectWindow::on_button_close()
 {
-  close();
+  this->close();
 }
 
 void AddObjectWindow::_close_updating_list()
 {
   drawOptionsBox->update_list_object();
-  close();
+  this->close();
 }
