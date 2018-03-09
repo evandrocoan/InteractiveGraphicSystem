@@ -1,9 +1,9 @@
 
 @startuml
-  MainWindow .. Addasdfd
-  MainWindow <|-- Class02
-  Class03 *-- Class04ddddddddd
-  Class05 o-- Class06ddddddd
-  Class07 .. Class08
-  Class09 -- Class10
+  MainWindow o-- Viewport:   viewport
+  MainWindow o-- Gtk::Box:   main_box, left_box
+  MainWindow o-- Gtk::Frame: left_frame, right_frame
+  MainWindow o-- DrawOptionsBox: draw_options_box
+  DrawOptionsBox o-- MainWindow: mainWindow
+
 @enduml

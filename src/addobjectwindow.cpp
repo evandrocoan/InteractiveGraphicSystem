@@ -1,8 +1,11 @@
 #include "addobjectwindow.h"
+#include "drawoptionsbox.h"
 
-AddObjectWindow::AddObjectWindow(MainWindow* mainWindow)
+
+AddObjectWindow::AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOptionsBox)
     : mainWindow(mainWindow),
       m_vbox(Gtk::ORIENTATION_VERTICAL),
+      drawOptionsBox(drawOptionsBox),
       button_add_coordenate("Add Coordenate"),
       button_save_point("Save Point"),
       button_save_line("Save Line"),
@@ -202,6 +205,6 @@ void AddObjectWindow::on_button_close()
 
 void AddObjectWindow::_close_updating_list()
 {
-  // ->update_list_object();
+  drawOptionsBox->update_list_object();
   close();
 }
