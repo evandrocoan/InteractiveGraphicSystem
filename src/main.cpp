@@ -4,16 +4,23 @@
 #include <list>
 #include <string>
 
+/**
+ * You can enable or disable the debugging statements from `LOG()` by going to the file
+ * `src/debugger.h` and looking for the variable `DEBUG_LEVEL`.
+ *
+ * You can control the debug level used by the function `LOG()` by going to the file
+ * `src/debugger.h` and looking for the variable `_debugger_int_debug_level`.
+ */
 int main (int argc, char *argv[])
 {
-  LOG(1, "Starting the main application...");
+  LOG(2, "Starting the main application...");
 
   Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv);
   MainWindow mainwindow;
 
-  LOG(1, "Shows the main window and returns when it is closed.");
+  LOG(4, "Shows the main window and returns when it is closed.");
   int exit_code = app->run(mainwindow);
 
-  LOG(1, "exit_code: %d", exit_code);
+  LOG(2, "exit_code: %d", exit_code);
   return exit_code;
 }
