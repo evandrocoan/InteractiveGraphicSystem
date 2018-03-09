@@ -2,8 +2,8 @@
 @startuml
   skinparam defaultFontName Consolas
 
-  MainWindow <|-- Gtk::Window
-  MainWindow *-- Viewport : viewport
+  MainWindow      <|-- Gtk::Window
+  MainWindow      *--  Viewport : viewport
 
   DrawOptionsBox  <|-- Gtk::Frame
   DrawOptionsBox  *-- MainWindow      : mainWindow
@@ -17,12 +17,12 @@
     Viewport*  getViewport()
   }
 
-  Viewport   <|-- Gtk::DrawingArea
-  Viewport   *-- ViewWindow
-  ViewWindow *-- DisplayFile
-
   AddObjectWindow <|-- Gtk::Window
   AddObjectWindow *-- DrawOptionsBox  : draw_options_box
+
+  Viewport <|-- Gtk::DrawingArea
+  Viewport *-- ViewWindow
+  Viewport *-- DisplayFile
 
   class AddObjectWindow {
     Gtk::Grid              point_grid

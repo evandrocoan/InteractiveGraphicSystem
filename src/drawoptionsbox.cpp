@@ -185,7 +185,7 @@ void DrawOptionsBox::update_list_object()
   LOG(2, "Entering...");
   LOG(4, "limpa a lista de objetos para reimprimi-la");
   this->objects_list.remove_all();
-  std::list<std::string> names = this->mainWindow->getViewport()->getViewWindow()->getDisplayFile()->getNamesList();
+  std::list<std::string> names = this->mainWindow->getViewport()->getDisplayFile()->getNamesList();
 
   /*for(std::list<std::string>::iterator it = names.begin(); it != names.end(); it++)
   {
@@ -216,7 +216,7 @@ void DrawOptionsBox::on_button_delete_object()
 
   if(!(name.empty()))
   {
-    this->mainWindow->getViewport()->getViewWindow()->getDisplayFile()->removeObjectByName((string) name);
+    this->mainWindow->getViewport()->getDisplayFile()->removeObjectByName((string) name);
     this->mainWindow->getViewport()->queue_draw();
 
     this->update_list_object();

@@ -33,7 +33,7 @@ bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
   cr->set_source_rgb(0, 0, 0);
 
   // draw displayfile objects
-  std::list<DrawableObject*> objects = this->viewWindow->getDisplayFile()->getObjects();
+  std::list<DrawableObject*> objects = this->getDisplayFile()->getObjects();
 
   for (std::list<DrawableObject*>::iterator it_obj = objects.begin(); it_obj != objects.end(); it_obj++)
   {
@@ -133,3 +133,9 @@ void Viewport::updateViewport(Gtk::Allocation allocation)
 Viewport::~Viewport()
 {
 }
+
+DisplayFile* Viewport::getDisplayFile()
+{
+  return &this->displayFile;
+}
+

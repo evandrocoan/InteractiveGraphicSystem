@@ -6,6 +6,7 @@
 #include <cairomm/context.h>
 #include <list>
 #include "viewwindow.h"
+#include "displayfile.h"
 #include "coordinate.h"
 
 class Viewport : public Gtk::DrawingArea
@@ -16,15 +17,22 @@ public:
   virtual ~Viewport();
 
   ViewWindow * getViewWindow();
+  DisplayFile* getDisplayFile();
 
 protected:
-  bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
+  ViewWindow* viewWindow = NULL;
+
+  DisplayFile displayFile;
   Gtk::Allocation* allocation;
 
-  ViewWindow* viewWindow = NULL;
-  int Xvpmin, Yvpmin, Xvpmax, Yvpmax;
+  int Xvpmin;
+  int Yvpmin;
 
-  void updateViewport(Gtk::Allocation allocation);
+  int Xvpmax;
+  int Yvpmax;
+
+  bool       on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
+  void       updateViewport(Gtk::Allocation allocation);
   Coordinate convertCoordinateFromWindow(Coordinate cord);
 
 };
