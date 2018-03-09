@@ -25,7 +25,7 @@ AddObjectWindow::AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOpt
       polygon_name_field(), line_y1_field(), line_y2_field(),
       polygon_x_field(), wire_y_field()
 {
-  LOG(1, "Entering...");
+  LOG(2, "Entering...");
   set_title("Add Object");
   set_border_width(12);
   add(m_vbox);
@@ -93,7 +93,7 @@ AddObjectWindow::~AddObjectWindow()
 void AddObjectWindow::on_button_save_point()
 {
   std::string name = point_name_field.get_text().raw();
-  LOG(2, "Name: %s", name);
+  LOG(4, "Name: %s", name);
 
   if (name.empty())
   {
@@ -119,7 +119,7 @@ void AddObjectWindow::on_button_save_point()
 void AddObjectWindow::on_button_save_line()
 {
   std::string name = line_name_field.get_text().raw();
-  LOG(2, "Name: %s", name);
+  LOG(4, "Name: %s", name);
 
   if (name.empty())
   {
@@ -153,7 +153,7 @@ void AddObjectWindow::on_button_save_polygon()
   if (!polygon_cord_list.empty())
   {
     std::string name = polygon_name_field.get_text().raw();
-    LOG(2, "Name: %s", name);
+    LOG(4, "Name: %s", name);
 
     if (name.empty())
     {
@@ -194,7 +194,7 @@ void AddObjectWindow::on_button_add_coordinate()
 
   std::string info_label_contents = "Added X : " + std::to_string(x_cord) + " Y : " + std::to_string(y_cord);
 
-  LOG(2, info_label_contents.c_str());
+  LOG(4, info_label_contents.c_str());
   info_label.set_text(info_label_contents);
 }
 

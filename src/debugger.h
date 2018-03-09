@@ -38,8 +38,9 @@
  *  1  - Basic debugging with time stamp.
  *  2  - Basic debugging without time stamp.
  */
-#define DEBUG_LEVEL 1
-
+#ifndef DEBUG_LEVEL
+  #define DEBUG_LEVEL 1
+#endif
 
 
 #define DEBUG_LEVEL_DISABLED_DEBUG     0
@@ -47,29 +48,19 @@
 #define DEBUG_LEVEL_WITHOUT_TIME_STAMP 2
 
 /**
- * MemoryManager debugging.
+ * Control all program debugging.
  */
 #if DEBUG_LEVEL > DEBUG_LEVEL_DISABLED_DEBUG
 
   /**
-   * A value like a127 (111111) for '_debugger_char_debug_level' enables all 'a' mask
-   * debugging levels. To enable all debugging levels at once, use "a127 b127 c127" etc, supposing
-   * the level 64 is the highest to each mask 'a', 'b', 'c', etc.
+   * A value like 127 binary(111111) enables all masked debugging levels.
    *
-   * Level A debugging:
-   * a1   - Basic debug messages.
-   * a2   - Function entrances
-   *
-   * Level B debugging:
-   * b1   - Basic debug messages.
-   */
-  extern const char* _debugger_char_debug_level;
-
-  /**
-   * Same as `_debugger_char_debug_level`, but there is only one level defined by an integer.
+   * 1  - Error or very important messages.
+   * 2  - Function entrances by `Entering...`
+   * 4  - Comment messages inside functions calls
+   * 8  - High called functions, i.e., create very big massive text output
    */
   extern int _debugger_int_debug_level;
-
 
   #define DEBUG
   #include <stdlib.h>
@@ -82,6 +73,7 @@
   #include <ctime>
 
   // C like printf support on C++
+  // https://github.com/c42f/tinyformat
   #include "tinyformat.h"
 
   // C++ -> Utilities library -> Date and time utilities -> C-style date and time utilities -> std:clock
@@ -123,10 +115,11 @@
 
   /**
    * Print like function for logging putting a new line at the end of string. See the variables
-   * '_debugger_char_debug_level' for the available levels.
+   * '_debugger_int_debug_level' for the available levels.
    *
-   * On this function only, a time stamp as `7.484e+003 7.484e+003` will be used. It means the `CPU
-   * time used` in milliseconds and the `Wall clock time passed` respectively.
+   * On this function only, a time stamp on scientific notation as `d.dde+ddd d.ddde+ddd` will be
+   * used. These values mean the `CPU time used` in milliseconds and the `Wall clock time passed`
+   * respectively.
    *
    * @param level     the debugging desired level to be printed.
    * @param ...       variable number os formating arguments parameters.
@@ -189,139 +182,10 @@
   while( 0 )
 
 
-  /**
-   * Determines whether the given debug level is enabled.
-   *
-   * @param debugLevel       the given char* string level to the debugger.
-   * @return true when the current debug output is enabled, false otherwise.
-   */
-  inline bool __computeDeggingLevel( const char* debugLevel )
-  {
-  #define COMPUTE_DEBUGGING_LEVEL_DEBUG      0
-  #define COMPUTE_DEBUGGING_DEBUG_INPUT_SIZE 32
-
-    int inputLevel;
-    int builtInLevel;
-
-    int inputLevelSize;
-    int builtInLevelSize;
-
-    int inputLevelTokenSize;
-    int builtInLevelTokenSize;
-
-    char* inputLevelToken;
-    char* builtInLevelToken;
-
-    char builtInLevelChar[ COMPUTE_DEBUGGING_DEBUG_INPUT_SIZE ];
-    char inputLevelChar  [ COMPUTE_DEBUGGING_DEBUG_INPUT_SIZE ];
-    char inputLevelChars [ COMPUTE_DEBUGGING_DEBUG_INPUT_SIZE ][ COMPUTE_DEBUGGING_DEBUG_INPUT_SIZE ];
-
-    int        inputLevels  = 0;
-    const char separator[2] = " ";
-
-    inputLevelSize   = strlen( debugLevel );
-    builtInLevelSize = strlen( _debugger_char_debug_level );
-
-    if( ( 2 > inputLevelSize && inputLevelSize > COMPUTE_DEBUGGING_DEBUG_INPUT_SIZE )
-      || ( 2 > builtInLevelSize && builtInLevelSize > COMPUTE_DEBUGGING_DEBUG_INPUT_SIZE ) )
-    {
-      std::cout << "ERROR while processing the DEBUG LEVEL: " << debugLevel << std::endl;
-      std::cout << "! The masks sizes are " << inputLevelSize << " and " << builtInLevelSize;
-      std::cout << ", but they must to be between 1 and 32." << std::endl;
-
-      exit( EXIT_FAILURE );
-    }
-
-    strcpy( inputLevelChar, debugLevel );
-    strcpy( builtInLevelChar, _debugger_char_debug_level );
-
-    // So, how do we debug the debugger?
-  #if COMPUTE_DEBUGGING_LEVEL_DEBUG > 0
-    int currentExternLoop = 0;
-    int currentInternLoop = 0;
-
-    std::cout << "\ndebugLevel: " << debugLevel << ", inputLevelSize: " << inputLevelSize << std::endl;
-    std::cout << "_debugger_char_debug_level: " << _debugger_char_debug_level << ", builtInLevelSize: " << builtInLevelSize << std::endl;
-  #endif
-
-    inputLevelToken = strtok( inputLevelChar, separator );
-
-    do
-    {
-      strcpy( inputLevelChars[ inputLevels++ ], inputLevelToken );
-
-    } while( ( inputLevelToken = strtok( NULL, separator ) ) != NULL );
-
-    while( inputLevels-- > 0 )
-    {
-    #if COMPUTE_DEBUGGING_LEVEL_DEBUG > 0
-      currentInternLoop = 0;
-      std::cout << "CURRENT_ExternLoop: " << currentExternLoop++ << std::endl;
-    #endif
-
-      builtInLevelToken   = strtok( builtInLevelChar, separator );
-      inputLevelTokenSize = strlen( inputLevelChars[ inputLevels ] );
-
-      do
-      {
-        builtInLevelTokenSize = strlen( builtInLevelToken );
-
-      #if COMPUTE_DEBUGGING_LEVEL_DEBUG > 0
-        std::cout << "space" << std::endl;
-        std::cout << "CURRENT_InternLoop: " << currentInternLoop++ << std::endl;
-
-        std::cout << "builtInLevelToken: " << builtInLevelToken << std::endl;
-        std::cout << "builtInLevelTokenSize: " << builtInLevelTokenSize << std::endl;
-        std::cout << "inputLevelChars[" << inputLevels << "]: " << inputLevelChars[ inputLevels ] << std::endl;
-        std::cout << "inputLevelTokenSize: " << inputLevelTokenSize << std::endl;
-      #endif
-
-        if( inputLevelTokenSize > 0
-          && builtInLevelTokenSize > 0 )
-        {
-          if( isdigit( inputLevelChars[ inputLevels ][ 1 ] )
-            && isdigit( builtInLevelToken[ 1 ] ) )
-          {
-            if( builtInLevelToken[ 0 ] == inputLevelChars[ inputLevels ][ 0 ] )
-            {
-              sscanf( &inputLevelChars[ inputLevels ][ 1 ], "%d", &inputLevel );
-              sscanf( &builtInLevelToken[ 1 ], "%d", &builtInLevel );
-
-            #if COMPUTE_DEBUGGING_LEVEL_DEBUG > 0
-              std::cout << "builtInLevel: " << builtInLevel << std::endl;
-              std::cout << "inputLevel: " << inputLevel << std::endl;
-              std::cout << "Is activeated? " << ( ( inputLevel & builtInLevel ) > 0 ) << std::endl;
-            #endif
-
-              if( ( inputLevel & builtInLevel ) > 0 )
-              {
-                #if COMPUTE_DEBUGGING_LEVEL_DEBUG > 0
-                  std::cout << "returning true..." << std::endl;
-                #endif
-                return true;
-              }
-            }
-          }
-        }
-
-      } while( ( builtInLevelToken = strtok( NULL, separator ) ) != NULL );
-
-    #if COMPUTE_DEBUGGING_LEVEL_DEBUG > 0
-      std::cout << "space" << std::endl;
-    #endif
-    }
-
-    #if COMPUTE_DEBUGGING_LEVEL_DEBUG > 0
-      std::cout << "returning false..." << std::endl;
-    #endif
-    return false;
-  }
-
 #else
 
   #define LOG( level, ... )
   #define LOGLN( level, ... )
-
 
   /**
    * The same as LOGLN(...), but it is for standard program output when the debugging is disabled.
