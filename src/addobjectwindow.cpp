@@ -110,7 +110,7 @@ void AddObjectWindow::on_button_save_point()
   Coordinate *point_cord = new Coordinate(x_cord, y_cord);
   Point *point = new Point(name, point_cord);
 
-  this->mainWindow->getViewport()->getViewWindow()->getDisplayFile()->addObject(point);
+  this->mainWindow->getViewport()->getDisplayFile()->addObject(point);
   this->mainWindow->getViewport()->queue_draw();
 
   _close_updating_list();
@@ -142,7 +142,7 @@ void AddObjectWindow::on_button_save_line()
 
   Line *line = new Line(name, point_cord1, point_cord2);
 
-  this->mainWindow->getViewport()->getViewWindow()->getDisplayFile()->addObject(line);
+  this->mainWindow->getViewport()->getDisplayFile()->addObject(line);
   this->mainWindow->getViewport()->queue_draw();
 
   _close_updating_list();
@@ -162,7 +162,7 @@ void AddObjectWindow::on_button_save_polygon()
     }
 
     Polygon *polygon = new Polygon(name, polygon_cord_list);
-    this->mainWindow->getViewport()->getViewWindow()->getDisplayFile()->addObject(polygon);
+    this->mainWindow->getViewport()->getDisplayFile()->addObject(polygon);
     this->mainWindow->getViewport()->queue_draw();
 
     while(!polygon_cord_list.empty())
