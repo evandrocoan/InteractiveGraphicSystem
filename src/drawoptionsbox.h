@@ -21,6 +21,7 @@ class DrawOptionsBox: public Gtk::Frame
 public:
   DrawOptionsBox(const Glib::ustring& title, gint spacing, Gtk::ButtonBoxStyle layout, MainWindow* mainWindow);
   virtual ~DrawOptionsBox();
+  void update_list_object();
 
 protected:
   MainWindow* mainWindow;
@@ -41,7 +42,6 @@ protected:
   void on_button_move_right();
   void on_button_zoom_in();
   void on_button_zoom_out();
-  void update_list_object();
   void on_button_delete_object();
 };
 

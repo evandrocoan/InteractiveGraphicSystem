@@ -205,7 +205,7 @@ void DrawOptionsBox::update_list_object()
 void DrawOptionsBox::on_button_add_object()
 {
   LOG(1, "Entering...");
-  add_object_window = new AddObjectWindow(this->mainWindow);
+  add_object_window = new AddObjectWindow(this->mainWindow, this);
   add_object_window->show();
 
   //add_object_window->on_button_save_point();
