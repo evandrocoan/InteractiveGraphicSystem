@@ -19,15 +19,18 @@
 #include "mainwindow.h"
 #include "coordinate.h"
 
+class DrawOptionsBox;
+
 class AddObjectWindow : public Gtk::Window
 {
 public:
-  AddObjectWindow(MainWindow* mainWindow);
+  AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOptionsBox);
   ~AddObjectWindow();
 
 protected:
   // Add here any components or frames
   MainWindow* mainWindow;
+  DrawOptionsBox* drawOptionsBox;
 
   std::list<Coordinate*> polygon_cord_list;
   Gtk::Grid point_grid, line_grid, polygn_grid;
