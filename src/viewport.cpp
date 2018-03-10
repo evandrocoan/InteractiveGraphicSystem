@@ -1,7 +1,7 @@
 #include "viewport.h"
 
 Viewport::Viewport()
-    : viewWindow(new ViewWindow (0, 0, 0, 0)),
+    : viewWindow(new Viewwindow (0, 0, 0, 0)),
       Xvpmin(0),
       Yvpmin(0),
       Xvpmax(0),
@@ -83,7 +83,7 @@ Coordinate Viewport::convertCoordinateFromWindow(Coordinate cord)
   return Coordinate(Xvp, Yvp);
 }
 
-ViewWindow * Viewport::getViewWindow()
+Viewwindow * Viewport::getViewWindow()
 {
   return this->viewWindow;
 }

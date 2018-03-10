@@ -16,11 +16,11 @@ public:
   Viewport();
   virtual ~Viewport();
 
-  ViewWindow * getViewWindow();
+  Viewwindow * getViewWindow();
   DisplayFile* getDisplayFile();
 
 protected:
-  ViewWindow* viewWindow = NULL;
+  Viewwindow* viewWindow = NULL;
 
   DisplayFile displayFile;
   Gtk::Allocation* allocation;
