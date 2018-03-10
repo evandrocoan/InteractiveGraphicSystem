@@ -109,9 +109,8 @@ void Viewport::updateViewport(Gtk::Allocation allocation)
     if (this->Xvpmax != 0)
     {
       xwmax = this->viewwindow->getXwmax()
-          + (float)(this->viewwindow->getXwmax() - this->viewwindow->getXwmin()) * (
-              (float)widthDiff
-                  / (float)(this->Xvpmax - this->Xvpmin)
+          + (float)(this->viewwindow->getXwmax() - this->viewwindow->getXwmin()) * ( (float)widthDiff
+              / (float)(this->Xvpmax - this->Xvpmin)
           );
     }
     else
@@ -138,6 +137,7 @@ void Viewport::updateViewport(Gtk::Allocation allocation)
 
     this->Xvpmax += widthDiff;
     this->Yvpmax += heightDiff;
+    LOG(8, "Xvpmax: %d, Yvpmax: %d", Xvpmax, Yvpmax);
   }
 }
 
