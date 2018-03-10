@@ -21,7 +21,7 @@
   AddObjectWindow *-- DrawOptionsBox  : draw_options_box
 
   Viewport <|-- Gtk::DrawingArea
-  Viewport *-- ViewWindow
+  Viewport *-- Viewwindow
   Viewport *-- DisplayFile
 
   class AddObjectWindow {

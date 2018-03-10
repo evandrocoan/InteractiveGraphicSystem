@@ -112,8 +112,7 @@ void AddObjectWindow::on_button_save_point()
 
   this->mainWindow->getViewport()->getDisplayFile()->addObject(point);
   this->mainWindow->getViewport()->queue_draw();
-
-  _close_updating_list();
+  this->_close_updating_list();
 }
 
 void AddObjectWindow::on_button_save_line()
@@ -144,8 +143,7 @@ void AddObjectWindow::on_button_save_line()
 
   this->mainWindow->getViewport()->getDisplayFile()->addObject(line);
   this->mainWindow->getViewport()->queue_draw();
-
-  _close_updating_list();
+  this->_close_updating_list();
 }
 
 void AddObjectWindow::on_button_save_polygon()

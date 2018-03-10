@@ -24,10 +24,13 @@ public:
   Viewport* getViewport();
 
 protected:
-  // Add here any components or frames
-  Gtk::Box main_box, left_box;
-  Gtk::Frame left_frame, right_frame;
-
   Viewport viewport;
+
+  Gtk::Box main_box;
+  Gtk::Box left_box;
+
+  Gtk::Frame left_frame;
+  Gtk::Frame right_frame;
 };
+
 #endif // GTKMM_APP_MAIN_WINDOW
