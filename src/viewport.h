@@ -8,10 +8,10 @@
 #include "viewwindow.h"
 #include "displayfile.h"
 #include "coordinate.h"
+#include "debugger.h"
 
 class Viewport : public Gtk::DrawingArea
 {
-
 public:
   Viewport();
   virtual ~Viewport();
