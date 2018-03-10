@@ -20,15 +20,34 @@ AddObjectWindow::AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOpt
       polygon_x_label("Coordinate X : "),
       polygon_y_label("Coordinate Y : "),
       info_label("Insert a Coordinate :"),
-      point_name_field(), point_x_field(), point_y_field(),
-      line_name_field(), line_x1_field(), line_x2_field(),
-      polygon_name_field(), line_y1_field(), line_y2_field(),
-      polygon_x_field(), wire_y_field()
+      point_name_field(),
+      point_x_field(),
+      point_y_field(),
+      line_name_field(),
+      line_x1_field(),
+      line_x2_field(),
+      polygon_name_field(),
+      line_y1_field(),
+      line_y2_field(),
+      wire_x_field(),
+      wire_y_field()
 {
   LOG(2, "Entering...");
   set_title("Add Object");
   set_border_width(12);
   add(m_vbox);
+
+  point_name_field.set_text("point1");
+  point_x_field.set_text("50");
+  point_y_field.set_text("50");
+  line_name_field.set_text("line1");
+  line_x1_field.set_text("0");
+  line_y1_field.set_text("0");
+  line_x2_field.set_text("50");
+  line_y2_field.set_text("50");
+  polygon_name_field.set_text("polygon1");
+  wire_x_field.set_text("0");
+  wire_y_field.set_text("0");
 
   m_notebook.set_border_width(0);
   m_vbox.pack_start(m_notebook);
@@ -67,7 +86,7 @@ AddObjectWindow::AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOpt
   polygn_grid.attach(polygon_name_field, 1, 1, 1, 1);
   polygn_grid.attach(info_label, 2, 1, 1, 1);
   polygn_grid.attach(polygon_x_label, 1, 2, 1, 1);
-  polygn_grid.attach(polygon_x_field, 2, 2, 1, 1);
+  polygn_grid.attach(wire_x_field, 2, 2, 1, 1);
   polygn_grid.attach(polygon_y_label, 1, 3, 1, 1);
   polygn_grid.attach(wire_y_field, 2, 3, 1, 1);
   polygn_grid.attach(button_add_coordenate, 1, 4, 1, 1);
@@ -178,7 +197,7 @@ void AddObjectWindow::on_button_save_polygon()
 
 void AddObjectWindow::on_button_add_coordinate()
 {
-  std::string x_string = polygon_x_field.get_text().raw();
+  std::string x_string = wire_x_field.get_text().raw();
   std::string y_string = wire_y_field.get_text().raw();
 
   int x_cord = atoi(x_string.c_str());
@@ -187,7 +206,7 @@ void AddObjectWindow::on_button_add_coordinate()
   Coordinate *wire_cord = new Coordinate(x_cord, y_cord);
   polygon_cord_list.push_back(wire_cord);
 
-  polygon_x_field.set_text("");
+  wire_x_field.set_text("");
   wire_y_field.set_text("");
 
   std::string info_label_contents = "Added X : " + std::to_string(x_cord) + " Y : " + std::to_string(y_cord);
