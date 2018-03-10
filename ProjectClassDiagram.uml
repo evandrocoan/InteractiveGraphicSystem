@@ -17,12 +17,49 @@
     Viewport*  getViewport()
   }
 
+  note right of MainWindow
+    This is the model viewer
+  end note
+
+  class DrawOptionsBox {
+    Gtk::Grid grid_move
+    Gtk::Grid grid_zoom
+    Gtk::Grid grid_list_obj
+  }
+
+  note right of DrawOptionsBox
+    This is a model controller
+  end note
+
+  note right of Viewport
+    This is the model
+  end note
+
   AddObjectWindow <|-- Gtk::Window
   AddObjectWindow *-- DrawOptionsBox  : draw_options_box
 
-  Viewport <|-- Gtk::DrawingArea
-  Viewport *-- Viewwindow
-  Viewport *-- DisplayFile
+  Viewport   <|-- Gtk::DrawingArea
+  Viewport   *-- Viewwindow
+  Viewport   *-- DisplayFile
+
+  class Viewport {
+    float Xwmin
+    float Ywmin
+    float Xwmax
+    float Ywmax
+
+    void zoom_in (float scale = 1.5)
+    void zoom_out(float scale = 1.5)
+
+    void move_up    (int length = 10)
+    void move_down  (int length = 10)
+    void move_left  (int length = 10)
+    void move_right (int length = 10)
+  }
+
+  note right of AddObjectWindow
+    This is a model controller
+  end note
 
   class AddObjectWindow {
     Gtk::Grid              point_grid
