@@ -24,24 +24,38 @@ public:
   void update_list_object();
 
 protected:
-  MainWindow* mainWindow;
+  MainWindow*       mainWindow;
+  AddObjectWindow*  add_object_window;
 
-  Gtk::Button button_add_object, button_move_up, button_move_down,
-        button_move_left, button_move_right, button_zoom_in,
-        button_zoom_out,button_delete_obj;
-
-  Gtk::Grid grid_move, grid_zoom, grid_list_obj;
-  AddObjectWindow* add_object_window;
-  Gtk::Entry entry_move_length, entry_zoom_scale;
   Gtk::ComboBoxText objects_list;
 
-  void on_button_add_object();
+  Gtk::Grid grid_move;
+  Gtk::Grid grid_zoom;
+  Gtk::Grid grid_list_obj;
+
+  Gtk::Entry entry_move_length;
+  Gtk::Entry entry_zoom_scale;
+
+  Gtk::Button button_move_up;
+  Gtk::Button button_move_down;
+  Gtk::Button button_move_left;
+  Gtk::Button button_move_right;
+
+  Gtk::Button button_zoom_in;
+  Gtk::Button button_zoom_out;
+
+  Gtk::Button button_add_object;
+  Gtk::Button button_delete_obj;
+
   void on_button_move_up();
   void on_button_move_down();
   void on_button_move_left();
   void on_button_move_right();
+
   void on_button_zoom_in();
   void on_button_zoom_out();
+
+  void on_button_add_object();
   void on_button_delete_object();
 };
 
