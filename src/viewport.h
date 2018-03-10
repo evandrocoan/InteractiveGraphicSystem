@@ -16,11 +16,11 @@ public:
   Viewport();
   virtual ~Viewport();
 
-  Viewwindow * getViewWindow();
+  Viewwindow * getViewwindow();
   DisplayFile* getDisplayFile();
 
 protected:
-  Viewwindow* viewWindow = NULL;
+  Viewwindow* viewwindow = NULL;
 
   DisplayFile displayFile;
   Gtk::Allocation* allocation;
@@ -34,7 +34,6 @@ protected:
   bool       on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
   void       updateViewport(Gtk::Allocation allocation);
   Coordinate convertCoordinateFromWindow(Coordinate cord);
-
 };
 
 #endif

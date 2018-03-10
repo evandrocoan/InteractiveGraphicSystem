@@ -92,7 +92,7 @@ void DrawOptionsBox::on_button_move_up()
   }
   else
   {
-    this->mainWindow->getViewport()->getViewWindow()->move_up(move_length);
+    this->mainWindow->getViewport()->getViewwindow()->move_up(move_length);
     this->mainWindow->getViewport()->queue_draw();
   }
 }
@@ -107,7 +107,7 @@ void DrawOptionsBox::on_button_move_down()
   }
   else
   {
-    this->mainWindow->getViewport()->getViewWindow()->move_down(move_length);
+    this->mainWindow->getViewport()->getViewwindow()->move_down(move_length);
     this->mainWindow->getViewport()->queue_draw();
   }
 }
@@ -122,7 +122,7 @@ void DrawOptionsBox::on_button_move_left()
   }
   else
   {
-    this->mainWindow->getViewport()->getViewWindow()->move_left(move_length);
+    this->mainWindow->getViewport()->getViewwindow()->move_left(move_length);
     this->mainWindow->getViewport()->queue_draw();
   }
 }
@@ -137,7 +137,7 @@ void DrawOptionsBox::on_button_move_right()
   }
   else
   {
-    this->mainWindow->getViewport()->getViewWindow()->move_right(move_length);
+    this->mainWindow->getViewport()->getViewwindow()->move_right(move_length);
     this->mainWindow->getViewport()->queue_draw();
   }
 }
@@ -156,7 +156,7 @@ void DrawOptionsBox::on_button_zoom_in()
   }
   else
   {
-    this->mainWindow->getViewport()->getViewWindow()->zoom_in(zoom_scale);
+    this->mainWindow->getViewport()->getViewwindow()->zoom_in(zoom_scale);
     this->mainWindow->getViewport()->queue_draw();
   }
 }
@@ -175,7 +175,7 @@ void DrawOptionsBox::on_button_zoom_out()
   }
   else
   {
-    this->mainWindow->getViewport()->getViewWindow()->zoom_out(zoom_scale);
+    this->mainWindow->getViewport()->getViewwindow()->zoom_out(zoom_scale);
     this->mainWindow->getViewport()->queue_draw();
   }
 }
