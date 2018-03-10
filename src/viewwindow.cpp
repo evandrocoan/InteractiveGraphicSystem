@@ -1,6 +1,6 @@
 #include "viewwindow.h"
 
-ViewWindow::ViewWindow(int Xwmin, int Ywmin, int Xwmax, int Ywmax)
+Viewwindow::Viewwindow(int Xwmin, int Ywmin, int Xwmax, int Ywmax)
     : Xwmin(Xwmin),
       Ywmin(Ywmin),
       Xwmax(Xwmax),
@@ -8,7 +8,7 @@ ViewWindow::ViewWindow(int Xwmin, int Ywmin, int Xwmax, int Ywmax)
 {
 }
 
-void ViewWindow::zoom_in(float scale)
+void Viewwindow::zoom_in(float scale)
 {
   if (scale < 1)
   {
@@ -38,7 +38,7 @@ void ViewWindow::zoom_in(float scale)
   }
 }
 
-void ViewWindow::zoom_out(float scale)
+void Viewwindow::zoom_out(float scale)
 {
   if (scale < 1)
   {
@@ -68,70 +68,70 @@ void ViewWindow::zoom_out(float scale)
   }
 }
 
-void ViewWindow::move_up(int length)
+void Viewwindow::move_up(int length)
 {
   this->Ywmin += length;
   this->Ywmax += length;
 }
 
-void ViewWindow::move_down(int length)
+void Viewwindow::move_down(int length)
 {
   this->Ywmin -= length;
   this->Ywmax -= length;
 }
 
-void ViewWindow::move_left(int length)
+void Viewwindow::move_left(int length)
 {
   this->Xwmin -= length;
   this->Xwmax -= length;
 }
 
-void ViewWindow::move_right(int length)
+void Viewwindow::move_right(int length)
 {
   this->Xwmin += length;
   this->Xwmax += length;
 }
 
-float ViewWindow::getXwmin()
+float Viewwindow::getXwmin()
 {
   return this->Xwmin;
 }
 
-float ViewWindow::getYwmin()
+float Viewwindow::getYwmin()
 {
   return this->Ywmin;
 }
 
-float ViewWindow::getXwmax()
+float Viewwindow::getXwmax()
 {
   return this->Xwmax;
 }
 
-float ViewWindow::getYwmax()
+float Viewwindow::getYwmax()
 {
   return this->Ywmax;
 }
 
-void ViewWindow::setXwmin(float Xwmin)
+void Viewwindow::setXwmin(float Xwmin)
 {
   this->Xwmin = Xwmin;
 }
 
-void ViewWindow::setYwmin(float Ywmin)
+void Viewwindow::setYwmin(float Ywmin)
 {
   this->Ywmin = Ywmin;
 }
 
-void ViewWindow::setXwmax(float Xwmax)
+void Viewwindow::setXwmax(float Xwmax)
 {
   this->Xwmax = Xwmax;
 }
 
-void ViewWindow::setYwmax(float Ywmax)
+void Viewwindow::setYwmax(float Ywmax)
 {
   this->Ywmax = Ywmax;
 }
 
-ViewWindow::~ViewWindow()
+Viewwindow::~Viewwindow()
 {
 }
