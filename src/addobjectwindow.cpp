@@ -53,7 +53,7 @@ AddObjectWindow::AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOpt
   m_vbox.pack_start(m_notebook);
   m_vbox.pack_start(button_close, Gtk::PACK_SHRINK);
 
-  //Add point grid
+  LOG(4, "Add point grid");
   point_grid.set_column_homogeneous(true);
   point_grid.set_row_spacing(10);
   point_name_field.set_placeholder_text("Name");
@@ -64,7 +64,7 @@ AddObjectWindow::AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOpt
   point_grid.attach(point_y_field, 2, 3, 1, 1);
   point_grid.attach(button_save_point, 1, 4, 2, 1);
 
-  //Add line grid
+  LOG(4, "Add line grid");
   line_grid.set_column_homogeneous(true);
   line_grid.set_row_spacing(10);
   line_name_field.set_placeholder_text("Name");
@@ -79,7 +79,7 @@ AddObjectWindow::AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOpt
   line_grid.attach(line_y2_field, 4, 3, 1, 1);
   line_grid.attach(button_save_line, 1, 4, 4, 1);
 
-  //Add polygon grid
+  LOG(4, "Add polygon grid");
   polygn_grid.set_column_homogeneous(true);
   polygn_grid.set_row_spacing(10);
   polygon_name_field.set_placeholder_text("Name");
@@ -102,7 +102,7 @@ AddObjectWindow::AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOpt
   m_notebook.append_page(line_grid, "Line");
   m_notebook.append_page(polygn_grid, "Polygon");
 
-  show_all_children();
+  this->show_all_children();
 }
 
 AddObjectWindow::~AddObjectWindow()

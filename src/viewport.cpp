@@ -9,27 +9,35 @@ Viewport::Viewport() :
 {
 }
 
-bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
+/**
+ * [Viewport::on_draw description]
+ *
+ * @param `cairo_context` Context is the main class used to draw in cairomm. It contains the current
+ *     state of the rendering device, including coordinates of yet to be drawn shapes.
+ *
+ * @return               [description]
+ */
+bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 {
   this->updateViewport(this->get_allocation());
 
   LOG(8, "Paint white background");
-  cr->set_source_rgb(1, 1, 1);
-  cr->paint();
+  cairo_context->set_source_rgb(1, 1, 1);
+  cairo_context->paint();
 
   LOG(8, "Draw x and y axis");
-  cr->set_line_width(1);
-  cr->set_source_rgb(0.741176, 0.717647, 0.419608);
+  cairo_context->set_line_width(1);
+  cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
   Coordinate originOnWindow = convertCoordinateFromWindow(Coordinate(0, 0));
 
-  cr->move_to(Xvpmin, originOnWindow.gety());
-  cr->line_to(Xvpmax, originOnWindow.gety());
-  cr->move_to(originOnWindow.getx(), Yvpmin);
-  cr->line_to(originOnWindow.getx(), Yvpmax);
-  cr->stroke();
+  cairo_context->move_to(Xvpmin, originOnWindow.gety());
+  cairo_context->line_to(Xvpmax, originOnWindow.gety());
+  cairo_context->move_to(originOnWindow.getx(), Yvpmin);
+  cairo_context->line_to(originOnWindow.getx(), Yvpmax);
+  cairo_context->stroke();
 
   LOG(8, "Set color's objects as black:");
-  cr->set_source_rgb(0, 0, 0);
+  cairo_context->set_source_rgb(0, 0, 0);
 
   LOG(8, "Draw displayfile objects");
   std::list<DrawableObject*> objects = this->getDisplayFile()->getObjects();
@@ -39,12 +47,12 @@ bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     list<Coordinate*> objectCoordinates = (*it_obj)->getCoordinates();
 
     Coordinate firstCordConverted = this->convertCoordinateFromWindow(**(objectCoordinates.begin()));
-    cr->move_to(firstCordConverted.getx(),firstCordConverted.gety());
+    cairo_context->move_to(firstCordConverted.getx(),firstCordConverted.gety());
 
     LOG(8, "Point case, objectCoordinates: %d", objectCoordinates.size());
     if (objectCoordinates.size() == 1)
     {
-      cr->line_to(firstCordConverted.getx()+1,firstCordConverted.gety()+1);
+      cairo_context->line_to(firstCordConverted.getx()+1,firstCordConverted.gety()+1);
     }
     else
     {
@@ -52,14 +60,14 @@ bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
               it_cord != objectCoordinates.end(); it_cord++)
       {
         Coordinate cordConverted = this->convertCoordinateFromWindow(**it_cord);
-        cr->line_to(cordConverted.getx(),cordConverted.gety());
+        cairo_context->line_to(cordConverted.getx(),cordConverted.gety());
       }
 
-      cr->line_to(firstCordConverted.getx(),firstCordConverted.gety());
+      cairo_context->line_to(firstCordConverted.getx(),firstCordConverted.gety());
     }
   }
 
-  cr->stroke();
+  cairo_context->stroke();
   return true;
 }
 
