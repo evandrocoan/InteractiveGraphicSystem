@@ -47,27 +47,26 @@ protected:
   Gtk::Button button_save_point;
   Gtk::Button button_add_coordenate;
 
+  Gtk::Entry point_name_field;
   Gtk::Entry point_x_field;
   Gtk::Entry point_y_field;
-  Gtk::Entry point_name_field;
 
+  Gtk::Entry line_name_field;
   Gtk::Entry line_x1_field;
   Gtk::Entry line_y1_field;
   Gtk::Entry line_y2_field;
   Gtk::Entry line_x2_field;
-  Gtk::Entry line_name_field;
+
+  Gtk::Entry polygon_name_field;
+  Gtk::Entry wire_y_field;
+  Gtk::Entry wire_x_field;
 
   Gtk::Label info_label;
   Gtk::Label point_x_label;
   Gtk::Label point_y_label;
 
-  Gtk::Entry wire_y_field;
-  Gtk::Entry polygon_x_field;
-  Gtk::Entry polygon_name_field;
-
   Gtk::Label line_x1_label;
   Gtk::Label line_y1_label;
-
   Gtk::Label line_x2_label;
   Gtk::Label line_y2_label;
 
