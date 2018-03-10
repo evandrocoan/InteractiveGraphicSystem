@@ -103,8 +103,9 @@ g++ -O0 -g  -o binaries/main objects/addobjectwindow.o objects/displayfile.o obj
 
 
 Links de Docmentação do GTKmm:
-- https://developer.gnome.org/gtkmm/stable/group__gtkmmEnums.html#gga83727a1b6fed51566dfd5c8e58890dbaa7b88e2329efd6367522358da92a3a736
+- https://developer.gnome.org/gtkmm-tutorial/stable/
 - https://developer.gnome.org/gtkmm/stable/group__Widgets.html
+- https://developer.gnome.org/gtkmm/stable/group__gtkmmEnums.html#gga83727a1b6fed51566dfd5c8e58890dbaa7b88e2329efd6367522358da92a3a736
 
 
 ### Download GTK Sources

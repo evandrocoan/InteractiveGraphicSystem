@@ -1,7 +1,7 @@
 #include "viewport.h"
 
-Viewport::Viewport()
-    : viewWindow(new Viewwindow (0, 0, 0, 0)),
+Viewport::Viewport() :
+      viewwindow(new Viewwindow (0, 0, 0, 0)),
       Xvpmin(0),
       Yvpmin(0),
       Xvpmax(0),
@@ -11,7 +11,6 @@ Viewport::Viewport()
 
 bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
-  // resize viewwindow when viewport is resized
   this->updateViewport(this->get_allocation());
 
   // paint white background
@@ -64,74 +63,90 @@ bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
   return true;
 }
 
-// transformada de viewport - Slide 2 de "02 - Conceitos Básicos"
+/**
+ * Transformada de viewport - Slide 2 de "02 - Conceitos Básicos"
+ *
+ * @param  cord [description]
+ * @return      [description]
+ */
 Coordinate Viewport::convertCoordinateFromWindow(Coordinate cord)
 {
   long int Xw = cord.getx();
   long int Xvp = (long int)(
-      (double)(Xw - this->viewWindow->getXwmin()) * ((double)(this->Xvpmax - this->Xvpmin) /
-          (double)(this->viewWindow->getXwmax() - this->viewWindow->getXwmin())
+      (double)(Xw - this->viewwindow->getXwmin()) * ((double)(this->Xvpmax - this->Xvpmin) /
+          (double)(this->viewwindow->getXwmax() - this->viewwindow->getXwmin())
       )
   );
 
   long int Yw = cord.gety();
   long int Yvp = (this->Yvpmax - this->Yvpmin) - (long int)(
-      (double)(Yw - this->viewWindow->getYwmin()) * (double)(this->Yvpmax - this->Yvpmin) /
-          (double)(this->viewWindow->getYwmax() - this->viewWindow->getYwmin())
+      (double)(Yw - this->viewwindow->getYwmin()) * (double)(this->Yvpmax - this->Yvpmin) /
+          (double)(this->viewwindow->getYwmax() - this->viewwindow->getYwmin())
   );
 
   return Coordinate(Xvp, Yvp);
 }
 
-Viewwindow * Viewport::getViewWindow()
-{
-  return this->viewWindow;
-}
-
-// NÃO ENTENDI A LÓGICA MATEMÁTICA
+/**
+ * Resize viewwindow when viewport is resized.
+ *
+ * Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of GdkRectangle.
+ *
+ * @param allocation is a structure holding the position and size of a rectangle. The intersection
+ *     of two rectangles can be computed with intersect(). To find the union of two rectangles use
+ *     join().
+ */
 void Viewport::updateViewport(Gtk::Allocation allocation)
 {
+  // NÃO ENTENDI A LÓGICA MATEMÁTICA
   if (this->Xvpmax != allocation.get_width() ||  this->Yvpmax != allocation.get_height())
   {
-    int widthDiff = allocation.get_width() - (this->Xvpmax - this->Xvpmin);
+    float xwmax;
+
+    int widthDiff  = allocation.get_width()  - (this->Xvpmax - this->Xvpmin);
     int heightDiff = allocation.get_height() - (this->Yvpmax - this->Yvpmin);
 
     if (this->Xvpmax != 0)
     {
-      this->viewWindow->setXwmax(
-          this->viewWindow->getXwmax() +
-              (float)(this->viewWindow->getXwmax() - this->viewWindow->getXwmin()) * (
-                  (float)widthDiff
-                            / (float)(this->Xvpmax - this->Xvpmin)
-              )
-      );
+      xwmax = this->viewwindow->getXwmax() +
+          (float)(this->viewwindow->getXwmax() - this->viewwindow->getXwmin()) * (
+              (float)widthDiff
+                  / (float)(this->Xvpmax - this->Xvpmin)
+          );
     }
     else
     {
-      this->viewWindow->setXwmax(widthDiff);
+      xwmax = (float)widthDiff;
     }
+
+    this->viewwindow->setXwmax( xwmax );
 
     if (this->Yvpmax != 0)
     {
-      this->viewWindow->setYwmin(
-          this->viewWindow->getYwmin() -
-              (float)(this->viewWindow->getYwmax() -
-                  this->viewWindow->getYwmin()) * ((float)heightDiff / (float)(this->Yvpmax - this->Yvpmin))
+      this->viewwindow->setYwmin(
+          this->viewwindow->getYwmin() -
+              (float)(this->viewwindow->getYwmax()
+                  - this->viewwindow->getYwmin()
+              ) * ((float)heightDiff / (float)(this->Yvpmax - this->Yvpmin))
       );
     }
     else
     {
-      this->viewWindow->setYwmax(heightDiff);
+      this->viewwindow->setYwmax((float)heightDiff);
     }
 
     this->Xvpmax += widthDiff;
     this->Yvpmax += heightDiff;
   }
-
 }
 
 Viewport::~Viewport()
 {
+}
+
+Viewwindow* Viewport::getViewwindow()
+{
+  return this->viewwindow;
 }
 
 DisplayFile* Viewport::getDisplayFile()
