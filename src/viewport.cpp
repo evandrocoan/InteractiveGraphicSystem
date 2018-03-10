@@ -13,11 +13,11 @@ bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
   this->updateViewport(this->get_allocation());
 
-  // paint white background
+  LOG(8, "Paint white background");
   cr->set_source_rgb(1, 1, 1);
   cr->paint();
 
-  // draw x and y axis
+  LOG(8, "Draw x and y axis");
   cr->set_line_width(1);
   cr->set_source_rgb(0.741176, 0.717647, 0.419608);
   Coordinate originOnWindow = convertCoordinateFromWindow(Coordinate(0, 0));
@@ -28,10 +28,10 @@ bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
   cr->line_to(originOnWindow.getx(), Yvpmax);
   cr->stroke();
 
-  // set color's objects as black:
+  LOG(8, "Set color's objects as black:");
   cr->set_source_rgb(0, 0, 0);
 
-  // draw displayfile objects
+  LOG(8, "Draw displayfile objects");
   std::list<DrawableObject*> objects = this->getDisplayFile()->getObjects();
 
   for (std::list<DrawableObject*>::iterator it_obj = objects.begin(); it_obj != objects.end(); it_obj++)
@@ -41,7 +41,7 @@ bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     Coordinate firstCordConverted = this->convertCoordinateFromWindow(**(objectCoordinates.begin()));
     cr->move_to(firstCordConverted.getx(),firstCordConverted.gety());
 
-    // point case
+    LOG(8, "Point case, objectCoordinates: %d", objectCoordinates.size());
     if (objectCoordinates.size() == 1)
     {
       cr->line_to(firstCordConverted.getx()+1,firstCordConverted.gety()+1);
@@ -108,8 +108,8 @@ void Viewport::updateViewport(Gtk::Allocation allocation)
 
     if (this->Xvpmax != 0)
     {
-      xwmax = this->viewwindow->getXwmax() +
-          (float)(this->viewwindow->getXwmax() - this->viewwindow->getXwmin()) * (
+      xwmax = this->viewwindow->getXwmax()
+          + (float)(this->viewwindow->getXwmax() - this->viewwindow->getXwmin()) * (
               (float)widthDiff
                   / (float)(this->Xvpmax - this->Xvpmin)
           );
@@ -124,14 +124,15 @@ void Viewport::updateViewport(Gtk::Allocation allocation)
     if (this->Yvpmax != 0)
     {
       this->viewwindow->setYwmin(
-          this->viewwindow->getYwmin() -
-              (float)(this->viewwindow->getYwmax()
+          this->viewwindow->getYwmin()
+              - (float)(this->viewwindow->getYwmax()
                   - this->viewwindow->getYwmin()
               ) * ((float)heightDiff / (float)(this->Yvpmax - this->Yvpmin))
       );
     }
     else
     {
+      LOG(8, "If we exchange this to `setYwmin()` our world becomes up-side-down");
       this->viewwindow->setYwmax((float)heightDiff);
     }
 
