@@ -1,10 +1,12 @@
 #ifndef GTKMM_APP_VIEWPORT
 #define GTKMM_APP_VIEWPORT
 
+#include <list>
+
 #include <gtkmm/drawingarea.h>
 #include <gdkmm/rgba.h>
 #include <cairomm/context.h>
-#include <list>
+
 #include "viewwindow.h"
 #include "displayfile.h"
 #include "coordinate.h"
@@ -16,14 +18,12 @@ public:
   Viewport();
   virtual ~Viewport();
 
-  Viewwindow * getViewwindow();
+  Viewwindow*  getViewwindow();
   DisplayFile* getDisplayFile();
 
 protected:
-  Viewwindow* viewwindow = NULL;
-
+  Viewwindow  viewwindow;
   DisplayFile displayFile;
-  Gtk::Allocation* allocation;
 
   int Xvpmin;
   int Yvpmin;
