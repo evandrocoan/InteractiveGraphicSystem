@@ -5,9 +5,10 @@ DrawOptionsBox::DrawOptionsBox(const Glib::ustring& title,
                                gint spacing,
                                Gtk::ButtonBoxStyle layout,
                                MainWindow* mainWindow
-                              )
-    : Gtk::Frame(title),
+                              ) :
+      Gtk::Frame(title),
       mainWindow(mainWindow),
+      objects_list(),
       button_add_object("Add Object"),
       button_move_up("up"),
       button_move_down("down"),
@@ -17,7 +18,6 @@ DrawOptionsBox::DrawOptionsBox(const Glib::ustring& title,
       button_zoom_out("-"),
       entry_move_length(),
       entry_zoom_scale(),
-      objects_list(),
       button_delete_obj("Delete Object")
 {
   LOG(2, "Entering...");
@@ -200,6 +200,9 @@ void DrawOptionsBox::update_list_object()
   }
 }
 
+/**
+ * This is leaking memory by creating a pointer to `DrawOptionsBox` every call.
+ */
 void DrawOptionsBox::on_button_add_object()
 {
   LOG(2, "Entering...");
