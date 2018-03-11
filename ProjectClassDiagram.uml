@@ -3,14 +3,11 @@
   skinparam defaultFontName Consolas
 
   AddObjectWindow <|-- Gtk::Window
-  AddObjectWindow *-- DrawOptionsBox  : draw_options_box
-
-  DrawOptionsBox  <|-- Gtk::Frame
-  DrawOptionsBox  *-- MainWindow      : mainWindow
-  DrawOptionsBox  *-- AddObjectWindow : add_object_window
+  AddObjectWindow  *-- Viewport        : viewport
 
   MainWindow      <|-- Gtk::Window
-  MainWindow      *--  Viewport       : viewport
+  MainWindow       *-- Viewport        : viewport
+  MainWindow       *-- AddObjectWindow : addObjectWindow
 
   Viewport   <|-- Gtk::DrawingArea
   Viewport   *-- Viewwindow           : viewwindow
@@ -24,16 +21,10 @@
   }
 
   class DisplayFile {
-    std::map< string, DrawableObject* > objectsMap
+    std::map< string, DrawableObject* >
     void addObject( DrawableObject* )
     void removeObject( DrawableObject* )
     void removeObjectByName( string )
-  }
-
-  class DrawOptionsBox {
-    Gtk::Grid grid_move
-    Gtk::Grid grid_zoom
-    Gtk::Grid grid_list_obj
   }
 
   class MainWindow {
@@ -41,7 +32,6 @@
     Gtk::Box   left_box
     Gtk::Frame left_frame
     Gtk::Frame right_frame
-    Viewport*  getViewport()
   }
 
   class Viewport {
@@ -53,7 +43,7 @@
     DisplayFile      displayFile
     Gtk::Allocation* allocation
 
-    bool       on_draw(const Cairo::RefPtr<Cairo::Context>&) override
+    bool       on_draw(const Cairo::Context>&)
     void       updateViewport(Gtk::Allocation)
     Coordinate convertCoordinateFromWindow(Coordinate)
   }
@@ -72,21 +62,5 @@
     void move_left  (int length = 10)
     void move_right (int length = 10)
   }
-
-  note right of AddObjectWindow
-    This is a model controller
-  end note
-
-  note right of DrawOptionsBox
-    This is a model controller
-  end note
-
-  note right of MainWindow
-    This is the model viewer and it is an observer
-  end note
-
-  note right of Viewport
-    This is the model
-  end note
 
 @enduml

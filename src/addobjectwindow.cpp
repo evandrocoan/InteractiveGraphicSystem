@@ -1,41 +1,39 @@
 #include "addobjectwindow.h"
-#include "drawoptionsbox.h"
 
-
-AddObjectWindow::AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOptionsBox)
-    : mainWindow(mainWindow),
+AddObjectWindow::AddObjectWindow(Viewport* viewport) :
+      m_notebook(),
       m_vbox(Gtk::ORIENTATION_VERTICAL),
-      drawOptionsBox(drawOptionsBox),
-      button_add_coordenate("Add Coordenate"),
-      button_save_point("Save Point"),
-      button_save_line("Save Line"),
-      button_save_wire("Save Polygon"),
-      button_close("Close"),
+      viewport(viewport),
+      point_name_field(),
+      info_label("Insert a Coordinate :"),
       point_x_label("Coordinate X : "),
       point_y_label("Coordinate Y : "),
+      button_save_point("Save Point"),
+      point_x_field(),
+      point_y_field(),
+      line_name_field(),
       line_x1_label("Coordinate X1 : "),
       line_y1_label("Coordinate Y1 : "),
       line_x2_label("Coordinate X2 : "),
       line_y2_label("Coordinate Y2 : "),
-      polygon_x_label("Coordinate X : "),
-      polygon_y_label("Coordinate Y : "),
-      info_label("Insert a Coordinate :"),
-      point_name_field(),
-      point_x_field(),
-      point_y_field(),
-      line_name_field(),
+      button_save_line("Save Line"),
       line_x1_field(),
       line_x2_field(),
-      polygon_name_field(),
       line_y1_field(),
       line_y2_field(),
+      polygon_name_field(),
+      polygon_x_label("Coordinate X : "),
+      polygon_y_label("Coordinate Y : "),
+      button_save_wire("Save Polygon"),
+      button_add_coordenate("Add Coordenate"),
       wire_x_field(),
-      wire_y_field()
+      wire_y_field(),
+      button_close("Close")
 {
   LOG(2, "Entering...");
-  set_title("Add Object");
-  set_border_width(12);
-  add(m_vbox);
+  this->set_title("Add Object");
+  this->set_border_width(12);
+  this->add(m_vbox);
 
   point_name_field.set_text("point1");
   point_x_field.set_text("50");
@@ -101,7 +99,6 @@ AddObjectWindow::AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOpt
   m_notebook.append_page(point_grid, "Point");
   m_notebook.append_page(line_grid, "Line");
   m_notebook.append_page(polygn_grid, "Polygon");
-
   this->show_all_children();
 }
 
@@ -129,9 +126,9 @@ void AddObjectWindow::on_button_save_point()
   Coordinate *point_cord = new Coordinate(x_cord, y_cord);
   Point *point = new Point(name, point_cord);
 
-  this->mainWindow->getViewport()->getDisplayFile()->addObject(point);
-  this->mainWindow->getViewport()->queue_draw();
-  this->_close_updating_list();
+  this->viewport->getDisplayFile()->addObject(point);
+  this->viewport->queue_draw();
+  this->close();
 }
 
 void AddObjectWindow::on_button_save_line()
@@ -160,9 +157,9 @@ void AddObjectWindow::on_button_save_line()
 
   Line *line = new Line(name, point_cord1, point_cord2);
 
-  this->mainWindow->getViewport()->getDisplayFile()->addObject(line);
-  this->mainWindow->getViewport()->queue_draw();
-  this->_close_updating_list();
+  this->viewport->getDisplayFile()->addObject(line);
+  this->viewport->queue_draw();
+  this->close();
 }
 
 void AddObjectWindow::on_button_save_polygon()
@@ -179,15 +176,15 @@ void AddObjectWindow::on_button_save_polygon()
     }
 
     Polygon *polygon = new Polygon(name, polygon_cord_list);
-    this->mainWindow->getViewport()->getDisplayFile()->addObject(polygon);
-    this->mainWindow->getViewport()->queue_draw();
+    this->viewport->getDisplayFile()->addObject(polygon);
+    this->viewport->queue_draw();
 
     while(!polygon_cord_list.empty())
     {
       polygon_cord_list.pop_back();
     }
 
-    this->_close_updating_list();
+    this->close();
   }
   else
   {
@@ -220,8 +217,3 @@ void AddObjectWindow::on_button_close()
   this->close();
 }
 
-void AddObjectWindow::_close_updating_list()
-{
-  drawOptionsBox->update_list_object();
-  this->close();
-}

@@ -1,9 +1,9 @@
 #ifndef GTKMM_APP_ADD_OBJECT_WINDOW
 #define GTKMM_APP_ADD_OBJECT_WINDOW
 
-/* Include any library as need to use other's components such as
- * gtkmm/button or gtkmm/frame.
- */
+#include <string>
+#include <iostream>
+
 #include <gtkmm/window.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/button.h>
@@ -11,28 +11,24 @@
 #include <gtkmm/label.h>
 #include <gtkmm/notebook.h>
 #include <gtkmm/box.h>
-#include <string>
-#include <iostream>
+
 #include "point.h"
 #include "line.h"
 #include "polygon.h"
-#include "mainwindow.h"
+#include "viewport.h"
 #include "coordinate.h"
-
-class DrawOptionsBox;
 
 class AddObjectWindow : public Gtk::Window
 {
 public:
-  AddObjectWindow(MainWindow*, DrawOptionsBox*);
+  AddObjectWindow(Viewport* viewport);
   ~AddObjectWindow();
 
-protected:
+private:
+  Viewport* viewport;
+
   Gtk::Box       m_vbox;
   Gtk::Notebook  m_notebook;
-
-  MainWindow*     mainWindow;
-  DrawOptionsBox* drawOptionsBox;
 
   string                 new_object_name;
   std::list<Coordinate*> polygon_cord_list;
