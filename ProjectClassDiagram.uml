@@ -2,12 +2,39 @@
 @startuml
   skinparam defaultFontName Consolas
 
-  MainWindow      <|-- Gtk::Window
-  MainWindow      *--  Viewport : viewport
+  AddObjectWindow <|-- Gtk::Window
+  AddObjectWindow *-- DrawOptionsBox  : draw_options_box
 
   DrawOptionsBox  <|-- Gtk::Frame
   DrawOptionsBox  *-- MainWindow      : mainWindow
   DrawOptionsBox  *-- AddObjectWindow : add_object_window
+
+  MainWindow      <|-- Gtk::Window
+  MainWindow      *--  Viewport       : viewport
+
+  Viewport   <|-- Gtk::DrawingArea
+  Viewport   *-- Viewwindow           : viewwindow
+  Viewport   *-- DisplayFile          : displayFile
+
+  class AddObjectWindow {
+    Gtk::Grid              point_grid
+    Gtk::Grid              line_grid
+    Gtk::Grid              polygn_grid
+    std::list<Coordinate*> polygon_cord_list
+  }
+
+  class DisplayFile {
+    std::map< string, DrawableObject* > objectsMap
+    void addObject( DrawableObject* )
+    void removeObject( DrawableObject* )
+    void removeObjectByName( string )
+  }
+
+  class DrawOptionsBox {
+    Gtk::Grid grid_move
+    Gtk::Grid grid_zoom
+    Gtk::Grid grid_list_obj
+  }
 
   class MainWindow {
     Gtk::Box   main_box
@@ -17,32 +44,21 @@
     Viewport*  getViewport()
   }
 
-  note right of MainWindow
-    This is the model viewer
-  end note
+  class Viewport {
+    int Xvpmin
+    int Yvpmin
+    int Xvpmax
+    int Yvpmax
 
-  class DrawOptionsBox {
-    Gtk::Grid grid_move
-    Gtk::Grid grid_zoom
-    Gtk::Grid grid_list_obj
+    DisplayFile      displayFile
+    Gtk::Allocation* allocation
+
+    bool       on_draw(const Cairo::RefPtr<Cairo::Context>&) override
+    void       updateViewport(Gtk::Allocation)
+    Coordinate convertCoordinateFromWindow(Coordinate)
   }
 
-  note right of DrawOptionsBox
-    This is a model controller
-  end note
-
-  note right of Viewport
-    This is the model
-  end note
-
-  AddObjectWindow <|-- Gtk::Window
-  AddObjectWindow *-- DrawOptionsBox  : draw_options_box
-
-  Viewport   <|-- Gtk::DrawingArea
-  Viewport   *-- Viewwindow
-  Viewport   *-- DisplayFile
-
-  class Viewport {
+  class Viewwindow {
     float Xwmin
     float Ywmin
     float Xwmax
@@ -61,18 +77,16 @@
     This is a model controller
   end note
 
-  class AddObjectWindow {
-    Gtk::Grid              point_grid
-    Gtk::Grid              line_grid
-    Gtk::Grid              polygn_grid
-    std::list<Coordinate*> polygon_cord_list
-  }
+  note right of DrawOptionsBox
+    This is a model controller
+  end note
 
-  class DisplayFile {
-    std::map< string, DrawableObject* > objectsMap
-    void addObject( DrawableObject* )
-    void removeObject( DrawableObject* )
-    void removeObjectByName( string )
-  }
+  note right of MainWindow
+    This is the model viewer and it is an observer
+  end note
+
+  note right of Viewport
+    This is the model
+  end note
 
 @enduml
