@@ -59,8 +59,8 @@ bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
       for (std::list<Coordinate*>::iterator it_cord = objectCoordinates.begin();
               it_cord != objectCoordinates.end(); it_cord++)
       {
-        Coordinate cordConverted = this->convertCoordinateFromWindow(**it_cord);
-        cairo_context->line_to(cordConverted.getx(),cordConverted.gety());
+        Coordinate coordinateConverted = this->convertCoordinateFromWindow(**it_cord);
+        cairo_context->line_to(coordinateConverted.getx(),coordinateConverted.gety());
       }
 
       cairo_context->line_to(firstCordConverted.getx(),firstCordConverted.gety());
@@ -96,13 +96,28 @@ Coordinate Viewport::convertCoordinateFromWindow(Coordinate cord)
 }
 
 /**
- * Resize viewwindow when viewport is resized.
+ * Resize `viewwindow` when `viewport` is resized:
+ * http://www.di.ubi.pt/~agomes/cg/teoricas/04e-windows.pdf
  *
- * Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of GdkRectangle.
+ * A strategy of keeping proportions automatically between window and viewport.
  *
- * @param allocation is a structure holding the position and size of a rectangle. The intersection
+ * Window-Viewport Mapping, important conclusion: As the world window increases in size the image in
+ * viewport decreases in size and vice-versa.
+ *
+ * The user may enlarge or reduce the size of a viewport with w pixels wide and h pixels high by
+ * pulling away the right-bottom of its interface window.
+ *
+ * To avoid distortion, we must change the size of the world window accordingly.
+ *
+ * For that, we assume that the initial world window is a square with side length L.
+ *
+ * A possible solution is to change the world window whenever the viewport of
+ * the interface window were changed.
+ *
+ * @param `allocation` is a structure holding the position and size of a rectangle. The intersection
  *     of two rectangles can be computed with intersect(). To find the union of two rectangles use
- *     join().
+ *     join(). Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of
+       GdkRectangle.
  */
 void Viewport::updateViewport(Gtk::Allocation allocation)
 {

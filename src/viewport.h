@@ -27,13 +27,12 @@ protected:
 
   int Xvpmin;
   int Yvpmin;
-
   int Xvpmax;
   int Yvpmax;
 
-  bool       on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
-  void       updateViewport(Gtk::Allocation allocation);
-  Coordinate convertCoordinateFromWindow(Coordinate cord);
+  bool       on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
+  void       updateViewport(Gtk::Allocation);
+  Coordinate convertCoordinateFromWindow(Coordinate);
 };
 
 #endif

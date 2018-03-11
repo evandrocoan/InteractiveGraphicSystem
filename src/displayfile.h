@@ -6,6 +6,10 @@
 #include <string>
 #include "drawableobject.h"
 
+/**
+ * `Random Scan Display` motivou o DisplayFile: Lista de todos os objetos constantemente
+ * redesenhados na tela.
+ */
 class DisplayFile
 {
 public:
