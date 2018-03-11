@@ -24,15 +24,15 @@ class DrawOptionsBox;
 class AddObjectWindow : public Gtk::Window
 {
 public:
-  AddObjectWindow(MainWindow* mainWindow, DrawOptionsBox* drawOptionsBox);
+  AddObjectWindow(MainWindow*, DrawOptionsBox*);
   ~AddObjectWindow();
 
 protected:
+  Gtk::Box       m_vbox;
+  Gtk::Notebook  m_notebook;
+
   MainWindow*     mainWindow;
   DrawOptionsBox* drawOptionsBox;
-
-  Gtk::Box      m_vbox;
-  Gtk::Notebook m_notebook;
 
   string                 new_object_name;
   std::list<Coordinate*> polygon_cord_list;
