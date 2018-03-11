@@ -1,7 +1,8 @@
 #include "viewport.h"
 
 Viewport::Viewport() :
-      viewwindow(new Viewwindow (0, 0, 0, 0)),
+      viewwindow(0, 0, 0, 0),
+      displayFile(),
       Xvpmin(0),
       Yvpmin(0),
       Xvpmax(0),
@@ -81,15 +82,15 @@ Coordinate Viewport::convertCoordinateFromWindow(Coordinate cord)
 {
   long int Xw = cord.getx();
   long int Xvp = (long int)(
-      (double)(Xw - this->viewwindow->getXwmin()) * ((double)(this->Xvpmax - this->Xvpmin) /
-          (double)(this->viewwindow->getXwmax() - this->viewwindow->getXwmin())
+      (double)(Xw - this->viewwindow.getXwmin()) * ((double)(this->Xvpmax - this->Xvpmin) /
+          (double)(this->viewwindow.getXwmax() - this->viewwindow.getXwmin())
       )
   );
 
   long int Yw = cord.gety();
   long int Yvp = (this->Yvpmax - this->Yvpmin) - (long int)(
-      (double)(Yw - this->viewwindow->getYwmin()) * (double)(this->Yvpmax - this->Yvpmin) /
-          (double)(this->viewwindow->getYwmax() - this->viewwindow->getYwmin())
+      (double)(Yw - this->viewwindow.getYwmin()) * (double)(this->Yvpmax - this->Yvpmin) /
+          (double)(this->viewwindow.getYwmax() - this->viewwindow.getYwmin())
   );
 
   return Coordinate(Xvp, Yvp);
@@ -131,8 +132,8 @@ void Viewport::updateViewport(Gtk::Allocation allocation)
 
     if (this->Xvpmax != 0)
     {
-      xwmax = this->viewwindow->getXwmax()
-          + (float)(this->viewwindow->getXwmax() - this->viewwindow->getXwmin()) * ( (float)widthDiff
+      xwmax = this->viewwindow.getXwmax()
+          + (float)(this->viewwindow.getXwmax() - this->viewwindow.getXwmin()) * ( (float)widthDiff
               / (float)(this->Xvpmax - this->Xvpmin)
           );
     }
@@ -141,21 +142,21 @@ void Viewport::updateViewport(Gtk::Allocation allocation)
       xwmax = (float)widthDiff;
     }
 
-    this->viewwindow->setXwmax( xwmax );
+    this->viewwindow.setXwmax( xwmax );
 
     if (this->Yvpmax != 0)
     {
-      this->viewwindow->setYwmin(
-          this->viewwindow->getYwmin()
-              - (float)(this->viewwindow->getYwmax()
-                  - this->viewwindow->getYwmin()
+      this->viewwindow.setYwmin(
+          this->viewwindow.getYwmin()
+              - (float)(this->viewwindow.getYwmax()
+                  - this->viewwindow.getYwmin()
               ) * ((float)heightDiff / (float)(this->Yvpmax - this->Yvpmin))
       );
     }
     else
     {
       LOG(8, "If we exchange this to `setYwmin()` our world becomes up-side-down");
-      this->viewwindow->setYwmax((float)heightDiff);
+      this->viewwindow.setYwmax((float)heightDiff);
     }
 
     this->Xvpmax += widthDiff;
@@ -170,7 +171,7 @@ Viewport::~Viewport()
 
 Viewwindow* Viewport::getViewwindow()
 {
-  return this->viewwindow;
+  return &this->viewwindow;
 }
 
 DisplayFile* Viewport::getDisplayFile()
