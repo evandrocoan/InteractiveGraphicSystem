@@ -36,7 +36,7 @@ INCDEP := -I.
 ##
 ## Targets:
 ##   all               generate all assets
-##   run               open the compiled program (you need to build it first)
+##   run               build and open the compiled program
 ##   clean             remove the objects and dependencies directory
 ##   veryclean         same as `clean`, but also removes the `bin` folder
 ##
@@ -56,7 +56,7 @@ INCDEP := -I.
 # You want latexmk to *always* run, because make does not have all the info.
 # Also, include non-file targets in .PHONY so they are run regardless of any
 # file of the given name existing.
-.PHONY: run start_timer print_elapsed_time
+.PHONY: start_timer print_elapsed_time
 
 
 
@@ -82,14 +82,14 @@ all: start_timer resources $(TARGET) print_elapsed_time
 
 # Start counting the elapsed seconds to print them to the screen later
 start_timer:
-	@. ./shell_scripts/timer_calculator.sh "$(CURRENT_DIR)"
+	. ./shell_scripts/timer_calculator.sh "$(CURRENT_DIR)"
 
 # Calculate the elapsed seconds and print them to the screen
 print_elapsed_time:
-	@. ./shell_scripts/timer_calculator.sh; showTheElapsedSeconds
+	. ./shell_scripts/timer_calculator.sh; showTheElapsedSeconds
 
 
-run:
+run: all
 	./$(TARGETDIR)/$(TARGET)
 
 # Remake
