@@ -97,12 +97,12 @@ Coordinate ViewPort::convertCoordinateFromWindow(Coordinate cord)
 }
 
 /**
- * Resize `viewWindow` when `viewport` is resized:
+ * Resize `viewwindow` when `viewport` is resized:
  * http://www.di.ubi.pt/~agomes/cg/teoricas/04e-windows.pdf
  *
  * A strategy of keeping proportions automatically between window and viewport.
  *
- * Window-ViewPort Mapping, important conclusion: As the world window increases in size the image in
+ * Window-Viewport Mapping, important conclusion: As the world window increases in size the image in
  * viewport decreases in size and vice-versa.
  *
  * The user may enlarge or reduce the size of a viewport with w pixels wide and h pixels high by
