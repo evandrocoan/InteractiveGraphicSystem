@@ -87,6 +87,8 @@ void MainWindow::setupButtons(const Glib::ustring& title, gint spacing, Gtk::But
 
   buttons_frame->add(*buttonBox);
   left_box.pack_start(*Gtk::manage(buttons_frame), Gtk::PACK_EXPAND_WIDGET);
+
+  this->viewport.addObserver(this);
 }
 
 void MainWindow::connectButtons()
@@ -104,9 +106,14 @@ void MainWindow::connectButtons()
   this->button_delete_obj.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_delete_object));
 }
 
-void MainWindow::update_list_object(std::list<std::string> names)
+/**
+ * Called when the `Viewport` objects list is updated.
+ */
+void MainWindow::updateDropdownList()
 {
   LOG(2, "Entering...");
+  auto names = this->viewport.getDisplayFile()->getNamesList();
+
   LOG(4, "limpa a lista de objetos para reimprimi-la");
   this->objects_list.remove_all();
 
@@ -234,9 +241,7 @@ void MainWindow::on_button_delete_object()
 
   if(!(name.empty()))
   {
-    this->viewport.getDisplayFile()->removeObjectByName((string) name);
-    this->viewport.queue_draw();
-    this->update_list_object(this->viewport.getDisplayFile()->getNamesList());
+    this->viewport.removeObject((string)name);
   }
 }
 
