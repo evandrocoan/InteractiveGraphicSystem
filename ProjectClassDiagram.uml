@@ -3,7 +3,7 @@
   skinparam defaultFontName Consolas
 
   AddObjectWindow <|-- Gtk::Window
-  AddObjectWindow <|-- ViewportObserver
+  AddObjectWindow <|-- ViewPortObserver
   AddObjectWindow  *-- ViewPort        : viewPort
 
   Line               <|-- DrawableObject
@@ -18,9 +18,9 @@
   ViewPort   <|-right- Gtk::DrawingArea
   ViewPort    *-- ViewWindow           : viewWindow
   ViewPort    *-- DisplayFile          : displayFile
-  ViewPort    *-- ViewPortObservers    : viewportObservers
+  ViewPort    *-- ViewPortObservers    : viewPortObservers
 
-  ViewPortObservers "1\n" *-up- "*" ViewportObserver : observers
+  ViewPortObservers "1\n" *-up- "*" ViewPortObserver : observers
 
 
   class AddObjectWindow {
@@ -66,13 +66,13 @@
     Coordinate convertCoordinateFromWindow(Coordinate)
   }
 
-  class ViewportObserver {
+  class ViewPortObserver {
     void updateDropdownList()
   }
 
   class ViewPortObservers {
     void notifyObservers()
-    void addObserver(ViewportObserver*)
+    void addObserver(ViewPortObserver*)
   }
 
   class ViewWindow {

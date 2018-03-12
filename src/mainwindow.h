@@ -24,7 +24,7 @@
 #define DEFAULT_MOVE_LENGTH "10"
 
 
-class MainWindow : public Gtk::Window, public ViewportObserver
+class MainWindow : public Gtk::Window, public ViewPortObserver
 {
 
 public:
