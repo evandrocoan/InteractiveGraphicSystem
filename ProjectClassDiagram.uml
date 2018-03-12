@@ -43,21 +43,21 @@
   }
 
   class DrawableObject {
-    string name
+    std::string name
     std::string       getName()
     list<Coordinate*> getCoordinates()
   }
 
   class Line {
-    Line(string name, Coordinate*, Coordinate*)
+    Line(std::string name, Coordinate*, Coordinate*)
   }
 
   class Point {
-    Point(string name, Coordinate*)
+    Point(std::string name, Coordinate*)
   }
 
   class Polygon {
-    Polygon(string name, list<Coordinate*>)
+    Polygon(std::string name, list<Coordinate*>)
   }
 
   class MainWindow {

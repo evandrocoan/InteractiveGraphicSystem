@@ -117,7 +117,7 @@ void MainWindow::connectButtons()
 void MainWindow::updateDropdownList()
 {
   LOG(2, "Entering...");
-  auto names = this->viewPort.getDisplayFile()->getNamesList();
+  auto names = this->viewPort.getNamesList();
 
   LOG(4, "limpa a lista de objetos para reimprimi-la");
   this->objects_list.remove_all();
@@ -145,8 +145,7 @@ void MainWindow::on_button_move_up()
   }
   else
   {
-    this->viewPort.getViewwindow()->move_up(move_length);
-    this->viewPort.queue_draw();
+    this->viewPort.move_up(move_length);
   }
 }
 
@@ -160,8 +159,7 @@ void MainWindow::on_button_move_down()
   }
   else
   {
-    this->viewPort.getViewwindow()->move_down(move_length);
-    this->viewPort.queue_draw();
+    this->viewPort.move_down(move_length);
   }
 }
 
@@ -175,8 +173,7 @@ void MainWindow::on_button_move_left()
   }
   else
   {
-    this->viewPort.getViewwindow()->move_left(move_length);
-    this->viewPort.queue_draw();
+    this->viewPort.move_left(move_length);
   }
 }
 
@@ -190,8 +187,7 @@ void MainWindow::on_button_move_right()
   }
   else
   {
-    this->viewPort.getViewwindow()->move_right(move_length);
-    this->viewPort.queue_draw();
+    this->viewPort.move_right(move_length);
   }
 }
 
@@ -209,8 +205,7 @@ void MainWindow::on_button_zoom_in()
   }
   else
   {
-    this->viewPort.getViewwindow()->zoom_in(zoom_scale);
-    this->viewPort.queue_draw();
+    this->viewPort.zoom_in(zoom_scale);
   }
 }
 
@@ -228,8 +223,7 @@ void MainWindow::on_button_zoom_out()
   }
   else
   {
-    this->viewPort.getViewwindow()->zoom_out(zoom_scale);
-    this->viewPort.queue_draw();
+    this->viewPort.zoom_out(zoom_scale);
   }
 }
 
