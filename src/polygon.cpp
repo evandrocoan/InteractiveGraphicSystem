@@ -1,7 +1,7 @@
 #include "polygon.h"
 
-Polygon::Polygon(string name, list<Coordinate*> Coordinates)
-    : DrawableObject(name, Coordinates)
+Polygon::Polygon(string name, list<Coordinate*> coordinates)
+    : DrawableObject(name, coordinates)
 {
   // nothing for while
 }
@@ -12,5 +12,5 @@ Polygon::~Polygon()
 
 list<Coordinate*> Polygon::getCoordinates()
 {
-  return Coordinates;
+  return coordinates;
 }

@@ -9,7 +9,8 @@
   Line               <|-- DrawableObject
   Point              <|-- DrawableObject
   Polygon            <|-- DrawableObject
-  DrawableObject "1"  *-- "*" Coordinate: coordinates
+  DrawableObject "\n1"  *-- "*" Coordinate: coordinates
+  DisplayFile    "1\n"  *-up- "*" DrawableObject
 
   MainWindow      <|-left- Gtk::Window
   MainWindow       *-- ViewPort        : viewPort*
@@ -17,11 +18,10 @@
 
   ViewPort   <|-right- Gtk::DrawingArea
   ViewPort    *-- ViewWindow           : viewWindow
-  ViewPort    *-- DisplayFile          : displayFile
+  ViewPort    *-up- DisplayFile        : displayFile
   ViewPort    *-- ViewPortObservers    : viewPortObservers
 
-  ViewPortObservers "1\n" *-up- "*" ViewPortObserver : observers
-
+  ViewPortObservers "1\n" *-up- "\n*" ViewPortObserver : observers
 
   class AddObjectWindow {
     Gtk::Grid              point_grid
@@ -43,6 +43,8 @@
   }
 
   class DrawableObject {
+    string name
+    std::string       getName()
     list<Coordinate*> getCoordinates()
   }
 

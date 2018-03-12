@@ -20,11 +20,8 @@ using namespace std;
 class DrawableObject
 {
 public:
-  DrawableObject(string name)
-      : name(name) {}
-
-  DrawableObject(string name, list<Coordinate*> Coordinates)
-      : name(name), Coordinates(Coordinates) {}
+  DrawableObject(string name, list<Coordinate*> coordinates) :
+      name(name), coordinates(coordinates) {}
 
   ~DrawableObject() {}
 
@@ -36,7 +33,10 @@ public:
   virtual list<Coordinate*> getCoordinates() = 0;
 
 protected:
+  DrawableObject(string name) :
+      name(name) {}
+
   string name;
-  list<Coordinate*> Coordinates;
+  list<Coordinate*> coordinates;
 };
 #endif // GTKMM_APP_DRAWABLE_OBJECT

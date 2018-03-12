@@ -9,7 +9,7 @@ using namespace std;
 class Polygon : public DrawableObject
 {
 public:
-  Polygon(string name, list<Coordinate*> Coordinates);
+  Polygon(string name, list<Coordinate*> coordinates);
   ~Polygon();
 
   virtual list<Coordinate*> getCoordinates();
