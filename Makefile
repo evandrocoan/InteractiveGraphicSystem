@@ -83,6 +83,22 @@ else
 	endif
 endif
 
+# How can I write a makefile to auto-detect and parallelize the build with GNU Make?
+# https://stackoverflow.com/questions/2527496/how-can-i-write-a-makefile-to-auto-detect-and-parallelize-the-build-with-gnu-mak
+ifeq ($J,)
+	ifeq ($(OS),Windows_NT)
+		NPROCS := $(NUMBER_OF_PROCESSORS)
+	else
+		ifeq ($(UNAME),Darwin)
+		  NPROCS := $(shell system_profiler | awk '/Number of CPUs/ {print $$4}{next;}')
+		else
+		  NPROCS := $(shell grep -c ^processor /proc/cpuinfo)
+		endif
+	endif
+else
+  NPROCS := ""
+endif
+
 CURRENT_DIR := $(shell pwd)
 
 # Print the usage instructions
@@ -96,7 +112,7 @@ help:
 all:
 	@${MAKE} start_timer -s
 	@${MAKE} resources -s
-	${MAKE} $(FULL_TARGET) -j
+	${MAKE} $(FULL_TARGET) -j$(NPROCS)
 	@${MAKE} print_elapsed_time -s
 
 # GNU Make silent by default
