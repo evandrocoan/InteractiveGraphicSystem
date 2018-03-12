@@ -30,7 +30,10 @@ public:
     return name;
   }
 
-  virtual list<Coordinate*> getCoordinates() = 0;
+  list<Coordinate*> getCoordinates()
+  {
+    return this->coordinates;
+  }
 
 protected:
   DrawableObject(string name) :

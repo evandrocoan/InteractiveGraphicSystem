@@ -9,8 +9,3 @@ Point::Point(string name, Coordinate* point_cord)
 Point::~Point()
 {
 }
-
-list<Coordinate*> Point::getCoordinates()
-{
-  return coordinates;
-}

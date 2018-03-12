@@ -11,7 +11,5 @@ class Polygon : public DrawableObject
 public:
   Polygon(string name, list<Coordinate*> coordinates);
   ~Polygon();
-
-  virtual list<Coordinate*> getCoordinates();
 };
 #endif // GTKMM_APP_WIREFRAME
