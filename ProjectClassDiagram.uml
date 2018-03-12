@@ -4,10 +4,10 @@
 
   AddObjectWindow <|-- Gtk::Window
   AddObjectWindow <|-- ViewportObserver
-  AddObjectWindow  *-- ViewPort        : viewport
+  AddObjectWindow  *-- ViewPort        : viewPort
 
   MainWindow      <|-left- Gtk::Window
-  MainWindow       *-- ViewPort        : viewport*
+  MainWindow       *-- ViewPort        : viewPort*
   MainWindow       *-- AddObjectWindow : addObjectWindow
 
   ViewPort   <|-right- Gtk::DrawingArea
@@ -36,7 +36,7 @@
     Gtk::Box        left_box
     Gtk::Frame      left_frame
     Gtk::Frame      right_frame
-    ViewPort        viewport
+    ViewPort        viewPort
     AddObjectWindow addObjectWindow
   }
 
