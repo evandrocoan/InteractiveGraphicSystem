@@ -10,11 +10,11 @@ public:
 };
 
 
-class ViewportObservers
+class ViewPortObservers
 {
 public:
-  ViewportObservers();
-  virtual ~ViewportObservers();
+  ViewPortObservers();
+  virtual ~ViewPortObservers();
 
   void notifyObservers();
   void addObserver(ViewportObserver*);
