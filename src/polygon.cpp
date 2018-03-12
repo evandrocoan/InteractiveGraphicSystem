@@ -1,6 +1,6 @@
 #include "polygon.h"
 
-Polygon::Polygon(string name, list<Coordinate*> coordinates)
+Polygon::Polygon(std::string name, std::list<Coordinate*> coordinates)
     : DrawableObject(name, coordinates)
 {
   // nothing for while

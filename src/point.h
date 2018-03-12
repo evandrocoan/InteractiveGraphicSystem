@@ -4,12 +4,10 @@
 #include "drawableobject.h"
 #include "coordinate.h"
 
-using namespace std;
-
 class Point : public DrawableObject
 {
 public:
-  Point(string name, Coordinate* point_cord);
+  Point(std::string name, Coordinate* point_cord);
   ~Point();
 };
 #endif // GTKMM_APP_POINT

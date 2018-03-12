@@ -18,15 +18,15 @@ public:
 
   void addObject(DrawableObject* object);
   void removeObject(DrawableObject* object);
-  void removeObjectByName(string name);
+  void removeObjectByName(std::string name);
 
-  std::list<string> getNamesList();
+  std::list<std::string> getNamesList();
   std::list<DrawableObject*> getObjects();
 
-  DrawableObject* getObjectByName(string name);
+  DrawableObject* getObjectByName(std::string name);
 
 protected:
-  std::map<string, DrawableObject*> objectsMap;
+  std::map<std::string, DrawableObject*> objectsMap;
 
 };
 
