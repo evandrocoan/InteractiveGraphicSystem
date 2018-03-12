@@ -2,21 +2,20 @@
 @startuml
   skinparam defaultFontName Consolas
 
-  AddObjectWindow <|-- Gtk::Window
   AddObjectWindow <|-- ViewPortObserver
-  AddObjectWindow  *-- ViewPort        : viewPort
+  AddObjectWindow  *-- ViewPort        : viewPort*
+
+  DrawableObject "1\n"  *-right- "*\n" Coordinate: coordinates
+  DisplayFile    "1\n"  *-up- "*" DrawableObject
 
   Line               <|-- DrawableObject
   Point              <|-- DrawableObject
   Polygon            <|-- DrawableObject
-  DrawableObject "\n1"  *-- "*" Coordinate: coordinates
-  DisplayFile    "1\n"  *-up- "*" DrawableObject
 
-  MainWindow      <|-left- Gtk::Window
-  MainWindow       *-- ViewPort        : viewPort*
+  MainWindow       *-- ViewPort        : viewPort\n\n\n\n\n
   MainWindow       *-- AddObjectWindow : addObjectWindow
 
-  ViewPort   <|-right- Gtk::DrawingArea
+  ViewPort   <|-left- Gtk::DrawingArea
   ViewPort    *-- ViewWindow           : viewWindow
   ViewPort    *-up- DisplayFile        : displayFile
   ViewPort    *-- ViewPortObservers    : viewPortObservers
@@ -27,6 +26,7 @@
     Gtk::Grid              point_grid
     Gtk::Grid              line_grid
     Gtk::Grid              polygn_grid
+    Gtk::Window            window
     std::list<Coordinate*> polygon_cord_list
   }
 
@@ -48,11 +48,24 @@
     list<Coordinate*> getCoordinates()
   }
 
+  class Line {
+    Line(string name, Coordinate*, Coordinate*)
+  }
+
+  class Point {
+    Point(string name, Coordinate*)
+  }
+
+  class Polygon {
+    Polygon(string name, list<Coordinate*>)
+  }
+
   class MainWindow {
     Gtk::Box        main_box
     Gtk::Box        left_box
     Gtk::Frame      left_frame
     Gtk::Frame      right_frame
+    Gtk::Window     window
     ViewPort        viewPort
     AddObjectWindow addObjectWindow
   }
