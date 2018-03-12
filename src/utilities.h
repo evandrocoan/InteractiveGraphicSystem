@@ -23,19 +23,18 @@
 
 #include <string>
 #include <cstdarg>
-#include <stdio.h>
 
+/* Deprecated the usage of `#pragma once` due:
 
-
-/**
- * Preprocessor directive designed to cause the current source file to be included only once in a
- * single compilation. Thus, serves the same purpose as #include guards, but with several
- * advantages, including: less code, avoidance of name clashes, and sometimes improvement in
- * compilation speed. In main file this is enabled by default.
- */
-#pragma once
-
-
+> #pragma once does have one drawback (other than being non-standard) and that is if you have the
+> same file in different locations (we have this because our build system copies files around) then
+> the compiler will think these are different files.
+>
+> Is #pragma once a safe include guard?
+> https://stackoverflow.com/a/1946730/4934640
+*/
+#ifndef GTKMM_APP_DEBUGGER_INT_UTILITIES_H
+#define GTKMM_APP_DEBUGGER_INT_UTILITIES_H
 
 /**
  *  Calculates a static array size.
@@ -44,7 +43,6 @@
   #define STATIC_ARRAY_SIZE( array ) ( sizeof( ( array ) ) / sizeof( ( array )[0] ) )
 
 #endif
-
 
 /**
  * Missing string printf. This is safe and convenient but not exactly efficient.
@@ -82,6 +80,5 @@ inline std::string format(const char* fmt, ...)
   return ret;
 }
 
-
-
+#endif // GTKMM_APP_DEBUGGER_INT_UTILITIES_H
 
