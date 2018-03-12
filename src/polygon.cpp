@@ -9,8 +9,3 @@ Polygon::Polygon(string name, list<Coordinate*> coordinates)
 Polygon::~Polygon()
 {
 }
-
-list<Coordinate*> Polygon::getCoordinates()
-{
-  return coordinates;
-}

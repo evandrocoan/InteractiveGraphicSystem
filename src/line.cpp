@@ -10,8 +10,3 @@ Line::Line(string name, Coordinate* line_cord1, Coordinate* line_cord2)
 Line::~Line()
 {
 }
-
-list<Coordinate*> Line::getCoordinates()
-{
-  return coordinates;
-}
