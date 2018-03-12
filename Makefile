@@ -74,7 +74,13 @@ help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 # Default make target rule
-all: start_timer resources $(TARGET) print_elapsed_time
+# How to force a certain groups of targets to be always run sequentially?
+# https://stackoverflow.com/questions/21832023/how-to-force-a-certain-groups-of-targets-to-be-always-run-sequentially
+all:
+	@${MAKE} start_timer -s
+	@${MAKE} resources -s
+	${MAKE} $(TARGET) -j
+	@${MAKE} print_elapsed_time -s
 
 # GNU Make silent by default
 # https://stackoverflow.com/questions/24005166/gnu-make-silent-by-default
