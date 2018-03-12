@@ -1,7 +1,7 @@
 #include "viewport.h"
 
 ViewPort::ViewPort() :
-      viewwindow(0, 0, 0, 0),
+      viewWindow(0, 0, 0, 0),
       displayFile(),
       Xvpmin(0),
       Yvpmin(0),
@@ -82,22 +82,22 @@ Coordinate ViewPort::convertCoordinateFromWindow(Coordinate cord)
 {
   long int Xw = cord.getx();
   long int Xvp = (long int)(
-      (double)(Xw - this->viewwindow.getXwmin()) * ((double)(this->Xvpmax - this->Xvpmin) /
-          (double)(this->viewwindow.getXwmax() - this->viewwindow.getXwmin())
+      (double)(Xw - this->viewWindow.getXwmin()) * ((double)(this->Xvpmax - this->Xvpmin) /
+          (double)(this->viewWindow.getXwmax() - this->viewWindow.getXwmin())
       )
   );
 
   long int Yw = cord.gety();
   long int Yvp = (this->Yvpmax - this->Yvpmin) - (long int)(
-      (double)(Yw - this->viewwindow.getYwmin()) * (double)(this->Yvpmax - this->Yvpmin) /
-          (double)(this->viewwindow.getYwmax() - this->viewwindow.getYwmin())
+      (double)(Yw - this->viewWindow.getYwmin()) * (double)(this->Yvpmax - this->Yvpmin) /
+          (double)(this->viewWindow.getYwmax() - this->viewWindow.getYwmin())
   );
 
   return Coordinate(Xvp, Yvp);
 }
 
 /**
- * Resize `viewwindow` when `viewport` is resized:
+ * Resize `viewWindow` when `viewport` is resized:
  * http://www.di.ubi.pt/~agomes/cg/teoricas/04e-windows.pdf
  *
  * A strategy of keeping proportions automatically between window and viewport.
@@ -132,8 +132,8 @@ void ViewPort::updateViewport(Gtk::Allocation allocation)
 
     if (this->Xvpmax != 0)
     {
-      xwmax = this->viewwindow.getXwmax()
-          + (float)(this->viewwindow.getXwmax() - this->viewwindow.getXwmin()) * ( (float)widthDiff
+      xwmax = this->viewWindow.getXwmax()
+          + (float)(this->viewWindow.getXwmax() - this->viewWindow.getXwmin()) * ( (float)widthDiff
               / (float)(this->Xvpmax - this->Xvpmin)
           );
     }
@@ -142,21 +142,21 @@ void ViewPort::updateViewport(Gtk::Allocation allocation)
       xwmax = (float)widthDiff;
     }
 
-    this->viewwindow.setXwmax( xwmax );
+    this->viewWindow.setXwmax( xwmax );
 
     if (this->Yvpmax != 0)
     {
-      this->viewwindow.setYwmin(
-          this->viewwindow.getYwmin()
-              - (float)(this->viewwindow.getYwmax()
-                  - this->viewwindow.getYwmin()
+      this->viewWindow.setYwmin(
+          this->viewWindow.getYwmin()
+              - (float)(this->viewWindow.getYwmax()
+                  - this->viewWindow.getYwmin()
               ) * ((float)heightDiff / (float)(this->Yvpmax - this->Yvpmin))
       );
     }
     else
     {
       LOG(8, "If we exchange this to `setYwmin()` our world becomes up-side-down");
-      this->viewwindow.setYwmax((float)heightDiff);
+      this->viewWindow.setYwmax((float)heightDiff);
     }
 
     this->Xvpmax += widthDiff;
@@ -188,9 +188,9 @@ void ViewPort::removeObject(std::string name)
   this->viewportObservers.notifyObservers();
 }
 
-Viewwindow* ViewPort::getViewwindow()
+ViewWindow* ViewPort::getViewwindow()
 {
-  return &this->viewwindow;
+  return &this->viewWindow;
 }
 
 DisplayFile* ViewPort::getDisplayFile()

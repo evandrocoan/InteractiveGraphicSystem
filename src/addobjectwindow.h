@@ -30,7 +30,7 @@ private:
   Gtk::Box       m_vbox;
   Gtk::Notebook  m_notebook;
 
-  string                 new_object_name;
+  std::string            new_object_name;
   std::list<Coordinate*> polygon_cord_list;
 
   Gtk::Grid line_grid;
