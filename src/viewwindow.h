@@ -7,11 +7,11 @@
 #define MAX_HEIGHT 50000000
 #define MAX_WIDTH 50000000
 
-class Viewwindow
+class ViewWindow
 {
 public:
-  Viewwindow(int Xwmin, int Ywmin, int Xwmax, int Ywmax);
-  virtual ~Viewwindow();
+  ViewWindow(int Xwmin, int Ywmin, int Xwmax, int Ywmax);
+  virtual ~ViewWindow();
 
   void zoom_in (float scale = 1.5);
   void zoom_out(float scale = 1.5);

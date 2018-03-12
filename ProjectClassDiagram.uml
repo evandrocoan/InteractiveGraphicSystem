@@ -6,16 +6,20 @@
   AddObjectWindow <|-- ViewportObserver
   AddObjectWindow  *-- ViewPort        : viewPort
 
+  Line               <|-- DrawableObject
+  DrawableObject "1"  *-- "*" Coordinate: coordinates
+
   MainWindow      <|-left- Gtk::Window
   MainWindow       *-- ViewPort        : viewPort*
   MainWindow       *-- AddObjectWindow : addObjectWindow
 
   ViewPort   <|-right- Gtk::DrawingArea
-  ViewPort    *-- Viewwindow           : viewwindow
+  ViewPort    *-- ViewWindow           : viewWindow
   ViewPort    *-- DisplayFile          : displayFile
   ViewPort    *-- ViewportObservers    : viewportObservers
 
   ViewportObservers "1\n" *-up- "*" ViewportObserver : observers
+
 
   class AddObjectWindow {
     Gtk::Grid              point_grid
@@ -24,11 +28,20 @@
     std::list<Coordinate*> polygon_cord_list
   }
 
+  class Coordinate {
+    long int cord_x
+    long int cord_y
+  }
+
   class DisplayFile {
     std::map< string, DrawableObject* >
     void addObject( DrawableObject* )
     void removeObject( DrawableObject* )
     void removeObjectByName( string )
+  }
+
+  class DrawableObject {
+    list<Coordinate*> getCoordinates()
   }
 
   class MainWindow {
@@ -60,7 +73,7 @@
     void addObserver(ViewportObserver*)
   }
 
-  class Viewwindow {
+  class ViewWindow {
     float Xwmin
     float Ywmin
     float Xwmax

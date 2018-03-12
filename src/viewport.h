@@ -19,14 +19,14 @@ public:
   ViewPort();
   virtual ~ViewPort();
 
-  Viewwindow*  getViewwindow();
+  ViewWindow*  getViewwindow();
   DisplayFile* getDisplayFile();
   void         addObject(DrawableObject*);
   void         removeObject(std::string name);
   void         addObserver(ViewportObserver*);
 
 protected:
-  Viewwindow        viewwindow;
+  ViewWindow        viewWindow;
   DisplayFile       displayFile;
   ViewportObservers viewportObservers;
 
