@@ -95,9 +95,9 @@ g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/main.o src/main.cpp `p
 g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/mainwindow.o src/mainwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
 g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/point.o src/point.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
 g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/polygon.o src/polygon.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/viewport.o src/viewport.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/viewPort.o src/viewPort.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
 g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/viewwindow.o src/viewwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -o binaries/main objects/addobjectwindow.o objects/displayfile.o objects/drawoptionsbox.o objects/line.o objects/main.o objects/mainwindow.o objects/point.o objects/polygon.o objects/viewport.o objects/viewwindow.o `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g  -o binaries/main objects/addobjectwindow.o objects/displayfile.o objects/drawoptionsbox.o objects/line.o objects/main.o objects/mainwindow.o objects/point.o objects/polygon.o objects/viewPort.o objects/viewwindow.o `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
 ./binaries/main
 ```
 

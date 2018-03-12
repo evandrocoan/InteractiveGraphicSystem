@@ -1,9 +1,9 @@
 #include "addobjectwindow.h"
 
-AddObjectWindow::AddObjectWindow(ViewPort* viewport) :
+AddObjectWindow::AddObjectWindow(ViewPort* viewPort) :
       m_notebook(),
       m_vbox(Gtk::ORIENTATION_VERTICAL),
-      viewport(viewport),
+      viewPort(viewPort),
       point_name_field(),
       info_label("Insert a Coordinate :"),
       point_x_label("Coordinate X : "),
@@ -126,7 +126,7 @@ void AddObjectWindow::on_button_save_point()
   Coordinate *point_cord = new Coordinate(x_cord, y_cord);
   Point *point = new Point(name, point_cord);
 
-  this->viewport->addObject(point);
+  this->viewPort->addObject(point);
   this->close();
 }
 
@@ -156,7 +156,7 @@ void AddObjectWindow::on_button_save_line()
 
   Line *line = new Line(name, point_cord1, point_cord2);
 
-  this->viewport->addObject(line);
+  this->viewPort->addObject(line);
   this->close();
 }
 
@@ -174,7 +174,7 @@ void AddObjectWindow::on_button_save_polygon()
     }
 
     Polygon *polygon = new Polygon(name, polygon_cord_list);
-    this->viewport->addObject(polygon);
+    this->viewPort->addObject(polygon);
 
     while(!polygon_cord_list.empty())
     {
