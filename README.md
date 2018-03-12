@@ -85,7 +85,7 @@ make
 
 Build output example:
 ```
-$ make all run
+$ make run
 if [ -d resources ]; then cp resources/* binaries/; fi;
 g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/addobjectwindow.o src/addobjectwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
 g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/displayfile.o src/displayfile.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
