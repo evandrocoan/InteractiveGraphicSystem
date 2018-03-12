@@ -28,7 +28,7 @@ public:
 protected:
   ViewWindow        viewWindow;
   DisplayFile       displayFile;
-  ViewportObservers viewportObservers;
+  ViewPortObservers viewportObservers;
 
   int Xvpmin;
   int Yvpmin;

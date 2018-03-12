@@ -7,6 +7,8 @@
   AddObjectWindow  *-- ViewPort        : viewPort
 
   Line               <|-- DrawableObject
+  Point              <|-- DrawableObject
+  Polygon            <|-- DrawableObject
   DrawableObject "1"  *-- "*" Coordinate: coordinates
 
   MainWindow      <|-left- Gtk::Window
@@ -16,9 +18,9 @@
   ViewPort   <|-right- Gtk::DrawingArea
   ViewPort    *-- ViewWindow           : viewWindow
   ViewPort    *-- DisplayFile          : displayFile
-  ViewPort    *-- ViewportObservers    : viewportObservers
+  ViewPort    *-- ViewPortObservers    : viewportObservers
 
-  ViewportObservers "1\n" *-up- "*" ViewportObserver : observers
+  ViewPortObservers "1\n" *-up- "*" ViewportObserver : observers
 
 
   class AddObjectWindow {
@@ -68,7 +70,7 @@
     void updateDropdownList()
   }
 
-  class ViewportObservers {
+  class ViewPortObservers {
     void notifyObservers()
     void addObserver(ViewportObserver*)
   }
