@@ -17,18 +17,20 @@
 #include "viewport.h"
 #include "debugger.h"
 #include "viewwindow.h"
+#include "viewportobserver.h"
 #include "addobjectwindow.h"
 
 #define DEFAULT_ZOOM_SCALE  1.5
 #define DEFAULT_MOVE_LENGTH "10"
 
 
-class MainWindow : public Gtk::Window
+class MainWindow : public Gtk::Window, public ViewportObserver
 {
 
 public:
   MainWindow();
   virtual ~MainWindow();
+  virtual void updateDropdownList();
 
 private:
   Gtk::ComboBoxText objects_list;
@@ -60,7 +62,6 @@ private:
   Gtk::Entry entry_move_length;
   Gtk::Entry entry_zoom_scale;
 
-  void update_list_object(std::list<std::string> names);
   void setupButtons(const Glib::ustring& title, gint spacing, Gtk::ButtonBoxStyle layout);
   void connectButtons();
 

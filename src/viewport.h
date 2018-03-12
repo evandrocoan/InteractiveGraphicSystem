@@ -9,6 +9,7 @@
 
 #include "viewwindow.h"
 #include "displayfile.h"
+#include "viewportobserver.h"
 #include "coordinate.h"
 #include "debugger.h"
 
@@ -20,10 +21,14 @@ public:
 
   Viewwindow*  getViewwindow();
   DisplayFile* getDisplayFile();
+  void         addObject(DrawableObject*);
+  void         removeObject(std::string name);
+  void         addObserver(ViewportObserver*);
 
 protected:
-  Viewwindow  viewwindow;
-  DisplayFile displayFile;
+  Viewwindow        viewwindow;
+  DisplayFile       displayFile;
+  ViewportObservers viewportObservers;
 
   int Xvpmin;
   int Yvpmin;
