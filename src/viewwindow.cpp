@@ -1,44 +1,14 @@
 #include "viewwindow.h"
 
-Viewwindow::Viewwindow(int Xwmin, int Ywmin, int Xwmax, int Ywmax)
-    : Xwmin(Xwmin),
-      Ywmin(Ywmin),
-      Xwmax(Xwmax),
-      Ywmax(Ywmax)
+ViewWindow::ViewWindow(int xWmin, int yWmin, int xWmax, int yWmax)
+    : xWmin(xWmin),
+      yWmin(yWmin),
+      xWmax(xWmax),
+      yWmax(yWmax)
 {
 }
 
-void Viewwindow::zoom_in(float scale)
-{
-  if (scale < 1)
-  {
-    return;
-  }
-  else
-  {
-    float width = this->Xwmax - this->Xwmin;
-    float height = this->Ywmax - this->Ywmin;
-
-    float newXwmin = Xwmin + (width - (width / scale)) / 2;
-    float newXwmax = Xwmax - (width - (width / scale)) / 2;
-    float newYwmin = Ywmin + (height - (height / scale)) / 2;
-    float newYwmax = Ywmax - (height - (height/ scale)) / 2;
-
-    if ((newXwmax - newXwmin) < MIN_WIDTH || (newYwmax - newYwmin) < MIN_HEIGHT)
-    {
-      return;
-    }
-    else
-    {
-      this->Xwmin = newXwmin;
-      this->Xwmax = newXwmax;
-      this->Ywmin = newYwmin;
-      this->Ywmax = newYwmax;
-    }
-  }
-}
-
-void Viewwindow::zoom_out(float scale)
+void ViewWindow::zoom_in(float scale)
 {
   if (scale < 1)
   {
@@ -46,92 +16,82 @@ void Viewwindow::zoom_out(float scale)
   }
   else
   {
-    float width = this->Xwmax - this->Xwmin;
-    float height = this->Ywmax - this->Ywmin;
+    float width = this->xWmax - this->xWmin;
+    float height = this->yWmax - this->yWmin;
 
-    float newXwmin = Xwmin - ((width * scale) - width) / 2;
-    float newXwmax = Xwmax + ((width * scale) - width) / 2;
-    float newYwmin = Ywmin - ((height * scale) - height) / 2;
-    float newYwmax = Ywmax + ((height * scale) - height) / 2;
+    float xWminNew = this->xWmin + (width - (width / scale)) / 2;
+    float xWmaxNew = this->xWmax - (width - (width / scale)) / 2;
+    float yWminNew = this->yWmin + (height - (height / scale)) / 2;
+    float yWmaxNew = this->yWmax - (height - (height/ scale)) / 2;
 
-    if ((newXwmax - newXwmin) > MAX_WIDTH || (newYwmax - newYwmin) > MAX_HEIGHT)
+    if ((xWmaxNew - xWminNew) < MIN_WIDTH || (yWmaxNew - yWminNew) < MIN_HEIGHT)
     {
       return;
     }
     else
     {
-      this->Xwmin = newXwmin;
-      this->Xwmax = newXwmax;
-      this->Ywmin = newYwmin;
-      this->Ywmax = newYwmax;
+      this->xWmin = xWminNew;
+      this->xWmax = xWmaxNew;
+      this->yWmin = yWminNew;
+      this->yWmax = yWmaxNew;
     }
   }
 }
 
-void Viewwindow::move_up(int length)
+void ViewWindow::zoom_out(float scale)
 {
-  this->Ywmin += length;
-  this->Ywmax += length;
+  if (scale < 1)
+  {
+    return;
+  }
+  else
+  {
+    float width = this->xWmax - this->xWmin;
+    float height = this->yWmax - this->yWmin;
+
+    float xWminNew = this->xWmin - ((width * scale) - width) / 2;
+    float xWmaxNew = this->xWmax + ((width * scale) - width) / 2;
+    float yWminNew = this->yWmin - ((height * scale) - height) / 2;
+    float yWmaxNew = this->yWmax + ((height * scale) - height) / 2;
+
+    if ((xWmaxNew - xWminNew) > MAX_WIDTH || (yWmaxNew - yWminNew) > MAX_HEIGHT)
+    {
+      return;
+    }
+    else
+    {
+      this->xWmin = xWminNew;
+      this->xWmax = xWmaxNew;
+      this->yWmin = yWminNew;
+      this->yWmax = yWmaxNew;
+    }
+  }
 }
 
-void Viewwindow::move_down(int length)
+void ViewWindow::move_up(int length)
 {
-  this->Ywmin -= length;
-  this->Ywmax -= length;
+  this->yWmin += length;
+  this->yWmax += length;
 }
 
-void Viewwindow::move_left(int length)
+void ViewWindow::move_down(int length)
 {
-  this->Xwmin -= length;
-  this->Xwmax -= length;
+  this->yWmin -= length;
+  this->yWmax -= length;
 }
 
-void Viewwindow::move_right(int length)
+void ViewWindow::move_left(int length)
 {
-  this->Xwmin += length;
-  this->Xwmax += length;
+  this->xWmin -= length;
+  this->xWmax -= length;
 }
 
-float Viewwindow::getXwmin()
+void ViewWindow::move_right(int length)
 {
-  return this->Xwmin;
+  this->xWmin += length;
+  this->xWmax += length;
 }
 
-float Viewwindow::getYwmin()
-{
-  return this->Ywmin;
-}
-
-float Viewwindow::getXwmax()
-{
-  return this->Xwmax;
-}
-
-float Viewwindow::getYwmax()
-{
-  return this->Ywmax;
-}
-
-void Viewwindow::setXwmin(float Xwmin)
-{
-  this->Xwmin = Xwmin;
-}
-
-void Viewwindow::setYwmin(float Ywmin)
-{
-  this->Ywmin = Ywmin;
-}
-
-void Viewwindow::setXwmax(float Xwmax)
-{
-  this->Xwmax = Xwmax;
-}
-
-void Viewwindow::setYwmax(float Ywmax)
-{
-  this->Ywmax = Ywmax;
-}
-
-Viewwindow::~Viewwindow()
+ViewWindow::~ViewWindow()
 {
 }

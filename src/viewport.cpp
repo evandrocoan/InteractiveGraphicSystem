@@ -1,24 +1,24 @@
 #include "viewport.h"
 
-Viewport::Viewport() :
-      viewwindow(0, 0, 0, 0),
+ViewPort::ViewPort() :
+      viewWindow(0, 0, 0, 0),
       displayFile(),
-      Xvpmin(0),
-      Yvpmin(0),
-      Xvpmax(0),
-      Yvpmax(0)
+      xVpmin(0),
+      yVpmin(0),
+      xVpmax(0),
+      yVpmax(0)
 {
 }
 
 /**
- * [Viewport::on_draw description]
+ * [ViewPort::on_draw description]
  *
  * @param `cairo_context` Context is the main class used to draw in cairomm. It contains the current
  *     state of the rendering device, including coordinates of yet to be drawn shapes.
  *
  * @return               [description]
  */
-bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
+bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 {
   this->updateViewport(this->get_allocation());
 
@@ -31,10 +31,10 @@ bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
   Coordinate originOnWindow = convertCoordinateFromWindow(Coordinate(0, 0));
 
-  cairo_context->move_to(Xvpmin, originOnWindow.gety());
-  cairo_context->line_to(Xvpmax, originOnWindow.gety());
-  cairo_context->move_to(originOnWindow.getx(), Yvpmin);
-  cairo_context->line_to(originOnWindow.getx(), Yvpmax);
+  cairo_context->move_to(this->xVpmin, originOnWindow.gety());
+  cairo_context->line_to(this->xVpmax, originOnWindow.gety());
+  cairo_context->move_to(originOnWindow.getx(), this->yVpmin);
+  cairo_context->line_to(originOnWindow.getx(), this->yVpmax);
   cairo_context->stroke();
 
   LOG(8, "Set color's objects as black:");
@@ -78,22 +78,22 @@ bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
  * @param  cord [description]
  * @return      [description]
  */
-Coordinate Viewport::convertCoordinateFromWindow(Coordinate cord)
+Coordinate ViewPort::convertCoordinateFromWindow(Coordinate cord)
 {
-  long int Xw = cord.getx();
-  long int Xvp = (long int)(
-      (double)(Xw - this->viewwindow.getXwmin()) * ((double)(this->Xvpmax - this->Xvpmin) /
-          (double)(this->viewwindow.getXwmax() - this->viewwindow.getXwmin())
+  long int xW = cord.getx();
+  long int xVp = (long int)(
+      (double)(xW - this->viewWindow.xWmin) * ((double)(this->xVpmax - this->xVpmin) /
+          (double)(this->viewWindow.xWmax - this->viewWindow.xWmin)
       )
   );
 
-  long int Yw = cord.gety();
-  long int Yvp = (this->Yvpmax - this->Yvpmin) - (long int)(
-      (double)(Yw - this->viewwindow.getYwmin()) * (double)(this->Yvpmax - this->Yvpmin) /
-          (double)(this->viewwindow.getYwmax() - this->viewwindow.getYwmin())
+  long int yW = cord.gety();
+  long int yVp = (this->yVpmax - this->yVpmin) - (long int)(
+      (double)(yW - this->viewWindow.yWmin) * (double)(this->yVpmax - this->yVpmin) /
+          (double)(this->viewWindow.yWmax - this->viewWindow.yWmin)
   );
 
-  return Coordinate(Xvp, Yvp);
+  return Coordinate(xVp, yVp);
 }
 
 /**
@@ -120,80 +120,80 @@ Coordinate Viewport::convertCoordinateFromWindow(Coordinate cord)
  *     join(). Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of
        GdkRectangle.
  */
-void Viewport::updateViewport(Gtk::Allocation allocation)
+void ViewPort::updateViewport(Gtk::Allocation allocation)
 {
   // NÃO ENTENDI A LÓGICA MATEMÁTICA
-  if (this->Xvpmax != allocation.get_width() ||  this->Yvpmax != allocation.get_height())
+  if (this->xVpmax != allocation.get_width() ||  this->yVpmax != allocation.get_height())
   {
-    float xwmax;
+    float xWmax;
 
-    int widthDiff  = allocation.get_width()  - (this->Xvpmax - this->Xvpmin);
-    int heightDiff = allocation.get_height() - (this->Yvpmax - this->Yvpmin);
+    int widthDiff  = allocation.get_width()  - (this->xVpmax - this->xVpmin);
+    int heightDiff = allocation.get_height() - (this->yVpmax - this->yVpmin);
 
-    if (this->Xvpmax != 0)
+    if (this->xVpmax != 0)
     {
-      xwmax = this->viewwindow.getXwmax()
-          + (float)(this->viewwindow.getXwmax() - this->viewwindow.getXwmin()) * ( (float)widthDiff
-              / (float)(this->Xvpmax - this->Xvpmin)
+      xWmax = this->viewWindow.xWmax
+          + (float)(this->viewWindow.xWmax - this->viewWindow.xWmin) * ( (float)widthDiff
+              / (float)(this->xVpmax - this->xVpmin)
           );
     }
     else
     {
-      xwmax = (float)widthDiff;
+      xWmax = (float)widthDiff;
     }
 
-    this->viewwindow.setXwmax( xwmax );
+    this->viewWindow.xWmax = xWmax;
 
-    if (this->Yvpmax != 0)
+    if (this->yVpmax != 0)
     {
-      this->viewwindow.setYwmin(
-          this->viewwindow.getYwmin()
-              - (float)(this->viewwindow.getYwmax()
-                  - this->viewwindow.getYwmin()
-              ) * ((float)heightDiff / (float)(this->Yvpmax - this->Yvpmin))
+      this->viewWindow.yWmin = (
+          this->viewWindow.yWmin
+              - (float)(this->viewWindow.yWmax
+                  - this->viewWindow.yWmin
+              ) * ((float)heightDiff / (float)(this->yVpmax - this->yVpmin))
       );
     }
     else
     {
       LOG(8, "If we exchange this to `setYwmin()` our world becomes up-side-down");
-      this->viewwindow.setYwmax((float)heightDiff);
+      this->viewWindow.yWmax = (float)heightDiff;
     }
 
-    this->Xvpmax += widthDiff;
-    this->Yvpmax += heightDiff;
-    LOG(8, "Xvpmax: %d, Yvpmax: %d", Xvpmax, Yvpmax);
+    this->xVpmax += widthDiff;
+    this->yVpmax += heightDiff;
+    LOG(8, "xVpmax: %d, yVpmax: %d", xVpmax, yVpmax);
   }
 }
 
-Viewport::~Viewport()
+ViewPort::~ViewPort()
 {
 }
 
-void Viewport::addObserver(ViewportObserver* observer)
+void ViewPort::addObserver(ViewPortObserver* observer)
 {
-  this->viewportObservers.addObserver(observer);
+  this->viewPortObservers.addObserver(observer);
 }
 
-void Viewport::addObject(DrawableObject* object)
+void ViewPort::addObject(DrawableObject* object)
 {
   this->getDisplayFile()->addObject(object);
   this->queue_draw();
-  this->viewportObservers.notifyObservers();
+  this->viewPortObservers.notifyObservers();
 }
 
-void Viewport::removeObject(std::string name)
+void ViewPort::removeObject(std::string name)
 {
   this->getDisplayFile()->removeObjectByName(name);
   this->queue_draw();
-  this->viewportObservers.notifyObservers();
+  this->viewPortObservers.notifyObservers();
 }
 
-Viewwindow* Viewport::getViewwindow()
+ViewWindow* ViewPort::getViewwindow()
 {
-  return &this->viewwindow;
+  return &this->viewWindow;
 }
 
-DisplayFile* Viewport::getDisplayFile()
+DisplayFile* ViewPort::getDisplayFile()
 {
   return &this->displayFile;
 }
