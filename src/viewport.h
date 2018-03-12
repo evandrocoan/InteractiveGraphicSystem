@@ -23,12 +23,12 @@ public:
   DisplayFile* getDisplayFile();
   void         addObject(DrawableObject*);
   void         removeObject(std::string name);
-  void         addObserver(ViewportObserver*);
+  void         addObserver(ViewPortObserver*);
 
 protected:
   ViewWindow        viewWindow;
   DisplayFile       displayFile;
-  ViewPortObservers viewportObservers;
+  ViewPortObservers viewPortObservers;
 
   int Xvpmin;
   int Yvpmin;
