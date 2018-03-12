@@ -66,6 +66,23 @@ INCDEP := -I.
 SOURCES := $(shell /bin/find $(SRCDIR) -type f -name "*.$(SRCEXT)" $(FIND_EXCLUSIONS))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
+# OS detecting makefile
+# https://stackoverflow.com/questions/714100/os-detecting-makefile
+#
+# GNU Make Under Windows: Check for cygwin in PATH
+# https://stackoverflow.com/questions/20690744/gnu-make-under-windows-check-for-cygwin-in-path
+UNAME := $(shell uname)
+
+ifeq ($(OS),Windows_NT)
+	FULL_TARGET := $(TARGETDIR)/$(TARGET).exe
+else
+	ifeq ($(UNAME),Darwin)
+		FULL_TARGET := $(TARGETDIR)/$(TARGET)
+	else
+		FULL_TARGET := $(TARGETDIR)/$(TARGET)
+	endif
+endif
+
 CURRENT_DIR := $(shell pwd)
 
 # Print the usage instructions
@@ -79,7 +96,7 @@ help:
 all:
 	@${MAKE} start_timer -s
 	@${MAKE} resources -s
-	${MAKE} $(TARGET) -j
+	${MAKE} $(FULL_TARGET) -j
 	@${MAKE} print_elapsed_time -s
 
 # GNU Make silent by default
@@ -96,7 +113,7 @@ print_elapsed_time:
 
 
 run: all
-	./$(TARGETDIR)/$(TARGET)
+	./$(FULL_TARGET)
 
 # Remake
 remake: cleaner all
@@ -125,8 +142,8 @@ veryclean: clean
 -include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
 
 # Link
-$(TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(TARGETDIR)/$(TARGET) $^ $(LIBS)
+$(FULL_TARGET): $(OBJECTS)
+	$(CC) $(CFLAGS) -o $(FULL_TARGET) $^ $(LIBS)
 
 # Compile
 # @echo "Building target: $@ from $<"
