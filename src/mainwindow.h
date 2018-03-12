@@ -24,16 +24,19 @@
 #define DEFAULT_MOVE_LENGTH "10"
 
 
-class MainWindow : public Gtk::Window, public ViewPortObserver
+class MainWindow : public ViewPortObserver
 {
 
 public:
   MainWindow();
   virtual ~MainWindow();
-  virtual void updateDropdownList();
+
+  void updateDropdownList();
+  Gtk::Window* getWindow();
 
 private:
   Gtk::ComboBoxText objects_list;
+  Gtk::Window       window;
 
   ViewPort        viewPort;
   AddObjectWindow addObjectWindow;

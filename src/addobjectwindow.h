@@ -18,14 +18,16 @@
 #include "viewport.h"
 #include "coordinate.h"
 
-class AddObjectWindow : public Gtk::Window
+class AddObjectWindow
 {
 public:
   AddObjectWindow(ViewPort* viewPort);
   ~AddObjectWindow();
+  Gtk::Window* getWindow();
 
 private:
   ViewPort* viewPort;
+  Gtk::Window window;
 
   Gtk::Box       m_vbox;
   Gtk::Notebook  m_notebook;

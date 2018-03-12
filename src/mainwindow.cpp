@@ -15,14 +15,11 @@ MainWindow::MainWindow() :
       addObjectWindow(&this->viewPort)
 {
   LOG(2, "Entering...");
-  this->set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan");
-  this->set_border_width(15);
-  this->set_default_size(700, 500);
-
-  LOG(4, "Draw options");
   this->main_box.pack_start(left_frame, Gtk::PACK_SHRINK, 10);
   this->left_box.set_border_width(10);
   this->left_frame.add(left_box);
+
+  LOG(4, "Draw options");
   this->setupButtons("", 10, Gtk::BUTTONBOX_START);
   this->connectButtons();
 
@@ -32,12 +29,20 @@ MainWindow::MainWindow() :
   this->viewPort.show();
 
   LOG(4, "Show all components");
-  this->add(this->main_box);
-  this->show_all_children();
+  this->window.set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan");
+  this->window.set_border_width(15);
+  this->window.set_default_size(700, 500);
+  this->window.add(this->main_box);
+  this->window.show_all_children();
 }
 
 MainWindow::~MainWindow()
 {
+}
+
+Gtk::Window* MainWindow::getWindow()
+{
+  return &this->window;
 }
 
 void MainWindow::setupButtons(const Glib::ustring& title, gint spacing, Gtk::ButtonBoxStyle layout)
@@ -231,7 +236,7 @@ void MainWindow::on_button_zoom_out()
 void MainWindow::on_button_add_object()
 {
   LOG(2, "Entering...");
-  this->addObjectWindow.show();
+  this->addObjectWindow.getWindow()->show();
   //addObjectWindow->on_button_save_point();
 }
 
