@@ -4,7 +4,7 @@
 #include <list>
 
 
-class ViewportObserver {
+class ViewPortObserver {
 public:
   virtual void updateDropdownList() = 0;
 };
@@ -17,10 +17,10 @@ public:
   virtual ~ViewPortObservers();
 
   void notifyObservers();
-  void addObserver(ViewportObserver*);
+  void addObserver(ViewPortObserver*);
 
 private:
-  std::list<ViewportObserver*> observers;
+  std::list<ViewPortObserver*> observers;
 };
 
 #endif // GTKMM_APP_VIEWPORT_OBSERVER

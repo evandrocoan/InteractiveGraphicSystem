@@ -169,23 +169,23 @@ ViewPort::~ViewPort()
 {
 }
 
-void ViewPort::addObserver(ViewportObserver* observer)
+void ViewPort::addObserver(ViewPortObserver* observer)
 {
-  this->viewportObservers.addObserver(observer);
+  this->viewPortObservers.addObserver(observer);
 }
 
 void ViewPort::addObject(DrawableObject* object)
 {
   this->getDisplayFile()->addObject(object);
   this->queue_draw();
-  this->viewportObservers.notifyObservers();
+  this->viewPortObservers.notifyObservers();
 }
 
 void ViewPort::removeObject(std::string name)
 {
   this->getDisplayFile()->removeObjectByName(name);
   this->queue_draw();
-  this->viewportObservers.notifyObservers();
+  this->viewPortObservers.notifyObservers();
 }
 
 ViewWindow* ViewPort::getViewwindow()
