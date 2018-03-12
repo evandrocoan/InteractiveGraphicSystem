@@ -2,6 +2,7 @@
 #define GTKMM_APP_VIEWPORT
 
 #include <list>
+#include <string>
 
 #include <gtkmm/drawingarea.h>
 #include <gdkmm/rgba.h>
@@ -19,11 +20,19 @@ public:
   ViewPort();
   virtual ~ViewPort();
 
-  ViewWindow*  getViewwindow();
-  DisplayFile* getDisplayFile();
-  void         addObject(DrawableObject*);
-  void         removeObject(std::string name);
-  void         addObserver(ViewPortObserver*);
+  void addObject(DrawableObject*);
+  void removeObject(std::string name);
+
+  void addObserver(ViewPortObserver*);
+  std::list<std::string> getNamesList();
+
+  void zoom_in (float scale = 1.5);
+  void zoom_out(float scale = 1.5);
+
+  void move_up   (int length = 10);
+  void move_down (int length = 10);
+  void move_left (int length = 10);
+  void move_right(int length = 10);
 
 protected:
   ViewWindow        viewWindow;

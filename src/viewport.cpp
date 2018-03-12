@@ -40,8 +40,8 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   LOG(8, "Set color's objects as black:");
   cairo_context->set_source_rgb(0, 0, 0);
 
-  LOG(8, "Draw displayfile objects");
-  std::list<DrawableObject*> objects = this->getDisplayFile()->getObjects();
+  LOG(8, "Draw displayFile objects");
+  std::list<DrawableObject*> objects = this->displayFile.getObjects();
 
   for (std::list<DrawableObject*>::iterator it_obj = objects.begin(); it_obj != objects.end(); it_obj++)
   {
@@ -176,25 +176,55 @@ void ViewPort::addObserver(ViewPortObserver* observer)
 
 void ViewPort::addObject(DrawableObject* object)
 {
-  this->getDisplayFile()->addObject(object);
+  this->displayFile.addObject(object);
   this->queue_draw();
   this->viewPortObservers.notifyObservers();
 }
 
 void ViewPort::removeObject(std::string name)
 {
-  this->getDisplayFile()->removeObjectByName(name);
+  this->displayFile.removeObjectByName(name);
   this->queue_draw();
   this->viewPortObservers.notifyObservers();
 }
 
-ViewWindow* ViewPort::getViewwindow()
+std::list<std::string> ViewPort::getNamesList()
 {
-  return &this->viewWindow;
+  return this->displayFile.getNamesList();
 }
 
-DisplayFile* ViewPort::getDisplayFile()
+void ViewPort::zoom_in(float scale)
 {
-  return &this->displayFile;
+  this->viewWindow.zoom_in(scale);
+  this->queue_draw();
 }
 
+void ViewPort::zoom_out(float scale)
+{
+  this->viewWindow.zoom_out(scale);
+  this->queue_draw();
+}
+
+void ViewPort::move_up(int length)
+{
+  this->viewWindow.move_up(length);
+  this->queue_draw();
+}
+
+void ViewPort::move_down(int length)
+{
+  this->viewWindow.move_down(length);
+  this->queue_draw();
+}
+
+void ViewPort::move_left(int length)
+{
+  this->viewWindow.move_left(length);
+  this->queue_draw();
+}
+
+void ViewPort::move_right(int length)
+{
+  this->viewWindow.move_right(length);
+  this->queue_draw();
+}

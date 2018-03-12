@@ -28,7 +28,7 @@ void DisplayFile::removeObjectByName(string name)
   this->objectsMap.erase(name);
 }
 
-std::list<string> DisplayFile::getNamesList()
+std::list<std::string> DisplayFile::getNamesList()
 {
   std::list<string> list;
 
