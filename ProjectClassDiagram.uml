@@ -3,15 +3,19 @@
   skinparam defaultFontName Consolas
 
   AddObjectWindow <|-- Gtk::Window
+  AddObjectWindow <|-- ViewportObserver
   AddObjectWindow  *-- Viewport        : viewport
 
-  MainWindow      <|-- Gtk::Window
-  MainWindow       *-- Viewport        : viewport
+  MainWindow      <|-left- Gtk::Window
+  MainWindow       *-- Viewport        : viewport*
   MainWindow       *-- AddObjectWindow : addObjectWindow
 
-  Viewport   <|-- Gtk::DrawingArea
-  Viewport   *-- Viewwindow           : viewwindow
-  Viewport   *-- DisplayFile          : displayFile
+  Viewport   <|-right- Gtk::DrawingArea
+  Viewport    *-- Viewwindow           : viewwindow
+  Viewport    *-- DisplayFile          : displayFile
+  Viewport    *-- ViewportObservers    : viewportObservers
+
+  ViewportObservers "1\n" *-up- "*" ViewportObserver : observers
 
   class AddObjectWindow {
     Gtk::Grid              point_grid
@@ -28,24 +32,32 @@
   }
 
   class MainWindow {
-    Gtk::Box   main_box
-    Gtk::Box   left_box
-    Gtk::Frame left_frame
-    Gtk::Frame right_frame
+    Gtk::Box        main_box
+    Gtk::Box        left_box
+    Gtk::Frame      left_frame
+    Gtk::Frame      right_frame
+    Viewport        viewport
+    AddObjectWindow addObjectWindow
   }
 
   class Viewport {
-    int Xvpmin
-    int Yvpmin
-    int Xvpmax
-    int Yvpmax
-
-    DisplayFile      displayFile
-    Gtk::Allocation* allocation
+    int               Xvpmin
+    int               Yvpmin
+    int               Xvpmax
+    int               Yvpmax
 
     bool       on_draw(const Cairo::Context>&)
     void       updateViewport(Gtk::Allocation)
     Coordinate convertCoordinateFromWindow(Coordinate)
+  }
+
+  class ViewportObserver {
+    void updateDropdownList()
+  }
+
+  class ViewportObservers {
+    void notifyObservers()
+    void addObserver(ViewportObserver*)
   }
 
   class Viewwindow {

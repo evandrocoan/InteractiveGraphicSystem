@@ -1,5 +1,5 @@
-#ifndef GTKMM_APP_VIEWPORT_OBSERVERS
-#define GTKMM_APP_VIEWPORT_OBSERVERS
+#ifndef GTKMM_APP_VIEWPORT_OBSERVER
+#define GTKMM_APP_VIEWPORT_OBSERVER
 
 #include <list>
 
@@ -16,11 +16,11 @@ public:
   ViewportObservers();
   virtual ~ViewportObservers();
 
-  void addObserver(ViewportObserver*);
   void notifyObservers();
+  void addObserver(ViewportObserver*);
 
 private:
   std::list<ViewportObserver*> observers;
 };
 
-#endif // GTKMM_APP_VIEWPORT_OBSERVERS
+#endif // GTKMM_APP_VIEWPORT_OBSERVER
