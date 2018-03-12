@@ -45,7 +45,7 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 
   for (std::list<DrawableObject*>::iterator it_obj = objects.begin(); it_obj != objects.end(); it_obj++)
   {
-    list<Coordinate*> objectCoordinates = (*it_obj)->getCoordinates();
+    std::list<Coordinate*> objectCoordinates = (*it_obj)->getCoordinates();
 
     Coordinate firstCordConverted = this->convertCoordinateFromWindow(**(objectCoordinates.begin()));
     cairo_context->move_to(firstCordConverted.getx(),firstCordConverted.gety());
