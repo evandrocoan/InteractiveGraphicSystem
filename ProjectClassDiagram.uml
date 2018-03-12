@@ -4,16 +4,16 @@
 
   AddObjectWindow <|-- Gtk::Window
   AddObjectWindow <|-- ViewportObserver
-  AddObjectWindow  *-- Viewport        : viewport
+  AddObjectWindow  *-- ViewPort        : viewport
 
   MainWindow      <|-left- Gtk::Window
-  MainWindow       *-- Viewport        : viewport*
+  MainWindow       *-- ViewPort        : viewport*
   MainWindow       *-- AddObjectWindow : addObjectWindow
 
-  Viewport   <|-right- Gtk::DrawingArea
-  Viewport    *-- Viewwindow           : viewwindow
-  Viewport    *-- DisplayFile          : displayFile
-  Viewport    *-- ViewportObservers    : viewportObservers
+  ViewPort   <|-right- Gtk::DrawingArea
+  ViewPort    *-- Viewwindow           : viewwindow
+  ViewPort    *-- DisplayFile          : displayFile
+  ViewPort    *-- ViewportObservers    : viewportObservers
 
   ViewportObservers "1\n" *-up- "*" ViewportObserver : observers
 
@@ -36,11 +36,11 @@
     Gtk::Box        left_box
     Gtk::Frame      left_frame
     Gtk::Frame      right_frame
-    Viewport        viewport
+    ViewPort        viewport
     AddObjectWindow addObjectWindow
   }
 
-  class Viewport {
+  class ViewPort {
     int               Xvpmin
     int               Yvpmin
     int               Xvpmax

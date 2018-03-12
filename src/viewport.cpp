@@ -1,6 +1,6 @@
 #include "viewport.h"
 
-Viewport::Viewport() :
+ViewPort::ViewPort() :
       viewwindow(0, 0, 0, 0),
       displayFile(),
       Xvpmin(0),
@@ -11,14 +11,14 @@ Viewport::Viewport() :
 }
 
 /**
- * [Viewport::on_draw description]
+ * [ViewPort::on_draw description]
  *
  * @param `cairo_context` Context is the main class used to draw in cairomm. It contains the current
  *     state of the rendering device, including coordinates of yet to be drawn shapes.
  *
  * @return               [description]
  */
-bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
+bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 {
   this->updateViewport(this->get_allocation());
 
@@ -78,7 +78,7 @@ bool Viewport::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
  * @param  cord [description]
  * @return      [description]
  */
-Coordinate Viewport::convertCoordinateFromWindow(Coordinate cord)
+Coordinate ViewPort::convertCoordinateFromWindow(Coordinate cord)
 {
   long int Xw = cord.getx();
   long int Xvp = (long int)(
@@ -102,7 +102,7 @@ Coordinate Viewport::convertCoordinateFromWindow(Coordinate cord)
  *
  * A strategy of keeping proportions automatically between window and viewport.
  *
- * Window-Viewport Mapping, important conclusion: As the world window increases in size the image in
+ * Window-ViewPort Mapping, important conclusion: As the world window increases in size the image in
  * viewport decreases in size and vice-versa.
  *
  * The user may enlarge or reduce the size of a viewport with w pixels wide and h pixels high by
@@ -120,7 +120,7 @@ Coordinate Viewport::convertCoordinateFromWindow(Coordinate cord)
  *     join(). Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of
        GdkRectangle.
  */
-void Viewport::updateViewport(Gtk::Allocation allocation)
+void ViewPort::updateViewport(Gtk::Allocation allocation)
 {
   // NÃO ENTENDI A LÓGICA MATEMÁTICA
   if (this->Xvpmax != allocation.get_width() ||  this->Yvpmax != allocation.get_height())
@@ -165,35 +165,35 @@ void Viewport::updateViewport(Gtk::Allocation allocation)
   }
 }
 
-Viewport::~Viewport()
+ViewPort::~ViewPort()
 {
 }
 
-void Viewport::addObserver(ViewportObserver* observer)
+void ViewPort::addObserver(ViewportObserver* observer)
 {
   this->viewportObservers.addObserver(observer);
 }
 
-void Viewport::addObject(DrawableObject* object)
+void ViewPort::addObject(DrawableObject* object)
 {
   this->getDisplayFile()->addObject(object);
   this->queue_draw();
   this->viewportObservers.notifyObservers();
 }
 
-void Viewport::removeObject(std::string name)
+void ViewPort::removeObject(std::string name)
 {
   this->getDisplayFile()->removeObjectByName(name);
   this->queue_draw();
   this->viewportObservers.notifyObservers();
 }
 
-Viewwindow* Viewport::getViewwindow()
+Viewwindow* ViewPort::getViewwindow()
 {
   return &this->viewwindow;
 }
 
-DisplayFile* Viewport::getDisplayFile()
+DisplayFile* ViewPort::getDisplayFile()
 {
   return &this->displayFile;
 }

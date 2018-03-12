@@ -13,11 +13,11 @@
 #include "coordinate.h"
 #include "debugger.h"
 
-class Viewport : public Gtk::DrawingArea
+class ViewPort : public Gtk::DrawingArea
 {
 public:
-  Viewport();
-  virtual ~Viewport();
+  ViewPort();
+  virtual ~ViewPort();
 
   Viewwindow*  getViewwindow();
   DisplayFile* getDisplayFile();

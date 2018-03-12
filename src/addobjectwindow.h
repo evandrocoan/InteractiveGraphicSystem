@@ -21,11 +21,11 @@
 class AddObjectWindow : public Gtk::Window
 {
 public:
-  AddObjectWindow(Viewport* viewport);
+  AddObjectWindow(ViewPort* viewport);
   ~AddObjectWindow();
 
 private:
-  Viewport* viewport;
+  ViewPort* viewport;
 
   Gtk::Box       m_vbox;
   Gtk::Notebook  m_notebook;

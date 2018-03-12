@@ -3,7 +3,7 @@
 MainWindow::MainWindow() :
       main_box(Gtk::ORIENTATION_HORIZONTAL),
       left_box(Gtk::ORIENTATION_VERTICAL),
-      right_frame("Viewport"),
+      right_frame("ViewPort"),
       button_add_object("Add Object"),
       button_move_up("up"),
       button_move_down("down"),
@@ -26,7 +26,7 @@ MainWindow::MainWindow() :
   this->setupButtons("", 10, Gtk::BUTTONBOX_START);
   this->connectButtons();
 
-  LOG(4, "Viewport");
+  LOG(4, "ViewPort");
   this->main_box.pack_start(this->right_frame, Gtk::PACK_EXPAND_WIDGET, 10);
   this->right_frame.add(this->viewport);
   this->viewport.show();
@@ -107,7 +107,7 @@ void MainWindow::connectButtons()
 }
 
 /**
- * Called when the `Viewport` objects list is updated.
+ * Called when the `ViewPort` objects list is updated.
  */
 void MainWindow::updateDropdownList()
 {

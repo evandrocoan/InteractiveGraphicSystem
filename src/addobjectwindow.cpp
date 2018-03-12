@@ -1,6 +1,6 @@
 #include "addobjectwindow.h"
 
-AddObjectWindow::AddObjectWindow(Viewport* viewport) :
+AddObjectWindow::AddObjectWindow(ViewPort* viewport) :
       m_notebook(),
       m_vbox(Gtk::ORIENTATION_VERTICAL),
       viewport(viewport),
