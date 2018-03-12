@@ -13,7 +13,7 @@ void DisplayFile::addObject(DrawableObject* object)
   this->objectsMap[object->getName()] = object;
 }
 
-DrawableObject* DisplayFile::getObjectByName(string name)
+DrawableObject* DisplayFile::getObjectByName(std::string name)
 {
   return this->objectsMap.find(name)->second;
 }
@@ -23,16 +23,16 @@ void DisplayFile::removeObject(DrawableObject* object)
   this->removeObjectByName(object->getName());
 }
 
-void DisplayFile::removeObjectByName(string name)
+void DisplayFile::removeObjectByName(std::string name)
 {
   this->objectsMap.erase(name);
 }
 
 std::list<std::string> DisplayFile::getNamesList()
 {
-  std::list<string> list;
+  std::list<std::string> list;
 
-  for(std::map<string, DrawableObject*>::iterator it = objectsMap.begin(); it != objectsMap.end(); it++)
+  for(std::map<std::string, DrawableObject*>::iterator it = objectsMap.begin(); it != objectsMap.end(); it++)
   {
     list.push_back(it->first);
   }
@@ -44,7 +44,7 @@ std::list<DrawableObject*> DisplayFile::getObjects()
 {
   std::list<DrawableObject*> list;
 
-  for(std::map<string, DrawableObject*>::iterator it = objectsMap.begin();
+  for(std::map<std::string, DrawableObject*>::iterator it = objectsMap.begin();
       it != objectsMap.end(); it++)
   {
     list.push_back(it->second);

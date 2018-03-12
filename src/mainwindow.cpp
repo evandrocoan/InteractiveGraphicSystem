@@ -245,7 +245,7 @@ void MainWindow::on_button_delete_object()
 
   if(!(name.empty()))
   {
-    this->viewPort.removeObject((string)name);
+    this->viewPort.removeObject((std::string)name);
   }
 }
 

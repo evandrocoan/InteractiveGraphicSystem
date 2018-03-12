@@ -8,38 +8,26 @@
 #ifndef GTKMM_APP_DRAWABLE_OBJECT
 #define GTKMM_APP_DRAWABLE_OBJECT
 
- /*This class represent's a object such as line or polygon
- * to be drawed on the view port.
- * Include any library as need to use other's components.
+/**
+ * This class represents a object such as line or polygon to be draw on the viewport.
  */
 #include <list>
 #include <string>
 #include "coordinate.h"
-using namespace std;
 
 class DrawableObject
 {
 public:
-  DrawableObject(string name, list<Coordinate*> coordinates) :
-      name(name), coordinates(coordinates) {}
+  DrawableObject(std::string name, std::list<Coordinate*> coordinates);
+  ~DrawableObject();
 
-  ~DrawableObject() {}
-
-  std::string getName()
-  {
-    return name;
-  }
-
-  list<Coordinate*> getCoordinates()
-  {
-    return this->coordinates;
-  }
+  std::string getName();
+  std::list<Coordinate*> getCoordinates();
 
 protected:
-  DrawableObject(string name) :
-      name(name) {}
+  DrawableObject(std::string name);
 
-  string name;
-  list<Coordinate*> coordinates;
+  std::string name;
+  std::list<Coordinate*> coordinates;
 };
 #endif // GTKMM_APP_DRAWABLE_OBJECT
