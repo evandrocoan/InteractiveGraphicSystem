@@ -31,9 +31,9 @@ AddObjectWindow::AddObjectWindow(ViewPort* viewPort) :
       button_close("Close")
 {
   LOG(2, "Entering...");
-  this->set_title("Add Object");
-  this->set_border_width(12);
-  this->add(m_vbox);
+  this->window.set_title("Add Object");
+  this->window.set_border_width(12);
+  this->window.add(m_vbox);
 
   point_name_field.set_text("point1");
   point_x_field.set_text("50");
@@ -99,11 +99,16 @@ AddObjectWindow::AddObjectWindow(ViewPort* viewPort) :
   m_notebook.append_page(point_grid, "Point");
   m_notebook.append_page(line_grid, "Line");
   m_notebook.append_page(polygn_grid, "Polygon");
-  this->show_all_children();
+  this->window.show_all_children();
 }
 
 AddObjectWindow::~AddObjectWindow()
 {
+}
+
+Gtk::Window* AddObjectWindow::getWindow()
+{
+  return &this->window;
 }
 
 void AddObjectWindow::on_button_save_point()
@@ -127,7 +132,7 @@ void AddObjectWindow::on_button_save_point()
   Point *point = new Point(name, point_cord);
 
   this->viewPort->addObject(point);
-  this->close();
+  this->window.close();
 }
 
 void AddObjectWindow::on_button_save_line()
@@ -157,7 +162,7 @@ void AddObjectWindow::on_button_save_line()
   Line *line = new Line(name, point_cord1, point_cord2);
 
   this->viewPort->addObject(line);
-  this->close();
+  this->window.close();
 }
 
 void AddObjectWindow::on_button_save_polygon()
@@ -181,7 +186,7 @@ void AddObjectWindow::on_button_save_polygon()
       polygon_cord_list.pop_back();
     }
 
-    this->close();
+    this->window.close();
   }
   else
   {
@@ -211,6 +216,6 @@ void AddObjectWindow::on_button_add_coordinate()
 
 void AddObjectWindow::on_button_close()
 {
-  this->close();
+  this->window.close();
 }
 

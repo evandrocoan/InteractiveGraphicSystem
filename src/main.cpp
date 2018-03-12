@@ -19,7 +19,7 @@ int main (int argc, char *argv[])
   MainWindow mainWindow;
 
   LOG(4, "Shows the main window and returns when it is closed.");
-  int exit_code = app->run(mainWindow);
+  int exit_code = app->run(*mainWindow.getWindow());
 
   LOG(2, "exit_code: %d", exit_code);
   return exit_code;
