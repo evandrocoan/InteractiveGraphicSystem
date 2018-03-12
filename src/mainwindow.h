@@ -35,7 +35,7 @@ public:
 private:
   Gtk::ComboBoxText objects_list;
 
-  ViewPort        viewport;
+  ViewPort        viewPort;
   AddObjectWindow addObjectWindow;
 
   Gtk::Button button_move_up;
