@@ -21,16 +21,16 @@
 class AddObjectWindow : public Gtk::Window
 {
 public:
-  AddObjectWindow(Viewport* viewport);
+  AddObjectWindow(ViewPort* viewPort);
   ~AddObjectWindow();
 
 private:
-  Viewport* viewport;
+  ViewPort* viewPort;
 
   Gtk::Box       m_vbox;
   Gtk::Notebook  m_notebook;
 
-  string                 new_object_name;
+  std::string            new_object_name;
   std::list<Coordinate*> polygon_cord_list;
 
   Gtk::Grid line_grid;

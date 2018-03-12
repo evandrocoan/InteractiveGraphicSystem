@@ -24,7 +24,7 @@
 #define DEFAULT_MOVE_LENGTH "10"
 
 
-class MainWindow : public Gtk::Window, public ViewportObserver
+class MainWindow : public Gtk::Window, public ViewPortObserver
 {
 
 public:
@@ -35,7 +35,7 @@ public:
 private:
   Gtk::ComboBoxText objects_list;
 
-  Viewport        viewport;
+  ViewPort        viewPort;
   AddObjectWindow addObjectWindow;
 
   Gtk::Button button_move_up;

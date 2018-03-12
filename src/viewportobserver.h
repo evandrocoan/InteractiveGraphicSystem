@@ -1,26 +1,26 @@
-#ifndef GTKMM_APP_VIEWPORT_OBSERVERS
-#define GTKMM_APP_VIEWPORT_OBSERVERS
+#ifndef GTKMM_APP_VIEWPORT_OBSERVER
+#define GTKMM_APP_VIEWPORT_OBSERVER
 
 #include <list>
 
 
-class ViewportObserver {
+class ViewPortObserver {
 public:
   virtual void updateDropdownList() = 0;
 };
 
 
-class ViewportObservers
+class ViewPortObservers
 {
 public:
-  ViewportObservers();
-  virtual ~ViewportObservers();
+  ViewPortObservers();
+  virtual ~ViewPortObservers();
 
-  void addObserver(ViewportObserver*);
   void notifyObservers();
+  void addObserver(ViewPortObserver*);
 
 private:
-  std::list<ViewportObserver*> observers;
+  std::list<ViewPortObserver*> observers;
 };
 
-#endif // GTKMM_APP_VIEWPORT_OBSERVERS
+#endif // GTKMM_APP_VIEWPORT_OBSERVER

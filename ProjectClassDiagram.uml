@@ -3,21 +3,36 @@
   skinparam defaultFontName Consolas
 
   AddObjectWindow <|-- Gtk::Window
-  AddObjectWindow  *-- Viewport        : viewport
+  AddObjectWindow <|-- ViewPortObserver
+  AddObjectWindow  *-- ViewPort        : viewPort
 
-  MainWindow      <|-- Gtk::Window
-  MainWindow       *-- Viewport        : viewport
+  Line               <|-- DrawableObject
+  Point              <|-- DrawableObject
+  Polygon            <|-- DrawableObject
+  DrawableObject "1"  *-- "*" Coordinate: coordinates
+
+  MainWindow      <|-left- Gtk::Window
+  MainWindow       *-- ViewPort        : viewPort*
   MainWindow       *-- AddObjectWindow : addObjectWindow
 
-  Viewport   <|-- Gtk::DrawingArea
-  Viewport   *-- Viewwindow           : viewwindow
-  Viewport   *-- DisplayFile          : displayFile
+  ViewPort   <|-right- Gtk::DrawingArea
+  ViewPort    *-- ViewWindow           : viewWindow
+  ViewPort    *-- DisplayFile          : displayFile
+  ViewPort    *-- ViewPortObservers    : viewPortObservers
+
+  ViewPortObservers "1\n" *-up- "*" ViewPortObserver : observers
+
 
   class AddObjectWindow {
     Gtk::Grid              point_grid
     Gtk::Grid              line_grid
     Gtk::Grid              polygn_grid
     std::list<Coordinate*> polygon_cord_list
+  }
+
+  class Coordinate {
+    long int cord_x
+    long int cord_y
   }
 
   class DisplayFile {
@@ -27,28 +42,40 @@
     void removeObjectByName( string )
   }
 
-  class MainWindow {
-    Gtk::Box   main_box
-    Gtk::Box   left_box
-    Gtk::Frame left_frame
-    Gtk::Frame right_frame
+  class DrawableObject {
+    list<Coordinate*> getCoordinates()
   }
 
-  class Viewport {
-    int Xvpmin
-    int Yvpmin
-    int Xvpmax
-    int Yvpmax
+  class MainWindow {
+    Gtk::Box        main_box
+    Gtk::Box        left_box
+    Gtk::Frame      left_frame
+    Gtk::Frame      right_frame
+    ViewPort        viewPort
+    AddObjectWindow addObjectWindow
+  }
 
-    DisplayFile      displayFile
-    Gtk::Allocation* allocation
+  class ViewPort {
+    int               Xvpmin
+    int               Yvpmin
+    int               Xvpmax
+    int               Yvpmax
 
     bool       on_draw(const Cairo::Context>&)
     void       updateViewport(Gtk::Allocation)
     Coordinate convertCoordinateFromWindow(Coordinate)
   }
 
-  class Viewwindow {
+  class ViewPortObserver {
+    void updateDropdownList()
+  }
+
+  class ViewPortObservers {
+    void notifyObservers()
+    void addObserver(ViewPortObserver*)
+  }
+
+  class ViewWindow {
     float Xwmin
     float Ywmin
     float Xwmax
