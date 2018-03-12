@@ -133,6 +133,11 @@ void MainWindow::updateDropdownList()
     this->objects_list.append(object);
     LOG(4, object.c_str());
   }
+
+  // Set Gtk.ComboBoxText default item?
+  // https://stackoverflow.com/questions/14912210/set-gtk-comboboxtext-default-item
+  LOG(4, "Selecting the last item on the ComboBoxText");
+  this->objects_list.set_active(names.size()-1);
 }
 
 void MainWindow::on_button_move_up()

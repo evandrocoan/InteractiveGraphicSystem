@@ -14,6 +14,13 @@
 #include "coordinate.h"
 #include "debugger.h"
 
+/**
+ * The Drawing Area Widget
+ * https://developer.gnome.org/gtkmm-tutorial/stable/chapter-drawingarea.html.en
+ *
+ * Drawing Straight Lines
+ * https://developer.gnome.org/gtkmm-tutorial/stable/sec-cairo-drawing-lines.html.en#cairo-example-lines
+ */
 class ViewPort : public Gtk::DrawingArea
 {
 public:
