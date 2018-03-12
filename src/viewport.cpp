@@ -3,10 +3,10 @@
 ViewPort::ViewPort() :
       viewWindow(0, 0, 0, 0),
       displayFile(),
-      Xvpmin(0),
-      Yvpmin(0),
-      Xvpmax(0),
-      Yvpmax(0)
+      xVpmin(0),
+      yVpmin(0),
+      xVpmax(0),
+      yVpmax(0)
 {
 }
 
@@ -31,10 +31,10 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
   Coordinate originOnWindow = convertCoordinateFromWindow(Coordinate(0, 0));
 
-  cairo_context->move_to(Xvpmin, originOnWindow.gety());
-  cairo_context->line_to(Xvpmax, originOnWindow.gety());
-  cairo_context->move_to(originOnWindow.getx(), Yvpmin);
-  cairo_context->line_to(originOnWindow.getx(), Yvpmax);
+  cairo_context->move_to(this->xVpmin, originOnWindow.gety());
+  cairo_context->line_to(this->xVpmax, originOnWindow.gety());
+  cairo_context->move_to(originOnWindow.getx(), this->yVpmin);
+  cairo_context->line_to(originOnWindow.getx(), this->yVpmax);
   cairo_context->stroke();
 
   LOG(8, "Set color's objects as black:");
@@ -80,20 +80,20 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
  */
 Coordinate ViewPort::convertCoordinateFromWindow(Coordinate cord)
 {
-  long int Xw = cord.getx();
-  long int Xvp = (long int)(
-      (double)(Xw - this->viewWindow.getXwmin()) * ((double)(this->Xvpmax - this->Xvpmin) /
-          (double)(this->viewWindow.getXwmax() - this->viewWindow.getXwmin())
+  long int xW = cord.getx();
+  long int xVp = (long int)(
+      (double)(xW - this->viewWindow.xWmin) * ((double)(this->xVpmax - this->xVpmin) /
+          (double)(this->viewWindow.xWmax - this->viewWindow.xWmin)
       )
   );
 
-  long int Yw = cord.gety();
-  long int Yvp = (this->Yvpmax - this->Yvpmin) - (long int)(
-      (double)(Yw - this->viewWindow.getYwmin()) * (double)(this->Yvpmax - this->Yvpmin) /
-          (double)(this->viewWindow.getYwmax() - this->viewWindow.getYwmin())
+  long int yW = cord.gety();
+  long int yVp = (this->yVpmax - this->yVpmin) - (long int)(
+      (double)(yW - this->viewWindow.yWmin) * (double)(this->yVpmax - this->yVpmin) /
+          (double)(this->viewWindow.yWmax - this->viewWindow.yWmin)
   );
 
-  return Coordinate(Xvp, Yvp);
+  return Coordinate(xVp, yVp);
 }
 
 /**
@@ -123,18 +123,18 @@ Coordinate ViewPort::convertCoordinateFromWindow(Coordinate cord)
 void ViewPort::updateViewport(Gtk::Allocation allocation)
 {
   // NÃO ENTENDI A LÓGICA MATEMÁTICA
-  if (this->Xvpmax != allocation.get_width() ||  this->Yvpmax != allocation.get_height())
+  if (this->xVpmax != allocation.get_width() ||  this->yVpmax != allocation.get_height())
   {
     float xwmax;
 
-    int widthDiff  = allocation.get_width()  - (this->Xvpmax - this->Xvpmin);
-    int heightDiff = allocation.get_height() - (this->Yvpmax - this->Yvpmin);
+    int widthDiff  = allocation.get_width()  - (this->xVpmax - this->xVpmin);
+    int heightDiff = allocation.get_height() - (this->yVpmax - this->yVpmin);
 
-    if (this->Xvpmax != 0)
+    if (this->xVpmax != 0)
     {
-      xwmax = this->viewWindow.getXwmax()
-          + (float)(this->viewWindow.getXwmax() - this->viewWindow.getXwmin()) * ( (float)widthDiff
-              / (float)(this->Xvpmax - this->Xvpmin)
+      xwmax = this->viewWindow.xWmax
+          + (float)(this->viewWindow.xWmax - this->viewWindow.xWmin) * ( (float)widthDiff
+              / (float)(this->xVpmax - this->xVpmin)
           );
     }
     else
@@ -142,26 +142,26 @@ void ViewPort::updateViewport(Gtk::Allocation allocation)
       xwmax = (float)widthDiff;
     }
 
-    this->viewWindow.setXwmax( xwmax );
+    this->viewWindow.xWmax = xwmax;
 
-    if (this->Yvpmax != 0)
+    if (this->yVpmax != 0)
     {
-      this->viewWindow.setYwmin(
-          this->viewWindow.getYwmin()
-              - (float)(this->viewWindow.getYwmax()
-                  - this->viewWindow.getYwmin()
-              ) * ((float)heightDiff / (float)(this->Yvpmax - this->Yvpmin))
+      this->viewWindow.yWmin = (
+          this->viewWindow.yWmin
+              - (float)(this->viewWindow.yWmax
+                  - this->viewWindow.yWmin
+              ) * ((float)heightDiff / (float)(this->yVpmax - this->yVpmin))
       );
     }
     else
     {
       LOG(8, "If we exchange this to `setYwmin()` our world becomes up-side-down");
-      this->viewWindow.setYwmax((float)heightDiff);
+      this->viewWindow.yWmax = (float)heightDiff;
     }
 
-    this->Xvpmax += widthDiff;
-    this->Yvpmax += heightDiff;
-    LOG(8, "Xvpmax: %d, Yvpmax: %d", Xvpmax, Yvpmax);
+    this->xVpmax += widthDiff;
+    this->yVpmax += heightDiff;
+    LOG(8, "xVpmax: %d, yVpmax: %d", xVpmax, yVpmax);
   }
 }
 
