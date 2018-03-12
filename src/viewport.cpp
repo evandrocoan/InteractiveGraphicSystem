@@ -125,24 +125,24 @@ void ViewPort::updateViewport(Gtk::Allocation allocation)
   // NÃO ENTENDI A LÓGICA MATEMÁTICA
   if (this->xVpmax != allocation.get_width() ||  this->yVpmax != allocation.get_height())
   {
-    float xwmax;
+    float xWmax;
 
     int widthDiff  = allocation.get_width()  - (this->xVpmax - this->xVpmin);
     int heightDiff = allocation.get_height() - (this->yVpmax - this->yVpmin);
 
     if (this->xVpmax != 0)
     {
-      xwmax = this->viewWindow.xWmax
+      xWmax = this->viewWindow.xWmax
           + (float)(this->viewWindow.xWmax - this->viewWindow.xWmin) * ( (float)widthDiff
               / (float)(this->xVpmax - this->xVpmin)
           );
     }
     else
     {
-      xwmax = (float)widthDiff;
+      xWmax = (float)widthDiff;
     }
 
-    this->viewWindow.xWmax = xwmax;
+    this->viewWindow.xWmax = xWmax;
 
     if (this->yVpmax != 0)
     {
