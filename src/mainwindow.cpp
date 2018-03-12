@@ -3,7 +3,7 @@
 MainWindow::MainWindow() :
       main_box(Gtk::ORIENTATION_HORIZONTAL),
       left_box(Gtk::ORIENTATION_VERTICAL),
-      right_frame("Viewport"),
+      right_frame("ViewPort"),
       button_add_object("Add Object"),
       button_move_up("up"),
       button_move_down("down"),
@@ -12,7 +12,7 @@ MainWindow::MainWindow() :
       button_zoom_in("+"),
       button_zoom_out("-"),
       button_delete_obj("Delete Object"),
-      addObjectWindow(&this->viewport)
+      addObjectWindow(&this->viewPort)
 {
   LOG(2, "Entering...");
   this->set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan");
@@ -26,10 +26,10 @@ MainWindow::MainWindow() :
   this->setupButtons("", 10, Gtk::BUTTONBOX_START);
   this->connectButtons();
 
-  LOG(4, "Viewport");
+  LOG(4, "ViewPort");
   this->main_box.pack_start(this->right_frame, Gtk::PACK_EXPAND_WIDGET, 10);
-  this->right_frame.add(this->viewport);
-  this->viewport.show();
+  this->right_frame.add(this->viewPort);
+  this->viewPort.show();
 
   LOG(4, "Show all components");
   this->add(this->main_box);
@@ -88,7 +88,7 @@ void MainWindow::setupButtons(const Glib::ustring& title, gint spacing, Gtk::But
   buttons_frame->add(*buttonBox);
   left_box.pack_start(*Gtk::manage(buttons_frame), Gtk::PACK_EXPAND_WIDGET);
 
-  this->viewport.addObserver(this);
+  this->viewPort.addObserver(this);
 }
 
 void MainWindow::connectButtons()
@@ -107,12 +107,12 @@ void MainWindow::connectButtons()
 }
 
 /**
- * Called when the `Viewport` objects list is updated.
+ * Called when the `ViewPort` objects list is updated.
  */
 void MainWindow::updateDropdownList()
 {
   LOG(2, "Entering...");
-  auto names = this->viewport.getDisplayFile()->getNamesList();
+  auto names = this->viewPort.getDisplayFile()->getNamesList();
 
   LOG(4, "limpa a lista de objetos para reimprimi-la");
   this->objects_list.remove_all();
@@ -140,8 +140,8 @@ void MainWindow::on_button_move_up()
   }
   else
   {
-    this->viewport.getViewwindow()->move_up(move_length);
-    this->viewport.queue_draw();
+    this->viewPort.getViewwindow()->move_up(move_length);
+    this->viewPort.queue_draw();
   }
 }
 
@@ -155,8 +155,8 @@ void MainWindow::on_button_move_down()
   }
   else
   {
-    this->viewport.getViewwindow()->move_down(move_length);
-    this->viewport.queue_draw();
+    this->viewPort.getViewwindow()->move_down(move_length);
+    this->viewPort.queue_draw();
   }
 }
 
@@ -170,8 +170,8 @@ void MainWindow::on_button_move_left()
   }
   else
   {
-    this->viewport.getViewwindow()->move_left(move_length);
-    this->viewport.queue_draw();
+    this->viewPort.getViewwindow()->move_left(move_length);
+    this->viewPort.queue_draw();
   }
 }
 
@@ -185,8 +185,8 @@ void MainWindow::on_button_move_right()
   }
   else
   {
-    this->viewport.getViewwindow()->move_right(move_length);
-    this->viewport.queue_draw();
+    this->viewPort.getViewwindow()->move_right(move_length);
+    this->viewPort.queue_draw();
   }
 }
 
@@ -204,8 +204,8 @@ void MainWindow::on_button_zoom_in()
   }
   else
   {
-    this->viewport.getViewwindow()->zoom_in(zoom_scale);
-    this->viewport.queue_draw();
+    this->viewPort.getViewwindow()->zoom_in(zoom_scale);
+    this->viewPort.queue_draw();
   }
 }
 
@@ -223,8 +223,8 @@ void MainWindow::on_button_zoom_out()
   }
   else
   {
-    this->viewport.getViewwindow()->zoom_out(zoom_scale);
-    this->viewport.queue_draw();
+    this->viewPort.getViewwindow()->zoom_out(zoom_scale);
+    this->viewPort.queue_draw();
   }
 }
 
@@ -241,7 +241,7 @@ void MainWindow::on_button_delete_object()
 
   if(!(name.empty()))
   {
-    this->viewport.removeObject((string)name);
+    this->viewPort.removeObject((string)name);
   }
 }
 

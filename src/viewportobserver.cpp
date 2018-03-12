@@ -1,21 +1,21 @@
 #include "viewportobserver.h"
 
-ViewportObservers::ViewportObservers()
+ViewPortObservers::ViewPortObservers()
 {
 }
 
-ViewportObservers::~ViewportObservers()
+ViewPortObservers::~ViewPortObservers()
 {
 }
 
-void ViewportObservers::addObserver(ViewportObserver* observer)
+void ViewPortObservers::addObserver(ViewPortObserver* observer)
 {
   this->observers.push_back(observer);
 }
 
-void ViewportObservers::notifyObservers()
+void ViewPortObservers::notifyObservers()
 {
-  for( ViewportObserver* observer : this->observers )
+  for( ViewPortObserver* observer : this->observers )
   {
     observer->updateDropdownList();
   }

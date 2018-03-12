@@ -13,27 +13,27 @@
 #include "coordinate.h"
 #include "debugger.h"
 
-class Viewport : public Gtk::DrawingArea
+class ViewPort : public Gtk::DrawingArea
 {
 public:
-  Viewport();
-  virtual ~Viewport();
+  ViewPort();
+  virtual ~ViewPort();
 
-  Viewwindow*  getViewwindow();
+  ViewWindow*  getViewwindow();
   DisplayFile* getDisplayFile();
   void         addObject(DrawableObject*);
   void         removeObject(std::string name);
-  void         addObserver(ViewportObserver*);
+  void         addObserver(ViewPortObserver*);
 
 protected:
-  Viewwindow        viewwindow;
+  ViewWindow        viewWindow;
   DisplayFile       displayFile;
-  ViewportObservers viewportObservers;
+  ViewPortObservers viewPortObservers;
 
-  int Xvpmin;
-  int Yvpmin;
-  int Xvpmax;
-  int Yvpmax;
+  int xVpmin;
+  int yVpmin;
+  int xVpmax;
+  int yVpmax;
 
   bool       on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
   void       updateViewport(Gtk::Allocation);
