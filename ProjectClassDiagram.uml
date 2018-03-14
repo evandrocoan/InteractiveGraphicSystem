@@ -3,24 +3,26 @@
   skinparam defaultFontName Consolas
 
   AddObjectWindow <|-- ViewPortObserver
-  AddObjectWindow  *-- ViewPort        : viewPort*
+  AddObjectWindow  *-- ViewPort           : viewPort*
 
-  DrawableObject "1\n"  *-right- "*\n" Coordinate: coordinates
-  DisplayFile    "1\n"  *-up- "*" DrawableObject
+  DisplayFile    "1\n"  *-down- "*" DrawableObject
+  DrawableObject "1\n"  *-left- "*\n" Coordinate: coordinates
 
-  Line               <|-- DrawableObject
-  Point              <|-- DrawableObject
-  Polygon            <|-- DrawableObject
+  Line    <|-up- DrawableObject
+  Point   <|-up- DrawableObject
+  Polygon <|-up- DrawableObject
 
-  MainWindow       *-- ViewPort        : viewPort\n\n\n\n\n
-  MainWindow       *-- AddObjectWindow : addObjectWindow
+  MainWindow *-down-  ViewPort             : viewPort
+  MainWindow *-right- AddObjectWindow      : addObjectWindow
+  MainWindow *-left-  TransformationWindow : transformationWindow
 
-  ViewPort   <|-left- Gtk::DrawingArea
-  ViewPort    *-- ViewWindow           : viewWindow
-  ViewPort    *-up- DisplayFile        : displayFile
-  ViewPort    *-- ViewPortObservers    : viewPortObservers
+  TransformationWindow *-- ViewPort        : viewPort*
 
-  ViewPortObservers "1\n" *-up- "\n*" ViewPortObserver : observers
+  ViewPort   *-left-  ViewWindow           : viewWindow
+  ViewPort   *-down-  DisplayFile          : displayFile
+  ViewPort   *-right- ViewPortObservers    : viewPortObservers
+
+  ViewPortObservers "1" *-up- "*" ViewPortObserver : observers
 
   class AddObjectWindow {
     Gtk::Grid              point_grid
@@ -68,6 +70,10 @@
     Gtk::Window     window
     ViewPort        viewPort
     AddObjectWindow addObjectWindow
+  }
+
+  class TransformationWindow {
+    Gtk::Window window
   }
 
   class ViewPort {
