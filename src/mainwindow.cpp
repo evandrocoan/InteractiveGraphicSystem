@@ -11,8 +11,10 @@ MainWindow::MainWindow() :
       button_move_right("right"),
       button_zoom_in("+"),
       button_zoom_out("-"),
-      button_delete_obj("Delete Object"),
-      addObjectWindow(&this->viewPort)
+      button_delete_object("Delete Object"),
+      button_add_transformation("Add Transformation"),
+      addObjectWindow(&this->viewPort),
+      addTransformationWindow(&this->viewPort)
 {
   LOG(2, "Entering...");
   this->main_box.pack_start(left_frame, Gtk::PACK_SHRINK, 10);
@@ -63,7 +65,8 @@ void MainWindow::setupButtons(const Glib::ustring& title, gint spacing, Gtk::But
   grid_list_obj.set_column_homogeneous(true);
   grid_list_obj.attach(button_add_object, 1, 1, 1, 1);
   grid_list_obj.attach(objects_list, 1, 2, 1, 1);
-  grid_list_obj.attach(button_delete_obj, 1, 3, 1, 1);
+  grid_list_obj.attach(button_delete_object, 1, 3, 1, 1);
+  grid_list_obj.attach(button_add_transformation, 1, 4, 1, 1);
 
   LOG(4, "Adicionando os botões de movimentações na grade de movimentação");
   grid_move.set_column_homogeneous(true);
@@ -108,7 +111,8 @@ void MainWindow::connectButtons()
   this->button_zoom_out.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_zoom_out));
 
   this->button_add_object.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_add_object));
-  this->button_delete_obj.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_delete_object));
+  this->button_delete_object.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_delete_object));
+  this->button_add_transformation.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_add_transformation));
 }
 
 /**
@@ -236,7 +240,12 @@ void MainWindow::on_button_add_object()
 {
   LOG(2, "Entering...");
   this->addObjectWindow.getWindow()->show();
-  //addObjectWindow->on_button_save_point();
+}
+
+void MainWindow::on_button_add_transformation()
+{
+  LOG(2, "Entering...");
+  this->addTransformationWindow.getWindow()->show();
 }
 
 void MainWindow::on_button_delete_object()

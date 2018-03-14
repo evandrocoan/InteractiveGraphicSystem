@@ -131,3 +131,35 @@ pkg-config --modversion gtkmm-2.4
 pkg-config --modversion glibmm-2.4
 ```
 
+
+> ### Installing Glade
+>
+> 1. http://grbd.github.io/posts/2016/01/29/gtksharp-part-2-setting-up-glade/
+>
+> Next we're going to install glade, make sure you have a MSYS console open
+>
+> To search for the glade packages:
+> ```
+> pacman -Ss glade
+> ```
+> To install for 64Bit Windows:
+> ```
+> pacman -S mingw64/mingw-w64-x86_64-glade
+> ```
+>
+> We can now run glade via the exe `C:\msys64\mingw64\bin\glade.exe`
+
+
+> ### Glade creates XML instead of C code
+>
+> 1. https://ubuntuforums.org/showthread.php?t=1408536
+>
+> The older version of glade would write C/C++ code for the GUI. You really don't want that. I use Glade 3.6.7 and GtkBuilder. I mainly write using C++ so the API I am using is Gtkmm. The GtkBuilder class is called Gtk::Builder. You can access your glade XML file and interact with the widgets using the Gtk::Builder classes. I don't think you will find any speed issue with the GUI being in an XML file. The entire file can be loaded and parsed at startup. Also many programs use "outside" files for resources and configuration. I don't think that is a problem. In \*nix these files can be placed in system directories that are not accessible by the normal user.
+>
+> However if you wish to hardcode the GUI then that is entirely possible. You can't use glade to do that. I don't know of any other program that will allow you to create a Gtk GUI and output the code for you.
+>
+> If you really want something like that then your best bet is to get an older version of glade and try that. Caveat: Gtk has gone through many changes and you won't be able to take advantage of the newer features. And some features have been deprecated.
+
+
+
+

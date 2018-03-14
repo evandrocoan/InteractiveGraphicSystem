@@ -1,33 +1,21 @@
 #include "addobjectwindow.h"
 
 AddObjectWindow::AddObjectWindow(ViewPort* viewPort) :
-      m_notebook(),
       m_vbox(Gtk::ORIENTATION_VERTICAL),
       viewPort(viewPort),
-      point_name_field(),
       info_label("Insert a Coordinate :"),
       point_x_label("Coordinate X : "),
       point_y_label("Coordinate Y : "),
       button_save_point("Save Point"),
-      point_x_field(),
-      point_y_field(),
-      line_name_field(),
       line_x1_label("Coordinate X1 : "),
       line_y1_label("Coordinate Y1 : "),
       line_x2_label("Coordinate X2 : "),
       line_y2_label("Coordinate Y2 : "),
       button_save_line("Save Line"),
-      line_x1_field(),
-      line_x2_field(),
-      line_y1_field(),
-      line_y2_field(),
-      polygon_name_field(),
       polygon_x_label("Coordinate X : "),
       polygon_y_label("Coordinate Y : "),
       button_save_wire("Save Polygon"),
       button_add_coordenate("Add Coordenate"),
-      wire_x_field(),
-      wire_y_field(),
       button_close("Close")
 {
   LOG(2, "Entering...");
