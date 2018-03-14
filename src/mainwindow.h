@@ -19,6 +19,7 @@
 #include "viewwindow.h"
 #include "viewportobserver.h"
 #include "addobjectwindow.h"
+#include "addtransformationwindow.h"
 
 #define DEFAULT_ZOOM_SCALE  1.5
 #define DEFAULT_MOVE_LENGTH "10"
@@ -38,8 +39,9 @@ private:
   Gtk::ComboBoxText objects_list;
   Gtk::Window       window;
 
-  ViewPort        viewPort;
-  AddObjectWindow addObjectWindow;
+  ViewPort                viewPort;
+  AddObjectWindow         addObjectWindow;
+  AddTransformationWindow addTransformationWindow;
 
   Gtk::Button button_move_up;
   Gtk::Button button_move_down;
@@ -50,7 +52,8 @@ private:
   Gtk::Button button_zoom_out;
 
   Gtk::Button button_add_object;
-  Gtk::Button button_delete_obj;
+  Gtk::Button button_delete_object;
+  Gtk::Button button_add_transformation;
 
   Gtk::Box main_box;
   Gtk::Box left_box;
@@ -78,6 +81,7 @@ private:
 
   void on_button_add_object();
   void on_button_delete_object();
+  void on_button_add_transformation();
 };
 
 #endif // GTKMM_APP_MAIN_WINDOW
