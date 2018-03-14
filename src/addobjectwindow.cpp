@@ -19,30 +19,12 @@ AddObjectWindow::AddObjectWindow(ViewPort* viewPort) :
       button_close("Close")
 {
   LOG(2, "Entering...");
-  this->window.set_title("Add Object");
-  this->window.set_border_width(12);
-  this->window.add(m_vbox);
-
   point_name_field.set_text("point1");
+  point_name_field.set_placeholder_text("Name");
   point_x_field.set_text("50");
   point_y_field.set_text("50");
-  line_name_field.set_text("line1");
-  line_x1_field.set_text("0");
-  line_y1_field.set_text("0");
-  line_x2_field.set_text("50");
-  line_y2_field.set_text("50");
-  polygon_name_field.set_text("polygon1");
-  wire_x_field.set_text("0");
-  wire_y_field.set_text("0");
-
-  m_notebook.set_border_width(0);
-  m_vbox.pack_start(m_notebook);
-  m_vbox.pack_start(button_close, Gtk::PACK_SHRINK);
-
-  LOG(4, "Add point grid");
   point_grid.set_column_homogeneous(true);
   point_grid.set_row_spacing(10);
-  point_name_field.set_placeholder_text("Name");
   point_grid.attach(point_name_field, 1, 1, 2, 1);
   point_grid.attach(point_x_label, 1, 2, 1, 1);
   point_grid.attach(point_x_field, 2, 2, 1, 1);
@@ -50,10 +32,14 @@ AddObjectWindow::AddObjectWindow(ViewPort* viewPort) :
   point_grid.attach(point_y_field, 2, 3, 1, 1);
   point_grid.attach(button_save_point, 1, 4, 2, 1);
 
-  LOG(4, "Add line grid");
+  line_name_field.set_placeholder_text("Name");
+  line_name_field.set_text("line1");
+  line_x1_field.set_text("0");
+  line_y1_field.set_text("0");
+  line_x2_field.set_text("50");
+  line_y2_field.set_text("50");
   line_grid.set_column_homogeneous(true);
   line_grid.set_row_spacing(10);
-  line_name_field.set_placeholder_text("Name");
   line_grid.attach(line_name_field, 1, 1, 4, 1);
   line_grid.attach(line_x1_label, 1, 2, 1, 1);
   line_grid.attach(line_x1_field, 2, 2, 1, 1);
@@ -65,10 +51,12 @@ AddObjectWindow::AddObjectWindow(ViewPort* viewPort) :
   line_grid.attach(line_y2_field, 4, 3, 1, 1);
   line_grid.attach(button_save_line, 1, 4, 4, 1);
 
-  LOG(4, "Add polygon grid");
+  polygon_name_field.set_placeholder_text("Name");
+  polygon_name_field.set_text("polygon1");
+  wire_x_field.set_text("0");
+  wire_y_field.set_text("0");
   polygn_grid.set_column_homogeneous(true);
   polygn_grid.set_row_spacing(10);
-  polygon_name_field.set_placeholder_text("Name");
   polygn_grid.attach(polygon_name_field, 1, 1, 1, 1);
   polygn_grid.attach(info_label, 2, 1, 1, 1);
   polygn_grid.attach(polygon_x_label, 1, 2, 1, 1);
@@ -84,9 +72,17 @@ AddObjectWindow::AddObjectWindow(ViewPort* viewPort) :
   button_add_coordenate.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_add_coordinate) );
   button_save_wire.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_save_polygon) );
 
+  m_notebook.set_border_width(0);
+  m_vbox.pack_start(m_notebook);
+  m_vbox.pack_start(button_close, Gtk::PACK_SHRINK);
+
   m_notebook.append_page(point_grid, "Point");
   m_notebook.append_page(line_grid, "Line");
   m_notebook.append_page(polygn_grid, "Polygon");
+
+  this->window.set_title("Add Object");
+  this->window.set_border_width(12);
+  this->window.add(m_vbox);
   this->window.show_all_children();
 }
 
