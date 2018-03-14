@@ -56,10 +56,10 @@ void AddTransformationWindow::create_scrolling_items_list()
   //Fill the ListViewText:
   m_ListViewText.set_column_title(0, "Transformations");
 
-  //Add the TreeView, inside a ScrolledWindow, with the button underneath:
+  //Add the TreeView, inside a ScrolledWindow, with the button underneath
   m_ScrolledWindow.add(m_ListViewText);
 
-  //Only show the scrollbars when they are necessary:
+  //Only show the scrollbars when they are necessary
   m_ScrolledWindow.set_policy(Gtk::PolicyType::POLICY_NEVER, Gtk::PolicyType::POLICY_AUTOMATIC);
 
   LOG(4, "Gtk::ScrolledWindow::property_max_content_width(): %d", m_ScrolledWindow.property_max_content_width());
