@@ -79,8 +79,17 @@ Gtk::Window* AddTransformationWindow::getWindow()
 
 void AddTransformationWindow::on_button_save_transformation()
 {
+  std::string main_value_value = main_value_field.get_text().raw();
+  LOG(4, "main_value_value: %s", main_value_value);
+
+  int          current_page_index = m_notebook.get_current_page();
+  Gtk::Widget* current_page_widget = m_notebook.get_nth_page(current_page_index);
+
+  std::string current_page_text = (std::string) m_notebook.get_tab_label_text(*current_page_widget);
+  LOG(4, "current_page_index: %d, current_page_text: %s", current_page_index, current_page_text);
+
   guint row_number = m_ListViewText.append();
-  m_ListViewText.set_text(row_number, 0, "Madrid");
+  m_ListViewText.set_text(row_number, 0, tfm::format("%s %s", current_page_text, main_value_value));
 }
 
 void AddTransformationWindow::on_button_close()
