@@ -81,9 +81,7 @@
   }
 
   class Transformation {
-    long int _scalings[3][3];
-    long int _rotations[3][3];
-    long int _transformations[3][3];
+    long int _transformation[3][3];
     std::vector<long int[3][3]> scalings
     std::vector<long int[3][3]> rotations
     std::vector<long int[3][3]> transformations
