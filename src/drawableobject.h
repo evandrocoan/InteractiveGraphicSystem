@@ -21,8 +21,11 @@ public:
   DrawableObject(std::string name, std::list<Coordinate*> coordinates);
   ~DrawableObject();
 
-  std::string getName();
+  std::string            getName();
   std::list<Coordinate*> getCoordinates();
+
+  void       apply(Transformation);
+  Coordinate get_geometric_center();
 
 protected:
   DrawableObject(std::string name);
