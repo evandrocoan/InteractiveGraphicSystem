@@ -16,14 +16,13 @@ public:
   DisplayFile();
   virtual ~DisplayFile();
 
-  void addObject(DrawableObject* object);
-  void removeObject(DrawableObject* object);
+  void addObject         (DrawableObject* object);
+  void removeObject      (DrawableObject* object);
   void removeObjectByName(std::string name);
 
-  std::list<std::string> getNamesList();
+  DrawableObject*            getObjectByName(std::string name);
   std::list<DrawableObject*> getObjects();
-
-  DrawableObject* getObjectByName(std::string name);
+  std::list<std::string>     getNamesList();
 
 protected:
   std::map<std::string, DrawableObject*> objectsMap;

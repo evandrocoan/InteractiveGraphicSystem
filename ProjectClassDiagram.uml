@@ -2,11 +2,11 @@
 @startuml
   skinparam defaultFontName Consolas
 
-  AddObjectWindow <|-- ViewPortObserver
-  AddObjectWindow  *-- ViewPort           : viewPort*
+  AddObjectWindow <|--  ViewPortObserver
+  AddObjectWindow  *--  ViewPort           : viewPort*
 
   DisplayFile    "1\n"  *-down- "*" DrawableObject
-  DrawableObject "1\n"  *-left- "*\n" Coordinate: coordinates
+  DrawableObject "1\n"  *-right- "*\n" Coordinate: coordinates
 
   Line    <|-up- DrawableObject
   Point   <|-up- DrawableObject
@@ -16,7 +16,8 @@
   MainWindow *-right- AddObjectWindow      : addObjectWindow
   MainWindow *-left-  TransformationWindow : transformationWindow
 
-  TransformationWindow *-- ViewPort        : viewPort*
+  TransformationWindow  *--  ViewPort      : viewPort*
+  TransformationWindow  .down. Transformation
 
   ViewPort   *-left-  ViewWindow           : viewWindow
   ViewPort   *-down-  DisplayFile          : displayFile
@@ -28,13 +29,14 @@
     Gtk::Grid              point_grid
     Gtk::Grid              line_grid
     Gtk::Grid              polygn_grid
-    Gtk::Window            window
     std::list<Coordinate*> polygon_cord_list
   }
 
   class Coordinate {
-    long int cord_x
-    long int cord_y
+    long int getx()
+    long int gety()
+    long int getz()
+    void apply(Transformation)
   }
 
   class DisplayFile {
@@ -48,6 +50,7 @@
     std::string name
     std::string       getName()
     list<Coordinate*> getCoordinates()
+    void              apply(Transformation)
   }
 
   class Line {
@@ -67,21 +70,32 @@
     Gtk::Box        left_box
     Gtk::Frame      left_frame
     Gtk::Frame      right_frame
-    Gtk::Window     window
     ViewPort        viewPort
     AddObjectWindow addObjectWindow
   }
 
   class TransformationWindow {
-    Gtk::Window window
+    Gtk::Grid   rotation_grid
+    Gtk::Grid   scaling_grid
+    Gtk::Grid   translation_grid
+  }
+
+  class Transformation {
+    long int _scalings[3][3];
+    long int _rotations[3][3];
+    long int _transformations[3][3];
+    std::vector<long int[3][3]> scalings
+    std::vector<long int[3][3]> rotations
+    std::vector<long int[3][3]> transformations
+    long int[3] apply(long int[3])
+    void set_geometric_center(Coordinate)
   }
 
   class ViewPort {
-    int               Xvpmin
-    int               Yvpmin
-    int               Xvpmax
-    int               Yvpmax
-
+    int Xvpmin
+    int Yvpmin
+    int Xvpmax
+    int Yvpmax
     bool       on_draw(const Cairo::Context>&)
     void       updateViewport(Gtk::Allocation)
     Coordinate convertCoordinateFromWindow(Coordinate)
@@ -101,14 +115,12 @@
     float Ywmin
     float Xwmax
     float Ywmax
-
-    void zoom_in (float scale = 1.5)
-    void zoom_out(float scale = 1.5)
-
-    void move_up    (int length = 10)
-    void move_down  (int length = 10)
-    void move_left  (int length = 10)
-    void move_right (int length = 10)
+    void zoom_in (float scale)
+    void zoom_out(float scale)
+    void move_up    (int length)
+    void move_down  (int length)
+    void move_left  (int length)
+    void move_right (int length)
   }
 
 @enduml

@@ -4,24 +4,16 @@
 class Coordinate
 {
 public:
-  Coordinate(long int x, long int y)
-      : cord_x(x), cord_y(y)
-  {}
+  Coordinate(long int x, long int y, long int z = 1);
+  ~Coordinate();
 
-  ~Coordinate() {}
+  void apply(Transformation);
 
-  long int getx()
-  {
-    return cord_x;
-  }
-
-  long int gety()
-  {
-    return cord_y;
-  }
+  long int getx();
+  long int gety();
+  long int getz();
 
 protected:
-  long int cord_x;
-  long int cord_y;
+  long int coordinates[3];
 };
 #endif // GTKMM_APP_Coordinate

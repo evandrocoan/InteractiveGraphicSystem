@@ -31,19 +31,16 @@ private:
   ViewPort* viewPort;
   Gtk::Window window;
 
-  Gtk::Box       m_vbox;
-  Gtk::Box       m_hbox;
-  Gtk::Notebook  m_notebook;
+  Gtk::Box      m_vbox;
+  Gtk::Box      m_hbox;
+  Gtk::Notebook m_notebook;
 
-  std::string            new_object_name;
-  std::list<Coordinate*> polygon_cord_list;
-
+  Gtk::ListViewText   m_ListViewText;
   Gtk::ScrolledWindow m_ScrolledWindow;
-  Gtk::ListViewText m_ListViewText;
 
   Gtk::Grid rotation_grid;
-  Gtk::Grid translation_grid;
   Gtk::Grid scaling_grid;
+  Gtk::Grid translation_grid;
 
   Gtk::Button button_close;
   Gtk::Button button_save_transformation;

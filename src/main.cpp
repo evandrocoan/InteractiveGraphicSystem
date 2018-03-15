@@ -1,8 +1,9 @@
-#include "mainwindow.h"
-#include "debugger.h"
 #include <gtkmm/application.h>
 #include <list>
 #include <string>
+
+#include "mainwindow.h"
+#include "debugger.h"
 
 /**
  * You can enable or disable the debugging statements from `LOG()` by going to the file
