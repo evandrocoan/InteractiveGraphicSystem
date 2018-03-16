@@ -1,5 +1,5 @@
-#ifndef GTKMM_APP_COORDINATE
-#define GTKMM_APP_COORDINATE
+#ifndef GTKMM_APP_COORDINATE_H
+#define GTKMM_APP_COORDINATE_H
 
 #include <iostream>
 
@@ -53,4 +53,4 @@ struct Coordinate
 // https://stackoverflow.com/questions/12121645/how-to-set-default-parameter-as-class-object-in-c
 Coordinate _default_coordinate_value_parameter{};
 
-#endif // GTKMM_APP_Coordinate
+#endif // GTKMM_APP_COORDINATE_H

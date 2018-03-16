@@ -1,7 +1,11 @@
 
 #include <iostream>
 
+#include "src/array.h"
 #include "src/matrix.h"
+
+void matrix_tests();
+void array_tests();
 
 /**
  * To build it use:
@@ -9,6 +13,29 @@
  */
 int main (int argc, char *argv[])
 {
+  matrix_tests();
+  std::cout << std::endl;
+  array_tests();
+}
+
+void array_tests()
+{
+  std::cout << "Array tests" << std::endl;
+  Array<3, long int> array;
+
+  std::cout << array << std::endl;
+  std::cout << array[0] << std::endl;
+
+  Array<3> array2 = {0,0,0};
+  std::cout << "array2: " << array2 << std::endl;
+
+  Array<3> array3 = {3};
+  std::cout << "array3: " << array3 << std::endl;
+}
+
+void matrix_tests()
+{
+  std::cout << "Matrix tests" << std::endl;
   Matrix<3, 3, long int> matrix;
   std::cout << matrix << std::endl;
 
