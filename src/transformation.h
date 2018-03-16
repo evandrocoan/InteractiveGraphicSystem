@@ -5,10 +5,6 @@
 #include "string"
 #include "coordinate.h"
 
-// How to set default parameter as class object in c++?
-// https://stackoverflow.com/questions/12121645/how-to-set-default-parameter-as-class-object-in-c
-Coordinate _default_coordinate_value_parameter{};
-
 enum RotationType
 {
   ON_WORLD_CENTER,
@@ -30,7 +26,7 @@ struct TransformationData
    * rotation which should be performed around some specific coordinate as the world center, instead
    * of the object geometric center.
    */
-  TransformationData(long int main_matrix[3][3], Coordinate rotation_center = NULL) :
+  TransformationData(long int main_matrix[3][3], Coordinate rotation_center = _default_coordinate_value_parameter) :
       main_matrix(main_matrix),
       rotation_center(rotation_center)
   {
