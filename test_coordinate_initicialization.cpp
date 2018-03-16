@@ -27,11 +27,22 @@ void function(MyCustomClassType my_custom_class_type = _my_custom_class_type)
   std::cout << my_custom_class_type << std::endl;
 }
 
+void print_coordinate(Coordinate coordinate)
+{
+  std::cout << tfm::format("Coordinate:     %s", coordinate) << std::endl;
+  std::cout << tfm::format("is_initialized: %s", coordinate.is_initialized) << std::endl;
+}
+
 int main (int argc, char *argv[])
 {
-  Coordinate coordinate;
-
   function();
-  std::cout << tfm::format("Coordinate: %s", coordinate) << std::endl;
+
+  std::cout << std::endl;
+  Coordinate coordinate;
+  print_coordinate(coordinate);
+
+  std::cout << std::endl;
+  Coordinate coordinate2{1};
+  print_coordinate(coordinate2);
 }
 

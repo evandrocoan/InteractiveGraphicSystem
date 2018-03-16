@@ -2,16 +2,30 @@
 #define GTKMM_APP_COORDINATE_H
 
 #include <iostream>
+#include "array.h"
 
-struct Coordinate
+/**
+ * Template default arguments
+ * https://stackoverflow.com/questions/15373823/template-default-arguments
+ */
+#define GTKMM_APP_COORDINATE_H_DATATYPE long int
+
+struct Coordinate : public Array<3, GTKMM_APP_COORDINATE_H_DATATYPE>
 {
   Coordinate() :
+      Array{},
       is_initialized(false)
   {
   }
 
-  Coordinate(long int x, long int y, long int z = 1) :
-      coordinates{x, y, z},
+  Coordinate(std::initializer_list< GTKMM_APP_COORDINATE_H_DATATYPE > raw_data) :
+      Array(raw_data),
+      is_initialized(true)
+  {
+  }
+
+  Coordinate(GTKMM_APP_COORDINATE_H_DATATYPE x, GTKMM_APP_COORDINATE_H_DATATYPE y, GTKMM_APP_COORDINATE_H_DATATYPE z = 1) :
+      Array{x, y, z},
       is_initialized(true)
   {
   }
@@ -20,33 +34,22 @@ struct Coordinate
   {
   }
 
-  friend std::ostream &operator<<( std::ostream &output, const Coordinate &coordinate )
+  GTKMM_APP_COORDINATE_H_DATATYPE getx() const
   {
-    output << coordinate.is_initialized
-           << "(" << coordinate.getx()
-           << ", " << coordinate.gety()
-           << ", " << coordinate.getz()
-           << ")";
-    return output;
+    return this->_data[0];
   }
 
-  long int getx() const
+  GTKMM_APP_COORDINATE_H_DATATYPE gety() const
   {
-    return this->coordinates[0];
+    return this->_data[1];
   }
 
-  long int gety() const
+  GTKMM_APP_COORDINATE_H_DATATYPE getz() const
   {
-    return this->coordinates[1];
-  }
-
-  long int getz() const
-  {
-    return this->coordinates[2];
+    return this->_data[2];
   }
 
   bool is_initialized;
-  long int coordinates[3];
 };
 
 // How to set default parameter as class object in c++?
