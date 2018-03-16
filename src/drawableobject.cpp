@@ -46,11 +46,11 @@ std::list<Coordinate*> DrawableObject::getCoordinates()
 
 void DrawableObject::apply(Transformation transformation)
 {
-  transformation.set_geometric_center(this->get_geometric_center())
   auto coordinates = this->getCoordinates();
+  transformation.set_geometric_center(this->get_geometric_center())
 
   for(auto coordinate : coordinates)
   {
-    coordinate.apply(transformation);
+    coordinate.coordinates = transformation.apply(coordinates);
   }
 }

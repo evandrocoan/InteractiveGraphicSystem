@@ -171,8 +171,7 @@ ViewPort::~ViewPort()
 
 void ViewPort::apply(std::string object_name, Transformation transformation);
 {
-  object = this->displayFile.getObjectByName(object_name);
-  object.apply(transformation);
+  this->displayFile.apply(object_name, transformation);
 }
 
 void ViewPort::addObserver(ViewPortObserver* observer)

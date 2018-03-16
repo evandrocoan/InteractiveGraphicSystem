@@ -1,19 +1,52 @@
 #ifndef GTKMM_APP_COORDINATE
 #define GTKMM_APP_COORDINATE
 
-class Coordinate
+#include <iostream>
+
+struct Coordinate
 {
-public:
-  Coordinate(long int x, long int y, long int z = 1);
-  ~Coordinate();
+  Coordinate() :
+      is_initialized(false)
+  {
+  }
 
-  void apply(Transformation);
+  Coordinate(long int x, long int y, long int z = 1) :
+      coordinates{x, y, z},
+      is_initialized(true)
+  {
+  }
 
-  long int getx();
-  long int gety();
-  long int getz();
+  ~Coordinate()
+  {
+  }
 
-protected:
+  friend std::ostream &operator<<( std::ostream &output, const Coordinate &coordinate )
+  {
+    output << coordinate.is_initialized
+           << "(" << coordinate.getx()
+           << ", " << coordinate.gety()
+           << ", " << coordinate.getz()
+           << ")";
+    return output;
+  }
+
+  long int getx() const
+  {
+    return this->coordinates[0];
+  }
+
+  long int gety() const
+  {
+    return this->coordinates[1];
+  }
+
+  long int getz() const
+  {
+    return this->coordinates[2];
+  }
+
+  bool is_initialized;
   long int coordinates[3];
 };
+
 #endif // GTKMM_APP_Coordinate

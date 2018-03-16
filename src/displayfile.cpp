@@ -8,6 +8,12 @@ DisplayFile::~DisplayFile()
 {
 }
 
+void DisplayFile::apply(std::string object_name, Transformation transformation);
+{
+  object = this->getObjectByName(object_name);
+  object.apply(transformation);
+}
+
 void DisplayFile::addObject(DrawableObject* object)
 {
   this->objectsMap[object->getName()] = object;

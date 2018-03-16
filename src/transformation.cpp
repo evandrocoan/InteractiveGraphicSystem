@@ -13,32 +13,42 @@ Transformation::Transformation(std::string name) :
  * @param type    an enum RotationType valid value
  * @param point   this is a optional value, only required when using RotationType::ON_GIVEN_COORDINATE
  */
-void Transformation::add_rotation(double degrees, RotationType type, Coordinate point=NULL)
+void Transformation::add_rotation(double degrees, RotationType type, Coordinate coordinate=_default_coordinate_value_parameter)
 {
+  long int rotation[3][3] =
+  {
+    {std::cos(degree), -std::sin(degree), 0},
+    {std::sin(degree),  std::cos(degree), 0},
+    {0               ,  0               , 1}
+  };
 
   switch(type)
   {
     case RotationType::ON_ITS_OWN_CENTER:
     {
-      long int rotation[3][3] =
+      if( !coordinate.is_initialized )
       {
-        {cos(degree), -sin(degree), 0},
-        {sin(degree),  cos(degree), 0},
-        {0          ,  0          , 1}
-      };
-
-      this->rotations.push_back(rotation);
+        LOG(1, "");
+        LOG(1, "");
+        LOG(1, "ERROR! Invalid Coordinate must to be NULL, instead of: %s", coordinate);
+      }
       break;
     }
 
     case RotationType::ON_WORLD_CENTER:
     {
+      Coordinate coordinate{0,0,0};
       break;
     }
 
     case RotationType::ON_GIVEN_COORDINATE:
     {
-      break;
+      if( coordinate.is_initialized )
+      {
+        LOG(1, "");
+        LOG(1, "");
+        LOG(1, "ERROR! Invalid Coordinate used: NULL(%s)", coordinate);
+      }
     }
 
     default:
@@ -48,15 +58,18 @@ void Transformation::add_rotation(double degrees, RotationType type, Coordinate 
       LOG(1, "ERROR! Invalid RotationType used: %d", type);
     }
   }
+
+  TransformationData transformation{rotation, coordinate};
+  this->rotations.push_back(transformation);
 }
 
-void Transformation::add_scaling(double scale)
+void Transformation::add_scaling(Coordinate move)
 {
   long int scaling[3][3] =
   {
-    {scale, 0      , 0},
-    {0      , scale, 0},
-    {0      ,  0   , 1}
+    {move.getx(), 0          , 0          },
+    {0          , move.gety(), 0          },
+    {0          , 0          , move.getz()}
   };
 
   this->scalings.push_back(scaling);
