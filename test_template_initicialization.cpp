@@ -6,37 +6,51 @@
  * To build it use:
  *     g++ -std=c++11 test_template_initicialization.cpp -o main
  */
-template <int width, int height>
+template <unsigned int matrix_width, unsigned int matrix_height, typename matrix_datatype=long int>
 struct Matrix
 {
-  long int _data[height][width];
+  matrix_datatype _data[matrix_height][matrix_width];
 
   Matrix()
   {
   }
 
-  Matrix(std::initializer_list<std::initializer_list<long int> > raw_data)
+  Matrix(matrix_datatype initial)
   {
-    auto index = raw_data.begin();
-    std::vector< std::vector<long int> > input_data;
+    unsigned int line;
+    unsigned int column;
 
-    std::cout << raw_data.size() << std::endl;
-    assert(raw_data.size() <= height);
-
-    std::cout << index->size() << std::endl;
-    assert(index->size() <= height);
-
-    for( ; index != raw_data.end(); index++ )
+    for( line=0; line < matrix_height; line++ )
     {
-      input_data.push_back( std::vector<long int>(*index) );
-    }
-
-    for( unsigned int line = 0; line < height; line++ )
-    {
-      for( unsigned int column = 0; column < width; column++ )
+      for( column=0; column < matrix_width; column++ )
       {
-        this->_data[line][column] = input_data[line][column];
+        this->_data[line][column] = initial;
       }
+    }
+  }
+
+  Matrix(std::initializer_list< std::initializer_list< matrix_datatype > > raw_data)
+  {
+    // std::cout << raw_data.size() << std::endl;
+    assert(raw_data.size() <= matrix_height);
+
+    // std::cout << raw_data.begin()->size() << std::endl;
+    assert(raw_data.begin()->size() <= matrix_width);
+
+    unsigned int line_index = 0;
+    unsigned int column_index;
+
+    for( auto line : raw_data )
+    {
+      column_index = 0;
+
+      for( auto column : line )
+      {
+        this->_data[line_index][column_index] = column;
+        column_index++;
+      }
+
+      line_index++;
     }
   }
 
@@ -47,7 +61,7 @@ struct Matrix
    * @param  line the current line you want to access
    * @return      a pointer to the current line
    */
-  long int* operator[](int line)
+  matrix_datatype* operator[](int line)
   {
     return this->_data[line];
   }
@@ -57,17 +71,19 @@ struct Matrix
    */
   friend std::ostream &operator<<( std::ostream &output, const Matrix &matrix )
   {
-    int i, j;
+    unsigned int line;
+    unsigned int column;
 
-    for( i=0; i < height; i++ )
+    for( line=0; line < matrix_height; line++ )
     {
-      for( j=0; j < width; j++ )
+      for( column=0; column < matrix_width; column++ )
       {
-        output << matrix._data[i][j] << ", ";
+        output << matrix._data[line][column] << ", ";
       }
 
-      output << matrix._data[i][j] << "\n";
+      output << "\n";
     }
+
     return output;
   }
 };
@@ -75,19 +91,28 @@ struct Matrix
 /**
  * C++ Matrix Class
  * https://stackoverflow.com/questions/2076624/c-matrix-class
+ *
+ * error: incompatible types in assignment of 'long int (*)[4]' to 'long int [4][4]'
+ * https://stackoverflow.com/questions/49312484/error-incompatible-types-in-assignment-of-long-int-4-to-long-int
  */
 int main (int argc, char *argv[])
 {
-  Matrix<3, 3> matrix;
+  Matrix<3, 3, long int> matrix;
   std::cout << matrix << std::endl;
 
-  // matrix[0][0] = 911;
-  // std::cout << matrix << std::endl;
+  matrix[0][0] = 911;
+  std::cout << matrix << std::endl;
 
-  // std::cout << matrix[0] << std::endl;
-  // std::cout << matrix[0][0] << std::endl;
+  std::cout << matrix[0] << std::endl;
+  std::cout << matrix[0][0] << std::endl;
 
-  Matrix<3,3> matrix2{ {0,0,0}, {0,0,0}, {0,0,0} };
+  Matrix<3, 3> matrix2{ {0,0,0}, {0,0,0}, {0,0,0} };
   std::cout << matrix2 << std::endl;
+
+  Matrix<3, 3> matrix3 = { 3 };
+  std::cout << matrix3 << std::endl;
+
+  Matrix<3, 1, long int> matrix4 = { 4 };
+  std::cout << matrix4 << std::endl;
 }
 
