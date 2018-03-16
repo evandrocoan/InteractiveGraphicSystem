@@ -1,30 +1,95 @@
 #ifndef GTKMM_APP_COORDINATE
 #define GTKMM_APP_COORDINATE
 
+#include <vector>
+#include <cassert>
 #include <iostream>
 
 /**
  * C++ Matrix Class
  * https://stackoverflow.com/questions/2076624/c-matrix-class
+ *
+ * error: incompatible types in assignment of 'long int (*)[4]' to 'long int [4][4]'
+ * https://stackoverflow.com/questions/49312484/error-incompatible-types-in-assignment-of-long-int-4-to-long-int
  */
-template <int width, int height>
+template <unsigned int matrix_width, unsigned int matrix_height, typename matrix_datatype=long int>
 struct Matrix
 {
-  long int _data[height][width];
+  matrix_datatype _data[matrix_height][matrix_width];
 
-  friend std::ostream &operator<<( std::ostream &output, const Matrix &matrix )
+  Matrix()
   {
-    int i, j;
+  }
 
-    for( i=0; i < height; i++ )
+  Matrix(matrix_datatype initial)
+  {
+    unsigned int line;
+    unsigned int column;
+
+    for( line=0; line < matrix_height; line++ )
     {
-      for( j=0; j < width; j++ )
+      for( column=0; column < matrix_width; column++ )
       {
-        output << matrix._data[i][j] << ", ";
+        this->_data[line][column] = initial;
+      }
+    }
+  }
+
+  Matrix(std::initializer_list< std::initializer_list< matrix_datatype > > raw_data)
+  {
+    // std::cout << raw_data.size() << std::endl;
+    assert(raw_data.size() <= matrix_height);
+
+    // std::cout << raw_data.begin()->size() << std::endl;
+    assert(raw_data.begin()->size() <= matrix_width);
+
+    unsigned int line_index = 0;
+    unsigned int column_index;
+
+    for( auto line : raw_data )
+    {
+      column_index = 0;
+
+      for( auto column : line )
+      {
+        this->_data[line_index][column_index] = column;
+        column_index++;
       }
 
-      output << matrix._data[i][j] << "\n";
+      line_index++;
     }
+  }
+
+  /**
+   * Overloads the `[]` array access operator, allowing you to access this class objects as the
+   * where usual `C` arrays.
+   *
+   * @param  line the current line you want to access
+   * @return      a pointer to the current line
+   */
+  matrix_datatype* operator[](int line)
+  {
+    return this->_data[line];
+  }
+
+  /**
+   * Prints a more beauty version of the matrix when called on `std::cout<< matrix << std::end;`
+   */
+  friend std::ostream &operator<<( std::ostream &output, const Matrix &matrix )
+  {
+    unsigned int line;
+    unsigned int column;
+
+    for( line=0; line < matrix_height; line++ )
+    {
+      for( column=0; column < matrix_width; column++ )
+      {
+        output << matrix._data[line][column] << ", ";
+      }
+
+      output << "\n";
+    }
+
     return output;
   }
 };
