@@ -1,7 +1,6 @@
-#ifndef GTKMM_APP_COORDINATE
-#define GTKMM_APP_COORDINATE
+#ifndef GTKMM_APP_MATRIX_H
+#define GTKMM_APP_MATRIX_H
 
-#include <vector>
 #include <cassert>
 #include <iostream>
 
@@ -38,10 +37,10 @@ struct Matrix
   Matrix(std::initializer_list< std::initializer_list< matrix_datatype > > raw_data)
   {
     // std::cout << raw_data.size() << std::endl;
-    assert(raw_data.size() <= matrix_height);
+    assert(raw_data.size() == matrix_height);
 
     // std::cout << raw_data.begin()->size() << std::endl;
-    assert(raw_data.begin()->size() <= matrix_width);
+    assert(raw_data.begin()->size() == matrix_width);
 
     unsigned int line_index = 0;
     unsigned int column_index;
@@ -79,19 +78,35 @@ struct Matrix
   {
     unsigned int line;
     unsigned int column;
+    output << "{";
 
     for( line=0; line < matrix_height; line++ )
     {
+      output << "{";
+
       for( column=0; column < matrix_width; column++ )
       {
-        output << matrix._data[line][column] << ", ";
+        output << matrix._data[line][column];
+
+        if( column != matrix_width-1 )
+        {
+          output << ", ";
+        }
       }
 
-      output << "\n";
+      if( line != matrix_height-1 )
+      {
+        output << "}, ";
+      }
+      else
+      {
+        output << "}";
+      }
     }
 
+    output << "}";
     return output;
   }
 };
 
-#endif // GTKMM_APP_Coordinate
+#endif // GTKMM_APP_MATRIX_H
