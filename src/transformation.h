@@ -1,8 +1,13 @@
 #ifndef GTKMM_APP_TRANSFORMATION
 #define GTKMM_APP_TRANSFORMATION
 
+#include <cmath>
 #include "string"
 #include "coordinate.h"
+
+// How to set default parameter as class object in c++?
+// https://stackoverflow.com/questions/12121645/how-to-set-default-parameter-as-class-object-in-c
+Coordinate _default_coordinate_value_parameter{};
 
 enum RotationType
 {
@@ -11,11 +16,32 @@ enum RotationType
   ON_GIVEN_COORDINATE
 };
 
+/**
+ * Ignoring the `translations` matrices, the `main_matrix` is the main operation applied after
+ * moving the object to the world center.
+ */
+struct TransformationData
+{
+  long int main_matrix[3][3];
+  Coordinate rotation_center;
+
+  /**
+   * This `rotation_center` default value is null, because it is only used when the object is a
+   * rotation which should be performed around some specific coordinate as the world center, instead
+   * of the object geometric center.
+   */
+  TransformationData(long int main_matrix[3][3], Coordinate rotation_center = NULL) :
+      main_matrix(main_matrix),
+      rotation_center(rotation_center)
+  {
+  }
+};
+
 class Transformation
 {
+public:
   Transformation(std::string name);
 
-public:
   void add_scaling(double scale);
   void add_rotation(double degrees, RotationType, Coordinate);
   void add_translation(Coordinate move);
@@ -38,21 +64,17 @@ protected:
   std::string name;
 
   /**
-   * As `scalings` and `rotations` does not contain embed the `transformations` matrices. These
-   * values are only required when current object is finally being rotated/scaled. This happens
-   * right after the `set_geometric_center()` method is called on.
+   * As `scalings` and `rotations` does not contain embedded all the `transformations` matrices.
+   * These values are only required when current object is finally being rotated/scaled. This
+   * happens right after the `set_geometric_center()` method is called on.
    */
-  std::vector<long int[3][3]> scalings;
-  std::vector<long int[3][3]> rotations;
-  std::vector<long int[3][3]> transformations;
+  std::vector<TransformationData> transformations;
 
   /**
    * These values are set after calling `set_geometric_center()`. They will be the values used
    * to transform the object when calling `apply()`.
    */
-  long int _scalings[3][3];
-  long int _rotations[3][3];
-  long int _transformations[3][3];
+  long int _transformation[3][3];
 };
 
 #endif // GTKMM_APP_TRANSFORMATION
