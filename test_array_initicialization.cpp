@@ -16,15 +16,15 @@ public:
 
 int main (int argc, char *argv[])
 {
-    Transformation t;
-    int i, j;
+  Transformation t;
+  int i, j;
 
-    for( i=0; i < 3; i++ )
+  for( i=0; i < 3; i++ )
+  {
+    for( j=0; j < 3; j++ )
     {
-        for( j=0; j < 3; j++ )
-        {
-            std::cout << t.transformation_matrix[i][j] << std::endl;
-        }
+      std::cout << t.transformation_matrix[i][j] << std::endl;
     }
+  }
 }
 

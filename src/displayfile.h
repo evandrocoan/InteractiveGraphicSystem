@@ -16,8 +16,10 @@ public:
   DisplayFile();
   virtual ~DisplayFile();
 
-  void addObject         (DrawableObject* object);
-  void removeObject      (DrawableObject* object);
+  void addObject   (DrawableObject* object);
+  void removeObject(DrawableObject* object);
+
+  void apply(std::string object_name, Transformation);
   void removeObjectByName(std::string name);
 
   DrawableObject*            getObjectByName(std::string name);

@@ -5,8 +5,9 @@
   AddObjectWindow <|--  ViewPortObserver
   AddObjectWindow  *--  ViewPort           : viewPort*
 
+  DisplayFile           -left[hidden]> ViewWindow
   DisplayFile    "1\n"  *-down- "*" DrawableObject
-  DrawableObject "1\n"  *-right- "*\n" Coordinate: coordinates
+  DrawableObject "1\n"  *-left- "*\n" Coordinate: coordinates
 
   Line    <|-up- DrawableObject
   Point   <|-up- DrawableObject
@@ -17,9 +18,11 @@
   MainWindow *-left-  TransformationWindow : transformationWindow
 
   TransformationWindow  *--  ViewPort      : viewPort*
-  TransformationWindow  .down. Transformation
+  TransformationWindow  *-down- Transformation: transformation
+  Transformation        *-- TransformationData: transformations
+  TransformationData    *-- Coordinate     : rotation_center
 
-  ViewPort   *-left-  ViewWindow           : viewWindow
+  ViewPort   *--  ViewWindow               : viewWindow
   ViewPort   *-down-  DisplayFile          : displayFile
   ViewPort   *-right- ViewPortObservers    : viewPortObservers
 
@@ -33,17 +36,20 @@
   }
 
   class Coordinate {
+    bool is_initialized;
+    long int coordinates[3];
     long int getx()
     long int gety()
     long int getz()
-    void apply(Transformation)
   }
 
   class DisplayFile {
     std::map< string, DrawableObject* >
-    void addObject( DrawableObject* )
-    void removeObject( DrawableObject* )
-    void removeObjectByName( string )
+    void addObject   (DrawableObject* object)
+    void removeObject(DrawableObject* object)
+
+    void apply(std::string object_name, Transformation)
+    void removeObjectByName(std::string name)
   }
 
   class DrawableObject {
@@ -74,19 +80,21 @@
     AddObjectWindow addObjectWindow
   }
 
+  class Transformation {
+    long int _transformation[3][3]
+    long int[3] apply(long int[3])
+    void set_geometric_center(Coordinate)
+  }
+
+  class TransformationData {
+    long int[3][3] main_matrix
+    Coordinate geometric_center
+  }
+
   class TransformationWindow {
     Gtk::Grid   rotation_grid
     Gtk::Grid   scaling_grid
     Gtk::Grid   translation_grid
-  }
-
-  class Transformation {
-    long int _transformation[3][3];
-    std::vector<long int[3][3]> scalings
-    std::vector<long int[3][3]> rotations
-    std::vector<long int[3][3]> transformations
-    long int[3] apply(long int[3])
-    void set_geometric_center(Coordinate)
   }
 
   class ViewPort {
@@ -94,9 +102,11 @@
     int Yvpmin
     int Xvpmax
     int Yvpmax
-    bool       on_draw(const Cairo::Context>&)
-    void       updateViewport(Gtk::Allocation)
+    bool on_draw(const Cairo::Context>&)
+    void updateViewport(Gtk::Allocation)
+
     Coordinate convertCoordinateFromWindow(Coordinate)
+    void apply(std::string object_name, Transformation)
   }
 
   class ViewPortObserver {
