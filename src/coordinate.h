@@ -49,4 +49,8 @@ struct Coordinate
   long int coordinates[3];
 };
 
+// How to set default parameter as class object in c++?
+// https://stackoverflow.com/questions/12121645/how-to-set-default-parameter-as-class-object-in-c
+Coordinate _default_coordinate_value_parameter{};
+
 #endif // GTKMM_APP_Coordinate
