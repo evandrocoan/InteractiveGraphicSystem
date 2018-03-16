@@ -13,7 +13,9 @@
  */
 #include <list>
 #include <string>
+
 #include "coordinate.h"
+#include "transformation.h"
 
 class DrawableObject
 {
