@@ -7,7 +7,6 @@
 
   DisplayFile           -left[hidden]> ViewWindow
   DisplayFile    "1\n"  *-down- "*" DrawableObject
-  DrawableObject "1\n"  *-left- "*\n" Coordinate: coordinates
 
   Line    <|-up- DrawableObject
   Point   <|-up- DrawableObject
@@ -19,8 +18,7 @@
 
   TransformationWindow  *--  ViewPort      : viewPort*
   TransformationWindow  *-down- Transformation: transformation
-  Transformation        *-- TransformationData: transformations
-  TransformationData    *-- Coordinate     : rotation_center
+  Transformation "1" *-- "*" TransformationData: transformations
 
   ViewPort   *--  ViewWindow               : viewWindow
   ViewPort   *-down-  DisplayFile          : displayFile
@@ -35,14 +33,6 @@
     std::list<Coordinate*> polygon_cord_list
   }
 
-  class Coordinate {
-    bool is_initialized;
-    long int coordinates[3];
-    long int getx()
-    long int gety()
-    long int getz()
-  }
-
   class DisplayFile {
     std::map< string, DrawableObject* >
     void addObject   (DrawableObject* object)
@@ -53,7 +43,6 @@
   }
 
   class DrawableObject {
-    std::string name
     std::string       getName()
     list<Coordinate*> getCoordinates()
     void              apply(Transformation)
@@ -81,14 +70,14 @@
   }
 
   class Transformation {
-    long int _transformation[3][3]
-    long int[3] apply(long int[3])
+    Matrix _transformation
+    Coordinate apply(Coordinate)
     void set_geometric_center(Coordinate)
   }
 
   class TransformationData {
-    long int[3][3] main_matrix
-    Coordinate geometric_center
+    Matrix main_matrix
+    Coordinate rotation_center
   }
 
   class TransformationWindow {

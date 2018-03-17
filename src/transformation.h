@@ -2,8 +2,12 @@
 #define GTKMM_APP_TRANSFORMATION
 
 #include <cmath>
-#include "string"
+#include <vector>
+#include <string>
+
+#include "debugger.h"
 #include "coordinate.h"
+#include "matrixform.h"
 
 enum RotationType
 {
@@ -18,7 +22,7 @@ enum RotationType
  */
 struct TransformationData
 {
-  long int main_matrix[3][3];
+  Matrix<> main_matrix;
   Coordinate rotation_center;
 
   /**
@@ -26,9 +30,9 @@ struct TransformationData
    * rotation which should be performed around some specific coordinate as the world center, instead
    * of the object geometric center.
    */
-  TransformationData(long int main_matrix[3][3], Coordinate rotation_center = _default_coordinate_value_parameter) :
+  TransformationData(Matrix<> main_matrix, Coordinate rotation_center = _default_coordinate_value_parameter) :
       main_matrix(main_matrix),
-      rotation_center(rotation_center)
+      rotation_center{rotation_center}
   {
   }
 };
@@ -38,7 +42,7 @@ class Transformation
 public:
   Transformation(std::string name);
 
-  void add_scaling(double scale);
+  void add_scaling(Coordinate scale);
   void add_rotation(double degrees, RotationType, Coordinate);
   void add_translation(Coordinate move);
 
@@ -50,11 +54,8 @@ public:
    * Note: After calling `set_geometric_center()`, you cannot create new transformations. If you
    * create new transformations, you must call `set_geometric_center()` before using it again.
    */
-  long int[3] apply(long int[3]);
-  void        set_geometric_center(Coordinate);
-
-  static long int[3] multiply_1x3_matrix(long int[3], long int[3][3]);
-  static long int[3] multiply_3x3_matrix(long int[3], long int[3][3]);
+  void apply(Coordinate);
+  void set_geometric_center(Coordinate);
 
 protected:
   std::string name;
@@ -70,7 +71,7 @@ protected:
    * These values are set after calling `set_geometric_center()`. They will be the values used
    * to transform the object when calling `apply()`.
    */
-  long int _transformation[3][3];
+  MatrixForm _transformation;
 };
 
 #endif // GTKMM_APP_TRANSFORMATION

@@ -8,9 +8,15 @@
  *     g++ -std=c++11 test_coordinate_initicialization.cpp -o main
  */
 
-class MyCustomClassType
+struct MyCustomClassType
 {
   int var;
+  Coordinate coordinate;
+
+  MyCustomClassType(Coordinate rotation_center = _default_coordinate_value_parameter) :
+      coordinate{rotation_center}
+  {
+  }
 
   friend std::ostream &operator<<( std::ostream &output, const MyCustomClassType &my_custom_class_type )
   {
@@ -35,7 +41,9 @@ void print_coordinate(Coordinate coordinate)
 
 int main (int argc, char *argv[])
 {
+  MyCustomClassType my_custom_class_type;
   function();
+  function(my_custom_class_type);
 
   std::cout << std::endl;
   Coordinate coordinate;

@@ -15,11 +15,11 @@ Transformation::Transformation(std::string name) :
  */
 void Transformation::add_rotation(double degrees, RotationType type, Coordinate coordinate=_default_coordinate_value_parameter)
 {
-  long int rotation[3][3] =
+  MatrixForm rotation =
   {
-    {std::cos(degree), -std::sin(degree), 0},
-    {std::sin(degree),  std::cos(degree), 0},
-    {0               ,  0               , 1}
+    {(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::cos(degrees), -(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::sin(degrees), 0},
+    {(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::sin(degrees),  (GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::cos(degrees), 0},
+    {0                ,  0                , 1}
   };
 
   switch(type)
@@ -37,7 +37,7 @@ void Transformation::add_rotation(double degrees, RotationType type, Coordinate 
 
     case RotationType::ON_WORLD_CENTER:
     {
-      Coordinate coordinate{0,0,0};
+      coordinate = Coordinate{0,0,0};
       break;
     }
 
@@ -60,30 +60,32 @@ void Transformation::add_rotation(double degrees, RotationType type, Coordinate 
   }
 
   TransformationData transformation{rotation, coordinate};
-  this->rotations.push_back(transformation);
+  this->transformations.push_back(transformation);
 }
 
 void Transformation::add_scaling(Coordinate move)
 {
-  long int scaling[3][3] =
+  MatrixForm scaling =
   {
     {move.getx(), 0          , 0          },
     {0          , move.gety(), 0          },
     {0          , 0          , move.getz()}
   };
 
-  this->scalings.push_back(scaling);
+  TransformationData transformation{scaling};
+  this->transformations.push_back(transformation);
 }
 
 void Transformation::add_translation(Coordinate move)
 {
-  long int transformation[3][3] =
+  MatrixForm translation =
   {
-    {1,         , 0          ,           0},
+    {1          , 0          ,           0},
     {0          , 1          ,           0},
     {move.getx(), move.gety(), move.getz()}
   };
 
+  TransformationData transformation{translation};
   this->transformations.push_back(transformation);
 }
 
@@ -92,40 +94,8 @@ void Transformation::set_geometric_center(Coordinate center)
 
 }
 
-long int[3][3] Transformation::multiply_3x3_matrix(long int coordinates[3][3], long int transformation[3][3])
+void Transformation::apply(Coordinate center)
 {
-  int line;
-  int column;
-  int step;
-  long int result[3][3] = { 0 };
-
-  for(line = 0; line < 3; line++)
-  {
-    for(column = 0; column < 3; column++)
-    {
-      for(step = 0; step < 3; step++)
-      {
-        result[line][column] += coordinates[line][step] * transformation[step][column];
-      }
-    }
-  }
-
-  return result;
+  center.multiply(this->_transformation);
 }
 
-long int[3] Transformation::multiply_1x3_matrix(long int coordinates[3], long int transformation[3][3])
-{
-  int column;
-  int step;
-  long int result[3] = { 0 };
-
-  for(column = 0; column < 3; column++)
-  {
-    for(step = 0; step < 3; step++)
-    {
-      result[column] += coordinates[step] * transformation[step][column];
-    }
-  }
-
-  return result;
-}

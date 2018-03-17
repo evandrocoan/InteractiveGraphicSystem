@@ -4,4 +4,5 @@
 binaries
 objects
 Debug
+*.exe
 
