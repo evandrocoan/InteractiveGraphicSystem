@@ -105,7 +105,7 @@ struct Matrix
   /**
    * Prints a more beauty version of the matrix when called on `std::cout<< matrix << std::end;`
    */
-  friend std::ostream &operator<<( std::ostream &output, const Matrix &matrix )
+  friend std::ostream& operator<<( std::ostream &output, const Matrix &matrix )
   {
     unsigned int line;
     unsigned int column;

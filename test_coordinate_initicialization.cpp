@@ -18,7 +18,7 @@ struct MyCustomClassType
   {
   }
 
-  friend std::ostream &operator<<( std::ostream &output, const MyCustomClassType &my_custom_class_type )
+  friend std::ostream& operator<<( std::ostream &output, const MyCustomClassType &my_custom_class_type )
   {
     output << my_custom_class_type.var;
     return output;

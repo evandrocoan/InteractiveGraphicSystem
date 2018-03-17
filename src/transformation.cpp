@@ -92,5 +92,6 @@ void Transformation::apply(Coordinate point)
 {
   LOG(4, "Applying transformation %s on %s", this->_transformation, point);
   point.multiply(this->_transformation);
+  LOG(4, "Results %s", point);
 }
 
