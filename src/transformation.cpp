@@ -19,7 +19,7 @@ void Transformation::add_rotation(double degrees, RotationType type, Coordinate 
   {
     {(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::cos(degrees), -(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::sin(degrees), 0},
     {(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::sin(degrees),  (GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::cos(degrees), 0},
-    {0                ,  0                , 1}
+    {0                                                  ,  0                                                  , 1}
   };
 
   switch(type)
@@ -94,8 +94,8 @@ void Transformation::set_geometric_center(Coordinate center)
 
 }
 
-void Transformation::apply(Coordinate center)
+void Transformation::apply(Coordinate point)
 {
-  center.multiply(this->_transformation);
+  point.multiply(this->_transformation);
 }
 
