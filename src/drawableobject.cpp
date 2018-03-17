@@ -44,6 +44,19 @@ std::list<Coordinate*> DrawableObject::getCoordinates()
   return this->coordinates;
 }
 
+/**
+ * Prints a more beauty version of the matrix when called on `std::cout<< matrix << std::end;`
+ */
+std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
+{
+  for( auto coordinate : object.coordinates )
+  {
+    output << *coordinate << " ";
+  }
+
+  return output;
+}
+
 void DrawableObject::apply(Transformation transformation)
 {
   auto coordinates = this->getCoordinates();

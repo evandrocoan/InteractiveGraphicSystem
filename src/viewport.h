@@ -55,7 +55,7 @@ protected:
 
   bool       on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
   void       updateViewport(Gtk::Allocation);
-  Coordinate convertCoordinateFromWindow(Coordinate);
+  Coordinate convertCoordinateFromWindow(Coordinate*);
 };
 
 #endif

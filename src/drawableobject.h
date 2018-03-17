@@ -23,7 +23,7 @@ public:
   DrawableObject(std::string name, std::list<Coordinate*> coordinates);
   ~DrawableObject();
 
-  std::string            getName();
+  std::string getName();
   std::list<Coordinate*> getCoordinates();
 
   void       apply(Transformation);
@@ -31,6 +31,7 @@ public:
 
 protected:
   DrawableObject(std::string name);
+  friend std::ostream& operator<<(std::ostream &output, const DrawableObject &object);
 
   std::string name;
   std::list<Coordinate*> coordinates;
