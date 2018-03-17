@@ -90,9 +90,6 @@ void AddTransformation::on_button_save_transformation()
 
   int x_coord = atoi(main_value_value.c_str());
 
-  guint row_number = m_ListViewText.append(name);
-  m_ListViewText.set_text(row_number, 0, name);
-
   if(current_page_text == "Translation")
   {
     this->transformation.add_translation(name, Coordinate(x_coord, 1, 1));
@@ -109,11 +106,24 @@ void AddTransformation::on_button_save_transformation()
     LOG(1, "");
     LOG(1, "ERROR! Current page used: %s", current_page_text);
   }
+
+  // Update the list after adding a new item
+  m_ListViewText.clear_items();
+
+  for( auto transformation_data : this->transformation.transformations )
+  {
+    guint row_number = m_ListViewText.append(transformation_data.name);
+    m_ListViewText.set_text(row_number, 0, transformation_data.name);
+  }
 }
 
 void AddTransformation::on_button_close()
 {
   this->window.close();
-  this->viewPort->apply(this->object_name, &this->transformation);
+
+  if( this->transformation.transformations.size() )
+  {
+    this->viewPort->apply(this->object_name, &this->transformation);
+  }
 }
 

@@ -84,7 +84,6 @@ public:
   void apply(Coordinate*);
   void set_geometric_center(Coordinate);
 
-protected:
   /**
    * The `scalings` and `rotations` does not need to contain embedded all the `transformations`
    * matrices. These extra matrices as the transformation matrices to the world center are only
@@ -94,6 +93,8 @@ protected:
    * transformation matrix. This happens right after the `set_geometric_center()` method is called on.
    */
   std::vector<TransformationData> transformations;
+
+protected:
 
   /**
    * These values are set after calling `set_geometric_center()`. They will be the values used
