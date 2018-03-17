@@ -5,6 +5,9 @@
   AddObject <|--  ViewPortObserver
   AddObject  *--  ViewPort                 : viewPort*
 
+  AddTransformation  *--  ViewPort         : viewPort*
+  AddTransformation  *-down- Transformation: transformation
+
   DisplayFile        -left[hidden]> ViewWindow
   DisplayFile "1\n"  *-down- "*" DrawableObject
 
@@ -16,9 +19,9 @@
   MainWindow *-right- AddObject            : addObject
   MainWindow *-left-  AddTransformation    : addTransformation
 
-  AddTransformation  *--  ViewPort         : viewPort*
-  AddTransformation  *-down- Transformation: transformation
   Transformation "1" *-- "*" TransformationData: transformations
+  TransformationData *-- TransformationType: type
+  TransformationData *-- RotationType      : rotation_type
 
   ViewPort   *--  ViewWindow               : viewWindow
   ViewPort   *-down-  DisplayFile          : displayFile
@@ -71,6 +74,12 @@
     Gtk::Window* getWindow()
   }
 
+  class RotationType {
+    enum ON_WORLD_CENTER
+    enum ON_ITS_OWN_CENTER
+    enum ON_GIVEN_COORDINATE
+  }
+
   class Transformation {
     MatrixForm _transformation
     Coordinate apply(Coordinate)
@@ -78,8 +87,15 @@
   }
 
   class TransformationData {
-    MatrixForm main_matrix
-    Coordinate rotation_center
+    MatrixForm  matrix
+    Coordinate  rotation_center
+    std::string name
+  }
+
+  class TransformationType {
+    enum SCALING
+    enum ROTATION
+    enum TRANSLATION
   }
 
   class AddTransformation {

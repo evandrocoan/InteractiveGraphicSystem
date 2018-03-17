@@ -20,6 +20,7 @@ ViewPort::ViewPort() :
  */
 bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 {
+  // LOG(8, "Chama-mes 5 vezes seguidas para desenhar a mesma coisa por que?");
   this->updateViewport(this->get_allocation());
 
   // LOG(8, "Paint white background");
