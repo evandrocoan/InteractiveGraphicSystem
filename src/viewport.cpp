@@ -22,11 +22,11 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 {
   this->updateViewport(this->get_allocation());
 
-  LOG(8, "Paint white background");
+  // LOG(8, "Paint white background");
   cairo_context->set_source_rgb(1, 1, 1);
   cairo_context->paint();
 
-  LOG(8, "Draw x and y axis");
+  // LOG(8, "Draw x and y axis");
   cairo_context->set_line_width(1);
   cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
   Coordinate originOnWindow = Coordinate(0, 0);
@@ -38,10 +38,10 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   cairo_context->line_to(originOnWorld.getx(), this->yVpmax);
   cairo_context->stroke();
 
-  LOG(8, "Set color's objects as black:");
+  // LOG(8, "Set color's objects as black:");
   cairo_context->set_source_rgb(0, 0, 0);
 
-  LOG(8, "Draw displayFile objects");
+  // LOG(8, "Draw displayFile objects");
   std::list<DrawableObject*> objects = this->displayFile.getObjects();
 
   for (auto object : objects)
@@ -64,7 +64,7 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
         cairo_context->line_to(coordinateConverted.getx(), coordinateConverted.gety());
       }
 
-      // Draw a line until the first coordinate, closing the polygon
+      // LOG(8, "Draw a line until the first coordinate, closing the polygon")
       cairo_context->line_to(firstCoordinate.getx(), firstCoordinate.gety());
     }
   }
