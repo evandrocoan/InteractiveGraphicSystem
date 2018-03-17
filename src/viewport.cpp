@@ -169,7 +169,7 @@ ViewPort::~ViewPort()
 {
 }
 
-void ViewPort::apply(std::string object_name, Transformation transformation);
+void ViewPort::apply(std::string object_name, Transformation transformation)
 {
   this->displayFile.apply(object_name, transformation);
 }

@@ -31,12 +31,12 @@ Coordinate DrawableObject::get_geometric_center()
 
   for(auto coordinate : coordinates)
   {
-    x_axis += coordinate.getx();
-    y_axis += coordinate.gety();
-    z_axis += coordinate.getz();
+    x_axis += coordinate->getx();
+    y_axis += coordinate->gety();
+    z_axis += coordinate->getz();
   }
 
-  return Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count)
+  return Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count);
 }
 
 std::list<Coordinate*> DrawableObject::getCoordinates()
@@ -47,10 +47,10 @@ std::list<Coordinate*> DrawableObject::getCoordinates()
 void DrawableObject::apply(Transformation transformation)
 {
   auto coordinates = this->getCoordinates();
-  transformation.set_geometric_center(this->get_geometric_center())
+  transformation.set_geometric_center(this->get_geometric_center());
 
   for(auto coordinate : coordinates)
   {
-    coordinate.coordinates = transformation.apply(coordinates);
+    transformation.apply(*coordinate);
   }
 }

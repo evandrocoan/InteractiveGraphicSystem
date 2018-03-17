@@ -54,6 +54,6 @@ struct Coordinate : public Array<3, GTKMM_APP_COORDINATE_H_DATATYPE>
 
 // How to set default parameter as class object in c++?
 // https://stackoverflow.com/questions/12121645/how-to-set-default-parameter-as-class-object-in-c
-Coordinate _default_coordinate_value_parameter{};
+extern Coordinate _default_coordinate_value_parameter;
 
 #endif // GTKMM_APP_COORDINATE_H
