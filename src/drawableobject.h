@@ -26,7 +26,7 @@ public:
   std::string getName();
   std::list<Coordinate*> getCoordinates();
 
-  void       apply(Transformation);
+  void       apply(Transformation*);
   Coordinate get_geometric_center();
 
 protected:

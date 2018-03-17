@@ -33,7 +33,7 @@ public:
   void addObserver(ViewPortObserver*);
   std::list<std::string> getNamesList();
 
-  void apply(std::string object_name, Transformation);
+  void apply(std::string object_name, Transformation*);
 
   void zoom_in (float scale = 1.5);
   void zoom_out(float scale = 1.5);
