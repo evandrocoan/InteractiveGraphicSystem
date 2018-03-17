@@ -5,6 +5,11 @@
 #include <iostream>
 
 /**
+ * Because you can multiply a `Array` by an `Matrix`, but not a vice-versa.
+ */
+#include "matrix.h"
+
+/**
  * C++ Matrix Class
  * https://stackoverflow.com/questions/2076624/c-matrix-class
  *
@@ -57,6 +62,29 @@ struct Array
   array_datatype* operator[](int line)
   {
     return this->_data;
+  }
+
+  void multiply(Matrix<array_width, array_width, array_datatype> matrix)
+  {
+    int column;
+    int step;
+
+    array_datatype old_array[array_width];
+
+    for(column = 0; column < array_width; column++)
+    {
+      old_array[column] = this->_data[column];
+    }
+
+    for(column = 0; column < array_width; column++)
+    {
+      for(step = 0; step < array_width; step++)
+      {
+        this->_data[column] += old_array[step] * matrix._data[step][column];
+      }
+    }
+    // If you would like to preserve the original value, it can be returned here
+    // return old_array;
   }
 
   /**

@@ -11,7 +11,7 @@
  * error: incompatible types in assignment of 'long int (*)[4]' to 'long int [4][4]'
  * https://stackoverflow.com/questions/49312484/error-incompatible-types-in-assignment-of-long-int-4-to-long-int
  */
-template <unsigned int matrix_width, unsigned int matrix_height, typename matrix_datatype=long int>
+template <unsigned int matrix_width=3, unsigned int matrix_height=3, typename matrix_datatype=long int>
 struct Matrix
 {
   matrix_datatype _data[matrix_height][matrix_width];
@@ -69,6 +69,36 @@ struct Matrix
   matrix_datatype* operator[](int line)
   {
     return this->_data[line];
+  }
+
+  void multiply(Matrix matrix)
+  {
+    int line;
+    int column;
+    int step;
+
+    matrix_datatype old_matrix[matrix_height][matrix_width];
+
+    for(line = 0; line < matrix_height; line++)
+    {
+      for(column = 0; column < matrix_width; column++)
+      {
+        old_matrix[line][column] = this->_data[line][column];
+      }
+    }
+
+    for(line = 0; line < matrix_height; line++)
+    {
+      for(column = 0; column < matrix_width; column++)
+      {
+        for(step = 0; step < matrix_width; step++)
+        {
+          this->_data[line][column] += old_matrix[line][step] * matrix._data[step][column];
+        }
+      }
+    }
+    // If you would like to preserve the original value, it can be returned here
+    // return old_matrix;
   }
 
   /**

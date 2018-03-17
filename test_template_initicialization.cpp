@@ -3,8 +3,10 @@
 
 #include "src/array.h"
 #include "src/matrix.h"
+#include "src/matrixform.h"
 
 void matrix_tests();
+void matrix_form_tests();
 void array_tests();
 
 /**
@@ -14,6 +16,10 @@ void array_tests();
 int main (int argc, char *argv[])
 {
   matrix_tests();
+
+  std::cout << std::endl;
+  matrix_form_tests();
+
   std::cout << std::endl;
   array_tests();
 }
@@ -31,6 +37,13 @@ void array_tests()
 
   Array<3> array3 = {3};
   std::cout << "array3: " << array3 << std::endl;
+}
+
+void matrix_form_tests()
+{
+  std::cout << "MatrixForm tests" << std::endl;
+  MatrixForm matrix;
+  std::cout << matrix << std::endl;
 }
 
 void matrix_tests()
