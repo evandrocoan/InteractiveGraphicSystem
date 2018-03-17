@@ -35,8 +35,7 @@ void function(MyCustomClassType my_custom_class_type = _my_custom_class_type)
 
 void print_coordinate(Coordinate coordinate)
 {
-  std::cout << tfm::format("Coordinate:     %s", coordinate) << std::endl;
-  std::cout << tfm::format("is_initialized: %s", coordinate.is_initialized) << std::endl;
+  std::cout << tfm::format("Coordinate: %s", coordinate) << std::endl;
 }
 
 int main (int argc, char *argv[])

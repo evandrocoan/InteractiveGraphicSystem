@@ -8,25 +8,17 @@
  * Template default arguments
  * https://stackoverflow.com/questions/15373823/template-default-arguments
  */
+#define GTKMM_APP_COORDINATE_H_LENGTH   3
 #define GTKMM_APP_COORDINATE_H_DATATYPE long int
 
-struct Coordinate : public Array<3, GTKMM_APP_COORDINATE_H_DATATYPE>
+struct Coordinate : public Array<GTKMM_APP_COORDINATE_H_LENGTH, GTKMM_APP_COORDINATE_H_DATATYPE>
 {
-  Coordinate() :
-      Array{},
-      is_initialized(false)
-  {
-  }
-
-  Coordinate(std::initializer_list< GTKMM_APP_COORDINATE_H_DATATYPE > raw_data) :
-      Array(raw_data),
-      is_initialized(true)
-  {
-  }
+  // Inheriting constructors
+  // https://stackoverflow.com/questions/347358/inheriting-constructors
+  using Array<GTKMM_APP_COORDINATE_H_LENGTH, GTKMM_APP_COORDINATE_H_DATATYPE>::Array;
 
   Coordinate(GTKMM_APP_COORDINATE_H_DATATYPE x, GTKMM_APP_COORDINATE_H_DATATYPE y, GTKMM_APP_COORDINATE_H_DATATYPE z = 1) :
-      Array{x, y, z},
-      is_initialized(true)
+      Array{x, y, z}
   {
   }
 
@@ -48,8 +40,6 @@ struct Coordinate : public Array<3, GTKMM_APP_COORDINATE_H_DATATYPE>
   {
     return this->_data[2];
   }
-
-  bool is_initialized;
 };
 
 // How to set default parameter as class object in c++?
