@@ -20,16 +20,21 @@
 #include "viewport.h"
 #include "coordinate.h"
 
-class AddTransformationWindow
+class AddTransformation
 {
 public:
-  AddTransformationWindow(ViewPort* viewPort);
-  ~AddTransformationWindow();
-  Gtk::Window* getWindow();
+  AddTransformation(ViewPort* viewPort);
+  ~AddTransformation();
 
-private:
+  Gtk::Window* getWindow();
+  std::string object_name;
+
+protected:
   ViewPort* viewPort;
+  Transformation transformation;
+
   Gtk::Window window;
+  Gtk::Entry main_value_field;
 
   Gtk::Box      m_vbox;
   Gtk::Box      m_hbox;
@@ -44,8 +49,6 @@ private:
 
   Gtk::Button button_close;
   Gtk::Button button_save_transformation;
-
-  Gtk::Entry main_value_field;
 
   void on_button_close();
   void on_button_save_transformation();

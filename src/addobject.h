@@ -18,11 +18,11 @@
 #include "viewport.h"
 #include "coordinate.h"
 
-class AddObjectWindow
+class AddObject
 {
 public:
-  AddObjectWindow(ViewPort* viewPort);
-  ~AddObjectWindow();
+  AddObject(ViewPort* viewPort);
+  ~AddObject();
   Gtk::Window* getWindow();
 
 private:

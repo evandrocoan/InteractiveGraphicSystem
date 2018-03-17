@@ -18,8 +18,8 @@
 #include "debugger.h"
 #include "viewwindow.h"
 #include "viewportobserver.h"
-#include "addobjectwindow.h"
-#include "addtransformationwindow.h"
+#include "addobject.h"
+#include "addtransformation.h"
 
 #define DEFAULT_ZOOM_SCALE  1.5
 #define DEFAULT_MOVE_LENGTH "10"
@@ -35,13 +35,13 @@ public:
   void updateDropdownList();
   Gtk::Window* getWindow();
 
-private:
+protected:
   Gtk::ComboBoxText objects_list;
   Gtk::Window       window;
 
-  ViewPort                viewPort;
-  AddObjectWindow         addObjectWindow;
-  AddTransformationWindow addTransformationWindow;
+  ViewPort          viewPort;
+  AddObject         addObject;
+  AddTransformation addTransformation;
 
   Gtk::Button button_move_up;
   Gtk::Button button_move_down;
