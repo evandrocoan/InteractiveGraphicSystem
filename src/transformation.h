@@ -41,7 +41,7 @@ struct TransformationData
   /**
    * Prints a basic information of this object when called on `std::cout<< matrix << std::end;`
    */
-  friend std::ostream &operator<<( std::ostream &output, const TransformationData &data )
+  friend std::ostream& operator<<( std::ostream &output, const TransformationData &data )
   {
     output << data.name << ", ";
     output << data.main_matrix << ", ";

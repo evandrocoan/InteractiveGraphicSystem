@@ -91,7 +91,7 @@ struct Array
   /**
    * Prints a more beauty version of the matrix when called on `std::cout<< matrix << std::end;`
    */
-  friend std::ostream &operator<<( std::ostream &output, const Array &matrix )
+  friend std::ostream& operator<<( std::ostream &output, const Array &matrix )
   {
     unsigned int column;
     output << "{";
