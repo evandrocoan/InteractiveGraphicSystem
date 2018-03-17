@@ -44,7 +44,7 @@ public:
 
   void add_scaling(Coordinate scale);
   void add_rotation(double degrees, RotationType, Coordinate);
-  void add_translation(Coordinate move);
+  void add_translation(Coordinate movemnt);
 
   /**
    * Before calling `apply()`, you must ensure you had called `set_geometric_center()` within the
