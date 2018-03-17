@@ -2,34 +2,35 @@
 @startuml
   skinparam defaultFontName Consolas
 
-  AddObjectWindow <|--  ViewPortObserver
-  AddObjectWindow  *--  ViewPort           : viewPort*
+  AddObject <|--  ViewPortObserver
+  AddObject  *--  ViewPort                 : viewPort*
 
-  DisplayFile           -left[hidden]> ViewWindow
-  DisplayFile    "1\n"  *-down- "*" DrawableObject
+  DisplayFile        -left[hidden]> ViewWindow
+  DisplayFile "1\n"  *-down- "*" DrawableObject
 
   Line    <|-up- DrawableObject
   Point   <|-up- DrawableObject
   Polygon <|-up- DrawableObject
 
   MainWindow *-down-  ViewPort             : viewPort
-  MainWindow *-right- AddObjectWindow      : addObjectWindow
-  MainWindow *-left-  TransformationWindow : transformationWindow
+  MainWindow *-right- AddObject            : addObject
+  MainWindow *-left-  AddTransformation    : addTransformation
 
-  TransformationWindow  *--  ViewPort      : viewPort*
-  TransformationWindow  *-down- Transformation: transformation
+  AddTransformation  *--  ViewPort         : viewPort*
+  AddTransformation  *-down- Transformation: transformation
   Transformation "1" *-- "*" TransformationData: transformations
 
   ViewPort   *--  ViewWindow               : viewWindow
   ViewPort   *-down-  DisplayFile          : displayFile
   ViewPort   *-right- ViewPortObservers    : viewPortObservers
 
-  ViewPortObservers "1" *-up- "*" ViewPortObserver : observers
+  ViewPortObservers "1" *-up- "*" ViewPortObserver: observers
 
-  class AddObjectWindow {
+  class AddObject {
     Gtk::Grid              point_grid
     Gtk::Grid              line_grid
     Gtk::Grid              polygn_grid
+    Gtk::Window*           getWindow()
     std::list<Coordinate*> polygon_cord_list
   }
 
@@ -61,12 +62,13 @@
   }
 
   class MainWindow {
-    Gtk::Box        main_box
-    Gtk::Box        left_box
-    Gtk::Frame      left_frame
-    Gtk::Frame      right_frame
-    ViewPort        viewPort
-    AddObjectWindow addObjectWindow
+    ViewPort     viewPort
+    AddObject    addObject
+    Gtk::Box     main_box
+    Gtk::Box     left_box
+    Gtk::Frame   left_frame
+    Gtk::Frame   right_frame
+    Gtk::Window* getWindow()
   }
 
   class Transformation {
@@ -80,10 +82,11 @@
     Coordinate rotation_center
   }
 
-  class TransformationWindow {
-    Gtk::Grid   rotation_grid
-    Gtk::Grid   scaling_grid
-    Gtk::Grid   translation_grid
+  class AddTransformation {
+    Gtk::Grid    rotation_grid
+    Gtk::Grid    scaling_grid
+    Gtk::Grid    translation_grid
+    Gtk::Window* getWindow()
   }
 
   class ViewPort {
