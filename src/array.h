@@ -25,26 +25,21 @@ struct Array
   {
   }
 
-  Array(std::initializer_list< array_datatype > raw_data)
+  Array(std::initializer_list< array_datatype > new_values)
   {
-    unsigned int data_size = raw_data.size();
+    unsigned int data_size = new_values.size();
     unsigned int column_index = 0;
     // std::cout << data_size << std::endl;
 
     if( data_size == 1 )
     {
-      array_datatype initial = *(raw_data.begin());
-
-      for( ; column_index < array_width; column_index++ )
-      {
-        this->_data[column_index] = initial;
-      }
+      this->clear(*(new_values.begin()));
     }
     else
     {
       assert(data_size == array_width);
 
-      for( auto column : raw_data )
+      for( auto column : new_values )
       {
         this->_data[column_index] = column;
         column_index++;
@@ -62,6 +57,16 @@ struct Array
   array_datatype* operator[](int line)
   {
     return this->_data;
+  }
+
+  void clear(array_datatype initial = 0)
+  {
+    unsigned int column_index = 0;
+
+    for( ; column_index < array_width; column_index++ )
+    {
+      this->_data[column_index] = initial;
+    }
   }
 
   void multiply(Matrix<array_width, array_width, array_datatype>* matrix)

@@ -22,16 +22,7 @@ struct Matrix
 
   Matrix(matrix_datatype initial)
   {
-    unsigned int line;
-    unsigned int column;
-
-    for( line=0; line < matrix_height; line++ )
-    {
-      for( column=0; column < matrix_width; column++ )
-      {
-        this->_data[line][column] = initial;
-      }
-    }
+    this->clear(initial);
   }
 
   Matrix(std::initializer_list< std::initializer_list< matrix_datatype > > raw_data)
@@ -71,12 +62,25 @@ struct Matrix
     return this->_data[line];
   }
 
+  clear(matrix_datatype initial=0)
+  {
+    unsigned int line;
+    unsigned int column;
+
+    for( line=0; line < matrix_height; line++ )
+    {
+      for( column=0; column < matrix_width; column++ )
+      {
+        this->_data[line][column] = initial;
+      }
+    }
+  }
+
   void multiply(Matrix* matrix)
   {
     int line;
     int column;
     int step;
-
     matrix_datatype old_matrix[matrix_height][matrix_width];
 
     for(line = 0; line < matrix_height; line++)
