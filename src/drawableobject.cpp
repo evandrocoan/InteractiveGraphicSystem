@@ -57,13 +57,13 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
   return output;
 }
 
-void DrawableObject::apply(Transformation transformation)
+void DrawableObject::apply(Transformation* transformation)
 {
   auto coordinates = this->getCoordinates();
-  transformation.set_geometric_center(this->get_geometric_center());
+  transformation->set_geometric_center(this->get_geometric_center());
 
   for(auto coordinate : coordinates)
   {
-    transformation.apply(*coordinate);
+    transformation->apply(coordinate);
   }
 }

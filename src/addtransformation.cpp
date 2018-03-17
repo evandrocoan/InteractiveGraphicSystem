@@ -114,6 +114,6 @@ void AddTransformation::on_button_save_transformation()
 void AddTransformation::on_button_close()
 {
   this->window.close();
-  this->viewPort->apply(this->object_name, this->transformation);
+  this->viewPort->apply(this->object_name, &this->transformation);
 }
 
