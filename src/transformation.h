@@ -57,8 +57,10 @@ struct TransformationData
    */
   friend std::ostream& operator<<( std::ostream &output, const TransformationData &data )
   {
-    output << data.name << ", ";
-    output << data.matrix << ", ";
+    output << data.name << ", type: ";
+    output << data.type << ", ";
+    output << data.matrix << ", rotation_type: ";
+    output << data.rotation_type << ", ";
     output << data.rotation_center;
     return output;
   }
@@ -98,6 +100,11 @@ protected:
    * to transform the object when calling `apply()`.
    */
   MatrixForm _transformation;
+
+  void _set_scaling_data      (TransformationData&, unsigned int &index, Coordinate &center);
+  void _set_rotation_data     (TransformationData&, unsigned int &index, Coordinate &center);
+  void _rotation_on_center    (TransformationData&, unsigned int &index, Coordinate &center);
+  void _rotation_on_coordinate(TransformationData&, unsigned int &index, Coordinate &center);
 };
 
 #endif // GTKMM_APP_TRANSFORMATION
