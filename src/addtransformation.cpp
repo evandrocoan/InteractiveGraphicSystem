@@ -1,6 +1,6 @@
-#include "addtransformationwindow.h"
+#include "addtransformation.h"
 
-AddTransformationWindow::AddTransformationWindow(ViewPort* viewPort) :
+AddTransformation::AddTransformation(ViewPort* viewPort) :
       m_vbox(Gtk::ORIENTATION_VERTICAL),
       m_hbox(Gtk::ORIENTATION_HORIZONTAL),
       viewPort(viewPort),
@@ -21,8 +21,8 @@ AddTransformationWindow::AddTransformationWindow(ViewPort* viewPort) :
   scaling_grid.set_column_homogeneous(true);
   scaling_grid.set_row_spacing(10);
 
-  button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformationWindow::on_button_close) );
-  button_save_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformationWindow::on_button_save_transformation) );
+  button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_close) );
+  button_save_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_save_transformation) );
 
   this->create_action_tabs();
   this->create_scrolling_items_list();
@@ -33,7 +33,7 @@ AddTransformationWindow::AddTransformationWindow(ViewPort* viewPort) :
   this->window.show_all_children();
 }
 
-void AddTransformationWindow::create_action_tabs()
+void AddTransformation::create_action_tabs()
 {
   m_notebook.append_page(translation_grid, "Translation");
   m_notebook.append_page(rotation_grid, "Rotation");
@@ -51,7 +51,7 @@ void AddTransformationWindow::create_action_tabs()
  * how to add text box in gtkmm:gtk::Listbox using c++
  * https://stackoverflow.com/questions/34253297/how-to-add-text-box-in-gtkmmgtklistbox-using-c
  */
-void AddTransformationWindow::create_scrolling_items_list()
+void AddTransformation::create_scrolling_items_list()
 {
   //Fill the ListViewText:
   m_ListViewText.set_column_title(0, "Transformations");
@@ -68,32 +68,52 @@ void AddTransformationWindow::create_scrolling_items_list()
   m_hbox.pack_start(m_ScrolledWindow, true, true);
 }
 
-AddTransformationWindow::~AddTransformationWindow()
+AddTransformation::~AddTransformation()
 {
 }
 
-Gtk::Window* AddTransformationWindow::getWindow()
+Gtk::Window* AddTransformation::getWindow()
 {
   return &this->window;
 }
 
-void AddTransformationWindow::on_button_save_transformation()
+void AddTransformation::on_button_save_transformation()
 {
-  std::string main_value_value = main_value_field.get_text().raw();
-  LOG(4, "main_value_value: %s", main_value_value);
-
   int          current_page_index = m_notebook.get_current_page();
   Gtk::Widget* current_page_widget = m_notebook.get_nth_page(current_page_index);
 
+  std::string main_value_value  = main_value_field.get_text().raw();
   std::string current_page_text = (std::string) m_notebook.get_tab_label_text(*current_page_widget);
-  LOG(4, "current_page_index: %d, current_page_text: %s", current_page_index, current_page_text);
 
-  guint row_number = m_ListViewText.append();
-  m_ListViewText.set_text(row_number, 0, tfm::format("%s %s", current_page_text, main_value_value));
+  std::string name = tfm::format("%s %s", current_page_text, main_value_value);
+  LOG(4, "%s", name);
+
+  int x_coord = atoi(main_value_value.c_str());
+
+  guint row_number = m_ListViewText.append(name);
+  m_ListViewText.set_text(row_number, 0, name);
+
+  if(current_page_text == "Translation")
+  {
+    this->transformation.add_translation(name, Coordinate(x_coord, 1, 1));
+  }
+  else if(current_page_text == "Rotation")
+  {
+  }
+  else if(current_page_text == "Scaling")
+  {
+  }
+  else
+  {
+    LOG(1, "");
+    LOG(1, "");
+    LOG(1, "ERROR! Current page used: %s", current_page_text);
+  }
 }
 
-void AddTransformationWindow::on_button_close()
+void AddTransformation::on_button_close()
 {
   this->window.close();
+  this->viewPort->apply(this->object_name, this->transformation);
 }
 

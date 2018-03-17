@@ -1,6 +1,6 @@
-#include "addobjectwindow.h"
+#include "addobject.h"
 
-AddObjectWindow::AddObjectWindow(ViewPort* viewPort) :
+AddObject::AddObject(ViewPort* viewPort) :
       m_vbox(Gtk::ORIENTATION_VERTICAL),
       viewPort(viewPort),
       info_label("Insert a Coordinate :"),
@@ -66,11 +66,11 @@ AddObjectWindow::AddObjectWindow(ViewPort* viewPort) :
   polygn_grid.attach(button_add_coordenate, 1, 4, 1, 1);
   polygn_grid.attach(button_save_wire, 2, 4, 1, 1);
 
-  button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_close) );
-  button_save_point.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_save_point) );
-  button_save_line.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_save_line) );
-  button_add_coordenate.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_add_coordinate) );
-  button_save_wire.signal_clicked().connect( sigc::mem_fun(*this, &AddObjectWindow::on_button_save_polygon) );
+  button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_close) );
+  button_save_point.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_point) );
+  button_save_line.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_line) );
+  button_add_coordenate.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_add_coordinate) );
+  button_save_wire.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_polygon) );
 
   m_notebook.set_border_width(0);
   m_vbox.pack_start(m_notebook);
@@ -86,16 +86,16 @@ AddObjectWindow::AddObjectWindow(ViewPort* viewPort) :
   this->window.show_all_children();
 }
 
-AddObjectWindow::~AddObjectWindow()
+AddObject::~AddObject()
 {
 }
 
-Gtk::Window* AddObjectWindow::getWindow()
+Gtk::Window* AddObject::getWindow()
 {
   return &this->window;
 }
 
-void AddObjectWindow::on_button_save_point()
+void AddObject::on_button_save_point()
 {
   std::string name = point_name_field.get_text().raw();
   LOG(4, "Name: %s", name);
@@ -109,17 +109,17 @@ void AddObjectWindow::on_button_save_point()
   std::string x_string = point_x_field.get_text().raw();
   std::string y_string = point_y_field.get_text().raw();
 
-  int x_cord = atoi(x_string.c_str());
-  int y_cord = atoi(y_string.c_str());
+  int x_coord = atoi(x_string.c_str());
+  int y_coord = atoi(y_string.c_str());
 
-  Coordinate *point_cord = new Coordinate(x_cord, y_cord);
+  Coordinate *point_cord = new Coordinate(x_coord, y_coord);
   Point *point = new Point(name, point_cord);
 
   this->viewPort->addObject(point);
   this->window.close();
 }
 
-void AddObjectWindow::on_button_save_line()
+void AddObject::on_button_save_line()
 {
   std::string name = line_name_field.get_text().raw();
   LOG(4, "Name: %s", name);
@@ -149,7 +149,7 @@ void AddObjectWindow::on_button_save_line()
   this->window.close();
 }
 
-void AddObjectWindow::on_button_save_polygon()
+void AddObject::on_button_save_polygon()
 {
   if (!polygon_cord_list.empty())
   {
@@ -178,27 +178,27 @@ void AddObjectWindow::on_button_save_polygon()
   }
 }
 
-void AddObjectWindow::on_button_add_coordinate()
+void AddObject::on_button_add_coordinate()
 {
   std::string x_string = wire_x_field.get_text().raw();
   std::string y_string = wire_y_field.get_text().raw();
 
-  int x_cord = atoi(x_string.c_str());
-  int y_cord = atoi(y_string.c_str());
+  int x_coord = atoi(x_string.c_str());
+  int y_coord = atoi(y_string.c_str());
 
-  Coordinate *wire_cord = new Coordinate(x_cord, y_cord);
+  Coordinate *wire_cord = new Coordinate(x_coord, y_coord);
   polygon_cord_list.push_back(wire_cord);
 
   wire_x_field.set_text("");
   wire_y_field.set_text("");
 
-  std::string info_label_contents = "Added X : " + std::to_string(x_cord) + " Y : " + std::to_string(y_cord);
+  std::string info_label_contents = "Added X : " + std::to_string(x_coord) + " Y : " + std::to_string(y_coord);
 
   LOG(4, info_label_contents.c_str());
   info_label.set_text(info_label_contents);
 }
 
-void AddObjectWindow::on_button_close()
+void AddObject::on_button_close()
 {
   this->window.close();
 }

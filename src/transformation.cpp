@@ -1,11 +1,5 @@
 #include "transformation.h"
 
-Transformation::Transformation(std::string name) :
-      name(name),
-      transformations()
-{
-}
-
 /**
  * Create and configure correctly a rotation.
  *
@@ -13,7 +7,7 @@ Transformation::Transformation(std::string name) :
  * @param type    an enum RotationType valid value
  * @param point   this is a optional value, only required when using RotationType::ON_GIVEN_COORDINATE
  */
-void Transformation::add_rotation(double degrees, RotationType type, Coordinate coordinate=_default_coordinate_value_parameter)
+void Transformation::add_rotation(std::string name, double degrees, RotationType type, Coordinate coordinate=_default_coordinate_value_parameter)
 {
   MatrixForm rotation =
   {
@@ -59,11 +53,11 @@ void Transformation::add_rotation(double degrees, RotationType type, Coordinate 
     }
   }
 
-  TransformationData transformation{rotation, coordinate};
+  TransformationData transformation{name, rotation, coordinate};
   this->transformations.push_back(transformation);
 }
 
-void Transformation::add_scaling(Coordinate move)
+void Transformation::add_scaling(std::string name, Coordinate move)
 {
   MatrixForm scaling =
   {
@@ -72,30 +66,31 @@ void Transformation::add_scaling(Coordinate move)
     {0          , 0          , move.getz()}
   };
 
-  TransformationData transformation{scaling};
+  TransformationData transformation{name, scaling};
   this->transformations.push_back(transformation);
 }
 
-void Transformation::add_translation(Coordinate movemnt)
+void Transformation::add_translation(std::string name, Coordinate movement)
 {
   MatrixForm translation =
   {
-    {1             , 0             ,              0},
-    {0             , 1             ,              0},
-    {movemnt.getx(), movemnt.gety(), movemnt.getz()}
+    {1              , 0              ,               0},
+    {0              , 1              ,               0},
+    {movement.getx(), movement.gety(), movement.getz()}
   };
 
-  TransformationData transformation{translation};
+  TransformationData transformation{name, translation};
   this->transformations.push_back(transformation);
 }
 
 void Transformation::set_geometric_center(Coordinate center)
 {
-
+  LOG(4, "Center on %s", center);
 }
 
 void Transformation::apply(Coordinate point)
 {
+  LOG(4, "Applying transformation %s on %s", this->_transformation, point);
   point.multiply(this->_transformation);
 }
 
