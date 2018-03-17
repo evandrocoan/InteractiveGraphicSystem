@@ -18,9 +18,9 @@ enum RotationType
 
 enum TransformationType
 {
-  TRANSLATION,
   SCALING,
-  ROTATION
+  ROTATION,
+  TRANSLATION
 };
 
 /**
