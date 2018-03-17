@@ -70,13 +70,13 @@
   }
 
   class Transformation {
-    Matrix _transformation
+    MatrixForm _transformation
     Coordinate apply(Coordinate)
     void set_geometric_center(Coordinate)
   }
 
   class TransformationData {
-    Matrix main_matrix
+    MatrixForm main_matrix
     Coordinate rotation_center
   }
 
