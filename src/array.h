@@ -73,7 +73,8 @@ struct Array
 
     for(column = 0; column < array_width; column++)
     {
-      old_array[column] = this->_data[column];
+      old_array  [column] = this->_data[column];
+      this->_data[column] = 0;
     }
 
     for(column = 0; column < array_width; column++)
