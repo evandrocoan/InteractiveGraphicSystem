@@ -83,7 +83,8 @@ struct Matrix
     {
       for(column = 0; column < matrix_width; column++)
       {
-        old_matrix[line][column] = this->_data[line][column];
+        old_matrix [line][column] = this->_data[line][column];
+        this->_data[line][column] = 0;
       }
     }
 

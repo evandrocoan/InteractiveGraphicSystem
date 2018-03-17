@@ -76,13 +76,13 @@ void Transformation::add_scaling(Coordinate move)
   this->transformations.push_back(transformation);
 }
 
-void Transformation::add_translation(Coordinate move)
+void Transformation::add_translation(Coordinate movemnt)
 {
   MatrixForm translation =
   {
-    {1          , 0          ,           0},
-    {0          , 1          ,           0},
-    {move.getx(), move.gety(), move.getz()}
+    {1             , 0             ,              0},
+    {0             , 1             ,              0},
+    {movemnt.getx(), movemnt.gety(), movemnt.getz()}
   };
 
   TransformationData transformation{translation};
