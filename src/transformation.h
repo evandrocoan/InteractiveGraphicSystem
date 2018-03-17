@@ -22,7 +22,7 @@ enum RotationType
  */
 struct TransformationData
 {
-  Matrix<> main_matrix;
+  MatrixForm main_matrix;
   Coordinate rotation_center;
 
   /**
@@ -30,7 +30,7 @@ struct TransformationData
    * rotation which should be performed around some specific coordinate as the world center, instead
    * of the object geometric center.
    */
-  TransformationData(Matrix<> main_matrix, Coordinate rotation_center = _default_coordinate_value_parameter) :
+  TransformationData(MatrixForm main_matrix, Coordinate rotation_center = _default_coordinate_value_parameter) :
       main_matrix(main_matrix),
       rotation_center{rotation_center}
   {
@@ -61,9 +61,12 @@ protected:
   std::string name;
 
   /**
-   * As `scalings` and `rotations` does not contain embedded all the `transformations` matrices.
-   * These values are only required when current object is finally being rotated/scaled. This
-   * happens right after the `set_geometric_center()` method is called on.
+   * The `scalings` and `rotations` does not need to contain embedded all the `transformations`
+   * matrices. These extra matrices as the transformation matrices to the world center are only
+   * required when current object is finally being rotated/scaled.
+   *
+   * Therefore, this variable is only set within the minimum required information to build the final
+   * transformation matrix. This happens right after the `set_geometric_center()` method is called on.
    */
   std::vector<TransformationData> transformations;
 
