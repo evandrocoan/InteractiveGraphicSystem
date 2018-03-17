@@ -86,12 +86,17 @@ void Transformation::add_translation(std::string name, Coordinate movement)
 void Transformation::set_geometric_center(Coordinate center)
 {
   LOG(4, "Center on %s", center);
+
+  for( auto transformation_data : this->transformations )
+  {
+
+  }
 }
 
-void Transformation::apply(Coordinate point)
+void Transformation::apply(Coordinate* point)
 {
-  LOG(4, "Applying transformation %s on %s", this->_transformation, point);
-  point.multiply(this->_transformation);
+  LOG(4, "Applying transformation %s on %s", this->_transformation, *point);
+  point->multiply(&this->_transformation);
   LOG(4, "Results %s", point);
 }
 

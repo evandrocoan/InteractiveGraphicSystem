@@ -29,7 +29,7 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   LOG(8, "Draw x and y axis");
   cairo_context->set_line_width(1);
   cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
-  Coordinate originOnWindow = Coordinate(50, 50);
+  Coordinate originOnWindow = Coordinate(0, 0);
   Coordinate originOnWorld  = convertCoordinateFromWindow(&originOnWindow);
 
   cairo_context->move_to(this->xVpmin, originOnWorld.gety());
@@ -170,7 +170,7 @@ ViewPort::~ViewPort()
 {
 }
 
-void ViewPort::apply(std::string object_name, Transformation transformation)
+void ViewPort::apply(std::string object_name, Transformation* transformation)
 {
   this->displayFile.apply(object_name, transformation);
 }

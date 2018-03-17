@@ -71,7 +71,7 @@ struct Matrix
     return this->_data[line];
   }
 
-  void multiply(Matrix matrix)
+  void multiply(Matrix* matrix)
   {
     int line;
     int column;
@@ -94,7 +94,7 @@ struct Matrix
       {
         for(step = 0; step < matrix_width; step++)
         {
-          this->_data[line][column] += old_matrix[line][step] * matrix._data[step][column];
+          this->_data[line][column] += old_matrix[line][step] * matrix->_data[step][column];
         }
       }
     }
