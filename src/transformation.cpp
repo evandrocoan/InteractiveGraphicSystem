@@ -4,6 +4,7 @@ void Transformation::apply(Coordinate &point)
 {
   LOG(4, "Applying transformation %s on %s", this->_transformation, point);
   point.multiply(this->_transformation);
+  // LOG(4, "point.multiply: %s", point);
 }
 
 void Transformation::remove_transformation(std::string name)
@@ -33,8 +34,6 @@ unsigned int Transformation::size()
  */
 std::ostream& operator<<( std::ostream &output, const Transformation &object )
 {
-  output << object._transformation << "(";
-
   unsigned int index = 0;
   unsigned int size = object.transformations.size() - 1;
 
@@ -44,13 +43,13 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
 
     if( index != size )
     {
-      output << ", ";
+      output << " - ";
     }
 
     index++;
   }
 
-  output << ")";
+  output << "(" << object._transformation << ")";
   return output;
 }
 
@@ -95,7 +94,7 @@ void Transformation::add_translation(std::string name, Coordinate movement)
 
 void Transformation::set_geometric_center(Coordinate &center = _default_coordinate_value_parameter)
 {
-  LOG(4, "Center on %s", center);
+  LOG(4, "Center on %s - %s", center, *this);
   unsigned int index = 0;
 
   for( auto transformation_data : this->transformations )
@@ -112,6 +111,7 @@ void Transformation::set_geometric_center(Coordinate &center = _default_coordina
         {
           this->_transformation.multiply(transformation_data.matrix);
         }
+        // LOG(4, "_transformation.multiply: %s", this->_transformation);
         break;
       }
 
