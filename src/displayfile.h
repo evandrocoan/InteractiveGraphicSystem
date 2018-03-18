@@ -19,8 +19,8 @@ public:
   void addObject   (DrawableObject* object);
   void removeObject(DrawableObject* object);
 
-  void apply(std::string object_name, Transformation*);
   void removeObjectByName(std::string name);
+  void apply(std::string object_name, Transformation&);
 
   bool            isObjectOnByName(std::string name);
   DrawableObject* getObjectByName(std::string name);

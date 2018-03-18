@@ -10,17 +10,17 @@ ViewPort::ViewPort() :
 {
 }
 
-void ViewPort::apply(std::string object_name, Transformation* transformation)
+void ViewPort::apply(std::string object_name, Transformation &transformation)
 {
   if( this->displayFile.isObjectOnByName(object_name) )
   {
-    if( transformation->size() )
+    if( transformation.size() )
     {
       this->displayFile.apply(object_name, transformation);
     }
     else
     {
-      LOG(4, "There are no transformations available to be applied on your object: `%s` %s", object_name, *transformation);
+      LOG(4, "There are no transformations available to be applied on your object: `%s` %s", object_name, transformation);
     }
   }
   else
@@ -40,7 +40,8 @@ void ViewPort::apply(std::string object_name, Transformation* transformation)
 bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 {
   // LOG(8, "Chama-mes 5 vezes seguidas para desenhar a mesma coisa por que?");
-  this->updateViewport(this->get_allocation());
+  auto allocation = this->get_allocation();
+  this->updateViewport(allocation);
 
   // LOG(8, "Paint white background");
   cairo_context->set_source_rgb(1, 1, 1);
@@ -49,8 +50,8 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   // LOG(8, "Draw x and y axis");
   cairo_context->set_line_width(1);
   cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
-  Coordinate originOnWindow = Coordinate(0, 0);
-  Coordinate originOnWorld  = convertCoordinateFromWindow(&originOnWindow);
+  Coordinate originOnWindow(0, 0);
+  Coordinate originOnWorld  = convertCoordinateFromWindow(originOnWindow);
 
   cairo_context->move_to(this->xVpmin, originOnWorld.gety());
   cairo_context->line_to(this->xVpmax, originOnWorld.gety());
@@ -62,12 +63,12 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   cairo_context->set_source_rgb(0, 0, 0);
 
   // LOG(8, "Draw displayFile objects");
-  std::list<DrawableObject*> objects = this->displayFile.getObjects();
+  auto objects = this->displayFile.getObjects();
 
   for (auto object : objects)
   {
     auto coordinates = object->getCoordinates();
-    Coordinate firstCoordinate = this->convertCoordinateFromWindow(*(coordinates.begin()));
+    Coordinate firstCoordinate = this->convertCoordinateFromWindow(**(coordinates.begin()));
 
     cairo_context->move_to(firstCoordinate.getx(), firstCoordinate.gety());
     LOG(8, "object coordinates: %s", *object);
@@ -80,7 +81,7 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
     {
       for (auto coordinate : coordinates)
       {
-        Coordinate coordinateConverted = this->convertCoordinateFromWindow(coordinate);
+        Coordinate coordinateConverted = this->convertCoordinateFromWindow(*coordinate);
         cairo_context->line_to(coordinateConverted.getx(), coordinateConverted.gety());
       }
 
@@ -99,16 +100,16 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
  * @param  coord [description]
  * @return       [description]
  */
-Coordinate ViewPort::convertCoordinateFromWindow(Coordinate* coord)
+Coordinate ViewPort::convertCoordinateFromWindow(Coordinate &coord)
 {
-  long int xW = coord->getx();
+  long int xW = coord.getx();
   long int xVp = (long int)(
       (double)(xW - this->viewWindow.xWmin) * ((double)(this->xVpmax - this->xVpmin) /
           (double)(this->viewWindow.xWmax - this->viewWindow.xWmin)
       )
   );
 
-  long int yW = coord->gety();
+  long int yW = coord.gety();
   long int yVp = (this->yVpmax - this->yVpmin) - (long int)(
       (double)(yW - this->viewWindow.yWmin) * (double)(this->yVpmax - this->yVpmin) /
           (double)(this->viewWindow.yWmax - this->viewWindow.yWmin)
@@ -141,7 +142,7 @@ Coordinate ViewPort::convertCoordinateFromWindow(Coordinate* coord)
  *     join(). Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of
        GdkRectangle.
  */
-void ViewPort::updateViewport(Gtk::Allocation allocation)
+void ViewPort::updateViewport(Gtk::Allocation &allocation)
 {
   // NÃO ENTENDI A LÓGICA MATEMÁTICA
   if (this->xVpmax != allocation.get_width() ||  this->yVpmax != allocation.get_height())

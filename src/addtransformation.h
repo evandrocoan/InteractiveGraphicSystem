@@ -24,15 +24,15 @@
 class AddTransformation
 {
 public:
-  AddTransformation(ViewPort* viewPort);
+  AddTransformation(ViewPort &viewPort);
   ~AddTransformation();
 
-  Gtk::Window* getWindow();
+  Gtk::Window& getWindow();
   std::string object_name;
   RotationType rotation_type;
 
 protected:
-  ViewPort* viewPort;
+  ViewPort &viewPort;
   Transformation transformation;
 
   Gtk::Window window;

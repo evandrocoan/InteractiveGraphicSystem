@@ -24,10 +24,13 @@ public:
   ~DrawableObject();
 
   std::string getName();
-  std::list<Coordinate*> getCoordinates();
+  std::list<Coordinate*>& getCoordinates();
 
-  void       apply(Transformation*);
-  Coordinate get_geometric_center();
+  /**
+   * `get_geometric_center()` return a pointer which you must explicitly delete after using it.
+   */
+  void        apply(Transformation&);
+  Coordinate* get_geometric_center();
 
   friend std::ostream& operator<<(std::ostream &output, const DrawableObject &object);
 
