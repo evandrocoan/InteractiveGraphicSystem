@@ -54,9 +54,9 @@ struct Array
    * @param  line the current line you want to access
    * @return      a pointer to the current line
    */
-  array_datatype* operator[](int line)
+  array_datatype operator[](int line)
   {
-    return this->_data;
+    return this->_data[line];
   }
 
   void clear(array_datatype initial = 0)

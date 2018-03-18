@@ -70,8 +70,19 @@ class Transformation
 {
 public:
   void add_scaling(std::string name, Coordinate scale);
-  void add_rotation(std::string name, double degrees, RotationType, Coordinate);
   void add_translation(std::string name, Coordinate movement);
+
+  /**
+   * Create and configure correctly a rotation.
+   *
+   * @param degrees [description]
+   * @param type    an enum RotationType valid value
+   * @param point   this is a optional value, only required when using RotationType::ON_GIVEN_COORDINATE
+   */
+  void add_rotation(std::string name,
+                    Array<3, long double> degrees,
+                    Coordinate coordinate=_default_coordinate_value_parameter,
+                    RotationType type=RotationType::ON_WORLD_CENTER);
 
   unsigned int size();
   void remove_transformation(std::string name);

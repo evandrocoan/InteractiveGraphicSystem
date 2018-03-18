@@ -5,19 +5,37 @@ AddTransformation::AddTransformation(ViewPort* viewPort) :
       m_hbox(Gtk::ORIENTATION_HORIZONTAL),
       viewPort(viewPort),
       m_ListViewText(1),
+      rotation_type(RotationType::ON_ITS_OWN_CENTER),
+      m_rb1("Rotate around world center"),
+      m_rb2("Rotate around the object own geometric center"),
+      m_rb3("Rotate around an arbitrary point"),
       button_save_transformation("Save Transformation"),
       button_remove_transformation("Remove Transformation"),
       button_close("Close")
 {
   LOG(2, "Entering...");
-  main_value_field.set_text("90");
-  main_value_field.set_placeholder_text("Name");
+  m_rb1.set_active();
+  m_rb2.join_group(m_rb1);
+  m_rb3.join_group(m_rb1);
+
+  x_rotation_field.set_text("90");
+  x_rotation_field.set_placeholder_text("Name");
+  main_value_field_a.set_text("100");
+  main_value_field_a.set_placeholder_text("Name");
+  main_value_field_b.set_text("0");
+  main_value_field_b.set_placeholder_text("Name");
+  main_value_field_c.set_text("0");
+  main_value_field_c.set_placeholder_text("Name");
 
   translation_grid.set_column_homogeneous(true);
   translation_grid.set_row_spacing(10);
 
   rotation_grid.set_column_homogeneous(true);
   rotation_grid.set_row_spacing(10);
+  rotation_grid.attach(x_rotation_field, 1, 1, 1, 1);
+  rotation_grid.attach(m_rb1, 1, 2, 1, 1);
+  rotation_grid.attach(m_rb2, 1, 3, 1, 1);
+  rotation_grid.attach(m_rb3, 1, 4, 1, 1);
 
   scaling_grid.set_column_homogeneous(true);
   scaling_grid.set_row_spacing(10);
@@ -25,6 +43,9 @@ AddTransformation::AddTransformation(ViewPort* viewPort) :
   button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_close) );
   button_save_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_save_transformation) );
   button_remove_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_remove_transformation) );
+  m_rb1.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_world_rotation_button) );
+  m_rb2.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_own_center_rotation_button) );
+  m_rb3.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_given_coordinate_rotation_button) );
 
   this->create_action_tabs();
   this->create_scrolling_items_list();
@@ -43,7 +64,9 @@ void AddTransformation::create_action_tabs()
   m_notebook.set_border_width(0);
 
   m_vbox.pack_start(m_notebook);
-  m_vbox.pack_start(main_value_field, Gtk::PACK_SHRINK);
+  m_vbox.pack_start(main_value_field_a, Gtk::PACK_SHRINK);
+  m_vbox.pack_start(main_value_field_b, Gtk::PACK_SHRINK);
+  m_vbox.pack_start(main_value_field_c, Gtk::PACK_SHRINK);
   m_vbox.pack_start(button_save_transformation, Gtk::PACK_SHRINK);
   m_vbox.pack_start(button_remove_transformation, Gtk::PACK_SHRINK);
   m_vbox.pack_start(button_close, Gtk::PACK_SHRINK);
@@ -66,7 +89,7 @@ void AddTransformation::create_scrolling_items_list()
   m_ScrolledWindow.set_policy(Gtk::PolicyType::POLICY_NEVER, Gtk::PolicyType::POLICY_AUTOMATIC);
 
   LOG(4, "Gtk::ScrolledWindow::property_max_content_width(): %d", m_ScrolledWindow.property_max_content_width());
-  m_ScrolledWindow.set_min_content_width(200);
+  m_ScrolledWindow.set_min_content_width(500);
 
   m_hbox.pack_start(m_ScrolledWindow, true, true);
 }
@@ -85,23 +108,37 @@ void AddTransformation::on_button_save_transformation()
   int          current_page_index = m_notebook.get_current_page();
   Gtk::Widget* current_page_widget = m_notebook.get_nth_page(current_page_index);
 
-  std::string main_value_value  = main_value_field.get_text().raw();
+  std::string main_value_a = main_value_field_a.get_text().raw();
+  std::string main_value_b = main_value_field_b.get_text().raw();
+  std::string main_value_c = main_value_field_c.get_text().raw();
+
+  std::string x_rotation_value  = x_rotation_field.get_text().raw();
   std::string current_page_text = (std::string) m_notebook.get_tab_label_text(*current_page_widget);
 
-  std::string name = tfm::format("%s %s", current_page_text, main_value_value);
-  LOG(4, "%s", name);
+  std::string name;
+  long double x_rotation{std::stold(x_rotation_value)};
 
-  int x_coord = atoi(main_value_value.c_str());
+  int x_coord = atoi(main_value_a.c_str());
+  int y_coord = atoi(main_value_b.c_str());
+  int z_coord = atoi(main_value_c.c_str());
 
   if(current_page_text == "Translation")
   {
-    this->transformation.add_translation(name, Coordinate(x_coord, 1, 1));
+    name = tfm::format("%s %s %s %s", current_page_text, main_value_a, main_value_c, main_value_c);
+    this->transformation.add_translation(name, Coordinate(x_coord, y_coord, z_coord));
   }
   else if(current_page_text == "Rotation")
   {
+    name = tfm::format("%s %s %s %s %s %s", current_page_text, x_rotation, this->rotation_type, main_value_a, main_value_b, main_value_c);
+    this->transformation.add_rotation(name,
+        Array<3, long double>{x_rotation, 0.0, 0.0},
+        Coordinate(x_coord, y_coord, z_coord),
+        this->rotation_type);
   }
   else if(current_page_text == "Scaling")
   {
+    name = tfm::format("%s %s %s %s", current_page_text, main_value_a, main_value_c, main_value_c);
+    this->transformation.add_scaling(name, Coordinate(x_coord, y_coord, z_coord));
   }
   else
   {
@@ -110,6 +147,7 @@ void AddTransformation::on_button_save_transformation()
     LOG(1, "ERROR! Current page used: %s", current_page_text);
   }
 
+  LOG(4, "%s", name);
   this->_update_transmations_list();
 }
 
@@ -142,5 +180,20 @@ void AddTransformation::on_button_close()
 {
   this->window.close();
   this->viewPort->apply(this->object_name, &this->transformation);
+}
+
+void AddTransformation::on_own_center_rotation_button()
+{
+  this->rotation_type = RotationType::ON_ITS_OWN_CENTER;
+}
+
+void AddTransformation::on_world_rotation_button()
+{
+  this->rotation_type = RotationType::ON_WORLD_CENTER;
+}
+
+void AddTransformation::on_given_coordinate_rotation_button()
+{
+  this->rotation_type = RotationType::ON_GIVEN_COORDINATE;
 }
 

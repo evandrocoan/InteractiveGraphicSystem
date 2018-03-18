@@ -54,20 +54,13 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
   return output;
 }
 
-/**
- * Create and configure correctly a rotation.
- *
- * @param degrees [description]
- * @param type    an enum RotationType valid value
- * @param point   this is a optional value, only required when using RotationType::ON_GIVEN_COORDINATE
- */
-void Transformation::add_rotation(std::string name, double degrees, RotationType type, Coordinate coordinate=_default_coordinate_value_parameter)
+void Transformation::add_rotation(std::string name, Array<3, long double> degrees, Coordinate coordinate, RotationType type)
 {
   MatrixForm rotation =
   {
-    {(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::cos(degrees), -(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::sin(degrees), 0},
-    {(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::sin(degrees),  (GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::cos(degrees), 0},
-    {0                                                  ,  0                                                  , 1}
+    {(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::cos(degrees[0]), -(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::sin(degrees[0]), 0},
+    {(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::sin(degrees[0]),  (GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::cos(degrees[0]), 0},
+    {0                                                     ,  0                                                     , 1}
   };
 
   TransformationData transformation{name, rotation, TransformationType::ROTATION, type, coordinate};
