@@ -142,20 +142,20 @@
   while( 0 )
 
   /**
-   * The same as LOGLN(...) just below, but do not put automatically a new line.
+   * The same as LOG(...) just above, but do not put automatically a new line.
    */
   #define LOGLN( level, ... ) \
   do \
   { \
     if( level & _debugger_int_debug_level ) \
     { \
-      std::cout << tfm::format( __VA_ARGS__ ); \
+      std::cout << tfm::format( __VA_ARGS__ ) << std::flush; \
     } \
   } \
   while( 0 )
 
   /**
-   * The same as LOGLN(...), but it is for standard program output.
+   * The same as LOG(...), but it is for standard program output.
    */
   #define PRINT( level, ... ) \
   do \
@@ -175,7 +175,7 @@
   { \
     if( level & _debugger_int_debug_level ) \
     { \
-      std::cout << tfm::format( __VA_ARGS__ ); \
+      std::cout << tfm::format( __VA_ARGS__ ) << std::flush; \
     } \
   } \
   while( 0 )
