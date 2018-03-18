@@ -8,6 +8,8 @@
  * Because you can multiply a `Array` by an `Matrix`, but not a vice-versa.
  */
 #include "matrix.h"
+#include "stacktrace.h"
+#include "debugger.h"
 
 /**
  * C++ Matrix Class
@@ -31,7 +33,16 @@ struct Array
     unsigned int column_index = 0;
     // std::cout << data_size << std::endl;
 
-    if( data_size == 1 )
+    if( data_size == 0 )
+    {
+      LOG(1, "Welcome to the Moodle VPL(Virtual Programming Lab) awesome got nuts bug!");
+      LOGLN(1, "Just give a look into his nonsense ");
+      #ifdef DEBUG
+        print_stacktrace();
+        std::cout << "Array(new_values), " << "data_size: " << data_size << ", " << "array_width: " << array_width << std::endl;
+      #endif
+    }
+    else if( data_size == 1 )
     {
       this->clear(*(new_values.begin()));
     }
