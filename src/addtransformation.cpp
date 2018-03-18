@@ -11,6 +11,7 @@ AddTransformation::AddTransformation(ViewPort &viewPort) :
       m_rb3("Rotate around an arbitrary point"),
       button_save_transformation("Save Transformation"),
       button_remove_transformation("Remove Transformation"),
+      button_apply("Apply"),
       button_close("Close")
 {
   LOG(2, "Entering...");
@@ -41,6 +42,7 @@ AddTransformation::AddTransformation(ViewPort &viewPort) :
   scaling_grid.set_row_spacing(10);
 
   button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_close) );
+  button_apply.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_apply) );
   button_save_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_save_transformation) );
   button_remove_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_remove_transformation) );
   m_rb1.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_world_rotation_button) );
@@ -69,6 +71,7 @@ void AddTransformation::create_action_tabs()
   m_vbox.pack_start(main_value_field_c, Gtk::PACK_SHRINK);
   m_vbox.pack_start(button_save_transformation, Gtk::PACK_SHRINK);
   m_vbox.pack_start(button_remove_transformation, Gtk::PACK_SHRINK);
+  m_vbox.pack_start(button_apply, Gtk::PACK_SHRINK);
   m_vbox.pack_start(button_close, Gtk::PACK_SHRINK);
   m_hbox.pack_start(m_vbox, true, true);
 }
@@ -182,8 +185,13 @@ void AddTransformation::on_button_remove_transformation()
 
 void AddTransformation::on_button_close()
 {
-  this->viewPort.apply(this->object_name, this->transformation);
   this->window.close();
+}
+
+void AddTransformation::on_button_apply()
+{
+  this->viewPort.apply(this->object_name, this->transformation);
+  this->viewPort.queue_draw();
 }
 
 void AddTransformation::on_own_center_rotation_button()

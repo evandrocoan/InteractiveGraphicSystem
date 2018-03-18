@@ -56,11 +56,13 @@ protected:
   Gtk::Grid scaling_grid;
   Gtk::Grid translation_grid;
 
+  Gtk::Button button_apply;
   Gtk::Button button_close;
   Gtk::Button button_save_transformation;
   Gtk::Button button_remove_transformation;
 
   void on_button_close();
+  void on_button_apply();
   void on_button_save_transformation();
   void on_button_remove_transformation();
 
