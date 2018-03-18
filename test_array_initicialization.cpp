@@ -14,7 +14,7 @@ public:
   long int transformation_matrix[3][3];
 };
 
-int main (int argc, char *argv[])
+int main (int argc, char* argv[])
 {
   Transformation t;
   int i, j;

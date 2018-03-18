@@ -1,9 +1,9 @@
 #include "transformation.h"
 
-void Transformation::apply(Coordinate* point)
+void Transformation::apply(Coordinate &point)
 {
-  LOG(4, "Applying transformation %s on %s", this->_transformation, *point);
-  point->multiply(&this->_transformation);
+  LOG(4, "Applying transformation %s on %s", this->_transformation, point);
+  point.multiply(this->_transformation);
 }
 
 void Transformation::remove_transformation(std::string name)
@@ -93,7 +93,7 @@ void Transformation::add_translation(std::string name, Coordinate movement)
   this->transformations.push_back(transformation);
 }
 
-void Transformation::set_geometric_center(Coordinate center = _default_coordinate_value_parameter)
+void Transformation::set_geometric_center(Coordinate &center = _default_coordinate_value_parameter)
 {
   LOG(4, "Center on %s", center);
   unsigned int index = 0;
@@ -110,7 +110,7 @@ void Transformation::set_geometric_center(Coordinate center = _default_coordinat
         }
         else
         {
-          this->_transformation.multiply(&transformation_data.matrix);
+          this->_transformation.multiply(transformation_data.matrix);
         }
         break;
       }
@@ -154,18 +154,18 @@ void Transformation::_set_scaling_data(TransformationData &transformation_data, 
   }
   else
   {
-    this->_transformation.multiply(&move_to_center);
+    this->_transformation.multiply(move_to_center);
   }
 
   // Do the scaling on the origin
-  this->_transformation.multiply(&transformation_data.matrix);
+  this->_transformation.multiply(transformation_data.matrix);
 
   // Move back to its origin
   move_to_center[3][0] = center.getx();
   move_to_center[3][1] = center.gety();
   move_to_center[3][2] = center.getz();
 
-  this->_transformation.multiply(&move_to_center);
+  this->_transformation.multiply(move_to_center);
 }
 
 void Transformation::_set_rotation_data(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
@@ -181,7 +181,7 @@ void Transformation::_set_rotation_data(TransformationData &transformation_data,
       }
       else
       {
-        this->_transformation.multiply(&transformation_data.matrix);
+        this->_transformation.multiply(transformation_data.matrix);
       }
       break;
     }
@@ -222,18 +222,18 @@ void Transformation::_rotation_on_center(TransformationData &transformation_data
   }
   else
   {
-    this->_transformation.multiply(&move_to_center);
+    this->_transformation.multiply(move_to_center);
   }
 
   // Do the rotation on the origin
-  this->_transformation.multiply(&transformation_data.matrix);
+  this->_transformation.multiply(transformation_data.matrix);
 
   // Move back to its origin
   move_to_center[3][0] = center.getx();
   move_to_center[3][1] = center.gety();
   move_to_center[3][2] = center.getz();
 
-  this->_transformation.multiply(&move_to_center);
+  this->_transformation.multiply(move_to_center);
 }
 
 
@@ -254,16 +254,16 @@ void Transformation::_rotation_on_coordinate(TransformationData &transformation_
   }
   else
   {
-    this->_transformation.multiply(&move_to_center);
+    this->_transformation.multiply(move_to_center);
   }
 
   // Do the rotation on the origin
-  this->_transformation.multiply(&transformation_data.matrix);
+  this->_transformation.multiply(transformation_data.matrix);
 
   // Move back to its origin
   move_to_center[3][0] = rotation_center.getx();
   move_to_center[3][1] = rotation_center.gety();
   move_to_center[3][2] = rotation_center.getz();
 
-  this->_transformation.multiply(&move_to_center);
+  this->_transformation.multiply(move_to_center);
 }

@@ -13,7 +13,7 @@ void array_tests();
  * To build it use:
  *     g++ -std=c++11 test_template_initicialization.cpp -o main
  */
-int main (int argc, char *argv[])
+int main (int argc, char* argv[])
 {
   matrix_tests();
 

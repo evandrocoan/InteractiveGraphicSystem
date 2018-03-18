@@ -20,7 +20,7 @@ std::string DrawableObject::getName()
   return this->name;
 }
 
-Coordinate DrawableObject::get_geometric_center()
+Coordinate* DrawableObject::get_geometric_center()
 {
   auto coordinates      = this->getCoordinates();
   int coordinates_count = coordinates.size();
@@ -36,10 +36,10 @@ Coordinate DrawableObject::get_geometric_center()
     z_axis += coordinate->getz();
   }
 
-  return Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count);
+  return new Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count);
 }
 
-std::list<Coordinate*> DrawableObject::getCoordinates()
+std::list<Coordinate*>& DrawableObject::getCoordinates()
 {
   return this->coordinates;
 }
@@ -70,13 +70,16 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
   return output;
 }
 
-void DrawableObject::apply(Transformation* transformation)
+void DrawableObject::apply(Transformation &transformation)
 {
   auto coordinates = this->getCoordinates();
-  transformation->set_geometric_center(this->get_geometric_center());
+  auto geometric_center = this->get_geometric_center();
+
+  transformation.set_geometric_center(*geometric_center);
+  delete geometric_center;
 
   for(auto coordinate : coordinates)
   {
-    transformation->apply(coordinate);
+    transformation.apply(*coordinate);
   }
 }

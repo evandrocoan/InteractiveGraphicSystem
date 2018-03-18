@@ -101,7 +101,7 @@
       /* duration -= microseconds; */ \
       /* auto nanoseconds = std::chrono::duration_cast< std::chrono::nanoseconds >( duration ); */ \
       time_t theTime = time(NULL); \
-      struct tm *aTime = localtime(&theTime); \
+      struct tm* aTime = localtime(&theTime); \
       std::cout << tfm::format( "%02d:%02d:%02d:%03d:%03d %.3e %.3e ", \
           aTime->tm_hour, minutes.count(), seconds.count(), milliseconds.count(), microseconds.count(), /* nanoseconds.count(), */ \
           std::chrono::duration<double, std::milli>(chrono_clock_now-_debugger_current_saved_chrono_time).count(), \

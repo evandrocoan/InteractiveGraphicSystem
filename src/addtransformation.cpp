@@ -1,6 +1,6 @@
 #include "addtransformation.h"
 
-AddTransformation::AddTransformation(ViewPort* viewPort) :
+AddTransformation::AddTransformation(ViewPort &viewPort) :
       m_vbox(Gtk::ORIENTATION_VERTICAL),
       m_hbox(Gtk::ORIENTATION_HORIZONTAL),
       viewPort(viewPort),
@@ -99,9 +99,9 @@ AddTransformation::~AddTransformation()
 {
 }
 
-Gtk::Window* AddTransformation::getWindow()
+Gtk::Window& AddTransformation::getWindow()
 {
-  return &this->window;
+  return this->window;
 }
 
 void AddTransformation::on_button_save_transformation()
@@ -179,7 +179,7 @@ void AddTransformation::on_button_remove_transformation()
 
 void AddTransformation::on_button_close()
 {
-  this->viewPort->apply(this->object_name, &this->transformation);
+  this->viewPort.apply(this->object_name, this->transformation);
   this->window.close();
 }
 

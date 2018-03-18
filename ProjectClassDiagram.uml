@@ -3,9 +3,9 @@
   skinparam defaultFontName Consolas
 
   AddObject <|--  ViewPortObserver
-  AddObject  *--  ViewPort                 : viewPort*
+  AddObject  *--  ViewPort                 : viewPort&
 
-  AddTransformation  *--  ViewPort         : viewPort*
+  AddTransformation  *--  ViewPort         : viewPort&
   AddTransformation  *-down- Transformation: transformation
 
   DisplayFile        -left[hidden]> ViewWindow
@@ -33,23 +33,34 @@
     Gtk::Grid              point_grid
     Gtk::Grid              line_grid
     Gtk::Grid              polygn_grid
-    Gtk::Window*           getWindow()
-    std::list<Coordinate*> polygon_cord_list
+    Gtk::Window&           getWindow()
+    std::list<Coordinate*> polygon_coord_list
+  }
+
+  class AddTransformation {
+    Gtk::Grid    rotation_grid
+    Gtk::Grid    scaling_grid
+    Gtk::Grid    translation_grid
+    Gtk::Window& getWindow()
   }
 
   class DisplayFile {
-    std::map< string, DrawableObject* >
-    void addObject   (DrawableObject* object)
-    void removeObject(DrawableObject* object)
+    std::map<string, DrawableObject*>
 
-    void removeObjectByName(std::string name)
-    void apply(std::string object_name, Transformation)
+    std::list<std::string>     getNamesList();
+    std::list<DrawableObject*> getObjects();
+    DrawableObject*   getObjectByName(std::string name);
+    bool              isObjectOnByName(std::string name);
+    void            addObject(DrawableObject* object);
+    void            removeObject(DrawableObject* object);
+    void            removeObjectByName(std::string name);
+    void apply(std::string object_name, Transformation&);
   }
 
   class DrawableObject {
-    std::string       getName()
-    list<Coordinate*> getCoordinates()
-    void              apply(Transformation)
+    std::string        getName()
+    list<Coordinate*>& getCoordinates()
+    void               apply(Transformation&)
   }
 
   class Line {
@@ -65,13 +76,11 @@
   }
 
   class MainWindow {
-    ViewPort     viewPort
-    AddObject    addObject
     Gtk::Box     main_box
     Gtk::Box     left_box
     Gtk::Frame   left_frame
     Gtk::Frame   right_frame
-    Gtk::Window* getWindow()
+    Gtk::Window& getWindow()
   }
 
   class RotationType {
@@ -82,8 +91,8 @@
 
   class Transformation {
     MatrixForm _transformation
-    Coordinate apply(Coordinate)
-    void set_geometric_center(Coordinate)
+    Coordinate apply(Coordinate&)
+    void set_geometric_center(Coordinate&)
   }
 
   class TransformationData {
@@ -98,23 +107,16 @@
     enum TRANSLATION
   }
 
-  class AddTransformation {
-    Gtk::Grid    rotation_grid
-    Gtk::Grid    scaling_grid
-    Gtk::Grid    translation_grid
-    Gtk::Window* getWindow()
-  }
-
   class ViewPort {
     int Xvpmin
     int Yvpmin
     int Xvpmax
     int Yvpmax
     bool on_draw(const Cairo::Context>&)
-    void updateViewport(Gtk::Allocation)
+    void updateViewport(Gtk::Allocation&)
 
-    Coordinate convertCoordinateFromWindow(Coordinate)
-    void apply(std::string object_name, Transformation)
+    Coordinate convertCoordinateFromWindow(Coordinate&)
+    void apply(std::string object_name, Transformation&)
   }
 
   class ViewPortObserver {
