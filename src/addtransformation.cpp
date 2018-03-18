@@ -88,7 +88,8 @@ void AddTransformation::create_scrolling_items_list()
   //Only show the scrollbars when they are necessary
   m_ScrolledWindow.set_policy(Gtk::PolicyType::POLICY_NEVER, Gtk::PolicyType::POLICY_AUTOMATIC);
 
-  LOG(4, "Gtk::ScrolledWindow::property_max_content_width(): %d", m_ScrolledWindow.property_max_content_width());
+  // The `property_max_content_width` is only since gtkmm 3.22, and Moodle uses GTK 3.20
+  // LOG(4, "Gtk::ScrolledWindow::property_max_content_width(): %d", m_ScrolledWindow.property_max_content_width());
   m_ScrolledWindow.set_min_content_width(500);
 
   m_hbox.pack_start(m_ScrolledWindow, true, true);
