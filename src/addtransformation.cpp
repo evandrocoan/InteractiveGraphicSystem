@@ -6,6 +6,7 @@ AddTransformation::AddTransformation(ViewPort* viewPort) :
       viewPort(viewPort),
       m_ListViewText(1),
       button_save_transformation("Save Transformation"),
+      button_remove_transformation("Remove Transformation"),
       button_close("Close")
 {
   LOG(2, "Entering...");
@@ -23,6 +24,7 @@ AddTransformation::AddTransformation(ViewPort* viewPort) :
 
   button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_close) );
   button_save_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_save_transformation) );
+  button_remove_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_remove_transformation) );
 
   this->create_action_tabs();
   this->create_scrolling_items_list();
@@ -43,6 +45,7 @@ void AddTransformation::create_action_tabs()
   m_vbox.pack_start(m_notebook);
   m_vbox.pack_start(main_value_field, Gtk::PACK_SHRINK);
   m_vbox.pack_start(button_save_transformation, Gtk::PACK_SHRINK);
+  m_vbox.pack_start(button_remove_transformation, Gtk::PACK_SHRINK);
   m_vbox.pack_start(button_close, Gtk::PACK_SHRINK);
   m_hbox.pack_start(m_vbox, true, true);
 }
@@ -107,23 +110,37 @@ void AddTransformation::on_button_save_transformation()
     LOG(1, "ERROR! Current page used: %s", current_page_text);
   }
 
-  // Update the list after adding a new item
+  this->_update_transmations_list();
+}
+
+/**
+ * Update the list after adding or removing a new item.
+ */
+void AddTransformation::_update_transmations_list()
+{
   m_ListViewText.clear_items();
 
-  for( auto transformation_data : this->transformation.transformations )
+  for( auto transformation_data : this->transformation.getTransformations() )
   {
     guint row_number = m_ListViewText.append(transformation_data.name);
     m_ListViewText.set_text(row_number, 0, transformation_data.name);
   }
 }
 
+void AddTransformation::on_button_remove_transformation()
+{
+  if( m_ListViewText.size() )
+  {
+    std::string current_name = (std::string)m_ListViewText.get_text(0);
+
+    this->transformation.remove_transformation(current_name);
+    this->_update_transmations_list();
+  }
+}
+
 void AddTransformation::on_button_close()
 {
   this->window.close();
-
-  if( this->transformation.transformations.size() )
-  {
-    this->viewPort->apply(this->object_name, &this->transformation);
-  }
+  this->viewPort->apply(this->object_name, &this->transformation);
 }
 

@@ -29,9 +29,10 @@ public:
   void       apply(Transformation*);
   Coordinate get_geometric_center();
 
+  friend std::ostream& operator<<(std::ostream &output, const DrawableObject &object);
+
 protected:
   DrawableObject(std::string name);
-  friend std::ostream& operator<<(std::ostream &output, const DrawableObject &object);
 
   std::string name;
   std::list<Coordinate*> coordinates;
