@@ -42,7 +42,7 @@ DrawableObject* DisplayFile::getObjectByName(std::string name)
     throw std::invalid_argument(message);
   }
 
-  LOG(4, "Object: %s", iterator->second);
+  LOG(4, "Object: %s", *iterator->second);
   return iterator->second;
 }
 
