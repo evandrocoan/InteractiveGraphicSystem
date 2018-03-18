@@ -13,8 +13,8 @@ MainWindow::MainWindow() :
       button_zoom_out("-"),
       button_delete_object("Delete Object"),
       button_add_transformation("Add Transformation"),
-      addObject(&this->viewPort),
-      addTransformation(&this->viewPort)
+      addObject(this->viewPort),
+      addTransformation(this->viewPort)
 {
   LOG(2, "Entering...");
   this->main_box.pack_start(left_frame, Gtk::PACK_SHRINK, 10);
@@ -42,9 +42,9 @@ MainWindow::~MainWindow()
 {
 }
 
-Gtk::Window* MainWindow::getWindow()
+Gtk::Window& MainWindow::getWindow()
 {
-  return &this->window;
+  return this->window;
 }
 
 void MainWindow::setupButtons(const Glib::ustring& title, gint spacing, Gtk::ButtonBoxStyle layout)
@@ -126,12 +126,6 @@ void MainWindow::updateDropdownList()
   LOG(4, "limpa a lista de objetos para reimprimi-la");
   this->objects_list.remove_all();
 
-  /*for(std::list<std::string>::iterator it = names.begin(); it != names.end(); it++)
-  {
-    this->objects_list.append(*it);
-  }*/
-
-  //for(std::string object : names)
   for(auto object : names)
   {
     this->objects_list.append(object);
@@ -239,7 +233,7 @@ void MainWindow::on_button_zoom_out()
 void MainWindow::on_button_add_object()
 {
   LOG(2, "Entering...");
-  this->addObject.getWindow()->show();
+  this->addObject.getWindow().show();
 }
 
 void MainWindow::on_button_add_transformation()
@@ -248,7 +242,7 @@ void MainWindow::on_button_add_transformation()
   Glib::ustring name = (std::string)objects_list.get_active_text();
 
   this->addTransformation.object_name = name;
-  this->addTransformation.getWindow()->show();
+  this->addTransformation.getWindow().show();
 }
 
 void MainWindow::on_button_delete_object()

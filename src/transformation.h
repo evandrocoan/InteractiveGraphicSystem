@@ -98,8 +98,8 @@ public:
    * Note: After calling `set_geometric_center()`, you cannot create new transformations. If you
    * create new transformations, you must call `set_geometric_center()` before using it again.
    */
-  void apply(Coordinate*);
-  void set_geometric_center(Coordinate);
+  void apply(Coordinate&);
+  void set_geometric_center(Coordinate&);
 
 protected:
 

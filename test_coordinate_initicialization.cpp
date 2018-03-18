@@ -38,7 +38,7 @@ void print_coordinate(Coordinate coordinate)
   std::cout << tfm::format("Coordinate: %s", coordinate) << std::endl;
 }
 
-int main (int argc, char *argv[])
+int main (int argc, char* argv[])
 {
   MyCustomClassType my_custom_class_type;
   function();

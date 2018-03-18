@@ -33,7 +33,7 @@ public:
   virtual ~MainWindow();
 
   void updateDropdownList();
-  Gtk::Window* getWindow();
+  Gtk::Window& getWindow();
 
 protected:
   Gtk::ComboBoxText objects_list;

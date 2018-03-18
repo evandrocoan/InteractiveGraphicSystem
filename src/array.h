@@ -80,7 +80,7 @@ struct Array
     }
   }
 
-  void multiply(Matrix<array_width, array_width, array_datatype>* matrix)
+  void multiply(Matrix<array_width, array_width, array_datatype> &matrix)
   {
     int column;
     int step;
@@ -97,7 +97,7 @@ struct Array
     {
       for(step = 0; step < array_width; step++)
       {
-        this->_data[column] += old_array[step] * matrix->_data[step][column];
+        this->_data[column] += old_array[step] * matrix._data[step][column];
       }
     }
     // If you would like to preserve the original value, it can be returned here

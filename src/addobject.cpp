@@ -1,6 +1,6 @@
 #include "addobject.h"
 
-AddObject::AddObject(ViewPort* viewPort) :
+AddObject::AddObject(ViewPort &viewPort) :
       m_vbox(Gtk::ORIENTATION_VERTICAL),
       viewPort(viewPort),
       info_label("Insert a Coordinate :"),
@@ -90,9 +90,9 @@ AddObject::~AddObject()
 {
 }
 
-Gtk::Window* AddObject::getWindow()
+Gtk::Window& AddObject::getWindow()
 {
-  return &this->window;
+  return this->window;
 }
 
 void AddObject::on_button_save_point()
@@ -112,10 +112,10 @@ void AddObject::on_button_save_point()
   int x_coord = atoi(x_string.c_str());
   int y_coord = atoi(y_string.c_str());
 
-  Coordinate *point_cord = new Coordinate(x_coord, y_coord);
-  Point *point = new Point(name, point_cord);
+  Coordinate* point_cord = new Coordinate(x_coord, y_coord);
+  Point* point = new Point(name, point_cord);
 
-  this->viewPort->addObject(point);
+  this->viewPort.addObject(point);
   this->window.close();
 }
 
@@ -140,18 +140,18 @@ void AddObject::on_button_save_line()
   int x2_cord = atoi(x2_string.c_str());
   int y2_cord = atoi(y2_string.c_str());
 
-  Coordinate *point_cord1 = new Coordinate(x1_cord, y1_cord);
-  Coordinate *point_cord2 = new Coordinate(x2_cord, y2_cord);
+  Coordinate* point_cord1 = new Coordinate(x1_cord, y1_cord);
+  Coordinate* point_cord2 = new Coordinate(x2_cord, y2_cord);
 
-  Line *line = new Line(name, point_cord1, point_cord2);
+  Line* line = new Line(name, point_cord1, point_cord2);
 
-  this->viewPort->addObject(line);
+  this->viewPort.addObject(line);
   this->window.close();
 }
 
 void AddObject::on_button_save_polygon()
 {
-  if (!polygon_cord_list.empty())
+  if (!polygon_coord_list.empty())
   {
     std::string name = polygon_name_field.get_text().raw();
     LOG(4, "Name: %s", name);
@@ -162,12 +162,12 @@ void AddObject::on_button_save_polygon()
       return;
     }
 
-    Polygon *polygon = new Polygon(name, polygon_cord_list);
-    this->viewPort->addObject(polygon);
+    Polygon* polygon = new Polygon(name, polygon_coord_list);
+    this->viewPort.addObject(polygon);
 
-    while(!polygon_cord_list.empty())
+    while(!polygon_coord_list.empty())
     {
-      polygon_cord_list.pop_back();
+      polygon_coord_list.pop_back();
     }
 
     this->window.close();
@@ -186,8 +186,8 @@ void AddObject::on_button_add_coordinate()
   int x_coord = atoi(x_string.c_str());
   int y_coord = atoi(y_string.c_str());
 
-  Coordinate *wire_cord = new Coordinate(x_coord, y_coord);
-  polygon_cord_list.push_back(wire_cord);
+  Coordinate* wire_cord = new Coordinate(x_coord, y_coord);
+  polygon_coord_list.push_back(wire_cord);
 
   wire_x_field.set_text("");
   wire_y_field.set_text("");

@@ -12,7 +12,7 @@
  * You can control the debug level used by the function `LOG()` by going to the file
  * `src/debugger.h` and looking for the variable `_debugger_int_debug_level`.
  */
-int main (int argc, char *argv[])
+int main (int argc, char* argv[])
 {
   LOG(2, "Starting the main application...");
 
@@ -24,7 +24,7 @@ int main (int argc, char *argv[])
     MainWindow mainWindow;
 
     LOG(4, "Shows the main window and returns when it is closed.");
-    int exit_code = app->run(*mainWindow.getWindow());
+    int exit_code = app->run(mainWindow.getWindow());
 
     LOG(2, "exit_code: %d", exit_code);
     return exit_code;
