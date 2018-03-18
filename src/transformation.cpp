@@ -6,6 +6,54 @@ void Transformation::apply(Coordinate* point)
   point->multiply(&this->_transformation);
 }
 
+void Transformation::remove_transformation(std::string name)
+{
+  for( auto iterator = this->transformations.begin(); iterator != this->transformations.end(); iterator++ )
+  {
+    if( (*iterator).name == name )
+    {
+      this->transformations.erase(iterator);
+      return;
+    }
+  }
+}
+
+std::vector<TransformationData>& Transformation::getTransformations()
+{
+  return this->transformations;
+}
+
+unsigned int Transformation::size()
+{
+  return this->transformations.size();
+}
+
+/**
+ * Prints a more beauty version of the transformations when called on `std::cout`
+ */
+std::ostream& operator<<( std::ostream &output, const Transformation &object )
+{
+  output << object._transformation << "(";
+
+  unsigned int index = 0;
+  unsigned int size = object.transformations.size() - 1;
+
+  for( auto transformation_data : object.transformations )
+  {
+    output << transformation_data;
+
+    if( index != size )
+    {
+      output << ", ";
+    }
+
+    index++;
+  }
+
+  output << ")";
+  return output;
+}
+
 /**
  * Create and configure correctly a rotation.
  *

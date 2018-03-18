@@ -10,6 +10,25 @@ ViewPort::ViewPort() :
 {
 }
 
+void ViewPort::apply(std::string object_name, Transformation* transformation)
+{
+  if( this->displayFile.isObjectOnByName(object_name) )
+  {
+    if( transformation->size() )
+    {
+      this->displayFile.apply(object_name, transformation);
+    }
+    else
+    {
+      LOG(4, "There are no transformations available to be applied on your object: `%s` %s", object_name, *transformation);
+    }
+  }
+  else
+  {
+    LOG(4, "No object was found within the name: `%s`", object_name);
+  }
+}
+
 /**
  * [ViewPort::on_draw description]
  *
@@ -169,11 +188,6 @@ void ViewPort::updateViewport(Gtk::Allocation allocation)
 
 ViewPort::~ViewPort()
 {
-}
-
-void ViewPort::apply(std::string object_name, Transformation* transformation)
-{
-  this->displayFile.apply(object_name, transformation);
 }
 
 void ViewPort::addObserver(ViewPortObserver* observer)

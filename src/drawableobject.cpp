@@ -49,11 +49,24 @@ std::list<Coordinate*> DrawableObject::getCoordinates()
  */
 std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
 {
+  output << object.name << "(";
+
+  unsigned int index = 0;
+  unsigned int size = object.coordinates.size() - 1;
+
   for( auto coordinate : object.coordinates )
   {
     output << *coordinate << " ";
+
+    if( index != size )
+    {
+      output << ", ";
+    }
+
+    index++;
   }
 
+  output << ")";
   return output;
 }
 

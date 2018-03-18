@@ -49,11 +49,15 @@ protected:
 
   Gtk::Button button_close;
   Gtk::Button button_save_transformation;
+  Gtk::Button button_remove_transformation;
 
   void on_button_close();
   void on_button_save_transformation();
+  void on_button_remove_transformation();
 
   void create_action_tabs();
   void create_scrolling_items_list();
+
+  void _update_transmations_list();
 };
 #endif //GTKMM_APP_ADD_TRANSFORMATION_WINDOW

@@ -73,6 +73,12 @@ public:
   void add_rotation(std::string name, double degrees, RotationType, Coordinate);
   void add_translation(std::string name, Coordinate movement);
 
+  unsigned int size();
+  void remove_transformation(std::string name);
+
+  std::vector<TransformationData>& getTransformations();
+  friend std::ostream& operator<<(std::ostream &output, const Transformation &object);
+
   /**
    * Before calling `apply()`, you must ensure you had called `set_geometric_center()` within the
    * current object geometric center. Such call only needs to happen once, per object where this
@@ -84,6 +90,8 @@ public:
   void apply(Coordinate*);
   void set_geometric_center(Coordinate);
 
+protected:
+
   /**
    * The `scalings` and `rotations` does not need to contain embedded all the `transformations`
    * matrices. These extra matrices as the transformation matrices to the world center are only
@@ -93,8 +101,6 @@ public:
    * transformation matrix. This happens right after the `set_geometric_center()` method is called on.
    */
   std::vector<TransformationData> transformations;
-
-protected:
 
   /**
    * These values are set after calling `set_geometric_center()`. They will be the values used

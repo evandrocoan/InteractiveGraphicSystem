@@ -131,7 +131,7 @@
       std::clock_t ctime_clock_now = std::clock(); \
       auto chrono_clock_now = std::chrono::high_resolution_clock::now(); \
       _DEBUGGER_TIME_STAMP_HEADER \
-      std::cout << tfm::format( "%s/%s:%s ", \
+      std::cout << tfm::format( "%s|%s:%s ", \
           __FILE__, __FUNCTION__, __LINE__ \
       ) \
       << tfm::format( __VA_ARGS__ ) << std::endl; \
