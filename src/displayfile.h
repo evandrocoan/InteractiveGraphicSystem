@@ -22,7 +22,9 @@ public:
   void apply(std::string object_name, Transformation*);
   void removeObjectByName(std::string name);
 
-  DrawableObject*            getObjectByName(std::string name);
+  bool            isObjectOnByName(std::string name);
+  DrawableObject* getObjectByName(std::string name);
+
   std::list<DrawableObject*> getObjects();
   std::list<std::string>     getNamesList();
 
