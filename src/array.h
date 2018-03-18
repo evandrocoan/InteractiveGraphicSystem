@@ -9,7 +9,6 @@
  */
 #include "matrix.h"
 #include "stacktrace.h"
-#include "debugger.h"
 
 /**
  * C++ Matrix Class
@@ -35,11 +34,11 @@ struct Array
 
     if( data_size == 0 )
     {
-      LOG(1, "Welcome to the Moodle VPL(Virtual Programming Lab) awesome got nuts bug!");
-      LOGLN(1, "Just give a look into his nonsense ");
       #ifdef DEBUG
+        std::cerr << "Welcome to the Moodle VPL(Virtual Programming Lab) awesome got nuts bug!\n";
+        std::cerr << "Just give a look into his nonsense " << std::endl;
         print_stacktrace();
-        std::cout << "Array(new_values), " << "data_size: " << data_size << ", " << "array_width: " << array_width << std::endl;
+        std::cerr << "Array(new_values), " << "data_size: " << data_size << ", " << "array_width: " << array_width << std::endl;
       #endif
     }
     else if( data_size == 1 )
