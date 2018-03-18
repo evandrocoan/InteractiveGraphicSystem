@@ -62,7 +62,7 @@ struct Matrix
     return this->_data[line];
   }
 
-  clear(matrix_datatype initial=0)
+  void clear(matrix_datatype initial=0)
   {
     unsigned int line;
     unsigned int column;
