@@ -100,6 +100,7 @@ struct Matrix
         {
           this->_data[line][column] += old_matrix[line][step] * matrix._data[step][column];
         }
+        // std::cout << "this->_data[line][column] = " << this->_data[line][column] << std::endl;
       }
     }
     // If you would like to preserve the original value, it can be returned here

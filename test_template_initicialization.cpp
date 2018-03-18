@@ -9,6 +9,7 @@ void matrix_tests();
 void matrix_form_tests();
 void array_tests();
 
+
 /**
  * To build it use:
  *     g++ -std=c++11 test_template_initicialization.cpp -o main
@@ -44,6 +45,15 @@ void matrix_form_tests()
   std::cout << "MatrixForm tests" << std::endl;
   MatrixForm matrix;
   std::cout << matrix << std::endl;
+
+  MatrixForm matrix1{{1, 0, 0}, {0, 1, 0}, {100, 100, 100}};
+  MatrixForm matrix2{{1, 0, 0}, {0, 1, 0}, {200, 100, 100}};
+  std::cout << matrix1 << std::endl;
+  std::cout << matrix2 << std::endl;
+
+  matrix1.multiply(matrix2);
+  std::cout << matrix1 << std::endl;
+  std::cout << matrix2 << std::endl;
 }
 
 void matrix_tests()

@@ -121,7 +121,10 @@ void AddTransformation::on_button_save_transformation()
 
   int x_coord = atoi(main_value_a.c_str());
   int y_coord = atoi(main_value_b.c_str());
-  int z_coord = atoi(main_value_c.c_str());
+
+  // Currently we do not support 3D, the force the z_coord to be 1
+  // int z_coord = atoi(main_value_c.c_str());
+  int z_coord = 1;
 
   if(current_page_text == "Translation")
   {
