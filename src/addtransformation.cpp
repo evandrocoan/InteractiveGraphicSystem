@@ -179,8 +179,8 @@ void AddTransformation::on_button_remove_transformation()
 
 void AddTransformation::on_button_close()
 {
-  this->window.close();
   this->viewPort->apply(this->object_name, &this->transformation);
+  this->window.close();
 }
 
 void AddTransformation::on_own_center_rotation_button()
