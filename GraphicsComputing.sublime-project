@@ -1,0 +1,46 @@
+{
+	"build_systems":
+	[
+		{
+			"cmd":
+			[
+				"make",
+				"run"
+			],
+			"env":
+			{
+				"PKG_CONFIG_PATH": "/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig"
+			},
+			"file_regex": "([^\\|\\:0-9\\ ]{3,})[^0-9]*([0-9]+):?([0-9]+)?:? (.*)$",
+			"name": "Make and Run",
+			"shell": true,
+			"syntax": "Packages/Text/Plain text.tmLanguage",
+			"target": "exec",
+			"working_dir": "$project_path/"
+		}
+	],
+	"folders":
+	[
+		{
+			"folder_exclude_patterns":
+			[
+				"Debug",
+				"objects",
+				"binaries",
+				".settings"
+			],
+			"path": "."
+		},
+		{
+			"path": "C:\\msys64\\mingw64\\include"
+		},
+		{
+			"path": "F:\\Forks"
+		}
+	],
+	"settings":
+	{
+		"tab_size": 2,
+		"result_file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$"
+	}
+}

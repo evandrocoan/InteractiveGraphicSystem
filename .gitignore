@@ -1,8 +1,12 @@
 
-*.png
+.cquery
 
 binaries
 objects
 Debug
+
+*.sublime-workspace
+
+*.png
 *.exe
 
