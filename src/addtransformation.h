@@ -13,6 +13,7 @@
 #include <gtkmm/box.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/listviewtext.h>
+#include <gtkmm/radiobutton.h>
 
 #include "point.h"
 #include "line.h"
@@ -28,13 +29,21 @@ public:
 
   Gtk::Window* getWindow();
   std::string object_name;
+  RotationType rotation_type;
 
 protected:
   ViewPort* viewPort;
   Transformation transformation;
 
   Gtk::Window window;
-  Gtk::Entry main_value_field;
+  Gtk::Entry x_rotation_field;
+  Gtk::Entry main_value_field_a;
+  Gtk::Entry main_value_field_b;
+  Gtk::Entry main_value_field_c;
+
+  Gtk::RadioButton m_rb1;
+  Gtk::RadioButton m_rb2;
+  Gtk::RadioButton m_rb3;
 
   Gtk::Box      m_vbox;
   Gtk::Box      m_hbox;
@@ -54,6 +63,10 @@ protected:
   void on_button_close();
   void on_button_save_transformation();
   void on_button_remove_transformation();
+
+  void on_world_rotation_button();
+  void on_own_center_rotation_button();
+  void on_given_coordinate_rotation_button();
 
   void create_action_tabs();
   void create_scrolling_items_list();

@@ -56,7 +56,7 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
 
   for( auto coordinate : object.coordinates )
   {
-    output << *coordinate << " ";
+    output << *coordinate;
 
     if( index != size )
     {
