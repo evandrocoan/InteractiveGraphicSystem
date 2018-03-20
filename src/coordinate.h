@@ -2,22 +2,17 @@
 #define GTKMM_APP_COORDINATE_H
 
 #include <iostream>
+
+#include "traits.h"
 #include "array.h"
 
-/**
- * Template default arguments
- * https://stackoverflow.com/questions/15373823/template-default-arguments
- */
-#define GTKMM_APP_COORDINATE_H_LENGTH   3
-#define GTKMM_APP_COORDINATE_H_DATATYPE long int
-
-struct Coordinate : public Array<GTKMM_APP_COORDINATE_H_LENGTH, GTKMM_APP_COORDINATE_H_DATATYPE>
+struct Coordinate : public Array<GTKMM_APP_MATRICES_DIMENSION, GTKMM_APP_MATRICES_DATATYPE>
 {
   // Inheriting constructors
   // https://stackoverflow.com/questions/347358/inheriting-constructors
-  using Array<GTKMM_APP_COORDINATE_H_LENGTH, GTKMM_APP_COORDINATE_H_DATATYPE>::Array;
+  using Array<GTKMM_APP_MATRICES_DIMENSION, GTKMM_APP_MATRICES_DATATYPE>::Array;
 
-  Coordinate(GTKMM_APP_COORDINATE_H_DATATYPE x, GTKMM_APP_COORDINATE_H_DATATYPE y, GTKMM_APP_COORDINATE_H_DATATYPE z = 1) :
+  Coordinate(GTKMM_APP_MATRICES_DATATYPE x, GTKMM_APP_MATRICES_DATATYPE y, GTKMM_APP_MATRICES_DATATYPE z = 1) :
       Array{x, y, z}
   {
   }
@@ -26,17 +21,17 @@ struct Coordinate : public Array<GTKMM_APP_COORDINATE_H_LENGTH, GTKMM_APP_COORDI
   {
   }
 
-  GTKMM_APP_COORDINATE_H_DATATYPE getx() const
+  GTKMM_APP_MATRICES_DATATYPE getx() const
   {
     return this->_data[0];
   }
 
-  GTKMM_APP_COORDINATE_H_DATATYPE gety() const
+  GTKMM_APP_MATRICES_DATATYPE gety() const
   {
     return this->_data[1];
   }
 
-  GTKMM_APP_COORDINATE_H_DATATYPE getz() const
+  GTKMM_APP_MATRICES_DATATYPE getz() const
   {
     return this->_data[2];
   }
