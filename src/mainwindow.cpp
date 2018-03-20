@@ -22,7 +22,7 @@ MainWindow::MainWindow() :
   this->left_frame.add(left_box);
 
   LOG(4, "Draw options");
-  this->setupButtons("", 10, Gtk::BUTTONBOX_START);
+  this->setupButtons();
   this->connectButtons();
 
   LOG(4, "ViewPort");
@@ -34,7 +34,7 @@ MainWindow::MainWindow() :
   LOG(4, "Show all components");
   this->window.set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan, Hugo Vincent");
   this->window.set_border_width(15);
-  this->window.set_default_size(700, 500);
+  this->window.set_default_size(800, 500);
   this->window.add(this->main_box);
   this->window.show_all_children();
 }
@@ -48,7 +48,7 @@ Gtk::Window& MainWindow::getWindow()
   return this->window;
 }
 
-void MainWindow::setupButtons(const Glib::ustring& title, gint spacing, Gtk::ButtonBoxStyle layout)
+void MainWindow::setupButtons()
 {
   LOG(4, "Inicializando dado da entrada do tamanho de movimentação");
   entry_move_length.set_width_chars(1);
@@ -84,18 +84,12 @@ void MainWindow::setupButtons(const Glib::ustring& title, gint spacing, Gtk::But
   grid_zoom.attach(button_zoom_in, 3, 1, 1, 1);
 
   LOG(4, "Adding the draw options box to left frame");
-  auto buttons_frame = new Gtk::Frame(title);
-  Gtk::ButtonBox* buttonBox = Gtk::manage(new Gtk::ButtonBox(Gtk::ORIENTATION_VERTICAL));
-
-  buttonBox->set_border_width(10);
-  buttonBox->set_layout(layout);
-  buttonBox->set_spacing(spacing);
-  buttonBox->add(grid_list_obj);
-  buttonBox->add(grid_move);
-  buttonBox->add(grid_zoom);
-
-  buttons_frame->add(*buttonBox);
-  left_box.pack_start(*Gtk::manage(buttons_frame), Gtk::PACK_EXPAND_WIDGET);
+  left_box.set_border_width(10);
+  left_box.set_spacing(10);
+  left_box.add(grid_list_obj);
+  left_box.add(grid_move);
+  left_box.add(grid_zoom);
+  left_box.add(this->addTransformation.getBox());
 }
 
 void MainWindow::connectButtons()
@@ -111,7 +105,6 @@ void MainWindow::connectButtons()
 
   this->button_add_object.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_add_object));
   this->button_delete_object.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_delete_object));
-  this->button_add_transformation.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_add_transformation));
 }
 
 /**
@@ -237,12 +230,6 @@ void MainWindow::on_button_add_object()
 {
   LOG(2, "Entering...");
   this->addObject.getWindow().show();
-}
-
-void MainWindow::on_button_add_transformation()
-{
-  LOG(2, "Entering...");
-  this->addTransformation.getWindow().show();
 }
 
 void MainWindow::on_button_delete_object()
