@@ -10,7 +10,7 @@ Trabalho de Computação Gráfica - UFSC - 2018.2
 
 To download it, you need to use the `git clone` with the `--recursive` option:
 ```
-git clone --recursive repository_url
+git clone --recursive https://github.com/evandrocoan/Trabalho01CG
 ```
 
 If you had already cloned it without the `--recursive` option, you need to run the command:
@@ -85,20 +85,27 @@ make
 
 Build output example:
 ```
-$ make run
-if [ -d resources ]; then cp resources/* binaries/; fi;
-g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/addobjectwindow.o src/addobjectwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/displayfile.o src/displayfile.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/drawoptionsbox.o src/drawoptionsbox.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/line.o src/line.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/main.o src/main.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/mainwindow.o src/mainwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/point.o src/point.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/polygon.o src/polygon.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/viewport.o src/viewport.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -Iincludes -I/usr/local/include -c -o objects/viewwindow.o src/viewwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g  -o binaries/main objects/addobjectwindow.o objects/displayfile.o objects/drawoptionsbox.o objects/line.o objects/main.o objects/mainwindow.o objects/point.o objects/polygon.o objects/viewport.o objects/viewwindow.o `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-./binaries/main
+$ make all
+Current time: Tue, Mar 20, 2018 16:45:59
+make binaries/main.exe -j4
+make[1]: Entering directory '/d/User/Dropbox/SoftwareVersioning/ComputerScienceGraduation/GraphicsComputing/Trabalho01CG'
+g++ -O0 -g -std=c++11 -I. -c -o objects/addobject.o src/addobject.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/addtransformation.o src/addtransformation.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/debugger.o src/debugger.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/coordinate.o src/coordinate.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/displayfile.o src/displayfile.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/drawableobject.o src/drawableobject.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/line.o src/line.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/main.o src/main.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/mainwindow.o src/mainwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/point.o src/point.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/polygon.o src/polygon.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/transformation.o src/transformation.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/viewport.o src/viewport.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -I. -c -o objects/viewwindow.o src/viewwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -std=c++11 -o binaries/main.exe objects/addobject.o objects/addtransformation.o objects/coordinate.o objects/debugger.o objects/displayfile.o objects/drawableobject.o objects/line.o objects/main.o objects/mainwindow.o objects/point.o objects/polygon.o objects/transformation.o objects/viewport.o objects/viewwindow.o `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+make[1]: Leaving directory '/d/User/Dropbox/SoftwareVersioning/ComputerScienceGraduation/GraphicsComputing/Trabalho01CG'
+Took '0:00:01:36' seconds to run the script, 16:47:36.
 ```
 
 
