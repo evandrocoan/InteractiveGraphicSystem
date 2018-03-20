@@ -57,8 +57,8 @@ void Transformation::add_rotation(std::string name, Array<3, long double> degree
 {
   MatrixForm rotation =
   {
-    {(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::cos(degrees[0]), -(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::sin(degrees[0]), 0},
-    {(GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::sin(degrees[0]),  (GTKMM_APP_MATRIX_FORM_H_DATATYPE)std::cos(degrees[0]), 0},
+    {std::cos(this->convert_degrees_to_radians(degrees[0])), -std::sin(this->convert_degrees_to_radians(degrees[0])), 0},
+    {std::sin(this->convert_degrees_to_radians(degrees[0])),  std::cos(this->convert_degrees_to_radians(degrees[0])), 0},
     {0                                                     ,  0                                                     , 1}
   };
 
@@ -123,7 +123,7 @@ void Transformation::set_geometric_center(Coordinate &center = _default_coordina
 
       case TransformationType::ROTATION:
       {
-        this->_set_scaling_data(transformation_data, index, center);
+        this->_set_rotation_data(transformation_data, index, center);
         break;
       }
 
@@ -266,4 +266,9 @@ void Transformation::_rotation_on_coordinate(TransformationData &transformation_
   move_to_center[3][2] = rotation_center.getz();
 
   this->_transformation.multiply(move_to_center);
+}
+
+GTKMM_APP_MATRICES_DATATYPE Transformation::convert_degrees_to_radians(GTKMM_APP_MATRICES_DATATYPE degrees)
+{
+  return M_PI * (fmod(degrees, 360.0) / 180.0);
 }

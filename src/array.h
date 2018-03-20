@@ -5,7 +5,8 @@
 #include <iostream>
 
 /**
- * Because you can multiply a `Array` by an `Matrix`, but not a vice-versa.
+ * The Array<> type includes the Matrix<> type, because you can multiply a `Array` by an `Matrix`,
+ * but not a vice-versa.
  */
 #include "matrix.h"
 #include "stacktrace.h"

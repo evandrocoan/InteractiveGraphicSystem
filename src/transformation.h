@@ -1,10 +1,15 @@
 #ifndef GTKMM_APP_TRANSFORMATION
 #define GTKMM_APP_TRANSFORMATION
 
+// M_PI flagged as undeclared identifier
+// https://stackoverflow.com/questions/26065359/m-pi-flagged-as-undeclared-identifier
+#define _USE_MATH_DEFINES
+
 #include <cmath>
 #include <vector>
 #include <string>
 
+#include "traits.h"
 #include "debugger.h"
 #include "coordinate.h"
 #include "matrixform.h"
@@ -86,6 +91,8 @@ public:
 
   unsigned int size();
   void remove_transformation(std::string name);
+
+  static inline GTKMM_APP_MATRICES_DATATYPE convert_degrees_to_radians(GTKMM_APP_MATRICES_DATATYPE degrees);
 
   std::vector<TransformationData>& getTransformations();
   friend std::ostream& operator<<(std::ostream &output, const Transformation &object);
