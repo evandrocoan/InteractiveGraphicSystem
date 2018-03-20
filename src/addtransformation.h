@@ -4,7 +4,6 @@
 #include <string>
 #include <iostream>
 
-#include <gtkmm/window.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/button.h>
 #include <gtkmm/entry.h>
@@ -27,7 +26,7 @@ public:
   AddTransformation(ViewPort &viewPort);
   ~AddTransformation();
 
-  Gtk::Window& getWindow();
+  Gtk::Box& getBox();
   std::string object_name;
   RotationType rotation_type;
 
@@ -35,7 +34,6 @@ protected:
   ViewPort &viewPort;
   Transformation transformation;
 
-  Gtk::Window window;
   Gtk::Entry x_rotation_field;
   Gtk::Entry main_value_field_a;
   Gtk::Entry main_value_field_b;
@@ -46,7 +44,6 @@ protected:
   Gtk::RadioButton m_rb3;
 
   Gtk::Box      m_vbox;
-  Gtk::Box      m_hbox;
   Gtk::Notebook m_notebook;
 
   Gtk::ListViewText   m_ListViewText;
@@ -55,13 +52,12 @@ protected:
   Gtk::Grid rotation_grid;
   Gtk::Grid scaling_grid;
   Gtk::Grid translation_grid;
+  Gtk::Grid coodinate_input_grid;
 
   Gtk::Button button_apply;
-  Gtk::Button button_close;
   Gtk::Button button_save_transformation;
   Gtk::Button button_remove_transformation;
 
-  void on_button_close();
   void on_button_apply();
   void on_button_save_transformation();
   void on_button_remove_transformation();

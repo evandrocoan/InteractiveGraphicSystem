@@ -67,7 +67,7 @@ protected:
   Gtk::Entry entry_move_length;
   Gtk::Entry entry_zoom_scale;
 
-  void setupButtons(const Glib::ustring& title, gint spacing, Gtk::ButtonBoxStyle layout);
+  void setupButtons();
   void connectButtons();
 
   void on_button_move_up();
@@ -80,7 +80,6 @@ protected:
 
   void on_button_add_object();
   void on_button_delete_object();
-  void on_button_add_transformation();
 };
 
 #endif // GTKMM_APP_MAIN_WINDOW

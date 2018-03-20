@@ -2,17 +2,15 @@
 
 AddTransformation::AddTransformation(ViewPort &viewPort) :
       m_vbox(Gtk::ORIENTATION_VERTICAL),
-      m_hbox(Gtk::ORIENTATION_HORIZONTAL),
       viewPort(viewPort),
       m_ListViewText(1),
       rotation_type(RotationType::ON_ITS_OWN_CENTER),
-      m_rb1("Rotate around world center"),
-      m_rb2("Rotate around the object own geometric center"),
-      m_rb3("Rotate around an arbitrary point"),
-      button_save_transformation("Save Transformation"),
-      button_remove_transformation("Remove Transformation"),
-      button_apply("Apply"),
-      button_close("Close")
+      m_rb1("WC"),
+      m_rb2("GC"),
+      m_rb3("AP"),
+      button_save_transformation("Save"),
+      button_remove_transformation("Del"),
+      button_apply("Apply")
 {
   LOG(2, "Entering...");
   m_rb1.set_active();
@@ -21,27 +19,32 @@ AddTransformation::AddTransformation(ViewPort &viewPort) :
 
   x_rotation_field.set_text("15");
   x_rotation_field.set_placeholder_text("Name");
+
   main_value_field_a.set_text("10");
   main_value_field_a.set_placeholder_text("Name");
+  main_value_field_a.set_width_chars(8);
+
   main_value_field_b.set_text("1");
   main_value_field_b.set_placeholder_text("Name");
+  main_value_field_b.set_width_chars(8);
+
   main_value_field_c.set_text("1");
   main_value_field_c.set_placeholder_text("Name");
+  main_value_field_c.set_width_chars(8);
 
   translation_grid.set_column_homogeneous(true);
   translation_grid.set_row_spacing(10);
 
   rotation_grid.set_column_homogeneous(true);
   rotation_grid.set_row_spacing(10);
-  rotation_grid.attach(x_rotation_field, 1, 1, 1, 1);
+  rotation_grid.attach(x_rotation_field, 1, 1, 3, 1);
   rotation_grid.attach(m_rb1, 1, 2, 1, 1);
-  rotation_grid.attach(m_rb2, 1, 3, 1, 1);
-  rotation_grid.attach(m_rb3, 1, 4, 1, 1);
+  rotation_grid.attach(m_rb2, 2, 2, 1, 1);
+  rotation_grid.attach(m_rb3, 3, 2, 1, 1);
 
   scaling_grid.set_column_homogeneous(true);
   scaling_grid.set_row_spacing(10);
 
-  button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_close) );
   button_apply.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_apply) );
   button_save_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_save_transformation) );
   button_remove_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_remove_transformation) );
@@ -51,29 +54,24 @@ AddTransformation::AddTransformation(ViewPort &viewPort) :
 
   this->create_action_tabs();
   this->create_scrolling_items_list();
-
-  this->window.set_title("Add Transformation");
-  this->window.set_border_width(12);
-  this->window.add(m_hbox);
-  this->window.show_all_children();
 }
 
 void AddTransformation::create_action_tabs()
 {
-  m_notebook.append_page(translation_grid, "Translation");
-  m_notebook.append_page(rotation_grid, "Rotation");
-  m_notebook.append_page(scaling_grid, "Scaling");
+  m_notebook.append_page(translation_grid, "T");
+  m_notebook.append_page(rotation_grid, "R");
+  m_notebook.append_page(scaling_grid, "S");
   m_notebook.set_border_width(0);
 
+  coodinate_input_grid.attach(main_value_field_a,           1, 1, 1, 1);
+  coodinate_input_grid.attach(main_value_field_b,           2, 1, 1, 1);
+  coodinate_input_grid.attach(main_value_field_c,           3, 1, 1, 1);
+  coodinate_input_grid.attach(button_apply,                 1, 2, 1, 1);
+  coodinate_input_grid.attach(button_save_transformation,   2, 2, 1, 1);
+  coodinate_input_grid.attach(button_remove_transformation, 3, 2, 1, 1);
+
   m_vbox.pack_start(m_notebook);
-  m_vbox.pack_start(main_value_field_a, Gtk::PACK_SHRINK);
-  m_vbox.pack_start(main_value_field_b, Gtk::PACK_SHRINK);
-  m_vbox.pack_start(main_value_field_c, Gtk::PACK_SHRINK);
-  m_vbox.pack_start(button_save_transformation, Gtk::PACK_SHRINK);
-  m_vbox.pack_start(button_remove_transformation, Gtk::PACK_SHRINK);
-  m_vbox.pack_start(button_apply, Gtk::PACK_SHRINK);
-  m_vbox.pack_start(button_close, Gtk::PACK_SHRINK);
-  m_hbox.pack_start(m_vbox, true, true);
+  m_vbox.pack_start(coodinate_input_grid, Gtk::PACK_SHRINK);
 }
 
 /**
@@ -93,18 +91,18 @@ void AddTransformation::create_scrolling_items_list()
 
   // The `property_max_content_width` is only since gtkmm 3.22, and Moodle uses GTK 3.20
   // LOG(4, "Gtk::ScrolledWindow::property_max_content_width(): %d", m_ScrolledWindow.property_max_content_width());
-  m_ScrolledWindow.set_min_content_width(500);
+  m_ScrolledWindow.set_min_content_width(50);
 
-  m_hbox.pack_start(m_ScrolledWindow, true, true);
+  m_vbox.pack_start(m_ScrolledWindow, true, true);
 }
 
 AddTransformation::~AddTransformation()
 {
 }
 
-Gtk::Window& AddTransformation::getWindow()
+Gtk::Box& AddTransformation::getBox()
 {
-  return this->window;
+  return this->m_vbox;
 }
 
 void AddTransformation::on_button_save_transformation()
@@ -129,12 +127,12 @@ void AddTransformation::on_button_save_transformation()
   long double y_coord{std::stold(main_value_b.c_str())};
   long double z_coord{std::stold(main_value_c.c_str())};
 
-  if(current_page_text == "Translation")
+  if(current_page_text == "T")
   {
     name = tfm::format("%s %s %s %s", current_page_text, main_value_a, main_value_b, main_value_c);
     this->transformation.add_translation(name, Coordinate(x_coord, y_coord, z_coord));
   }
-  else if(current_page_text == "Rotation")
+  else if(current_page_text == "R")
   {
     name = tfm::format("%s %s %s %s %s %s", current_page_text, x_rotation, this->rotation_type, main_value_a, main_value_b, main_value_c);
     this->transformation.add_rotation(name,
@@ -142,7 +140,7 @@ void AddTransformation::on_button_save_transformation()
         Coordinate(x_coord, y_coord, z_coord),
         this->rotation_type);
   }
-  else if(current_page_text == "Scaling")
+  else if(current_page_text == "S")
   {
     name = tfm::format("%s %s %s %s", current_page_text, main_value_a, main_value_b, main_value_c);
     this->transformation.add_scaling(name, Coordinate(x_coord, y_coord, z_coord));
@@ -181,11 +179,6 @@ void AddTransformation::on_button_remove_transformation()
     this->transformation.remove_transformation(current_name);
     this->_update_transmations_list();
   }
-}
-
-void AddTransformation::on_button_close()
-{
-  this->window.close();
 }
 
 void AddTransformation::on_button_apply()
