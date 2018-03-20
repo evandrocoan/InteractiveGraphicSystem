@@ -19,13 +19,13 @@ AddTransformation::AddTransformation(ViewPort &viewPort) :
   m_rb2.join_group(m_rb1);
   m_rb3.join_group(m_rb1);
 
-  x_rotation_field.set_text("90");
+  x_rotation_field.set_text("15");
   x_rotation_field.set_placeholder_text("Name");
-  main_value_field_a.set_text("100");
+  main_value_field_a.set_text("10");
   main_value_field_a.set_placeholder_text("Name");
-  main_value_field_b.set_text("0");
+  main_value_field_b.set_text("1");
   main_value_field_b.set_placeholder_text("Name");
-  main_value_field_c.set_text("0");
+  main_value_field_c.set_text("1");
   main_value_field_c.set_placeholder_text("Name");
 
   translation_grid.set_column_homogeneous(true);
@@ -116,22 +116,22 @@ void AddTransformation::on_button_save_transformation()
   std::string main_value_b = main_value_field_b.get_text().raw();
   std::string main_value_c = main_value_field_c.get_text().raw();
 
+  LOG(1, "Currently we do not support 3D, forcing z `%s` to be 1", main_value_c);
+  main_value_c = "1";
+
   std::string x_rotation_value  = x_rotation_field.get_text().raw();
   std::string current_page_text = (std::string) m_notebook.get_tab_label_text(*current_page_widget);
 
   std::string name;
   long double x_rotation{std::stold(x_rotation_value)};
 
-  int x_coord = atoi(main_value_a.c_str());
-  int y_coord = atoi(main_value_b.c_str());
-
-  // Currently we do not support 3D, the force the z_coord to be 1
-  // int z_coord = atoi(main_value_c.c_str());
-  int z_coord = 1;
+  long double x_coord{std::stold(main_value_a.c_str())};
+  long double y_coord{std::stold(main_value_b.c_str())};
+  long double z_coord{std::stold(main_value_c.c_str())};
 
   if(current_page_text == "Translation")
   {
-    name = tfm::format("%s %s %s %s", current_page_text, main_value_a, main_value_c, main_value_c);
+    name = tfm::format("%s %s %s %s", current_page_text, main_value_a, main_value_b, main_value_c);
     this->transformation.add_translation(name, Coordinate(x_coord, y_coord, z_coord));
   }
   else if(current_page_text == "Rotation")
@@ -144,7 +144,7 @@ void AddTransformation::on_button_save_transformation()
   }
   else if(current_page_text == "Scaling")
   {
-    name = tfm::format("%s %s %s %s", current_page_text, main_value_a, main_value_c, main_value_c);
+    name = tfm::format("%s %s %s %s", current_page_text, main_value_a, main_value_b, main_value_c);
     this->transformation.add_scaling(name, Coordinate(x_coord, y_coord, z_coord));
   }
   else
