@@ -101,7 +101,7 @@
       /* duration -= microseconds; */ \
       /* auto nanoseconds = std::chrono::duration_cast< std::chrono::nanoseconds >( duration ); */ \
       time_t theTime = time(NULL); \
-      struct tm *aTime = localtime(&theTime); \
+      struct tm* aTime = localtime(&theTime); \
       std::cout << tfm::format( "%02d:%02d:%02d:%03d:%03d %.3e %.3e ", \
           aTime->tm_hour, minutes.count(), seconds.count(), milliseconds.count(), microseconds.count(), /* nanoseconds.count(), */ \
           std::chrono::duration<double, std::milli>(chrono_clock_now-_debugger_current_saved_chrono_time).count(), \
@@ -131,7 +131,7 @@
       std::clock_t ctime_clock_now = std::clock(); \
       auto chrono_clock_now = std::chrono::high_resolution_clock::now(); \
       _DEBUGGER_TIME_STAMP_HEADER \
-      std::cout << tfm::format( "%s/%s:%s ", \
+      std::cout << tfm::format( "%s|%s:%s ", \
           __FILE__, __FUNCTION__, __LINE__ \
       ) \
       << tfm::format( __VA_ARGS__ ) << std::endl; \
@@ -142,20 +142,20 @@
   while( 0 )
 
   /**
-   * The same as LOGLN(...) just below, but do not put automatically a new line.
+   * The same as LOG(...) just above, but do not put automatically a new line.
    */
   #define LOGLN( level, ... ) \
   do \
   { \
     if( level & _debugger_int_debug_level ) \
     { \
-      std::cout << tfm::format( __VA_ARGS__ ); \
+      std::cout << tfm::format( __VA_ARGS__ ) << std::flush; \
     } \
   } \
   while( 0 )
 
   /**
-   * The same as LOGLN(...), but it is for standard program output.
+   * The same as LOG(...), but it is for standard program output.
    */
   #define PRINT( level, ... ) \
   do \
@@ -175,7 +175,7 @@
   { \
     if( level & _debugger_int_debug_level ) \
     { \
-      std::cout << tfm::format( __VA_ARGS__ ); \
+      std::cout << tfm::format( __VA_ARGS__ ) << std::flush; \
     } \
   } \
   while( 0 )
