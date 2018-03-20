@@ -10,7 +10,7 @@
 
 #include "viewwindow.h"
 #include "displayfile.h"
-#include "viewportobserver.h"
+#include "subject_controller.h"
 #include "coordinate.h"
 #include "debugger.h"
 
@@ -27,8 +27,6 @@ public:
   ViewPort();
   virtual ~ViewPort();
 
-  void addObserver(ViewPortObserver*);
-
   void addObject(DrawableObject*);
   void removeObject(std::string name);
 
@@ -43,10 +41,12 @@ public:
   void move_left (int length = 10);
   void move_right(int length = 10);
 
+  Signal<>::Connection addObserver(const Signal<>::Callback&);
+
 protected:
-  ViewWindow        viewWindow;
-  DisplayFile       displayFile;
-  ViewPortObservers viewPortObservers;
+  ViewWindow  viewWindow;
+  DisplayFile displayFile;
+  Signal<>    observerController;
 
   int xVpmin;
   int yVpmin;
