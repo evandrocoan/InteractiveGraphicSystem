@@ -18,22 +18,22 @@
 #include "viewport.h"
 #include "coordinate.h"
 
-class AddObjectWindow
+class AddObject
 {
 public:
-  AddObjectWindow(ViewPort* viewPort);
-  ~AddObjectWindow();
-  Gtk::Window* getWindow();
+  AddObject(ViewPort &viewPort);
+  ~AddObject();
+  Gtk::Window& getWindow();
 
 private:
-  ViewPort* viewPort;
+  ViewPort &viewPort;
   Gtk::Window window;
 
   Gtk::Box       m_vbox;
   Gtk::Notebook  m_notebook;
 
   std::string            new_object_name;
-  std::list<Coordinate*> polygon_cord_list;
+  std::list<Coordinate*> polygon_coord_list;
 
   Gtk::Grid line_grid;
   Gtk::Grid point_grid;

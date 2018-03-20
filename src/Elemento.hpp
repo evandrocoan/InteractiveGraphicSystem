@@ -5,7 +5,7 @@ template<typename T>
 class Elemento
 {
 private:
-  T *info;
+  T* info;
   Elemento<T>* _next;
 
 public:
