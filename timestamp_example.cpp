@@ -58,7 +58,7 @@ int main (int argc, char *argv[])
   // };
 
   time_t theTime = time(NULL);
-  struct tm *aTime = localtime(&theTime);
+  struct tm* aTime = localtime(&theTime);
 
   std::cout << days.count() << " days since epoch or "
             << days.count() / 365.2524 << " years since epoch. The time is now "
