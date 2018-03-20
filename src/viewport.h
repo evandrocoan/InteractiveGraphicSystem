@@ -41,12 +41,16 @@ public:
   void move_left (int length = 10);
   void move_right(int length = 10);
 
-  Signal<>::Connection addObserver(const Signal<>::Callback&);
+  template <typename Observer>
+  void addObserver(Observer&& observer)
+  {
+    observerController.registerObserver("updateDropdownList", observer);
+  }
 
 protected:
-  ViewWindow  viewWindow;
-  DisplayFile displayFile;
-  Signal<>    observerController;
+  ViewWindow           viewWindow;
+  DisplayFile          displayFile;
+  Subject<std::string> observerController;
 
   int xVpmin;
   int yVpmin;

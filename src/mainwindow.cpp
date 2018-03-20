@@ -29,6 +29,7 @@ MainWindow::MainWindow() :
   this->main_box.pack_start(this->right_frame, Gtk::PACK_EXPAND_WIDGET, 10);
   this->right_frame.add(this->viewPort);
   this->viewPort.show();
+  this->viewPort.addObserver(std::bind(&MainWindow::updateDropdownList, this));
 
   LOG(4, "Show all components");
   this->window.set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan, Hugo Vincent");
@@ -95,8 +96,6 @@ void MainWindow::setupButtons(const Glib::ustring& title, gint spacing, Gtk::But
 
   buttons_frame->add(*buttonBox);
   left_box.pack_start(*Gtk::manage(buttons_frame), Gtk::PACK_EXPAND_WIDGET);
-
-  this->viewPort.addObserver(std::bind(&MainWindow::updateDropdownList, this));
 }
 
 void MainWindow::connectButtons()
