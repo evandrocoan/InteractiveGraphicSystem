@@ -33,6 +33,9 @@
 
 #include "utilities.h"
 
+// C like printf support on C++
+// https://github.com/c42f/tinyformat
+#include "tinyformat.h"
 
 
 /**
@@ -70,10 +73,6 @@
   #include <iostream>
   #include <chrono>
   #include <ctime>
-
-  // C like printf support on C++
-  // https://github.com/c42f/tinyformat
-  #include "tinyformat.h"
 
   // C++ -> Utilities library -> Date and time utilities -> C-style date and time utilities -> std:clock
   // http://en.cppreference.com/w/cpp/chrono/c/clock
