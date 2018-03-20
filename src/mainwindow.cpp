@@ -31,7 +31,7 @@ MainWindow::MainWindow() :
   this->viewPort.show();
 
   LOG(4, "Show all components");
-  this->window.set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan");
+  this->window.set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan, Hugo Vincent");
   this->window.set_border_width(15);
   this->window.set_default_size(700, 500);
   this->window.add(this->main_box);
