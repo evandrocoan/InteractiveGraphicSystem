@@ -35,10 +35,11 @@
   }
 
   class AddTransformation {
-    Gtk::Grid    rotation_grid
-    Gtk::Grid    scaling_grid
-    Gtk::Grid    translation_grid
-    Gtk::Window& getWindow()
+    Gtk::Grid rotation_grid
+    Gtk::Grid scaling_grid
+    Gtk::Grid translation_grid
+    Gtk::Grid coodinate_input_grid
+    Gtk::Box& getBox()
   }
 
   class DisplayFile {
