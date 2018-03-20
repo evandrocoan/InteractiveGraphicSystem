@@ -13,8 +13,8 @@ MainWindow::MainWindow() :
       button_zoom_out("-"),
       button_delete_object("Delete Object"),
       button_add_transformation("Add Transformation"),
-      addObjectWindow(&this->viewPort),
-      addTransformationWindow(&this->viewPort)
+      addObject(this->viewPort),
+      addTransformation(this->viewPort)
 {
   LOG(2, "Entering...");
   this->main_box.pack_start(left_frame, Gtk::PACK_SHRINK, 10);
@@ -42,9 +42,9 @@ MainWindow::~MainWindow()
 {
 }
 
-Gtk::Window* MainWindow::getWindow()
+Gtk::Window& MainWindow::getWindow()
 {
-  return &this->window;
+  return this->window;
 }
 
 void MainWindow::setupButtons(const Glib::ustring& title, gint spacing, Gtk::ButtonBoxStyle layout)
@@ -96,7 +96,7 @@ void MainWindow::setupButtons(const Glib::ustring& title, gint spacing, Gtk::But
   buttons_frame->add(*buttonBox);
   left_box.pack_start(*Gtk::manage(buttons_frame), Gtk::PACK_EXPAND_WIDGET);
 
-  this->viewPort.addObserver(this);
+  this->viewPort.addObserver(std::bind(&MainWindow::updateDropdownList, this));
 }
 
 void MainWindow::connectButtons()
@@ -126,12 +126,6 @@ void MainWindow::updateDropdownList()
   LOG(4, "limpa a lista de objetos para reimprimi-la");
   this->objects_list.remove_all();
 
-  /*for(std::list<std::string>::iterator it = names.begin(); it != names.end(); it++)
-  {
-    this->objects_list.append(*it);
-  }*/
-
-  //for(std::string object : names)
   for(auto object : names)
   {
     this->objects_list.append(object);
@@ -239,22 +233,25 @@ void MainWindow::on_button_zoom_out()
 void MainWindow::on_button_add_object()
 {
   LOG(2, "Entering...");
-  this->addObjectWindow.getWindow()->show();
+  this->addObject.getWindow().show();
 }
 
 void MainWindow::on_button_add_transformation()
 {
   LOG(2, "Entering...");
-  this->addTransformationWindow.getWindow()->show();
+  Glib::ustring name = (std::string)objects_list.get_active_text();
+
+  this->addTransformation.object_name = name;
+  this->addTransformation.getWindow().show();
 }
 
 void MainWindow::on_button_delete_object()
 {
-  Glib::ustring name = objects_list.get_active_text();
+  Glib::ustring name = (std::string)objects_list.get_active_text();
 
   if(!(name.empty()))
   {
-    this->viewPort.removeObject((std::string)name);
+    this->viewPort.removeObject(name);
   }
 }
 
