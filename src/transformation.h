@@ -28,6 +28,32 @@ enum TransformationType
   TRANSLATION
 };
 
+inline std::ostream & operator<<(std::ostream &output, TransformationType object)
+{
+  switch (object)
+  {
+    case TransformationType::SCALING:     output << "TransformationType::SCALING"; break;
+    case TransformationType::ROTATION:    output << "TransformationType::ROTATION"; break;
+    case TransformationType::TRANSLATION: output << "TransformationType::TRANSLATION"; break;
+    default:
+      output << (int) object; break;
+  }
+  return output;
+}
+
+inline std::ostream & operator<<(std::ostream &output, RotationType object)
+{
+  switch (object)
+  {
+    case RotationType::ON_WORLD_CENTER:     output << "RotationType::ON_WORLD_CENTER"; break;
+    case RotationType::ON_ITS_OWN_CENTER:   output << "RotationType::ON_ITS_OWN_CENTER"; break;
+    case RotationType::ON_GIVEN_COORDINATE: output << "RotationType::ON_GIVEN_COORDINATE"; break;
+    default:
+      output << (int) object; break;
+  }
+  return output;
+}
+
 /**
  * Ignoring the `translations` matrices, the `matrix` is the main operation applied after
  * moving the object to the world center.
@@ -62,9 +88,9 @@ struct TransformationData
    */
   friend std::ostream& operator<<( std::ostream &output, const TransformationData &data )
   {
-    output << data.name << ", type: ";
+    output << data.name << ", ";
     output << data.type << ", ";
-    output << data.matrix << ", rotation_type: ";
+    output << data.matrix << ", ";
     output << data.rotation_type << ", ";
     output << data.rotation_center;
     return output;
