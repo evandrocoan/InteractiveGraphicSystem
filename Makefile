@@ -1,5 +1,3 @@
-
-
 # How to place object files in separate subdirectory
 # https://stackoverflow.com/questions/5178125/how-to-place-object-files-in-separate-subdirectory
 
@@ -63,8 +61,6 @@ INCDEP := -I.
 #---------------------------------------------------------------------------------
 # DO NOT EDIT BELOW THIS LINE
 #---------------------------------------------------------------------------------
-SOURCES := $(shell /bin/find $(SRCDIR) -type f -name "*.$(SRCEXT)" $(FIND_EXCLUSIONS))
-OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
 # OS detecting makefile
 # https://stackoverflow.com/questions/714100/os-detecting-makefile
@@ -88,11 +84,14 @@ endif
 ifeq ($J,)
 	ifeq ($(OS),Windows_NT)
 		NPROCS := $(NUMBER_OF_PROCESSORS)
+		FIND_EXEC := /bin/find
 	else
 		ifeq ($(UNAME),Darwin)
-		  NPROCS := $(shell system_profiler | awk '/Number of CPUs/ {print $$4}{next;}')
+		  NPROCS := $(shell sysctl -n hw.ncpu)
+		  FIND_EXEC := /usr/bin/find
 		else
 		  NPROCS := $(shell grep -c ^processor /proc/cpuinfo)
+		  FIND_EXEC := /bin/find
 		endif
 	endif
 else
@@ -100,6 +99,10 @@ else
 endif
 
 CURRENT_DIR := $(shell pwd)
+
+SOURCES := $(shell $(FIND_EXEC) $(SRCDIR) -type f -name "*.$(SRCEXT)" $(FIND_EXCLUSIONS))
+OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
+
 
 # Print the usage instructions
 # https://gist.github.com/prwhite/8168133
@@ -183,5 +186,12 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
 	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
 	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
+
+
+hugo:
+	g++ src/*.cpp -o helloworld_gtkmm `pkg-config gtkmm-3.0 --cflags --libs` -std=c++11
+
+
+
 
 
