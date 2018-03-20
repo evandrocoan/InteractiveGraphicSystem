@@ -10,6 +10,25 @@ ViewPort::ViewPort() :
 {
 }
 
+void ViewPort::apply(std::string object_name, Transformation &transformation)
+{
+  if( this->displayFile.isObjectOnByName(object_name) )
+  {
+    if( transformation.size() )
+    {
+      this->displayFile.apply(object_name, transformation);
+    }
+    else
+    {
+      LOG(4, "There are no transformations available to be applied on your object: `%s` %s", object_name, transformation);
+    }
+  }
+  else
+  {
+    LOG(4, "No object was found within the name: `%s`", object_name);
+  }
+}
+
 /**
  * [ViewPort::on_draw description]
  *
@@ -20,51 +39,54 @@ ViewPort::ViewPort() :
  */
 bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 {
-  this->updateViewport(this->get_allocation());
+  // LOG(8, "Chama-mes 5 vezes seguidas para desenhar a mesma coisa por que?");
+  auto allocation = this->get_allocation();
+  this->updateViewport(allocation);
 
-  LOG(8, "Paint white background");
+  // LOG(8, "Paint white background");
   cairo_context->set_source_rgb(1, 1, 1);
   cairo_context->paint();
 
-  LOG(8, "Draw x and y axis");
+  // LOG(8, "Draw x and y axis");
   cairo_context->set_line_width(1);
   cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
-  Coordinate originOnWindow = convertCoordinateFromWindow(Coordinate(0, 0));
+  Coordinate originOnWindow(0, 0);
+  Coordinate originOnWorld  = convertCoordinateFromWindow(originOnWindow);
 
-  cairo_context->move_to(this->xVpmin, originOnWindow.gety());
-  cairo_context->line_to(this->xVpmax, originOnWindow.gety());
-  cairo_context->move_to(originOnWindow.getx(), this->yVpmin);
-  cairo_context->line_to(originOnWindow.getx(), this->yVpmax);
+  cairo_context->move_to(this->xVpmin, originOnWorld.gety());
+  cairo_context->line_to(this->xVpmax, originOnWorld.gety());
+  cairo_context->move_to(originOnWorld.getx(), this->yVpmin);
+  cairo_context->line_to(originOnWorld.getx(), this->yVpmax);
   cairo_context->stroke();
 
-  LOG(8, "Set color's objects as black:");
+  // LOG(8, "Set color's objects as black:");
   cairo_context->set_source_rgb(0, 0, 0);
 
-  LOG(8, "Draw displayFile objects");
-  std::list<DrawableObject*> objects = this->displayFile.getObjects();
+  // LOG(8, "Draw displayFile objects");
+  auto objects = this->displayFile.getObjects();
 
-  for (std::list<DrawableObject*>::iterator it_obj = objects.begin(); it_obj != objects.end(); it_obj++)
+  for (auto object : objects)
   {
-    std::list<Coordinate*> objectCoordinates = (*it_obj)->getCoordinates();
+    auto coordinates = object->getCoordinates();
+    Coordinate firstCoordinate = this->convertCoordinateFromWindow(**(coordinates.begin()));
 
-    Coordinate firstCordConverted = this->convertCoordinateFromWindow(**(objectCoordinates.begin()));
-    cairo_context->move_to(firstCordConverted.getx(),firstCordConverted.gety());
+    cairo_context->move_to(firstCoordinate.getx(), firstCoordinate.gety());
+    LOG(8, "object coordinates: %s", *object);
 
-    LOG(8, "Point case, objectCoordinates: %d", objectCoordinates.size());
-    if (objectCoordinates.size() == 1)
+    if (coordinates.size() == 1)
     {
-      cairo_context->line_to(firstCordConverted.getx()+1,firstCordConverted.gety()+1);
+      cairo_context->line_to(firstCoordinate.getx()+1, firstCoordinate.gety()+1);
     }
     else
     {
-      for (std::list<Coordinate*>::iterator it_cord = objectCoordinates.begin();
-              it_cord != objectCoordinates.end(); it_cord++)
+      for (auto coordinate : coordinates)
       {
-        Coordinate coordinateConverted = this->convertCoordinateFromWindow(**it_cord);
-        cairo_context->line_to(coordinateConverted.getx(),coordinateConverted.gety());
+        Coordinate coordinateConverted = this->convertCoordinateFromWindow(*coordinate);
+        cairo_context->line_to(coordinateConverted.getx(), coordinateConverted.gety());
       }
 
-      cairo_context->line_to(firstCordConverted.getx(),firstCordConverted.gety());
+      // LOG(8, "Draw a line until the first coordinate, closing the polygon")
+      cairo_context->line_to(firstCoordinate.getx(), firstCoordinate.gety());
     }
   }
 
@@ -75,19 +97,19 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 /**
  * Transformada de viewport - Slide 2 de "02 - Conceitos Básicos"
  *
- * @param  cord [description]
- * @return      [description]
+ * @param  coord [description]
+ * @return       [description]
  */
-Coordinate ViewPort::convertCoordinateFromWindow(Coordinate cord)
+Coordinate ViewPort::convertCoordinateFromWindow(Coordinate &coord)
 {
-  long int xW = cord.getx();
+  long int xW = coord.getx();
   long int xVp = (long int)(
       (double)(xW - this->viewWindow.xWmin) * ((double)(this->xVpmax - this->xVpmin) /
           (double)(this->viewWindow.xWmax - this->viewWindow.xWmin)
       )
   );
 
-  long int yW = cord.gety();
+  long int yW = coord.gety();
   long int yVp = (this->yVpmax - this->yVpmin) - (long int)(
       (double)(yW - this->viewWindow.yWmin) * (double)(this->yVpmax - this->yVpmin) /
           (double)(this->viewWindow.yWmax - this->viewWindow.yWmin)
@@ -120,7 +142,7 @@ Coordinate ViewPort::convertCoordinateFromWindow(Coordinate cord)
  *     join(). Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of
        GdkRectangle.
  */
-void ViewPort::updateViewport(Gtk::Allocation allocation)
+void ViewPort::updateViewport(Gtk::Allocation &allocation)
 {
   // NÃO ENTENDI A LÓGICA MATEMÁTICA
   if (this->xVpmax != allocation.get_width() ||  this->yVpmax != allocation.get_height())
