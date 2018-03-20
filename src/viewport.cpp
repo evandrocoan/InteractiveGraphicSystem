@@ -191,23 +191,23 @@ ViewPort::~ViewPort()
 {
 }
 
-void ViewPort::addObserver(ViewPortObserver* observer)
+Signal<>::Connection ViewPort::addObserver(const Signal<>::Callback &callback)
 {
-  this->viewPortObservers.addObserver(observer);
+    return observerController.connect(callback);
 }
 
 void ViewPort::addObject(DrawableObject* object)
 {
   this->displayFile.addObject(object);
   this->queue_draw();
-  this->viewPortObservers.notifyObservers();
+  this->observerController();
 }
 
 void ViewPort::removeObject(std::string name)
 {
   this->displayFile.removeObjectByName(name);
   this->queue_draw();
-  this->viewPortObservers.notifyObservers();
+  this->observerController();
 }
 
 std::list<std::string> ViewPort::getNamesList()

@@ -2,7 +2,6 @@
 @startuml
   skinparam defaultFontName Consolas
 
-  AddObject <|--  ViewPortObserver
   AddObject  *--  ViewPort                 : viewPort&
 
   AddTransformation  *--  ViewPort         : viewPort&
@@ -23,11 +22,9 @@
   TransformationData *-- TransformationType: type
   TransformationData *-- RotationType      : rotation_type
 
-  ViewPort   *--  ViewWindow               : viewWindow
-  ViewPort   *-down-  DisplayFile          : displayFile
-  ViewPort   *-right- ViewPortObservers    : viewPortObservers
-
-  ViewPortObservers "1" *-up- "*" ViewPortObserver: observers
+  ViewPort *-- ViewWindow                  : viewWindow
+  ViewPort *-down- DisplayFile             : displayFile
+  ViewPort *-right- "Signal<>"             : observerController
 
   class AddObject {
     Gtk::Grid              point_grid
@@ -117,15 +114,6 @@
 
     Coordinate convertCoordinateFromWindow(Coordinate&)
     void apply(std::string object_name, Transformation&)
-  }
-
-  class ViewPortObserver {
-    void updateDropdownList()
-  }
-
-  class ViewPortObservers {
-    void notifyObservers()
-    void addObserver(ViewPortObserver*)
   }
 
   class ViewWindow {

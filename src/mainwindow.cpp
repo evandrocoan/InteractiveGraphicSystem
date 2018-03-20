@@ -96,7 +96,7 @@ void MainWindow::setupButtons(const Glib::ustring& title, gint spacing, Gtk::But
   buttons_frame->add(*buttonBox);
   left_box.pack_start(*Gtk::manage(buttons_frame), Gtk::PACK_EXPAND_WIDGET);
 
-  this->viewPort.addObserver(this);
+  this->viewPort.addObserver(std::bind(&MainWindow::updateDropdownList, this));
 }
 
 void MainWindow::connectButtons()

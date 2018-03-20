@@ -17,7 +17,6 @@
 #include "viewport.h"
 #include "debugger.h"
 #include "viewwindow.h"
-#include "viewportobserver.h"
 #include "addobject.h"
 #include "addtransformation.h"
 
@@ -25,7 +24,7 @@
 #define DEFAULT_MOVE_LENGTH "10"
 
 
-class MainWindow : public ViewPortObserver
+class MainWindow
 {
 
 public:
