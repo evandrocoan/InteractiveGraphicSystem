@@ -135,6 +135,10 @@ void MainWindow::updateDropdownList()
   // https://stackoverflow.com/questions/14912210/set-gtk-comboboxtext-default-item
   LOG(4, "Selecting the last item on the ComboBoxText");
   this->objects_list.set_active(names.size()-1);
+
+  // Also update the name on the `addTransformation` window
+  Glib::ustring name = (std::string)objects_list.get_active_text();
+  this->addTransformation.object_name = name;
 }
 
 void MainWindow::on_button_move_up()
@@ -238,9 +242,6 @@ void MainWindow::on_button_add_object()
 void MainWindow::on_button_add_transformation()
 {
   LOG(2, "Entering...");
-  Glib::ustring name = (std::string)objects_list.get_active_text();
-
-  this->addTransformation.object_name = name;
   this->addTransformation.getWindow().show();
 }
 
