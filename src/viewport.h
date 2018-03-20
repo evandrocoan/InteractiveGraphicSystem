@@ -10,7 +10,7 @@
 
 #include "viewwindow.h"
 #include "displayfile.h"
-#include "viewportobserver.h"
+#include "subject_controller.h"
 #include "coordinate.h"
 #include "debugger.h"
 
@@ -30,8 +30,8 @@ public:
   void addObject(DrawableObject*);
   void removeObject(std::string name);
 
-  void addObserver(ViewPortObserver*);
   std::list<std::string> getNamesList();
+  void apply(std::string object_name, Transformation&);
 
   void zoom_in (float scale = 1.5);
   void zoom_out(float scale = 1.5);
@@ -41,10 +41,12 @@ public:
   void move_left (int length = 10);
   void move_right(int length = 10);
 
+  Signal<>::Connection addObserver(const Signal<>::Callback&);
+
 protected:
-  ViewWindow        viewWindow;
-  DisplayFile       displayFile;
-  ViewPortObservers viewPortObservers;
+  ViewWindow  viewWindow;
+  DisplayFile displayFile;
+  Signal<>    observerController;
 
   int xVpmin;
   int yVpmin;
@@ -52,8 +54,8 @@ protected:
   int yVpmax;
 
   bool       on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
-  void       updateViewport(Gtk::Allocation);
-  Coordinate convertCoordinateFromWindow(Coordinate);
+  void       updateViewport(Gtk::Allocation&);
+  Coordinate convertCoordinateFromWindow(Coordinate&);
 };
 
 #endif
