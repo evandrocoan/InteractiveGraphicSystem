@@ -146,6 +146,8 @@ void Transformation::set_geometric_center(Coordinate &center = _default_coordina
 
     index++;
   }
+
+  LOG(2, "Leaving...");
 }
 
 void Transformation::_set_scaling_data(TransformationData* transformation_data, unsigned int &index, Coordinate &center)
@@ -176,6 +178,7 @@ void Transformation::_set_scaling_data(TransformationData* transformation_data, 
   move_to_center[3][2] = center.getz();
 
   this->_transformation.multiply(move_to_center);
+
 }
 
 void Transformation::_set_rotation_data(TransformationData* transformation_data, unsigned int &index, Coordinate &center)
@@ -248,6 +251,8 @@ void Transformation::_rotation_on_center(TransformationData* transformation_data
   move_to_center[3][2] = center.getz();
 
   this->_transformation.multiply(move_to_center);
+
+  LOG(2, "Leaving...");
 }
 
 
