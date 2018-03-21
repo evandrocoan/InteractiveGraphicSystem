@@ -195,11 +195,11 @@ void Transformation::_set_scaling_data(TransformationData* transformation_data, 
 
   // Move back to its origin
   LOG(2, "Leaving...");
-  move_to_center[3][0] = center.getx();
+  move_to_center[2][0] = center.getx();
   LOG(2, "Leaving...");
-  move_to_center[3][1] = center.gety();
+  move_to_center[2][1] = center.gety();
   LOG(2, "Leaving...");
-  move_to_center[3][2] = center.getz();
+  move_to_center[2][2] = center.getz();
 
   LOG(2, "Leaving...");
   this->_transformation.multiply(move_to_center);
@@ -285,9 +285,9 @@ void Transformation::_rotation_on_center(TransformationData* transformation_data
   this->_transformation.multiply(transformation_data->matrix);
 
   // Move back to its origin
-  move_to_center[3][0] = center.getx();
-  move_to_center[3][1] = center.gety();
-  move_to_center[3][2] = center.getz();
+  move_to_center[2][0] = center.getx();
+  move_to_center[2][1] = center.gety();
+  move_to_center[2][2] = center.getz();
 
   this->_transformation.multiply(move_to_center);
   LOG(2, "Leaving...");
