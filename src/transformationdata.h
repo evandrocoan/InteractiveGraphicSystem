@@ -19,9 +19,9 @@ inline std::ostream & operator<<(std::ostream &output, TransformationType object
 {
   switch (object)
   {
-    case TransformationType::SCALING:     output << "TransformationType::SCALING"; break;
-    case TransformationType::ROTATION:    output << "TransformationType::ROTATION"; break;
-    case TransformationType::TRANSLATION: output << "TransformationType::TRANSLATION"; break;
+    case TransformationType::SCALING:     output << "SCALING"; break;
+    case TransformationType::ROTATION:    output << "ROTATION"; break;
+    case TransformationType::TRANSLATION: output << "TRANSLATION"; break;
     default:
       output << (int) object; break;
   }
@@ -32,9 +32,9 @@ inline std::ostream & operator<<(std::ostream &output, RotationType object)
 {
   switch (object)
   {
-    case RotationType::ON_WORLD_CENTER:     output << "RotationType::ON_WORLD_CENTER"; break;
-    case RotationType::ON_ITS_OWN_CENTER:   output << "RotationType::ON_ITS_OWN_CENTER"; break;
-    case RotationType::ON_GIVEN_COORDINATE: output << "RotationType::ON_GIVEN_COORDINATE"; break;
+    case RotationType::ON_WORLD_CENTER:     output << "ON_WORLD_CENTER"; break;
+    case RotationType::ON_ITS_OWN_CENTER:   output << "ON_ITS_OWN_CENTER"; break;
+    case RotationType::ON_GIVEN_COORDINATE: output << "ON_GIVEN_COORDINATE"; break;
     default:
       output << (int) object; break;
   }

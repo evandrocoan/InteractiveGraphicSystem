@@ -65,8 +65,10 @@ struct Array
    * @param  line the current line you want to access
    * @return      a pointer to the current line
    */
-  array_datatype operator[](int line)
+  array_datatype operator[](unsigned int line)
   {
+    assert(line < array_width);
+    assert(line > -1);
     return this->_data[line];
   }
 

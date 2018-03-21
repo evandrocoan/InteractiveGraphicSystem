@@ -167,10 +167,10 @@ void Transformation::_set_scaling_data(TransformationData &transformation_data, 
     this->_transformation.multiply(move_to_center);
   }
 
-  // Do the scaling on the origin
+  LOG(4, "Do the rotation on the origin");
   this->_transformation.multiply(transformation_data.matrix);
 
-  // Move back to its origin
+  LOG(4, "Move back to its origin");
   move_to_center[2][0] = center.getx();
   move_to_center[2][1] = center.gety();
   move_to_center[2][2] = center.getz();
@@ -186,7 +186,7 @@ void Transformation::_set_rotation_data(TransformationData &transformation_data,
   {
     case RotationType::ON_WORLD_CENTER:
     {
-      // Just rotate it, as all rotations are based on the world center
+      LOG(4, "Just rotate it, as all rotations are based on the world center");
       if( index == 0 )
       {
         this->_transformation = transformation_data.matrix;
@@ -239,10 +239,10 @@ void Transformation::_rotation_on_center(TransformationData &transformation_data
     this->_transformation.multiply(move_to_center);
   }
 
-  // Do the rotation on the origin
+  LOG(4, "Do the rotation on the origin");
   this->_transformation.multiply(transformation_data.matrix);
 
-  // Move back to its origin
+  LOG(4, "Move back to its origin");
   move_to_center[2][0] = center.getx();
   move_to_center[2][1] = center.gety();
   move_to_center[2][2] = center.getz();
@@ -272,10 +272,10 @@ void Transformation::_rotation_on_coordinate(TransformationData &transformation_
     this->_transformation.multiply(move_to_center);
   }
 
-  // Do the rotation on the origin
+  LOG(4, "Do the rotation on the origin");
   this->_transformation.multiply(transformation_data.matrix);
 
-  // Move back to its origin
+  LOG(4, "Move back to its origin");
   move_to_center[2][0] = rotation_center.getx();
   move_to_center[2][1] = rotation_center.gety();
   move_to_center[2][2] = rotation_center.getz();
