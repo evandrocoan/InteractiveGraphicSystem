@@ -52,7 +52,6 @@ protected:
 
   Gtk::Button button_add_object;
   Gtk::Button button_delete_object;
-  Gtk::Button button_add_transformation;
 
   Gtk::Box main_box;
   Gtk::Box left_box;

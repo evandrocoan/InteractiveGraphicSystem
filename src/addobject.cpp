@@ -1,22 +1,22 @@
 #include "addobject.h"
 
 AddObject::AddObject(ViewPort &viewPort) :
-      m_vbox(Gtk::ORIENTATION_VERTICAL),
       viewPort(viewPort),
+      m_vbox(Gtk::ORIENTATION_VERTICAL),
+      button_close("Close"),
+      button_save_line("Save Line"),
+      button_save_wire("Save Polygon"),
+      button_save_point("Save Point"),
+      button_add_coordenate("Add Coordenate"),
       info_label("Insert a Coordinate :"),
       point_x_label("Coordinate X : "),
       point_y_label("Coordinate Y : "),
-      button_save_point("Save Point"),
       line_x1_label("Coordinate X1 : "),
       line_y1_label("Coordinate Y1 : "),
       line_x2_label("Coordinate X2 : "),
       line_y2_label("Coordinate Y2 : "),
-      button_save_line("Save Line"),
       polygon_x_label("Coordinate X : "),
-      polygon_y_label("Coordinate Y : "),
-      button_save_wire("Save Polygon"),
-      button_add_coordenate("Add Coordenate"),
-      button_close("Close")
+      polygon_y_label("Coordinate Y : ")
 {
   LOG(2, "Entering...");
   point_name_field.set_text("point1");
