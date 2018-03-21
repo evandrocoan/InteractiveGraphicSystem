@@ -93,7 +93,7 @@ ifeq ($J,)
 		  FIND_EXEC := /usr/bin/find
 		else
 		  NPROCS := $(shell grep -c ^processor /proc/cpuinfo)
-		  FIND_EXEC := /bin/find
+		  FIND_EXEC := /usr/bin/find
 		endif
 	endif
 else
