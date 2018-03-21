@@ -105,47 +105,34 @@ void Transformation::set_geometric_center(Coordinate &center = _default_coordina
 {
   LOG(4, "Center on %s - %s", center, *this);
   unsigned int index = 0;
-  LOG(2, "Leaving...");
 
   for( auto transformation_data : this->transformations )
   {
-  LOG(2, "Leaving...");
     switch( transformation_data->type )
     {
       case TransformationType::TRANSLATION:
       {
-  LOG(2, "Leaving...");
         if( index == 0 )
         {
-  LOG(2, "Leaving...");
           this->_transformation = transformation_data->matrix;
-  LOG(2, "Leaving...");
         }
         else
         {
-  LOG(2, "Leaving...");
           this->_transformation.multiply(transformation_data->matrix);
-  LOG(2, "Leaving...");
         }
-  LOG(2, "Leaving...");
         // LOG(4, "_transformation.multiply: %s", this->_transformation);
         break;
-  LOG(2, "Leaving...");
       }
 
       case TransformationType::SCALING:
       {
-  LOG(2, "Leaving...");
         this->_set_scaling_data(transformation_data, index, center);
-  LOG(2, "Leaving...");
         break;
       }
 
       case TransformationType::ROTATION:
       {
-  LOG(2, "Leaving...");
         this->_set_rotation_data(transformation_data, index, center);
-  LOG(2, "Leaving...");
         break;
       }
 
@@ -156,54 +143,39 @@ void Transformation::set_geometric_center(Coordinate &center = _default_coordina
         LOG(1, "ERROR! Invalid TransformationData type used: %d", transformation_data->type);
       }
     }
-  LOG(2, "Leaving...");
 
     index++;
-  LOG(2, "Leaving...");
   }
-  LOG(2, "Leaving...");
 }
 
 void Transformation::_set_scaling_data(TransformationData* transformation_data, unsigned int &index, Coordinate &center)
 {
   LOG(2, "Entering...");
-  LOG(2, "Leaving...");
   MatrixForm move_to_center
   {
     {1             ,  0            ,              0},
     {0             ,  1            ,              0},
     {-center.getx(), -center.gety(), -center.getz()}
   };
-  LOG(2, "Leaving...");
 
   if( index == 0 )
   {
-  LOG(2, "Leaving...");
     this->_transformation = move_to_center;
   }
   else
   {
-  LOG(2, "Leaving...");
     this->_transformation.multiply(move_to_center);
   }
-  LOG(2, "Leaving...");
 
   // Do the scaling on the origin
-  LOG(2, "Leaving...");
   this->_transformation.multiply(transformation_data->matrix);
-  LOG(2, "Leaving...");
 
   // Move back to its origin
-  LOG(2, "Leaving...");
   move_to_center[2][0] = center.getx();
-  LOG(2, "Leaving...");
   move_to_center[2][1] = center.gety();
-  LOG(2, "Leaving...");
   move_to_center[2][2] = center.getz();
 
-  LOG(2, "Leaving...");
   this->_transformation.multiply(move_to_center);
-  LOG(2, "Leaving...");
 }
 
 void Transformation::_set_rotation_data(TransformationData* transformation_data, unsigned int &index, Coordinate &center)
@@ -214,41 +186,28 @@ void Transformation::_set_rotation_data(TransformationData* transformation_data,
   {
     case RotationType::ON_WORLD_CENTER:
     {
-  LOG(2, "Leaving...");
       // Just rotate it, as all rotations are based on the world center
       if( index == 0 )
       {
-  LOG(2, "Leaving...");
         this->_transformation = transformation_data->matrix;
-  LOG(2, "Leaving...");
       }
       else
       {
-  LOG(2, "Leaving...");
         this->_transformation.multiply(transformation_data->matrix);
-  LOG(2, "Leaving...");
       }
-  LOG(2, "Leaving...");
       break;
-  LOG(2, "Leaving...");
     }
 
     case RotationType::ON_ITS_OWN_CENTER:
     {
-  LOG(2, "Leaving...");
       this->_rotation_on_center(transformation_data, index, center);
-  LOG(2, "Leaving...");
       break;
-  LOG(2, "Leaving...");
     }
 
     case RotationType::ON_GIVEN_COORDINATE:
     {
-  LOG(2, "Leaving...");
       this->_rotation_on_coordinate(transformation_data, index, center);
-  LOG(2, "Leaving...");
       break;
-  LOG(2, "Leaving...");
     }
 
     default:
@@ -258,7 +217,6 @@ void Transformation::_set_rotation_data(TransformationData* transformation_data,
       LOG(1, "ERROR! Invalid RotationType used: %d", transformation_data->rotation_type);
     }
   }
-  LOG(2, "Leaving...");
 }
 
 void Transformation::_rotation_on_center(TransformationData* transformation_data, unsigned int &index, Coordinate &center)
@@ -290,7 +248,6 @@ void Transformation::_rotation_on_center(TransformationData* transformation_data
   move_to_center[2][2] = center.getz();
 
   this->_transformation.multiply(move_to_center);
-  LOG(2, "Leaving...");
 }
 
 
