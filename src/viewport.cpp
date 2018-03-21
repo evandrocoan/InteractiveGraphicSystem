@@ -12,21 +12,29 @@ ViewPort::ViewPort() :
 
 void ViewPort::apply(std::string object_name, Transformation &transformation)
 {
+  LOG(2, "Leaving...");
   if( this->displayFile.isObjectOnByName(object_name) )
   {
+  LOG(2, "Leaving...");
     if( transformation.size() )
     {
+  LOG(2, "Leaving...");
       this->displayFile.apply(object_name, transformation);
+  LOG(2, "Leaving...");
     }
     else
     {
+  LOG(2, "Leaving...");
       LOG(4, "There are no transformations available to be applied on your object: `%s` %s", object_name, transformation);
     }
   }
   else
   {
+  LOG(2, "Leaving...");
     LOG(4, "No object was found within the name: `%s`", object_name);
+  LOG(2, "Leaving...");
   }
+  LOG(2, "Leaving...");
 }
 
 /**

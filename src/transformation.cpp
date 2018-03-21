@@ -105,34 +105,48 @@ void Transformation::set_geometric_center(Coordinate &center = _default_coordina
 {
   LOG(4, "Center on %s - %s", center, *this);
   unsigned int index = 0;
+  LOG(2, "Leaving...");
 
   for( auto transformation_data : this->transformations )
   {
+  LOG(2, "Leaving...");
     switch( transformation_data->type )
     {
+  LOG(2, "Leaving...");
       case TransformationType::TRANSLATION:
       {
+  LOG(2, "Leaving...");
         if( index == 0 )
         {
+  LOG(2, "Leaving...");
           this->_transformation = transformation_data->matrix;
+  LOG(2, "Leaving...");
         }
         else
         {
+  LOG(2, "Leaving...");
           this->_transformation.multiply(transformation_data->matrix);
+  LOG(2, "Leaving...");
         }
+  LOG(2, "Leaving...");
         // LOG(4, "_transformation.multiply: %s", this->_transformation);
         break;
+  LOG(2, "Leaving...");
       }
 
       case TransformationType::SCALING:
       {
+  LOG(2, "Leaving...");
         this->_set_scaling_data(transformation_data, index, center);
+  LOG(2, "Leaving...");
         break;
       }
 
       case TransformationType::ROTATION:
       {
+  LOG(2, "Leaving...");
         this->_set_rotation_data(transformation_data, index, center);
+  LOG(2, "Leaving...");
         break;
       }
 
@@ -143,9 +157,12 @@ void Transformation::set_geometric_center(Coordinate &center = _default_coordina
         LOG(1, "ERROR! Invalid TransformationData type used: %d", transformation_data->type);
       }
     }
+  LOG(2, "Leaving...");
 
     index++;
+  LOG(2, "Leaving...");
   }
+  LOG(2, "Leaving...");
 }
 
 void Transformation::_set_scaling_data(TransformationData* transformation_data, unsigned int &index, Coordinate &center)
@@ -248,6 +265,7 @@ void Transformation::_rotation_on_center(TransformationData* transformation_data
   move_to_center[3][2] = center.getz();
 
   this->_transformation.multiply(move_to_center);
+  LOG(2, "Leaving...");
 }
 
 

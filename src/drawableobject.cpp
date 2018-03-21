@@ -72,14 +72,23 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
 
 void DrawableObject::apply(Transformation &transformation)
 {
+  LOG(2, "Leaving...");
   auto coordinates = this->getCoordinates();
+  LOG(2, "Leaving...");
   auto geometric_center = this->get_geometric_center();
 
+  LOG(2, "Leaving...");
   transformation.set_geometric_center(*geometric_center);
+  LOG(2, "Leaving...");
   delete geometric_center;
+  LOG(2, "Leaving...");
 
   for(auto coordinate : coordinates)
   {
+  LOG(2, "Leaving...");
     transformation.apply(*coordinate);
+  LOG(2, "Leaving...");
   }
+
+  LOG(2, "Leaving...");
 }
