@@ -57,8 +57,10 @@ struct Matrix
    * @param  line the current line you want to access
    * @return      a pointer to the current line
    */
-  matrix_datatype* operator[](int line)
+  matrix_datatype* operator[](unsigned int line)
   {
+    assert(line < matrix_height);
+    assert(line > -1);
     return this->_data[line];
   }
 
