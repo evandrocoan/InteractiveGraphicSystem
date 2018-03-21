@@ -1,20 +1,20 @@
 #include "mainwindow.h"
 
 MainWindow::MainWindow() :
-      main_box(Gtk::ORIENTATION_HORIZONTAL),
-      left_box(Gtk::ORIENTATION_VERTICAL),
-      right_frame("ViewPort"),
-      button_add_object("Add Object"),
+      addObject(this->viewPort),
+      addTransformation(this->viewPort),
       button_move_up("up"),
       button_move_down("down"),
       button_move_left("left"),
       button_move_right("right"),
       button_zoom_in("+"),
       button_zoom_out("-"),
+      button_add_object("Add Object"),
       button_delete_object("Delete Object"),
-      button_add_transformation("Add Transformation"),
-      addObject(this->viewPort),
-      addTransformation(this->viewPort)
+      main_box(Gtk::ORIENTATION_HORIZONTAL),
+      left_box(Gtk::ORIENTATION_VERTICAL),
+      left_frame("Controllers"),
+      right_frame("ViewPort")
 {
   LOG(2, "Entering...");
   this->main_box.pack_start(left_frame, Gtk::PACK_SHRINK, 10);
@@ -67,7 +67,6 @@ void MainWindow::setupButtons()
   grid_list_obj.attach(button_add_object, 1, 1, 1, 1);
   grid_list_obj.attach(objects_list, 1, 2, 1, 1);
   grid_list_obj.attach(button_delete_object, 1, 3, 1, 1);
-  grid_list_obj.attach(button_add_transformation, 1, 4, 1, 1);
 
   LOG(4, "Adicionando os botões de movimentações na grade de movimentação");
   grid_move.set_column_homogeneous(true);

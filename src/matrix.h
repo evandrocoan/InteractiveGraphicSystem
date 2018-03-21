@@ -78,9 +78,9 @@ struct Matrix
 
   void multiply(Matrix &matrix)
   {
-    int line;
-    int column;
-    int step;
+    unsigned int line;
+    unsigned int column;
+    unsigned int step;
     matrix_datatype old_matrix[matrix_height][matrix_width];
 
     for(line = 0; line < matrix_height; line++)

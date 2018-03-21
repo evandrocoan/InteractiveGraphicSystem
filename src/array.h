@@ -82,8 +82,8 @@ struct Array
 
   void multiply(Matrix<array_width, array_width, array_datatype> &matrix)
   {
-    int column;
-    int step;
+    unsigned int column;
+    unsigned int step;
 
     array_datatype old_array[array_width];
 
