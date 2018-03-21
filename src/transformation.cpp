@@ -276,9 +276,9 @@ void Transformation::_rotation_on_coordinate(TransformationData &transformation_
   this->_transformation.multiply(transformation_data.matrix);
 
   // Move back to its origin
-  move_to_center[3][0] = rotation_center.getx();
-  move_to_center[3][1] = rotation_center.gety();
-  move_to_center[3][2] = rotation_center.getz();
+  move_to_center[2][0] = rotation_center.getx();
+  move_to_center[2][1] = rotation_center.gety();
+  move_to_center[2][2] = rotation_center.getz();
 
   this->_transformation.multiply(move_to_center);
 }
