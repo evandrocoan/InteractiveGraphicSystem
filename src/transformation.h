@@ -42,7 +42,7 @@ public:
 
   static inline GTKMM_APP_MATRICES_DATATYPE convert_degrees_to_radians(GTKMM_APP_MATRICES_DATATYPE degrees);
 
-  std::vector<TransformationData>& getTransformations();
+  std::vector<TransformationData*> getTransformations();
   friend std::ostream& operator<<(std::ostream &output, const Transformation &object);
 
   /**
@@ -66,7 +66,7 @@ protected:
    * Therefore, this variable is only set within the minimum required information to build the final
    * transformation matrix. This happens right after the `set_geometric_center()` method is called on.
    */
-  std::vector<TransformationData> transformations;
+  std::vector<TransformationData*> transformations;
 
   /**
    * These values are set after calling `set_geometric_center()`. They will be the values used
@@ -74,10 +74,10 @@ protected:
    */
   MatrixForm _transformation;
 
-  void _set_scaling_data      (TransformationData&, unsigned int &index, Coordinate &center);
-  void _set_rotation_data     (TransformationData&, unsigned int &index, Coordinate &center);
-  void _rotation_on_center    (TransformationData&, unsigned int &index, Coordinate &center);
-  void _rotation_on_coordinate(TransformationData&, unsigned int &index, Coordinate &center);
+  void _set_scaling_data      (TransformationData*, unsigned int &index, Coordinate &center);
+  void _set_rotation_data     (TransformationData*, unsigned int &index, Coordinate &center);
+  void _rotation_on_center    (TransformationData*, unsigned int &index, Coordinate &center);
+  void _rotation_on_coordinate(TransformationData*, unsigned int &index, Coordinate &center);
 };
 
 #endif // GTKMM_APP_TRANSFORMATION
