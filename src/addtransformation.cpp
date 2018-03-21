@@ -183,11 +183,8 @@ void AddTransformation::on_button_remove_transformation()
 
 void AddTransformation::on_button_apply()
 {
-  LOG(2, "Leaving...");
   this->viewPort.apply(this->object_name, this->transformation);
-  LOG(2, "Leaving...");
   this->viewPort.queue_draw();
-  LOG(2, "Leaving...");
 }
 
 void AddTransformation::on_own_center_rotation_button()
