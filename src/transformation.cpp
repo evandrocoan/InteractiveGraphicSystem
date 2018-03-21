@@ -112,7 +112,6 @@ void Transformation::set_geometric_center(Coordinate &center = _default_coordina
   LOG(2, "Leaving...");
     switch( transformation_data->type )
     {
-  LOG(2, "Leaving...");
       case TransformationType::TRANSLATION:
       {
   LOG(2, "Leaving...");
