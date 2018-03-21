@@ -19,6 +19,9 @@
 class Transformation
 {
 public:
+  Transformation();
+  ~Transformation();
+
   void add_scaling(std::string name, Coordinate scale);
   void add_translation(std::string name, Coordinate movement);
 

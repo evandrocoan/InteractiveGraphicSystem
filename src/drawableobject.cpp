@@ -82,4 +82,5 @@ void DrawableObject::apply(Transformation &transformation)
   {
     transformation.apply(*coordinate);
   }
+
 }
