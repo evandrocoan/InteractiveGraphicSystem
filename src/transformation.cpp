@@ -1,5 +1,14 @@
 #include "transformation.h"
 
+Transformation::Transformation() :
+    _transformation{}
+{
+}
+
+Transformation::~Transformation()
+{
+}
+
 void Transformation::apply(Coordinate &point)
 {
   LOG(4, "Applying transformation %s on %s", this->_transformation, point);
@@ -141,6 +150,7 @@ void Transformation::set_geometric_center(Coordinate &center = _default_coordina
 
 void Transformation::_set_scaling_data(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
 {
+  LOG(2, "Entering...");
   MatrixForm move_to_center
   {
     {1             ,  0            ,              0},
@@ -161,15 +171,17 @@ void Transformation::_set_scaling_data(TransformationData &transformation_data, 
   this->_transformation.multiply(transformation_data.matrix);
 
   // Move back to its origin
-  move_to_center[3][0] = center.getx();
-  move_to_center[3][1] = center.gety();
-  move_to_center[3][2] = center.getz();
+  move_to_center[2][0] = center.getx();
+  move_to_center[2][1] = center.gety();
+  move_to_center[2][2] = center.getz();
 
   this->_transformation.multiply(move_to_center);
 }
 
 void Transformation::_set_rotation_data(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
 {
+  LOG(2, "Entering...");
+
   switch(transformation_data.rotation_type)
   {
     case RotationType::ON_WORLD_CENTER:
@@ -209,6 +221,8 @@ void Transformation::_set_rotation_data(TransformationData &transformation_data,
 
 void Transformation::_rotation_on_center(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
 {
+  LOG(2, "Entering...");
+
   MatrixForm move_to_center
   {
     {1             ,  0            ,              0},
@@ -229,9 +243,9 @@ void Transformation::_rotation_on_center(TransformationData &transformation_data
   this->_transformation.multiply(transformation_data.matrix);
 
   // Move back to its origin
-  move_to_center[3][0] = center.getx();
-  move_to_center[3][1] = center.gety();
-  move_to_center[3][2] = center.getz();
+  move_to_center[2][0] = center.getx();
+  move_to_center[2][1] = center.gety();
+  move_to_center[2][2] = center.getz();
 
   this->_transformation.multiply(move_to_center);
 }
@@ -239,6 +253,7 @@ void Transformation::_rotation_on_center(TransformationData &transformation_data
 
 void Transformation::_rotation_on_coordinate(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
 {
+  LOG(2, "Entering...");
   auto rotation_center = transformation_data.rotation_center;
 
   MatrixForm move_to_center

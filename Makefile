@@ -17,7 +17,9 @@ DEPEXT:= d
 BUILDDIR:= objects
 TARGETDIR:= binaries
 
-CFLAGS := -O0 -g -std=c++11
+# Stack smashing detected
+# https://stackoverflow.com/questions/1345670/stack-smashing-detected
+CFLAGS := -O0 -g -Wall -std=c++11 -fstack-protector
 # CFLAGS := -Wall -O3 -g -std=c++11
 
 LIBS := `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
@@ -91,7 +93,7 @@ ifeq ($J,)
 		  FIND_EXEC := /usr/bin/find
 		else
 		  NPROCS := $(shell grep -c ^processor /proc/cpuinfo)
-		  FIND_EXEC := /bin/find
+		  FIND_EXEC := /usr/bin/find
 		endif
 	endif
 else
