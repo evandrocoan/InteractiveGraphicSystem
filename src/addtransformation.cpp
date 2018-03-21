@@ -165,8 +165,8 @@ void AddTransformation::_update_transmations_list()
 
   for( auto transformation_data : this->transformation.getTransformations() )
   {
-    guint row_number = m_ListViewText.append(transformation_data.name);
-    m_ListViewText.set_text(row_number, 0, transformation_data.name);
+    guint row_number = m_ListViewText.append(transformation_data->name);
+    m_ListViewText.set_text(row_number, 0, transformation_data->name);
   }
 }
 
