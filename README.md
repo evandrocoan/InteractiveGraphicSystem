@@ -134,7 +134,7 @@ cd glibmm; checkout 2.54.1; cd -
 To know you installed versions of these libraries, you can run the commands:
 ```
 pkg-config --modversion gtk+-3.0
-pkg-config --modversion gtkmm-2.4
+pkg-config --modversion gtkmm-3.0
 pkg-config --modversion glibmm-2.4
 ```
 
