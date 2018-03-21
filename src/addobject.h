@@ -29,8 +29,8 @@ private:
   ViewPort &viewPort;
   Gtk::Window window;
 
-  Gtk::Box       m_vbox;
-  Gtk::Notebook  m_notebook;
+  Gtk::Box      m_vbox;
+  Gtk::Notebook m_notebook;
 
   std::string            new_object_name;
   std::list<Coordinate*> polygon_coord_list;

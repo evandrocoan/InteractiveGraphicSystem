@@ -1,16 +1,16 @@
 #include "addtransformation.h"
 
 AddTransformation::AddTransformation(ViewPort &viewPort) :
-      m_vbox(Gtk::ORIENTATION_VERTICAL),
-      viewPort(viewPort),
-      m_ListViewText(1),
       rotation_type(RotationType::ON_ITS_OWN_CENTER),
+      viewPort(viewPort),
       m_rb1("WC"),
       m_rb2("GC"),
       m_rb3("AP"),
+      m_vbox(Gtk::ORIENTATION_VERTICAL),
+      m_ListViewText(1),
+      button_apply("Apply"),
       button_save_transformation("Save"),
-      button_remove_transformation("Del"),
-      button_apply("Apply")
+      button_remove_transformation("Del")
 {
   LOG(2, "Entering...");
   m_rb1.set_active();

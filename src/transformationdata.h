@@ -63,10 +63,10 @@ struct TransformationData
           RotationType rotation_type = RotationType::ON_WORLD_CENTER,
           Coordinate rotation_center = _default_coordinate_value_parameter) :
       name(name),
-      type(type),
       matrix(matrix),
-      rotation_type(rotation_type),
-      rotation_center{rotation_center}
+      type(type),
+      rotation_center{rotation_center},
+      rotation_type(rotation_type)
   {
   }
 
