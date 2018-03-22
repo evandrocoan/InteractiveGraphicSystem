@@ -62,9 +62,9 @@ protected:
   void on_button_save_transformation();
   void on_button_remove_transformation();
 
-  void on_world_rotation_button();
-  void on_own_center_rotation_button();
-  void on_given_coordinate_rotation_button();
+  void rotation_on_world_center_button();
+  void rotation_on_own_center_button();
+  void rotation_on_given_coordinate_button();
 
   void create_action_tabs();
   void create_scrolling_items_list();

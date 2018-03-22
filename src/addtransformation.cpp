@@ -1,7 +1,6 @@
 #include "addtransformation.h"
 
 AddTransformation::AddTransformation(ViewPort &viewPort) :
-      rotation_type(RotationType::ON_ITS_OWN_CENTER),
       viewPort(viewPort),
       m_rb1("WC"),
       m_rb2("GC"),
@@ -13,6 +12,7 @@ AddTransformation::AddTransformation(ViewPort &viewPort) :
       button_remove_transformation("Del")
 {
   LOG(2, "Entering...");
+  this->rotation_on_world_center_button();
   m_rb1.set_active();
   m_rb2.join_group(m_rb1);
   m_rb3.join_group(m_rb1);
@@ -48,9 +48,9 @@ AddTransformation::AddTransformation(ViewPort &viewPort) :
   button_apply.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_apply) );
   button_save_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_save_transformation) );
   button_remove_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_remove_transformation) );
-  m_rb1.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_world_rotation_button) );
-  m_rb2.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_own_center_rotation_button) );
-  m_rb3.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_given_coordinate_rotation_button) );
+  m_rb1.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::rotation_on_world_center_button) );
+  m_rb2.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::rotation_on_own_center_button) );
+  m_rb3.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::rotation_on_given_coordinate_button) );
 
   this->create_action_tabs();
   this->create_scrolling_items_list();
@@ -187,17 +187,17 @@ void AddTransformation::on_button_apply()
   this->viewPort.queue_draw();
 }
 
-void AddTransformation::on_own_center_rotation_button()
+void AddTransformation::rotation_on_own_center_button()
 {
   this->rotation_type = RotationType::ON_ITS_OWN_CENTER;
 }
 
-void AddTransformation::on_world_rotation_button()
+void AddTransformation::rotation_on_world_center_button()
 {
   this->rotation_type = RotationType::ON_WORLD_CENTER;
 }
 
-void AddTransformation::on_given_coordinate_rotation_button()
+void AddTransformation::rotation_on_given_coordinate_button()
 {
   this->rotation_type = RotationType::ON_GIVEN_COORDINATE;
 }
