@@ -85,27 +85,28 @@ make
 
 Build output example:
 ```
-$ make all
-Current time: Tue, Mar 20, 2018 16:45:59
-make binaries/main.exe -j4
-make[1]: Entering directory '/d/User/Dropbox/SoftwareVersioning/ComputerScienceGraduation/GraphicsComputing/Trabalho01CG'
-g++ -O0 -g -std=c++11 -I. -c -o objects/addobject.o src/addobject.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/addtransformation.o src/addtransformation.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/debugger.o src/debugger.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/coordinate.o src/coordinate.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/displayfile.o src/displayfile.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/drawableobject.o src/drawableobject.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/line.o src/line.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/main.o src/main.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/mainwindow.o src/mainwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/point.o src/point.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/polygon.o src/polygon.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/transformation.o src/transformation.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/viewport.o src/viewport.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -I. -c -o objects/viewwindow.o src/viewwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-g++ -O0 -g -std=c++11 -o binaries/main.exe objects/addobject.o objects/addtransformation.o objects/coordinate.o objects/debugger.o objects/displayfile.o objects/drawableobject.o objects/line.o objects/main.o objects/mainwindow.o objects/point.o objects/polygon.o objects/transformation.o objects/viewport.o objects/viewwindow.o `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
-make[1]: Leaving directory '/d/User/Dropbox/SoftwareVersioning/ComputerScienceGraduation/GraphicsComputing/Trabalho01CG'
-Took '0:00:01:36' seconds to run the script, 16:47:36.
+$ make run
+make binaries/main -j4
+make[1]: Entering directory '/home/user/graphics_project'
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/addobject.o src/addobject.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/addtransformation.o src/addtransformation.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/coordinate.o src/coordinate.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/debugger.o src/debugger.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/displayfile.o src/displayfile.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/drawableobject.o src/drawableobject.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/line.o src/line.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/main.o src/main.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/mainwindow.o src/mainwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/point.o src/point.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/polygon.o src/polygon.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/transformation.o src/transformation.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/viewport.o src/viewport.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -I. -c -o objects/viewwindow.o src/viewwindow.cpp `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+g++ -O0 -g -Wall -std=c++11 -fstack-protector -o binaries/main.exe objects/addobject.o objects/addtransformation.o objects/coordinate.o objects/debugger.o objects/displayfile.o objects/drawableobject.o objects/line.o objects/main.o objects/mainwindow.o objects/point.o objects/polygon.o objects/transformation.o objects/viewport.o objects/viewwindow.o `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+make[1]: Leaving directory '/home/user/graphics_project'
+Took '0:00:02:00' seconds to run the script, 00:27:20.
+./binaries/main
+00:27:21:018:927 0.000e+000 0.000e+000 src/main.cpp|main:17 Starting the main application...
 ```
 
 
