@@ -22,7 +22,7 @@ TARGETDIR:= binaries
 CFLAGS := -O0 -g -Wall -std=c++11 -fstack-protector
 # CFLAGS := -Wall -O3 -g -std=c++11
 
-LIBS := `pkg-config --cflags --libs gtkmm-3.0`
+LIBS := `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
 FIND_EXCLUSIONS := \( ! -name "*test.cpp" \)
 
 INC := -I.
@@ -122,7 +122,7 @@ all:
 
 # GNU Make silent by default
 # https://stackoverflow.com/questions/24005166/gnu-make-silent-by-default
-# .SILENT: start_timer print_elapsed_time
+.SILENT: start_timer print_elapsed_time
 
 # Start counting the elapsed seconds to print them to the screen later
 start_timer:
@@ -189,6 +189,9 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@sed -e 's/.*://' -e 's/\\$$//' < $(BUILDDIR)/$*.$(DEPEXT).tmp | fmt -1 | sed -e 's/^ *//' -e 's/$$/:/' >> $(BUILDDIR)/$*.$(DEPEXT)
 	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
 
+
+hugo:
+	g++ src/*.cpp -o helloworld_gtkmm `pkg-config gtkmm-3.0 --cflags --libs` -std=c++11
 
 
 
