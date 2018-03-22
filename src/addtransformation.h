@@ -39,9 +39,9 @@ protected:
   Gtk::Entry main_value_field_b;
   Gtk::Entry main_value_field_c;
 
-  Gtk::RadioButton m_rb1;
-  Gtk::RadioButton m_rb2;
-  Gtk::RadioButton m_rb3;
+  Gtk::RadioButton m_radiobutton_world_center;
+  Gtk::RadioButton m_radiobutton_geometric_center;
+  Gtk::RadioButton m_radiobutton_any_point;
 
   Gtk::Box      m_vbox;
   Gtk::Notebook m_notebook;
