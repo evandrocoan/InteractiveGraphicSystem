@@ -4,18 +4,21 @@
 #include <cassert>
 #include <iostream>
 
+#include "array.h"
+
 /**
  * C++ Matrix Class
  * https://stackoverflow.com/questions/2076624/c-matrix-class
+ *
+ * A proper way to create a matrix in c++
+ * https://stackoverflow.com/questions/618511/a-proper-way-to-create-a-matrix-in-c
  *
  * error: incompatible types in assignment of 'long int (*)[4]' to 'long int [4][4]'
  * https://stackoverflow.com/questions/49312484/error-incompatible-types-in-assignment-of-long-int-4-to-long-int
  */
 template <unsigned int matrix_width=3, unsigned int matrix_height=3, typename matrix_datatype=long int>
-struct Matrix
+struct Matrix : public Array< matrix_height, Array< matrix_width, matrix_datatype > >
 {
-  matrix_datatype _data[matrix_height][matrix_width];
-
   Matrix()
   {
   }
@@ -48,20 +51,6 @@ struct Matrix
 
       line_index++;
     }
-  }
-
-  /**
-   * Overloads the `[]` array access operator, allowing you to access this class objects as the
-   * where usual `C` arrays.
-   *
-   * @param  line the current line you want to access
-   * @return      a pointer to the current line
-   */
-  matrix_datatype* operator[](unsigned int line)
-  {
-    assert(line < matrix_height);
-    assert(line > -1);
-    return this->_data[line];
   }
 
   void clear(matrix_datatype initial=0)

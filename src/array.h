@@ -1,28 +1,25 @@
 #ifndef GTKMM_APP_ARRAY_H
 #define GTKMM_APP_ARRAY_H
 
+#include <array>
 #include <cassert>
 #include <iostream>
 
-/**
- * The Array<> type includes the Matrix<> type, because you can multiply a `Array` by an `Matrix`,
- * but not a vice-versa.
- */
-#include "matrix.h"
 #include "stacktrace.h"
 
-/**
- * C++ Matrix Class
- * https://stackoverflow.com/questions/2076624/c-matrix-class
- *
- * error: incompatible types in assignment of 'long int (*)[4]' to 'long int [4][4]'
- * https://stackoverflow.com/questions/49312484/error-incompatible-types-in-assignment-of-long-int-4-to-long-int
- */
 template <unsigned int array_width, typename array_datatype=long int>
 struct Array
 {
-  array_datatype _data[array_width];
+  /**
+   * Is it okay to inherit implementation from STL containers, rather than delegate?
+   * https://stackoverflow.com/questions/2034916/is-it-okay-to-inherit-implementation-from-stl-containers-rather-than-delegate
+   */
+  std::array<array_datatype, array_width> _data;
 
+  /**
+   * std::array constructor inheritance
+   * https://stackoverflow.com/questions/24280521/stdarray-constructor-inheritance
+   */
   Array()
   {
   }
@@ -62,13 +59,30 @@ struct Array
    * Overloads the `[]` array access operator, allowing you to access this class objects as the
    * where usual `C` arrays.
    *
+   * How to implement bound checking for std::array?
+   * https://stackoverflow.com/questions/49419089/how-to-implement-bound-checking-for-stdarray
+   *
    * @param  line the current line you want to access
    * @return      a pointer to the current line
    */
-  array_datatype operator[](unsigned int line)
+  array_datatype operator[](unsigned int line)&&
   {
     assert(line < array_width);
-    assert(line > -1);
+    assert(line >= 0);
+    return this->_data[line];
+  }
+
+  array_datatype const& operator[](unsigned int line)const&
+  {
+    assert(line < array_width);
+    assert(line >= 0);
+    return this->_data[line];
+  }
+
+  array_datatype& operator[](unsigned int line)&
+  {
+    assert(line < array_width);
+    assert(line >= 0);
     return this->_data[line];
   }
 
@@ -82,7 +96,11 @@ struct Array
     }
   }
 
-  void multiply(Matrix<array_width, array_width, array_datatype> &matrix)
+  /**
+   * The Array<> type includes the Matrix<> type, because you can multiply a `Array` by an `Matrix`,
+   * but not a vice-versa.
+   */
+  void multiply(Array< array_width, Array< array_width, array_datatype > > &matrix)
   {
     unsigned int column;
     unsigned int step;
@@ -107,16 +125,16 @@ struct Array
   }
 
   /**
-   * Prints a more beauty version of the matrix when called on `std::cout<< matrix << std::end;`
+   * Prints a more beauty version of the array when called on `std::cout<< array << std::end;`
    */
-  friend std::ostream& operator<<( std::ostream &output, const Array &matrix )
+  friend std::ostream& operator<<( std::ostream &output, const Array &array )
   {
     unsigned int column;
     output << "{";
 
     for( column=0; column < array_width; column++ )
     {
-      output << matrix._data[column];
+      output << array._data[column];
 
       if( column != array_width-1 )
       {
