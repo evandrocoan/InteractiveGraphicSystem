@@ -2,9 +2,9 @@
 
 AddTransformation::AddTransformation(ViewPort &viewPort) :
       viewPort(viewPort),
-      m_rb1("WC"),
-      m_rb2("GC"),
-      m_rb3("AP"),
+      m_radiobutton_world_center("WC"),
+      m_radiobutton_geometric_center("GC"),
+      m_radiobutton_any_point("AP"),
       m_vbox(Gtk::ORIENTATION_VERTICAL),
       m_ListViewText(1),
       button_apply("Apply"),
@@ -13,9 +13,9 @@ AddTransformation::AddTransformation(ViewPort &viewPort) :
 {
   LOG(2, "Entering...");
   this->rotation_on_world_center_button();
-  m_rb1.set_active();
-  m_rb2.join_group(m_rb1);
-  m_rb3.join_group(m_rb1);
+  m_radiobutton_world_center.set_active();
+  m_radiobutton_geometric_center.join_group(m_radiobutton_world_center);
+  m_radiobutton_any_point.join_group(m_radiobutton_world_center);
 
   x_rotation_field.set_text("15");
   x_rotation_field.set_placeholder_text("Name");
@@ -38,9 +38,9 @@ AddTransformation::AddTransformation(ViewPort &viewPort) :
   rotation_grid.set_column_homogeneous(true);
   rotation_grid.set_row_spacing(10);
   rotation_grid.attach(x_rotation_field, 1, 1, 3, 1);
-  rotation_grid.attach(m_rb1, 1, 2, 1, 1);
-  rotation_grid.attach(m_rb2, 2, 2, 1, 1);
-  rotation_grid.attach(m_rb3, 3, 2, 1, 1);
+  rotation_grid.attach(m_radiobutton_world_center, 1, 2, 1, 1);
+  rotation_grid.attach(m_radiobutton_geometric_center, 2, 2, 1, 1);
+  rotation_grid.attach(m_radiobutton_any_point, 3, 2, 1, 1);
 
   scaling_grid.set_column_homogeneous(true);
   scaling_grid.set_row_spacing(10);
@@ -48,9 +48,9 @@ AddTransformation::AddTransformation(ViewPort &viewPort) :
   button_apply.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_apply) );
   button_save_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_save_transformation) );
   button_remove_transformation.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::on_button_remove_transformation) );
-  m_rb1.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::rotation_on_world_center_button) );
-  m_rb2.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::rotation_on_own_center_button) );
-  m_rb3.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::rotation_on_given_coordinate_button) );
+  m_radiobutton_world_center.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::rotation_on_world_center_button) );
+  m_radiobutton_geometric_center.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::rotation_on_own_center_button) );
+  m_radiobutton_any_point.signal_clicked().connect( sigc::mem_fun(*this, &AddTransformation::rotation_on_given_coordinate_button) );
 
   this->create_action_tabs();
   this->create_scrolling_items_list();
