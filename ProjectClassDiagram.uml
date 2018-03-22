@@ -24,7 +24,6 @@
 
   ViewPort *-- ViewWindow                  : viewWindow
   ViewPort *-down- DisplayFile             : displayFile
-  ViewPort *-right- "Signal<>"             : observerController
 
   class AddObject {
     Gtk::Grid              point_grid
@@ -106,10 +105,11 @@
   }
 
   class ViewPort {
-    int Xvpmin
-    int Yvpmin
-    int Xvpmax
-    int Yvpmax
+    int      Xvpmin
+    int      Yvpmin
+    int      Xvpmax
+    int      Yvpmax
+    Signal<> observerController
     bool on_draw(const Cairo::Context>&)
     void updateViewport(Gtk::Allocation&)
 
