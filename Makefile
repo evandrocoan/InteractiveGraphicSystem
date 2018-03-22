@@ -190,8 +190,9 @@ $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@rm -f $(BUILDDIR)/$*.$(DEPEXT).tmp
 
 
-hugo:
-	g++ src/*.cpp -o helloworld_gtkmm `pkg-config gtkmm-3.0 --cflags --libs` -std=c++11
+hugo: directories
+	g++ src/*.cpp -o $(FULL_TARGET) `pkg-config gtkmm-3.0 --cflags --libs` -std=c++11
+	./$(FULL_TARGET)
 
 
 
