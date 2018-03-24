@@ -68,6 +68,7 @@ protected:
 
   void setupButtons();
   void connectButtons();
+  void setDefaultTooltips();
 
   void on_button_move_up();
   void on_button_move_down();

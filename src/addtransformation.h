@@ -8,7 +8,6 @@
 #include <gtkmm/button.h>
 #include <gtkmm/entry.h>
 #include <gtkmm/label.h>
-#include <gtkmm/notebook.h>
 #include <gtkmm/box.h>
 #include <gtkmm/scrolledwindow.h>
 #include <gtkmm/listviewtext.h>
@@ -29,6 +28,7 @@ public:
   Gtk::Box& getBox();
   std::string object_name;
   RotationType rotation_type;
+  TransformationType transformation_type;
 
 protected:
   ViewPort &viewPort;
@@ -39,20 +39,19 @@ protected:
   Gtk::Entry main_value_field_b;
   Gtk::Entry main_value_field_c;
 
-  Gtk::RadioButton m_radiobutton_world_center;
-  Gtk::RadioButton m_radiobutton_geometric_center;
-  Gtk::RadioButton m_radiobutton_any_point;
+  Gtk::Box            main_vertical_box;
+  Gtk::ListViewText   list_view_text;
+  Gtk::ScrolledWindow scrolled_window;
 
-  Gtk::Box      m_vbox;
-  Gtk::Notebook m_notebook;
-
-  Gtk::ListViewText   m_ListViewText;
-  Gtk::ScrolledWindow m_ScrolledWindow;
-
-  Gtk::Grid rotation_grid;
-  Gtk::Grid scaling_grid;
-  Gtk::Grid translation_grid;
   Gtk::Grid coodinate_input_grid;
+
+  Gtk::RadioButton translation_radiobutton;
+  Gtk::RadioButton scaling_radiobutton;
+  Gtk::RadioButton rotation_radiobutton;
+
+  Gtk::RadioButton world_center_radiobutton;
+  Gtk::RadioButton geometric_center_radiobutton;
+  Gtk::RadioButton any_point_radiobutton;
 
   Gtk::Button button_apply;
   Gtk::Button button_save_transformation;
@@ -62,13 +61,20 @@ protected:
   void on_button_save_transformation();
   void on_button_remove_transformation();
 
-  void rotation_on_world_center_button();
-  void rotation_on_own_center_button();
-  void rotation_on_given_coordinate_button();
+  void on_translation_radiobutton();
+  void on_scaling_radiobutton();
+  void on_rotation_radiobutton();
+
+  void on_world_center_rotation_radiobutton();
+  void on_own_center_rotation_radiobutton();
+  void on_given_coordinate_rotation_radiobutton();
 
   void create_action_tabs();
   void create_scrolling_items_list();
+  void set_default_values_and_tooltips();
 
+  void _addThingsToTheWindow();
+  void _connectButtons();
   void _update_transmations_list();
 };
 #endif //GTKMM_APP_ADD_TRANSFORMATION_WINDOW
