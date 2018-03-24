@@ -54,8 +54,19 @@ Gtk::Window& MainWindow::getWindow()
 
 void MainWindow::setDefaultTooltips()
 {
-  button_add_object.set_tooltip_text("Add new object");
+  button_add_object   .set_tooltip_text("Add new object");
   button_delete_object.set_tooltip_text("Remove current selected object");
+  objects_list        .set_tooltip_text("The list of all created objects on the DrawingArea");
+
+  entry_move_length   .set_tooltip_text("How many pixels to move the ViewWindow");
+  entry_zoom_scale    .set_tooltip_text("A scaling factor as `1.1` or `0.9` to `zoom in` or `zoom out` the ViewWindow");
+  button_zoom_in      .set_tooltip_text("Apply the scaling factor to the ViewWindow over the Drawing World");
+  button_zoom_out     .set_tooltip_text("Apply inverted the scaling factor to the ViewWindow over the Drawing World");
+
+  button_move_up      .set_tooltip_text("Move the ViewWindow on the drawing area upwards");
+  button_move_down    .set_tooltip_text("Move the ViewWindow on the drawing area downwards");
+  button_move_left    .set_tooltip_text("Move the ViewWindow on the drawing area to the left");
+  button_move_right   .set_tooltip_text("Move the ViewWindow on the drawing area to the right");
 }
 
 void MainWindow::setupButtons()
