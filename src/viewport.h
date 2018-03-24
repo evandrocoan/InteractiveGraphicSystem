@@ -8,6 +8,7 @@
 #include <gdkmm/rgba.h>
 #include <cairomm/context.h>
 
+#include "polygon.h"
 #include "viewwindow.h"
 #include "displayfile.h"
 #include "subject_controller.h"
@@ -47,7 +48,9 @@ public:
 protected:
   ViewWindow  viewWindow;
   DisplayFile displayFile;
-  Signal<>    observerController;
+
+  Polygon  clippingWindow;
+  Signal<> observerController;
 
   bool isCentered;
 

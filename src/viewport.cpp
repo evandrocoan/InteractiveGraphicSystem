@@ -3,6 +3,7 @@
 ViewPort::ViewPort() :
       viewWindow(0, 0, 0, 0),
       displayFile(),
+      clippingWindow("Clipping Window", std::list<Coordinate*>{}),
       isCentered(false),
       xVpmin(0),
       yVpmin(0),
@@ -12,19 +13,33 @@ ViewPort::ViewPort() :
   this->signal_size_allocate().connect(sigc::mem_fun(*this, &ViewPort::on_my_size_allocate));
 }
 
+/**
+ * Move the X and Y axis to the center of the window when the program starts and recalculate the
+ * clipping window size when the window size changes.
+ *
+ * @param allocation [description]
+ */
 void ViewPort::on_my_size_allocate(Gtk::Allocation& allocation)
 {
+  const int width = this->get_width();
+  const int height = this->get_height();
+  LOG(4, "Current viewport size %sx%s", width, height);
+
   if( !isCentered )
   {
-    int width = this->get_width();
-    int height = this->get_height();
-
     this->isCentered = true;
-    LOG(4, "Moving ViewWindow (0, 0) to the window center (%s, %d)...", width, height);
+    LOG(4, "Moving ViewWindow (0, 0) to the window center...");
 
     this->move_down(480);
     this->move_left(500);
   }
+
+  this->clippingWindow.clearCoordinates();
+  this->clippingWindow.addCoordinate(new Coordinate(30        , 30         ));
+  this->clippingWindow.addCoordinate(new Coordinate(30        , height - 30));
+  this->clippingWindow.addCoordinate(new Coordinate(width - 30, height - 30));
+  this->clippingWindow.addCoordinate(new Coordinate(width - 30, 30         ));
+  this->clippingWindow.addCoordinate(new Coordinate(30        , 30         ));
 }
 
 void ViewPort::apply(std::string object_name, Transformation &transformation)
@@ -74,6 +89,15 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   cairo_context->line_to(this->xVpmax, originOnWorld.gety());
   cairo_context->move_to(originOnWorld.getx(), this->yVpmin);
   cairo_context->line_to(originOnWorld.getx(), this->yVpmax);
+  cairo_context->stroke();
+
+  // LOG(8, "Draw the clipping window with a red border")
+  cairo_context->set_source_rgb(0.99, 0.0, 0.0);
+
+  for (auto coordinate : this->clippingWindow.getCoordinates())
+  {
+    cairo_context->line_to(coordinate->getx(), coordinate->gety());
+  }
   cairo_context->stroke();
 
   // LOG(8, "Set color's objects as black:");
