@@ -35,8 +35,8 @@ public:
   Gtk::Window& getWindow();
 
 protected:
-  Gtk::ComboBoxText objects_list;
   Gtk::Window       window;
+  Gtk::ComboBoxText objects_list;
 
   ViewPort          viewPort;
   AddObject         addObject;
