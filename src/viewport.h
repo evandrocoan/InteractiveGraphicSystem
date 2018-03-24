@@ -3,6 +3,7 @@
 
 #include <list>
 #include <string>
+#include <iomanip>
 
 #include <gtkmm/drawingarea.h>
 #include <gdkmm/rgba.h>
@@ -44,6 +45,8 @@ public:
 
   Coordinate convertCoordinateFromWindow(Coordinate&);
   Signal<>::Connection addObserver(const Signal<>::Callback&);
+
+  friend std::ostream& operator<<(std::ostream &output, const ViewPort &object);
 
 protected:
   ViewWindow  viewWindow;

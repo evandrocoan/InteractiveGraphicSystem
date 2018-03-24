@@ -14,6 +14,17 @@ ViewPort::ViewPort() :
 }
 
 /**
+ * Prints a beauty version of the viewWindow when called on `std::cout<< viewWindow << std::end;`
+ */
+std::ostream& operator<<( std::ostream &output, const ViewPort &object )
+{
+  output << "ViewPort"
+      << "(" << std::setw(4) << object.xVpmin << ", " << std::setw(4) << object.yVpmin << ")"
+      << "(" << std::setw(4) << object.xVpmax << ", " << std::setw(4) << object.yVpmax << ")";
+  return output;
+}
+
+/**
  * Move the X and Y axis to the center of the window when the program starts and recalculate the
  * clipping window size when the window size changes.
  *
@@ -84,7 +95,7 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   Coordinate originOnWindow(0, 0);
   Coordinate originOnWorld = convertCoordinateFromWindow(originOnWindow);
 
-  LOG(8, "Draw x and y axis: %s", originOnWorld);
+  // LOG(8, "Draw x and y axis: %s", originOnWorld);
   cairo_context->move_to(this->xVpmin, originOnWorld.gety());
   cairo_context->line_to(this->xVpmax, originOnWorld.gety());
   cairo_context->move_to(originOnWorld.getx(), this->yVpmin);
@@ -98,9 +109,9 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   {
     cairo_context->line_to(coordinate->getx(), coordinate->gety());
   }
-  cairo_context->stroke();
 
   // LOG(8, "Set color's objects as black:");
+  cairo_context->stroke();
   cairo_context->set_source_rgb(0, 0, 0);
 
   // LOG(8, "Draw displayFile objects");
@@ -185,8 +196,10 @@ Coordinate ViewPort::convertCoordinateFromWindow(Coordinate &coord)
  */
 void ViewPort::updateViewport(Gtk::Allocation &allocation)
 {
+  LOG(8, "Entering: %s; %s", *this, this->viewWindow);
+
   // NÃO ENTENDI A LÓGICA MATEMÁTICA
-  if (this->xVpmax != allocation.get_width() ||  this->yVpmax != allocation.get_height())
+  if (this->xVpmax != allocation.get_width() || this->yVpmax != allocation.get_height())
   {
     float xWmax;
 
@@ -218,13 +231,13 @@ void ViewPort::updateViewport(Gtk::Allocation &allocation)
     }
     else
     {
-      LOG(8, "If we exchange this to `setYwmin()` our world becomes up-side-down");
+      // LOG(8, "If we exchange this to `viewWindow.yWmin` our world becomes up-side-down");
       this->viewWindow.yWmax = (float)heightDiff;
     }
 
     this->xVpmax += widthDiff;
     this->yVpmax += heightDiff;
-    LOG(8, "xVpmax: %d, yVpmax: %d", xVpmax, yVpmax);
+    LOG(8, "Leaving:  %s; %s", *this, this->viewWindow);
   }
 }
 
