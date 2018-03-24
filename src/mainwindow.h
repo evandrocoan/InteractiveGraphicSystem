@@ -14,7 +14,7 @@
 #include <gtkmm/grid.h>
 #include <glibmm/refptr.h>
 
-#include "viewport.h"
+#include "drawingarea.h"
 #include "debugger.h"
 #include "viewwindow.h"
 #include "addobject.h"
@@ -37,7 +37,7 @@ protected:
   Gtk::Window       window;
   Gtk::ComboBoxText objects_list;
 
-  ViewPort          viewPort;
+  DrawingArea       drawingArea;
   AddObject         addObject;
   AddTransformation addTransformation;
 

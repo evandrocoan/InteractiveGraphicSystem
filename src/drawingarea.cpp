@@ -1,26 +1,22 @@
-#include "viewport.h"
+#include "drawingarea.h"
 
-ViewPort::ViewPort() :
-      viewWindow(0, 0, 0, 0),
-      displayFile(),
-      clippingWindow("Clipping Window", std::list<Coordinate*>{}),
+DrawingArea::DrawingArea() :
+      viewPort(),
+      viewWindow(),
       isCentered(false),
-      xVpmin(0),
-      yVpmin(0),
-      xVpmax(0),
-      yVpmax(0)
+      displayFile()
 {
-  this->signal_size_allocate().connect(sigc::mem_fun(*this, &ViewPort::on_my_size_allocate));
+  this->signal_size_allocate().connect(sigc::mem_fun(*this, &DrawingArea::on_my_size_allocate));
 }
 
 /**
  * Prints a beauty version of the viewWindow when called on `std::cout<< viewWindow << std::end;`
  */
-std::ostream& operator<<( std::ostream &output, const ViewPort &object )
+std::ostream& operator<<( std::ostream &output, const DrawingArea &object )
 {
-  output << "ViewPort"
-      << "(" << std::setw(4) << object.xVpmin << ", " << std::setw(4) << object.yVpmin << ")"
-      << "(" << std::setw(4) << object.xVpmax << ", " << std::setw(4) << object.yVpmax << ")";
+  output
+      << "ViewPort" << object.viewPort
+      << "ViewWindow" << object.viewWindow;
   return output;
 }
 
@@ -30,10 +26,12 @@ std::ostream& operator<<( std::ostream &output, const ViewPort &object )
  *
  * @param allocation [description]
  */
-void ViewPort::on_my_size_allocate(Gtk::Allocation& allocation)
+void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
 {
   const int width = this->get_width();
   const int height = this->get_height();
+
+  this->viewPort.updateClippingWindowSize(width, height);
   LOG(4, "Current viewport size %sx%s", width, height);
 
   if( !isCentered )
@@ -44,16 +42,9 @@ void ViewPort::on_my_size_allocate(Gtk::Allocation& allocation)
     this->move_down(480);
     this->move_left(500);
   }
-
-  this->clippingWindow.clearCoordinates();
-  this->clippingWindow.addCoordinate(new Coordinate(30        , 30         ));
-  this->clippingWindow.addCoordinate(new Coordinate(30        , height - 30));
-  this->clippingWindow.addCoordinate(new Coordinate(width - 30, height - 30));
-  this->clippingWindow.addCoordinate(new Coordinate(width - 30, 30         ));
-  this->clippingWindow.addCoordinate(new Coordinate(30        , 30         ));
 }
 
-void ViewPort::apply(std::string object_name, Transformation &transformation)
+void DrawingArea::apply(std::string object_name, Transformation &transformation)
 {
   if( this->displayFile.isObjectOnByName(object_name) )
   {
@@ -73,18 +64,18 @@ void ViewPort::apply(std::string object_name, Transformation &transformation)
 }
 
 /**
- * [ViewPort::on_draw description]
+ * [DrawingArea::on_draw description]
  *
  * @param `cairo_context` Context is the main class used to draw in cairomm. It contains the current
  *     state of the rendering device, including coordinates of yet to be drawn shapes.
  *
  * @return               [description]
  */
-bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
+bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 {
   // LOG(8, "Chama-mes 5 vezes seguidas para desenhar a mesma coisa por que?");
   auto allocation = this->get_allocation();
-  this->updateViewport(allocation);
+  this->updateViewPort(allocation);
 
   // LOG(8, "Paint white background");
   cairo_context->set_source_rgb(1, 1, 1);
@@ -96,16 +87,16 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   Coordinate originOnWorld = convertCoordinateFromWindow(originOnWindow);
 
   // LOG(8, "Draw x and y axis: %s", originOnWorld);
-  cairo_context->move_to(this->xVpmin, originOnWorld.gety());
-  cairo_context->line_to(this->xVpmax, originOnWorld.gety());
-  cairo_context->move_to(originOnWorld.getx(), this->yVpmin);
-  cairo_context->line_to(originOnWorld.getx(), this->yVpmax);
+  cairo_context->move_to(this->viewPort.xMin, originOnWorld.gety());
+  cairo_context->line_to(this->viewPort.xMax, originOnWorld.gety());
+  cairo_context->move_to(originOnWorld.getx(), this->viewPort.yMin);
+  cairo_context->line_to(originOnWorld.getx(), this->viewPort.yMax);
   cairo_context->stroke();
 
   // LOG(8, "Draw the clipping window with a red border")
   cairo_context->set_source_rgb(0.99, 0.0, 0.0);
 
-  for (auto coordinate : this->clippingWindow.getCoordinates())
+  for (auto coordinate : this->viewPort.getCoordinates())
   {
     cairo_context->line_to(coordinate->getx(), coordinate->gety());
   }
@@ -149,22 +140,23 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 /**
  * Transformada de viewport - Slide 2 de "02 - Conceitos Básicos"
  *
- * @param  coord [description]
- * @return       [description]
+ * @param  coordinate [description]
+ * @return            [description]
  */
-Coordinate ViewPort::convertCoordinateFromWindow(Coordinate &coord)
+Coordinate DrawingArea::convertCoordinateFromWindow(Coordinate &coordinate)
 {
-  long int xW = coord.getx();
+  long int xW = coordinate.getx();
+  long int yW = coordinate.gety();
+
   long int xVp = (long int)(
-      (double)(xW - this->viewWindow.xWmin) * ((double)(this->xVpmax - this->xVpmin) /
-          (double)(this->viewWindow.xWmax - this->viewWindow.xWmin)
+      (double)(xW - this->viewWindow.xMin) * ((double)(this->viewPort.xMax - this->viewPort.xMin) /
+          (double)(this->viewWindow.xMax - this->viewWindow.xMin)
       )
   );
 
-  long int yW = coord.gety();
-  long int yVp = (this->yVpmax - this->yVpmin) - (long int)(
-      (double)(yW - this->viewWindow.yWmin) * (double)(this->yVpmax - this->yVpmin) /
-          (double)(this->viewWindow.yWmax - this->viewWindow.yWmin)
+  long int yVp = (this->viewPort.yMax - this->viewPort.yMin) - (long int)(
+      (double)(yW - this->viewWindow.yMin) * (double)(this->viewPort.yMax - this->viewPort.yMin) /
+          (double)(this->viewWindow.yMax - this->viewWindow.yMin)
   );
 
   return Coordinate(xVp, yVp);
@@ -194,112 +186,142 @@ Coordinate ViewPort::convertCoordinateFromWindow(Coordinate &coord)
  *     join(). Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of
        GdkRectangle.
  */
-void ViewPort::updateViewport(Gtk::Allocation &allocation)
+void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
 {
   LOG(8, "Entering: %s; %s", *this, this->viewWindow);
 
   // NÃO ENTENDI A LÓGICA MATEMÁTICA
-  if (this->xVpmax != allocation.get_width() || this->yVpmax != allocation.get_height())
+  if (this->viewPort.xMax != allocation.get_width() || this->viewPort.yMax != allocation.get_height())
   {
-    float xWmax;
+    float xMax;
 
-    int widthDiff  = allocation.get_width()  - (this->xVpmax - this->xVpmin);
-    int heightDiff = allocation.get_height() - (this->yVpmax - this->yVpmin);
+    int widthDiff  = allocation.get_width()  - (this->viewPort.xMax - this->viewPort.xMin);
+    int heightDiff = allocation.get_height() - (this->viewPort.yMax - this->viewPort.yMin);
 
-    if (this->xVpmax != 0)
+    if (this->viewPort.xMax != 0)
     {
-      xWmax = this->viewWindow.xWmax
-          + (float)(this->viewWindow.xWmax - this->viewWindow.xWmin) * ( (float)widthDiff
-              / (float)(this->xVpmax - this->xVpmin)
+      xMax = this->viewWindow.xMax
+          + (float)(this->viewWindow.xMax - this->viewWindow.xMin) * ( (float)widthDiff
+              / (float)(this->viewPort.xMax - this->viewPort.xMin)
           );
     }
     else
     {
-      xWmax = (float)widthDiff;
+      xMax = (float)widthDiff;
     }
 
-    this->viewWindow.xWmax = xWmax;
+    this->viewWindow.xMax = xMax;
 
-    if (this->yVpmax != 0)
+    if (this->viewPort.yMax != 0)
     {
-      this->viewWindow.yWmin = (
-          this->viewWindow.yWmin
-              - (float)(this->viewWindow.yWmax
-                  - this->viewWindow.yWmin
-              ) * ((float)heightDiff / (float)(this->yVpmax - this->yVpmin))
+      this->viewWindow.yMin = (
+          this->viewWindow.yMin
+              - (float)(this->viewWindow.yMax
+                  - this->viewWindow.yMin
+              ) * ((float)heightDiff / (float)(this->viewPort.yMax - this->viewPort.yMin))
       );
     }
     else
     {
-      // LOG(8, "If we exchange this to `viewWindow.yWmin` our world becomes up-side-down");
-      this->viewWindow.yWmax = (float)heightDiff;
+      // LOG(8, "If we exchange this to `viewWindow.yMin` our world becomes up-side-down");
+      this->viewWindow.yMax = (float)heightDiff;
     }
 
-    this->xVpmax += widthDiff;
-    this->yVpmax += heightDiff;
+    this->viewPort.xMax += widthDiff;
+    this->viewPort.yMax += heightDiff;
     LOG(8, "Leaving:  %s; %s", *this, this->viewWindow);
   }
 }
 
-ViewPort::~ViewPort()
+DrawingArea::~DrawingArea()
 {
 }
 
-Signal<>::Connection ViewPort::addObserver(const Signal<>::Callback &callback)
+Signal<>::Connection DrawingArea::addObserver(const Signal<>::Callback &callback)
 {
-    return observerController.connect(callback);
+  return observerController.connect(callback);
 }
 
-void ViewPort::addObject(DrawableObject* object)
+void DrawingArea::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int y2_cord)
+{
+  Coordinate* point_cord1 = new Coordinate(x1_cord, y1_cord);
+  Coordinate* point_cord2 = new Coordinate(x2_cord, y2_cord);
+
+  Line* line = new Line(name, point_cord1, point_cord2);
+  this->addObject(line);
+}
+
+void DrawingArea::addPoint(std::string name, int x_coord, int y_coord)
+{
+  Coordinate* point_cord = new Coordinate(x_coord, y_coord);
+  Point* point = new Point(name, point_cord);
+  this->addObject(point);
+}
+
+void DrawingArea::addPolygon(std::string name, std::vector<int> polygon_coord_list)
+{
+  int unsigned coordinates_size = polygon_coord_list.size();
+  std::list<Coordinate*> coordinates;
+
+  for( unsigned int index = 1; index < coordinates_size; index++, index++ )
+  {
+    coordinates.push_back(new Coordinate(polygon_coord_list.at(index-1), polygon_coord_list.at(index)));
+  }
+
+  Polygon* polygon = new Polygon(name, coordinates);
+  this->addObject(polygon);
+}
+
+void DrawingArea::addObject(DrawableObject* object)
 {
   this->displayFile.addObject(object);
   this->queue_draw();
   this->observerController();
 }
 
-void ViewPort::removeObject(std::string name)
+void DrawingArea::removeObject(std::string name)
 {
   this->displayFile.removeObjectByName(name);
   this->queue_draw();
   this->observerController();
 }
 
-std::list<std::string> ViewPort::getNamesList()
+std::list<std::string> DrawingArea::getNamesList()
 {
   return this->displayFile.getNamesList();
 }
 
-void ViewPort::zoom_in(float scale)
+void DrawingArea::zoom_in(float scale)
 {
   this->viewWindow.zoom_in(scale);
   this->queue_draw();
 }
 
-void ViewPort::zoom_out(float scale)
+void DrawingArea::zoom_out(float scale)
 {
   this->viewWindow.zoom_out(scale);
   this->queue_draw();
 }
 
-void ViewPort::move_up(int length)
+void DrawingArea::move_up(int length)
 {
   this->viewWindow.move_up(length);
   this->queue_draw();
 }
 
-void ViewPort::move_down(int length)
+void DrawingArea::move_down(int length)
 {
   this->viewWindow.move_down(length);
   this->queue_draw();
 }
 
-void ViewPort::move_left(int length)
+void DrawingArea::move_left(int length)
 {
   this->viewWindow.move_left(length);
   this->queue_draw();
 }
 
-void ViewPort::move_right(int length)
+void DrawingArea::move_right(int length)
 {
   this->viewWindow.move_right(length);
   this->queue_draw();

@@ -16,13 +16,13 @@
 #include "point.h"
 #include "line.h"
 #include "polygon.h"
-#include "viewport.h"
+#include "drawingarea.h"
 #include "coordinate.h"
 
 class AddTransformation
 {
 public:
-  AddTransformation(ViewPort &viewPort);
+  AddTransformation(DrawingArea &drawingArea);
   ~AddTransformation();
 
   Gtk::Box& getBox();
@@ -31,7 +31,7 @@ public:
   TransformationType transformation_type;
 
 protected:
-  ViewPort &viewPort;
+  DrawingArea    &drawingArea;
   Transformation transformation;
 
   Gtk::Entry x_rotation_field;
@@ -77,4 +77,4 @@ protected:
   void _connectButtons();
   void _update_transmations_list();
 };
-#endif //GTKMM_APP_ADD_TRANSFORMATION_WINDOW
+#endif // GTKMM_APP_ADD_TRANSFORMATION_WINDOW

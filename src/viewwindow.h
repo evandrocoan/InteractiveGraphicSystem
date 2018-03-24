@@ -13,7 +13,7 @@
 class ViewWindow
 {
 public:
-  ViewWindow(int Xwmin, int Ywmin, int Xwmax, int Ywmax);
+  ViewWindow();
   virtual ~ViewWindow();
 
   void zoom_in (float scale = 1.5);
@@ -24,10 +24,10 @@ public:
   void move_left (int length = 10);
   void move_right(int length = 10);
 
-  float xWmin;
-  float yWmin;
-  float xWmax;
-  float yWmax;
+  float xMin;
+  float yMin;
+  float xMax;
+  float yMax;
 
   friend std::ostream& operator<<(std::ostream &output, const ViewWindow &object);
 };

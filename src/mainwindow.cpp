@@ -4,8 +4,8 @@
  * https://en.wikipedia.org/wiki/Template:Unicode_chart_Arrows
  */
 MainWindow::MainWindow() :
-      addObject(this->viewPort),
-      addTransformation(this->viewPort),
+      addObject(this->drawingArea),
+      addTransformation(this->drawingArea),
       button_move_up("↑"),
       button_move_down("↓"),
       button_move_left("←"),
@@ -17,7 +17,7 @@ MainWindow::MainWindow() :
       main_box(Gtk::ORIENTATION_HORIZONTAL),
       left_box(Gtk::ORIENTATION_VERTICAL),
       left_frame("Controllers"),
-      right_frame("ViewPort")
+      right_frame("DrawingArea")
 {
   LOG(2, "Entering...");
   this->main_box.pack_start(left_frame, Gtk::PACK_SHRINK, 10);
@@ -29,11 +29,11 @@ MainWindow::MainWindow() :
   this->connectButtons();
   this->setDefaultTooltips();
 
-  LOG(4, "ViewPort");
+  LOG(4, "DrawingArea");
   this->main_box.pack_start(this->right_frame, Gtk::PACK_EXPAND_WIDGET, 10);
-  this->right_frame.add(this->viewPort);
-  this->viewPort.show();
-  this->viewPort.addObserver(std::bind(&MainWindow::updateDropdownList, this));
+  this->right_frame.add(this->drawingArea);
+  this->drawingArea.show();
+  this->drawingArea.addObserver(std::bind(&MainWindow::updateDropdownList, this));
 
   LOG(4, "Show all components");
   this->window.set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan, Hugo Vincent");
@@ -117,12 +117,12 @@ void MainWindow::connectButtons()
 }
 
 /**
- * Called when the `ViewPort` objects list is updated.
+ * Called when the `DrawingArea` objects list is updated.
  */
 void MainWindow::updateDropdownList()
 {
   LOG(2, "Entering...");
-  auto names = this->viewPort.getNamesList();
+  auto names = this->drawingArea.getNamesList();
 
   LOG(4, "limpa a lista de objetos para reimprimi-la");
   this->objects_list.remove_all();
@@ -153,7 +153,7 @@ void MainWindow::on_button_move_up()
   }
   else
   {
-    this->viewPort.move_up(move_length);
+    this->drawingArea.move_up(move_length);
   }
 }
 
@@ -167,7 +167,7 @@ void MainWindow::on_button_move_down()
   }
   else
   {
-    this->viewPort.move_down(move_length);
+    this->drawingArea.move_down(move_length);
   }
 }
 
@@ -181,7 +181,7 @@ void MainWindow::on_button_move_left()
   }
   else
   {
-    this->viewPort.move_left(move_length);
+    this->drawingArea.move_left(move_length);
   }
 }
 
@@ -195,7 +195,7 @@ void MainWindow::on_button_move_right()
   }
   else
   {
-    this->viewPort.move_right(move_length);
+    this->drawingArea.move_right(move_length);
   }
 }
 
@@ -213,7 +213,7 @@ void MainWindow::on_button_zoom_in()
   }
   else
   {
-    this->viewPort.zoom_in(zoom_scale);
+    this->drawingArea.zoom_in(zoom_scale);
   }
 }
 
@@ -231,7 +231,7 @@ void MainWindow::on_button_zoom_out()
   }
   else
   {
-    this->viewPort.zoom_out(zoom_scale);
+    this->drawingArea.zoom_out(zoom_scale);
   }
 }
 
@@ -247,7 +247,7 @@ void MainWindow::on_button_delete_object()
 
   if(!(name.empty()))
   {
-    this->viewPort.removeObject(name);
+    this->drawingArea.removeObject(name);
   }
 }
 
