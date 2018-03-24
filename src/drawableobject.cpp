@@ -7,18 +7,40 @@ DrawableObject::DrawableObject(std::string name) :
 
 DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordinates) :
       name(name),
-      coordinates(coordinates)
+	  coordinates(coordinates)
 {
 }
 
 DrawableObject::~DrawableObject()
 {
+	this->destroyList(coordinates);
+}
+
+void DrawableObject::destroyList(std::list<Coordinate*> coordinates)
+{
+  while(!coordinates.empty())
+  {
+    // delete coordinates.front();
+    coordinates.pop_front();
+  }
 }
 
 std::string DrawableObject::getName()
 {
   return this->name;
 }
+
+std::list<Coordinate*>& DrawableObject::getCoordinates()
+{
+  return this->coordinates;
+}
+
+void DrawableObject::setCoordinates(std::list<Coordinate*> coordinates)
+{
+  this->destroyList(coordinates);
+  this->coordinates= coordinates;
+}
+
 
 Coordinate* DrawableObject::get_geometric_center()
 {
@@ -39,11 +61,6 @@ Coordinate* DrawableObject::get_geometric_center()
   return new Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count);
 }
 
-std::list<Coordinate*>& DrawableObject::getCoordinates()
-{
-  return this->coordinates;
-}
-
 /**
  * Prints a more beauty version of the matrix when called on `std::cout<< matrix << std::end;`
  */
@@ -56,7 +73,7 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
 
   for( auto coordinate : object.coordinates )
   {
-    output << *coordinate;
+    output << coordinate;
 
     if( index != size )
     {
@@ -84,3 +101,8 @@ void DrawableObject::apply(Transformation &transformation)
   }
 
 }
+
+
+
+
+

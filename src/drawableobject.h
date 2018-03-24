@@ -20,11 +20,13 @@
 class DrawableObject
 {
 public:
+  DrawableObject(std::string name);
   DrawableObject(std::string name, std::list<Coordinate*> coordinates);
   ~DrawableObject();
 
   std::string getName();
   std::list<Coordinate*>& getCoordinates();
+  void setCoordinates(std::list<Coordinate*> coordinates);
 
   /**
    * `get_geometric_center()` return a pointer which you must explicitly delete after using it.
@@ -35,9 +37,9 @@ public:
   friend std::ostream& operator<<(std::ostream &output, const DrawableObject &object);
 
 protected:
-  DrawableObject(std::string name);
 
   std::string name;
   std::list<Coordinate*> coordinates;
+  void destroyList(std::list<Coordinate*> coordinates);
 };
 #endif // GTKMM_APP_DRAWABLE_OBJECT
