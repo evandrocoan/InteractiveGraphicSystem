@@ -2,6 +2,9 @@
 #ifndef GTKMM_APP_VIEW_WINDOW
 #define GTKMM_APP_VIEW_WINDOW
 
+#include <ostream>
+#include <iomanip>
+
 #define MIN_WIDTH 15
 #define MIN_HEIGHT 15
 #define MAX_HEIGHT 50000000
@@ -25,6 +28,8 @@ public:
   float yWmin;
   float xWmax;
   float yWmax;
+
+  friend std::ostream& operator<<(std::ostream &output, const ViewWindow &object);
 };
 
 #endif

@@ -8,6 +8,17 @@ ViewWindow::ViewWindow(int xWmin, int yWmin, int xWmax, int yWmax)
 {
 }
 
+/**
+ * Prints a beauty version of the viewWindow when called on `std::cout<< viewWindow << std::end;`
+ */
+std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
+{
+  output << "ViewWindow"
+      << "(" << std::setw(4) << object.xWmin << ", " << std::setw(4) << object.yWmin << ")"
+      << "(" << std::setw(4) << object.xWmax << ", " << std::setw(4) << object.yWmax << ")";
+  return output;
+}
+
 void ViewWindow::zoom_in(float scale)
 {
   if (scale < 1)
