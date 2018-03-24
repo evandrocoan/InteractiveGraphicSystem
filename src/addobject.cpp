@@ -1,7 +1,7 @@
 #include "addobject.h"
 
-AddObject::AddObject(ViewPort &viewPort) :
-      viewPort(viewPort),
+AddObject::AddObject(DrawingArea &drawingArea) :
+      drawingArea(drawingArea),
       m_vbox(Gtk::ORIENTATION_VERTICAL),
       button_close("Close"),
       button_save_line("Save Line"),
@@ -112,10 +112,7 @@ void AddObject::on_button_save_point()
   int x_coord = atoi(x_string.c_str());
   int y_coord = atoi(y_string.c_str());
 
-  Coordinate* point_cord = new Coordinate(x_coord, y_coord);
-  Point* point = new Point(name, point_cord);
-
-  this->viewPort.addObject(point);
+  this->drawingArea.addPoint(name, x_coord, y_coord);
   this->window.close();
 }
 
@@ -140,12 +137,7 @@ void AddObject::on_button_save_line()
   int x2_cord = atoi(x2_string.c_str());
   int y2_cord = atoi(y2_string.c_str());
 
-  Coordinate* point_cord1 = new Coordinate(x1_cord, y1_cord);
-  Coordinate* point_cord2 = new Coordinate(x2_cord, y2_cord);
-
-  Line* line = new Line(name, point_cord1, point_cord2);
-
-  this->viewPort.addObject(line);
+  this->drawingArea.addLine(name, x1_cord, y1_cord, x2_cord, y2_cord);
   this->window.close();
 }
 
@@ -162,8 +154,7 @@ void AddObject::on_button_save_polygon()
       return;
     }
 
-    Polygon* polygon = new Polygon(name, polygon_coord_list);
-    this->viewPort.addObject(polygon);
+    this->drawingArea.addPolygon(name, polygon_coord_list);
 
     while(!polygon_coord_list.empty())
     {
@@ -186,8 +177,8 @@ void AddObject::on_button_add_coordinate()
   int x_coord = atoi(x_string.c_str());
   int y_coord = atoi(y_string.c_str());
 
-  Coordinate* wire_cord = new Coordinate(x_coord, y_coord);
-  polygon_coord_list.push_back(wire_cord);
+  polygon_coord_list.push_back(x_coord);
+  polygon_coord_list.push_back(y_coord);
 
   wire_x_field.set_text("");
   wire_y_field.set_text("");

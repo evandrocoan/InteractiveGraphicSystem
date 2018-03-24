@@ -1,5 +1,5 @@
-#ifndef GTKMM_APP_VIEWPORT
-#define GTKMM_APP_VIEWPORT
+#ifndef GTKMM_APP_DRAWINGAREA
+#define GTKMM_APP_DRAWINGAREA
 
 #include <list>
 #include <string>
@@ -9,12 +9,17 @@
 #include <gdkmm/rgba.h>
 #include <cairomm/context.h>
 
+#include "debugger.h"
+#include "subject_controller.h"
+
+#include "point.h"
+#include "line.h"
 #include "polygon.h"
+#include "coordinate.h"
+
+#include "viewport.h"
 #include "viewwindow.h"
 #include "displayfile.h"
-#include "subject_controller.h"
-#include "coordinate.h"
-#include "debugger.h"
 
 /**
  * The Drawing Area Widget
@@ -23,13 +28,16 @@
  * Drawing Straight Lines
  * https://developer.gnome.org/gtkmm-tutorial/stable/sec-cairo-drawing-lines.html.en#cairo-example-lines
  */
-class ViewPort : public Gtk::DrawingArea
+class DrawingArea : public Gtk::DrawingArea
 {
 public:
-  ViewPort();
-  virtual ~ViewPort();
+  DrawingArea();
+  virtual ~DrawingArea();
 
-  void addObject(DrawableObject*);
+  void addPoint(std::string name, int, int);
+  void addLine(std::string name, int, int, int, int);
+  void addPolygon(std::string name, std::vector<int>);
+
   void removeObject(std::string name);
 
   std::list<std::string> getNamesList();
@@ -46,26 +54,22 @@ public:
   Coordinate convertCoordinateFromWindow(Coordinate&);
   Signal<>::Connection addObserver(const Signal<>::Callback&);
 
-  friend std::ostream& operator<<(std::ostream &output, const ViewPort &object);
+  friend std::ostream& operator<<(std::ostream &output, const DrawingArea &object);
 
 protected:
-  ViewWindow  viewWindow;
-  DisplayFile displayFile;
-
-  Polygon  clippingWindow;
-  Signal<> observerController;
+  ViewPort   viewPort;
+  ViewWindow viewWindow;
 
   bool isCentered;
+  DisplayFile displayFile;
 
-  int xVpmin;
-  int yVpmin;
-  int xVpmax;
-  int yVpmax;
+  Signal<> observerController;
 
+  void addObject(DrawableObject*);
   bool on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
 
-  void updateViewport     (Gtk::Allocation&);
+  void updateViewPort     (Gtk::Allocation&);
   void on_my_size_allocate(Gtk::Allocation&);
 };
 
-#endif
+#endif // GTKMM_APP_DRAWINGAREA
