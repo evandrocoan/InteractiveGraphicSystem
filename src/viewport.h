@@ -43,6 +43,8 @@ public:
 
   Signal<>::Connection addObserver(const Signal<>::Callback&);
 
+  std::list<DrawableObject*> getObjectsList();
+
 protected:
   ViewWindow  viewWindow;
   DisplayFile displayFile;
@@ -56,6 +58,7 @@ protected:
   bool       on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
   void       updateViewport(Gtk::Allocation&);
   Coordinate convertCoordinateFromWindow(Coordinate&);
+
 };
 
 #endif

@@ -9,3 +9,4 @@ Point::Point(std::string name, Coordinate* point_cord)
 Point::~Point()
 {
 }
+
