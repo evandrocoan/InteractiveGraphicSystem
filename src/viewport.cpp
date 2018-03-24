@@ -3,11 +3,28 @@
 ViewPort::ViewPort() :
       viewWindow(0, 0, 0, 0),
       displayFile(),
+      isCentered(false),
       xVpmin(0),
       yVpmin(0),
       xVpmax(0),
       yVpmax(0)
 {
+  this->signal_size_allocate().connect(sigc::mem_fun(*this, &ViewPort::on_my_size_allocate));
+}
+
+void ViewPort::on_my_size_allocate(Gtk::Allocation& allocation)
+{
+  if( !isCentered )
+  {
+    int width = this->get_width();
+    int height = this->get_height();
+
+    this->isCentered = true;
+    LOG(4, "Moving ViewWindow (0, 0) to the window center (%s, %d)...", width, height);
+
+    this->move_down(480);
+    this->move_left(500);
+  }
 }
 
 void ViewPort::apply(std::string object_name, Transformation &transformation)
@@ -47,12 +64,12 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   cairo_context->set_source_rgb(1, 1, 1);
   cairo_context->paint();
 
-  // LOG(8, "Draw x and y axis");
   cairo_context->set_line_width(1);
   cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
   Coordinate originOnWindow(0, 0);
-  Coordinate originOnWorld  = convertCoordinateFromWindow(originOnWindow);
+  Coordinate originOnWorld = convertCoordinateFromWindow(originOnWindow);
 
+  LOG(8, "Draw x and y axis: %s", originOnWorld);
   cairo_context->move_to(this->xVpmin, originOnWorld.gety());
   cairo_context->line_to(this->xVpmax, originOnWorld.gety());
   cairo_context->move_to(originOnWorld.getx(), this->yVpmin);

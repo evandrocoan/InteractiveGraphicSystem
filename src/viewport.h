@@ -41,6 +41,7 @@ public:
   void move_left (int length = 10);
   void move_right(int length = 10);
 
+  Coordinate convertCoordinateFromWindow(Coordinate&);
   Signal<>::Connection addObserver(const Signal<>::Callback&);
 
 protected:
@@ -48,14 +49,17 @@ protected:
   DisplayFile displayFile;
   Signal<>    observerController;
 
+  bool isCentered;
+
   int xVpmin;
   int yVpmin;
   int xVpmax;
   int yVpmax;
 
-  bool       on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
-  void       updateViewport(Gtk::Allocation&);
-  Coordinate convertCoordinateFromWindow(Coordinate&);
+  bool on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
+
+  void updateViewport     (Gtk::Allocation&);
+  void on_my_size_allocate(Gtk::Allocation&);
 };
 
 #endif
