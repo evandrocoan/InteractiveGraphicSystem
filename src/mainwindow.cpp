@@ -1,16 +1,19 @@
 #include "mainwindow.h"
 
+/**
+ * https://en.wikipedia.org/wiki/Template:Unicode_chart_Arrows
+ */
 MainWindow::MainWindow() :
       addObject(this->viewPort),
       addTransformation(this->viewPort),
-      button_move_up("up"),
-      button_move_down("down"),
-      button_move_left("left"),
-      button_move_right("right"),
+      button_move_up("↑"),
+      button_move_down("↓"),
+      button_move_left("←"),
+      button_move_right("→"),
       button_zoom_in("+"),
       button_zoom_out("-"),
-      button_add_object("Add Object"),
-      button_delete_object("Delete Object"),
+      button_add_object("Add"),
+      button_delete_object("Rem"),
       main_box(Gtk::ORIENTATION_HORIZONTAL),
       left_box(Gtk::ORIENTATION_VERTICAL),
       left_frame("Controllers"),
@@ -24,6 +27,7 @@ MainWindow::MainWindow() :
   LOG(4, "Draw options");
   this->setupButtons();
   this->connectButtons();
+  this->setDefaultTooltips();
 
   LOG(4, "ViewPort");
   this->main_box.pack_start(this->right_frame, Gtk::PACK_EXPAND_WIDGET, 10);
@@ -48,14 +52,20 @@ Gtk::Window& MainWindow::getWindow()
   return this->window;
 }
 
+void MainWindow::setDefaultTooltips()
+{
+  button_add_object.set_tooltip_text("Add new object");
+  button_delete_object.set_tooltip_text("Remove current selected object");
+}
+
 void MainWindow::setupButtons()
 {
   LOG(4, "Inicializando dado da entrada do tamanho de movimentação");
-  entry_move_length.set_width_chars(1);
+  entry_move_length.set_width_chars(3);
   entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
 
   LOG(4, "Inicializando dado da entrada do tamanho do zoom");
-  entry_zoom_scale.set_width_chars(1);
+  entry_zoom_scale.set_width_chars(3);
   char array[4];
 
   sprintf(array, "%f", DEFAULT_ZOOM_SCALE);
@@ -64,23 +74,23 @@ void MainWindow::setupButtons()
 
   LOG(4, "Montando a estrutura da grade de lista de objetos");
   grid_list_obj.set_column_homogeneous(true);
-  grid_list_obj.attach(button_add_object, 1, 1, 1, 1);
-  grid_list_obj.attach(objects_list, 1, 2, 1, 1);
-  grid_list_obj.attach(button_delete_object, 1, 3, 1, 1);
+  grid_list_obj.attach(button_add_object,    1, 1, 1, 1);
+  grid_list_obj.attach(button_delete_object, 2, 1, 1, 1);
+  grid_list_obj.attach(objects_list,         1, 2, 2, 1);
 
   LOG(4, "Adicionando os botões de movimentações na grade de movimentação");
-  grid_move.set_column_homogeneous(true);
-  grid_move.attach(button_move_up, 2, 1, 1, 1);
-  grid_move.attach(button_move_left, 1, 2, 1, 1);
+  // grid_move.set_column_homogeneous(true);
+  grid_move.attach(button_move_left,  1, 2, 1, 1);
+  grid_move.attach(button_move_up,    2, 1, 1, 1);
   grid_move.attach(entry_move_length, 2, 2, 1, 1);
+  grid_move.attach(button_move_down,  2, 3, 1, 1);
   grid_move.attach(button_move_right, 3, 2, 1, 1);
-  grid_move.attach(button_move_down, 2, 3, 1, 1);
 
   LOG(4, "Adicionando os botões de movimentações na grade de zoom");
   grid_zoom.set_column_homogeneous(true);
-  grid_zoom.attach(button_zoom_out, 1, 1, 1, 1);
+  grid_zoom.attach(button_zoom_out,  1, 1, 1, 1);
   grid_zoom.attach(entry_zoom_scale, 2, 1, 1, 1);
-  grid_zoom.attach(button_zoom_in, 3, 1, 1, 1);
+  grid_zoom.attach(button_zoom_in,   3, 1, 1, 1);
 
   LOG(4, "Adding the draw options box to left frame");
   left_box.set_border_width(10);
