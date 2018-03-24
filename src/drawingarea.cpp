@@ -15,7 +15,7 @@ DrawingArea::DrawingArea() :
 std::ostream& operator<<( std::ostream &output, const DrawingArea &object )
 {
   output
-      << "ViewPort" << object.viewPort
+      << "ViewPort" << object.viewPort << " "
       << "ViewWindow" << object.viewWindow;
   return output;
 }
@@ -86,7 +86,9 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   Coordinate originOnWindow(0, 0);
   Coordinate originOnWorld = convertCoordinateFromWindow(originOnWindow);
 
-  // LOG(8, "Draw x and y axis: %s", originOnWorld);
+  LOG(8, "Drawing X and Y axis with originOnWorld: %s", originOnWorld);
+  LOG(4, "Drawing axis X from (%s, %s) to (%s, %s)", this->viewPort.xMin, originOnWorld.gety(), this->viewPort.xMax, originOnWorld.gety() );
+  LOG(4, "Drawing axis Y from (%s, %s) to (%s, %s)", originOnWorld.getx(), this->viewPort.yMin, originOnWorld.getx(), this->viewPort.yMax );
   cairo_context->move_to(this->viewPort.xMin, originOnWorld.gety());
   cairo_context->line_to(this->viewPort.xMax, originOnWorld.gety());
   cairo_context->move_to(originOnWorld.getx(), this->viewPort.yMin);
@@ -188,9 +190,10 @@ Coordinate DrawingArea::convertCoordinateFromWindow(Coordinate &coordinate)
  */
 void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
 {
-  LOG(8, "Entering: %s; %s", *this, this->viewWindow);
+  // NÃO ENTENDI A LÓGICA MATEMÁTICA.
+  LOG(8, "Entering: %s", *this);
 
-  // NÃO ENTENDI A LÓGICA MATEMÁTICA
+  // This is true only when you resize the you DrawingArea widget window
   if (this->viewPort.xMax != allocation.get_width() || this->viewPort.yMax != allocation.get_height())
   {
     float xMax;
@@ -229,7 +232,7 @@ void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
 
     this->viewPort.xMax += widthDiff;
     this->viewPort.yMax += heightDiff;
-    LOG(8, "Leaving:  %s; %s", *this, this->viewWindow);
+    LOG(8, "Leaving:  %s", *this);
   }
 }
 
