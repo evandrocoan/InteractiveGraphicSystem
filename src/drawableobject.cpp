@@ -45,7 +45,7 @@ std::list<Coordinate*>& DrawableObject::getCoordinates()
 }
 
 /**
- * Prints a more beauty version of the matrix when called on `std::cout<< matrix << std::end;`
+ * Prints a more beauty version of the object when called on `std::cout<< object << std::end;`
  */
 std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
 {
