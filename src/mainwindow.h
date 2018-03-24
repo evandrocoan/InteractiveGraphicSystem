@@ -20,9 +20,8 @@
 #include "addobject.h"
 #include "addtransformation.h"
 
-#define DEFAULT_ZOOM_SCALE  1.5
-#define DEFAULT_MOVE_LENGTH "10"
-
+const double default_zoom_scale = 1.5;
+const char* const default_move_length = "1";
 
 class MainWindow
 {

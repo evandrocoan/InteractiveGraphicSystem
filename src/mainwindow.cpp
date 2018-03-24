@@ -62,13 +62,13 @@ void MainWindow::setupButtons()
 {
   LOG(4, "Inicializando dado da entrada do tamanho de movimentação");
   entry_move_length.set_width_chars(3);
-  entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+  entry_move_length.set_text(default_move_length);
 
   LOG(4, "Inicializando dado da entrada do tamanho do zoom");
   entry_zoom_scale.set_width_chars(3);
   char array[4];
 
-  sprintf(array, "%f", DEFAULT_ZOOM_SCALE);
+  sprintf(array, "%f", default_zoom_scale);
   array[3] = '\0';
   entry_zoom_scale.set_text(array);
 
@@ -149,7 +149,7 @@ void MainWindow::on_button_move_up()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+    entry_move_length.set_text(default_move_length);
   }
   else
   {
@@ -163,7 +163,7 @@ void MainWindow::on_button_move_down()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+    entry_move_length.set_text(default_move_length);
   }
   else
   {
@@ -177,7 +177,7 @@ void MainWindow::on_button_move_left()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+    entry_move_length.set_text(default_move_length);
   }
   else
   {
@@ -191,7 +191,7 @@ void MainWindow::on_button_move_right()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+    entry_move_length.set_text(default_move_length);
   }
   else
   {
@@ -206,7 +206,7 @@ void MainWindow::on_button_zoom_in()
   if (zoom_scale <=1)
   {
     char array[4];
-    sprintf(array, "%f", DEFAULT_ZOOM_SCALE);
+    sprintf(array, "%f", default_zoom_scale);
 
     array[3] = '\0';
     entry_zoom_scale.set_text(array);
@@ -224,7 +224,7 @@ void MainWindow::on_button_zoom_out()
   if (zoom_scale <=1)
   {
     char array[4];
-    sprintf(array, "%f", DEFAULT_ZOOM_SCALE);
+    sprintf(array, "%f", default_zoom_scale);
 
     array[3] = '\0';
     entry_zoom_scale.set_text(array);
