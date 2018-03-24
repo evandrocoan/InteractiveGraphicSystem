@@ -10,6 +10,14 @@
 #define MAX_HEIGHT 50000000
 #define MAX_WIDTH 50000000
 
+/**
+ * Window: Retângulo que representa um recorte do
+ * mundo 2D representado pelo Display File que será
+ * mostrado no vídeo.
+ * – Representado no sistema de coordenadas cartesiano.
+ * – Tamanho variável (Zoom).
+ * – Posição variável (navegação)
+ */
 class ViewWindow
 {
 public:
