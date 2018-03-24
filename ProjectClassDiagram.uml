@@ -2,9 +2,9 @@
 @startuml
   skinparam defaultFontName Consolas
 
-  AddObject  *--  ViewPort                 : viewPort&
+  AddObject  *--  DrawingArea              : drawingArea&
 
-  AddTransformation  *--  ViewPort         : viewPort&
+  AddTransformation  *--  DrawingArea      : drawingArea&
   AddTransformation  *-down- Transformation: transformation
 
   DisplayFile        -left[hidden]> ViewWindow
@@ -14,7 +14,7 @@
   Point   <|-up- DrawableObject
   Polygon <|-up- DrawableObject
 
-  MainWindow *-down-  ViewPort             : viewPort
+  MainWindow *-down-  DrawingArea          : drawingArea
   MainWindow *-right- AddObject            : addObject
   MainWindow *-left-  AddTransformation    : addTransformation
 
@@ -22,15 +22,16 @@
   TransformationData *-- TransformationType: type
   TransformationData *-- RotationType      : rotation_type
 
-  ViewPort *-- ViewWindow                  : viewWindow
-  ViewPort *-down- DisplayFile             : displayFile
+  DrawingArea *-- ViewPort                 : viewPort
+  DrawingArea *-- ViewWindow               : viewWindow
+  DrawingArea *-down- DisplayFile          : displayFile
 
   class AddObject {
-    Gtk::Grid              point_grid
-    Gtk::Grid              line_grid
-    Gtk::Grid              polygn_grid
-    Gtk::Window&           getWindow()
-    std::list<Coordinate*> polygon_coord_list
+    Gtk::Grid       point_grid
+    Gtk::Grid       line_grid
+    Gtk::Grid       polygn_grid
+    Gtk::Window&    getWindow()
+    std::list<int*> polygon_coord_list
   }
 
   class AddTransformation {
@@ -55,9 +56,24 @@
   }
 
   class DrawableObject {
-    std::string        getName()
+    std::string  getName()
+    void         addLine()
+    void         addPoint()
+    void         addPolygon()
+    void         apply(Transformation&)
     list<Coordinate*>& getCoordinates()
-    void               apply(Transformation&)
+  }
+
+  class DrawingArea {
+    Signal<> observerController
+    void addPoint(std::string name, int, int)
+    void addLine(std::string name, int, int, int, int)
+    void addPolygon(std::string name, std::list<int>)
+
+    bool       on_draw(const Cairo::Context>&)
+    void       updateViewPort(Gtk::Allocation&)
+    Coordinate convertCoordinateFromWindow(Coordinate&)
+    void apply(std::string object_name, Transformation&)
   }
 
   class Line {
@@ -105,16 +121,12 @@
   }
 
   class ViewPort {
-    int      Xvpmin
-    int      Yvpmin
-    int      Xvpmax
-    int      Yvpmax
-    Signal<> observerController
-    bool on_draw(const Cairo::Context>&)
-    void updateViewport(Gtk::Allocation&)
-
-    Coordinate convertCoordinateFromWindow(Coordinate&)
-    void apply(std::string object_name, Transformation&)
+    int     Xvpmin
+    int     Yvpmin
+    int     Xvpmax
+    int     Yvpmax
+    Polygon clippingWindow
+    void updateClippingWindowSize(int, int)
   }
 
   class ViewWindow {
@@ -122,12 +134,12 @@
     float Ywmin
     float Xwmax
     float Ywmax
-    void zoom_in (float scale)
-    void zoom_out(float scale)
-    void move_up    (int length)
-    void move_down  (int length)
-    void move_left  (int length)
-    void move_right (int length)
+    void zoom_in  (float scale)
+    void zoom_out (float scale)
+    void move_up   (int length)
+    void move_down (int length)
+    void move_left (int length)
+    void move_right(int length)
   }
 
 @enduml

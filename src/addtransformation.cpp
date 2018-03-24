@@ -1,7 +1,7 @@
 #include "addtransformation.h"
 
-AddTransformation::AddTransformation(ViewPort &viewPort) :
-      viewPort(viewPort),
+AddTransformation::AddTransformation(DrawingArea &drawingArea) :
+      drawingArea(drawingArea),
       main_vertical_box(Gtk::ORIENTATION_VERTICAL),
       list_view_text(1),
       translation_radiobutton("T"),
@@ -200,8 +200,8 @@ void AddTransformation::on_button_remove_transformation()
 
 void AddTransformation::on_button_apply()
 {
-  this->viewPort.apply(this->object_name, this->transformation);
-  this->viewPort.queue_draw();
+  this->drawingArea.apply(this->object_name, this->transformation);
+  this->drawingArea.queue_draw();
 }
 
 void AddTransformation::on_translation_radiobutton()

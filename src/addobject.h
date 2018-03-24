@@ -2,6 +2,7 @@
 #define GTKMM_APP_ADD_OBJECT_WINDOW
 
 #include <string>
+#include <vector>
 #include <iostream>
 
 #include <gtkmm/window.h>
@@ -12,28 +13,24 @@
 #include <gtkmm/notebook.h>
 #include <gtkmm/box.h>
 
-#include "point.h"
-#include "line.h"
-#include "polygon.h"
-#include "viewport.h"
-#include "coordinate.h"
+#include "drawingarea.h"
 
 class AddObject
 {
 public:
-  AddObject(ViewPort &viewPort);
+  AddObject(DrawingArea &drawingArea);
   ~AddObject();
   Gtk::Window& getWindow();
 
 private:
-  ViewPort &viewPort;
   Gtk::Window window;
+  DrawingArea &drawingArea;
 
   Gtk::Box      m_vbox;
   Gtk::Notebook m_notebook;
 
-  std::string            new_object_name;
-  std::list<Coordinate*> polygon_coord_list;
+  std::string      new_object_name;
+  std::vector<int> polygon_coord_list;
 
   Gtk::Grid line_grid;
   Gtk::Grid point_grid;
@@ -79,4 +76,4 @@ private:
   void on_button_add_coordinate();
   void _close_updating_list();
 };
-#endif //GTKMM_APP_ADD_OBJECT_WINDOW
+#endif // GTKMM_APP_ADD_OBJECT_WINDOW
