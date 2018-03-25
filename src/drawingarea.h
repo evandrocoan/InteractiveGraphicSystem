@@ -67,7 +67,7 @@ protected:
   bool isCentered;
   DisplayFile displayFile;
 
-  Signal<> observerController;
+  Signal<> callObservers;
   Signal<>::Connection _connection;
 
   void addObject(DrawableObject*);

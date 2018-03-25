@@ -67,7 +67,7 @@ void DrawingArea::apply(std::string object_name, Transformation &transformation)
     if( transformation.size() )
     {
       this->displayFile.apply(object_name, transformation);
-      this->viewWindow.observerController();
+      this->viewWindow.callObservers();
     }
     else
     {
@@ -249,14 +249,14 @@ void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
     this->viewPort.xMax += widthDiff;
     this->viewPort.yMax += heightDiff;
 
-    this->viewWindow.observerController();
+    this->viewWindow.callObservers();
     LOG(8, "Leaving:  %s", *this);
   }
 }
 
 Signal<>::Connection DrawingArea::addObserver(const Signal<>::Callback &callback)
 {
-  return observerController.connect(callback);
+  return this->callObservers.connect(callback);
 }
 
 void DrawingArea::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int y2_cord)
@@ -293,7 +293,7 @@ void DrawingArea::addObject(DrawableObject* object)
 {
   this->displayFile.addObject(object);
   this->queue_draw();
-  this->observerController();
+  this->callObservers();
 }
 
 void DrawingArea::removeObject(std::string name)
@@ -302,7 +302,7 @@ void DrawingArea::removeObject(std::string name)
   this->displayFile.removeObjectByName(name);
 
   this->queue_draw();
-  this->observerController();
+  this->callObservers();
 }
 
 void DrawingArea::updateClipping()

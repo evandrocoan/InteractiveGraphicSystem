@@ -46,7 +46,7 @@ public:
    */
   friend std::ostream& operator<<(std::ostream &output, const ViewWindow &object);
 
-  Signal<> observerController;
+  Signal<> callObservers;
 };
 
 #endif
