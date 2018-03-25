@@ -10,3 +10,10 @@ Line::Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2)
 Line::~Line()
 {
 }
+
+void Line::updateClipping()
+{
+  LOG(4, "Line clipping update...");
+  this->clipped_coordinates = this->coordinates;
+}
+

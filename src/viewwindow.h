@@ -29,6 +29,14 @@ public:
   /**
    * Add an observer to this ViewWindow, which is notified every time the ViewWindow has some change
    * on any of its attributes.
+   *
+   * After register the observer callback and perform the first notification call on the just added
+   * observer.
+   *
+   * @param `callback` a function pointer to the observer to be notified
+   * @return           a Connection method allowing the observer to unsubscribe from observing this
+   *                   object. Useful to avoid null pointer exceptions when the observer function
+   *                   pointer is deleted.
    */
   Signal<>::Connection addObserver(const Signal<>::Callback&);
 
@@ -45,6 +53,9 @@ public:
   float xMax;
   float yMax;
 
+  /**
+   * Prints a beauty version of the viewWindow when called on `std::cout<< viewWindow << std::end;`
+   */
   friend std::ostream& operator<<(std::ostream &output, const ViewWindow &object);
 
 protected:

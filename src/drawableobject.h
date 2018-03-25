@@ -24,7 +24,7 @@ public:
   DrawableObject(std::string name, std::list<Coordinate*> coordinates);
   ~DrawableObject();
 
-  void updateClipping();
+  virtual void updateClipping();
   std::string getName();
 
   /**
