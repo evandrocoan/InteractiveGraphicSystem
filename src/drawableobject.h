@@ -16,6 +16,7 @@
 
 #include "coordinate.h"
 #include "transformation.h"
+#include "subject_controller.h"
 
 class DrawableObject
 {
@@ -23,8 +24,18 @@ public:
   DrawableObject(std::string name, std::list<Coordinate*> coordinates);
   ~DrawableObject();
 
+  void updateClipping();
   std::string getName();
+
+  /**
+   * Save the observed object disconnect callback to disconnect it from the observers list when
+   * removing the object from the program by calling `disconnectObserver()`.
+   */
+  void addConnection(Signal<>::Connection);
+  void disconnectObserver();
+
   std::list<Coordinate*>& getCoordinates();
+  std::list<Coordinate*>& getClippedCoordinates();
 
   /**
    * `get_geometric_center()` return a pointer which you must explicitly delete after using it.
@@ -38,6 +49,9 @@ protected:
   DrawableObject(std::string name);
 
   std::string name;
+  Signal<>::Connection _connection;
+
   std::list<Coordinate*> coordinates;
+  std::list<Coordinate*> clipped_coordinates;
 };
 #endif // GTKMM_APP_DRAWABLE_OBJECT

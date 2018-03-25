@@ -5,6 +5,8 @@
 #include <ostream>
 #include <iomanip>
 
+#include "subject_controller.h"
+
 #define MIN_WIDTH 15
 #define MIN_HEIGHT 15
 #define MAX_HEIGHT 50000000
@@ -24,6 +26,12 @@ public:
   ViewWindow();
   virtual ~ViewWindow();
 
+  /**
+   * Add an observer to this ViewWindow, which is notified every time the ViewWindow has some change
+   * on any of its attributes.
+   */
+  Signal<>::Connection addObserver(const Signal<>::Callback&);
+
   void zoom_in (float scale = 1.5);
   void zoom_out(float scale = 1.5);
 
@@ -38,6 +46,9 @@ public:
   float yMax;
 
   friend std::ostream& operator<<(std::ostream &output, const ViewWindow &object);
+
+protected:
+  Signal<> observerController;
 };
 
 #endif

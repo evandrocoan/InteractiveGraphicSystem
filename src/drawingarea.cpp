@@ -112,7 +112,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 
   for (auto object : objects)
   {
-    auto coordinates = object->getCoordinates();
+    auto coordinates = object->getClippedCoordinates();
     Coordinate firstCoordinate = this->convertCoordinateFromWindow(**(coordinates.begin()));
 
     cairo_context->move_to(firstCoordinate.getx(), firstCoordinate.gety());
@@ -276,6 +276,9 @@ void DrawingArea::addPolygon(std::string name, std::vector<int> polygon_coord_li
 
 void DrawingArea::addObject(DrawableObject* object)
 {
+  Signal<>::Connection connection = this->viewWindow.addObserver(std::bind(&DrawableObject::updateClipping, object));
+  object->addConnection(connection);
+
   this->displayFile.addObject(object);
   this->queue_draw();
   this->observerController();
@@ -283,7 +286,10 @@ void DrawingArea::addObject(DrawableObject* object)
 
 void DrawingArea::removeObject(std::string name)
 {
+  // LOG(4, "Removing an object by name is faster than by pointer because it internally calls `removeObjectByName()`");
+  this->displayFile.getObjectByName(name)->disconnectObserver();
   this->displayFile.removeObjectByName(name);
+
   this->queue_draw();
   this->observerController();
 }
