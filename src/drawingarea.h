@@ -9,6 +9,7 @@
 #include <gdkmm/rgba.h>
 #include <cairomm/context.h>
 
+#include "traits.h"
 #include "debugger.h"
 #include "subject_controller.h"
 
