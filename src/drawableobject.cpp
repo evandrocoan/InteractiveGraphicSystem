@@ -15,21 +15,6 @@ DrawableObject::~DrawableObject()
 {
 }
 
-void DrawableObject::disconnectObserver()
-{
-  if( !this->_connection.disconnect() )
-  {
-    LOG(1, "");
-    LOG(1, "");
-    LOG(1, "ERROR! Could not disconnect the object `%s` from its observer.", *this);
-  }
-}
-
-void DrawableObject::addConnection(Signal<>::Connection connection)
-{
-  this->_connection = connection;
-}
-
 void DrawableObject::updateClipping()
 {
   LOG(4, "Generic clipping update...");
