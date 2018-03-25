@@ -5,6 +5,7 @@
 #include <iomanip>
 
 #include "polygon.h"
+#include "traits.h"
 
 /**
  * The Drawing Area Widget
