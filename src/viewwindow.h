@@ -36,6 +36,19 @@ public:
   void move_left (int length = 10);
   void move_right(int length = 10);
 
+   /**
+    * `ViewWindow` coordinates:
+    *
+    *                        (xMax, yMax) something like (600, 500)
+    *         +-------------------+
+    *         |                   |
+    *         |                   |
+    *         |                   |
+    *         |                   |
+    *         |                   |
+    *         +-------------------+
+    *   (xMin, yMin) usually (0, 0)
+    */
   float xMin;
   float yMin;
   float xMax;

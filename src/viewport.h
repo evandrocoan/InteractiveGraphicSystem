@@ -4,8 +4,10 @@
 #include <iostream>
 #include <iomanip>
 
-#include "polygon.h"
 #include "traits.h"
+
+#include "line.h"
+#include "polygon.h"
 
 /**
  * The Drawing Area Widget
@@ -32,22 +34,94 @@ public:
   ViewPort();
   virtual ~ViewPort();
 
+   /**
+    * `ViewPort` coordinates:
+    *
+    *   (xMin, yMin) usually (0, 0)
+    *         +-------------------+
+    *         |                   |
+    *         |                   |
+    *         |                   |
+    *         |                   |
+    *         |                   |
+    *         +-------------------+
+    *                        (xMax, yMax) something like (600, 500)
+    */
+  int xMin;
+  int yMin;
+  int xMax;
+  int yMax;
+
+  /**
+   * Lines representing the clipping window saved on `_clippingWindow` on viewport coordinates:
+   *
+   *                 x1_axe
+   *         +-------------------+
+   *         |                   |
+   *         |                   |
+   * y1_axe  |                   | y2_axe
+   *         |                   |
+   *         |                   |
+   *         +-------------------+
+   *                 x2_axe
+   *
+   *
+   * Now, the same lines represented on `ViewWindow` coordinates:
+   *
+   *                 x2_axe
+   *         +-------------------+
+   *         |                   |
+   *         |                   |
+   * y1_axe  |                   | y2_axe
+   *         |                   |
+   *         |                   |
+   *         +-------------------+
+   *                 x1_axe
+   */
+  Line* x1_axe;
+  Line* x2_axe;
+  Line* y1_axe;
+  Line* y2_axe;
+
+  Polygon _clippingWindow;
+
   std::list<Coordinate*> getCoordinates();
 
   void updateClippingWindowSize(int width, int height);
 
   friend std::ostream& operator<<(std::ostream &output, const ViewPort &object);
 
-  int xMin;
-  int yMin;
-  int xMax;
-  int yMax;
-
 protected:
-  Polygon clippingWindow;
-
-  int _drawing_area_width;
-  int _drawing_area_height;
+  /**
+   * The coordinates use to represent the `_clippingWindow` X Y axis with `ViewPort` coordinates:
+   *
+   * _firstCoordinate       _forthCoordinate
+   *          +-------------------+
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          +-------------------+
+   * _secondCoordinate      _thirdCoordinate
+   *
+   *
+   * Now, the same coordinates represented on `ViewWindow` coordinates:
+   *
+   * _secondCoordinate       _thirdCoordinate
+   *          +-------------------+
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          +-------------------+
+   * _firstCoordinate        _forthCoordinate
+   */
+  Coordinate* _firstCoordinate;
+  Coordinate* _secondCoordinate;
+  Coordinate* _thirdCoordinate;
+  Coordinate* _forthCoordinate;
 };
 
 #endif
