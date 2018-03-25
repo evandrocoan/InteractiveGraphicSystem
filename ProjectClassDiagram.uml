@@ -64,20 +64,19 @@
     void         addPolygon()
     void         updateClipping();
     void         apply(Transformation&)
-    Signal<>::Connection _connection
     std::list<Coordinate*> clipped_coordinates
     list<Coordinate*>& getCoordinates()
     list<Coordinate*>& getClippedCoordinates()
   }
 
   class DrawingArea {
-    Signal<> observerController
+    Signal<> callObservers
+    Signal<>::Connection _connection
     void addPoint(std::string name, int, int)
     void addLine(std::string name, int, int, int, int)
     void addPolygon(std::string name, std::list<int>)
-    bool       on_draw(const Cairo::Context>&)
-    void       updateViewPort(Gtk::Allocation&)
     Coordinate convertCoordinateFromWindow(Coordinate&)
+    void updateClipping();
     void apply(std::string object_name, Transformation&)
   }
 
@@ -139,7 +138,7 @@
     float    Ywmin
     float    Xwmax
     float    Ywmax
-    Signal<> observerController
+    Signal<> callObservers
     Signal<>::Connection addObserver(...)
     void zoom_in  (float scale)
     void zoom_out (float scale)

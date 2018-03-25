@@ -22,8 +22,8 @@ std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
 
 Signal<>::Connection ViewWindow::addObserver(const Signal<>::Callback &callback)
 {
-  auto connection = observerController.connect(callback);
-  this->observerController();
+  auto connection = callObservers.connect(callback);
+  this->callObservers();
   return connection;
 }
 
@@ -56,7 +56,7 @@ void ViewWindow::zoom_in(float scale)
     }
   }
 
-  this->observerController();
+  this->callObservers();
 }
 
 void ViewWindow::zoom_out(float scale)
@@ -88,7 +88,7 @@ void ViewWindow::zoom_out(float scale)
     }
   }
 
-  this->observerController();
+  this->callObservers();
 }
 
 void ViewWindow::move_up(int length)
@@ -96,7 +96,7 @@ void ViewWindow::move_up(int length)
   this->yMin += length;
   this->yMax += length;
 
-  this->observerController();
+  this->callObservers();
 }
 
 void ViewWindow::move_down(int length)
@@ -104,7 +104,7 @@ void ViewWindow::move_down(int length)
   this->yMin -= length;
   this->yMax -= length;
 
-  this->observerController();
+  this->callObservers();
 }
 
 void ViewWindow::move_left(int length)
@@ -112,7 +112,7 @@ void ViewWindow::move_left(int length)
   this->xMin -= length;
   this->xMax -= length;
 
-  this->observerController();
+  this->callObservers();
 }
 
 void ViewWindow::move_right(int length)
@@ -120,5 +120,5 @@ void ViewWindow::move_right(int length)
   this->xMin += length;
   this->xMax += length;
 
-  this->observerController();
+  this->callObservers();
 }
