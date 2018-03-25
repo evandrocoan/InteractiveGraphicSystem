@@ -30,11 +30,11 @@ void ViewPort::updateClippingWindowSize(int width, int height)
   this->_drawing_area_height = height;
 
   this->clippingWindow.clearCoordinates();
-  this->clippingWindow.addCoordinate(new Coordinate(30        , 30         ));
-  this->clippingWindow.addCoordinate(new Coordinate(30        , height - 30));
-  this->clippingWindow.addCoordinate(new Coordinate(width - 30, height - 30));
-  this->clippingWindow.addCoordinate(new Coordinate(width - 30, 30         ));
-  this->clippingWindow.addCoordinate(new Coordinate(30        , 30         ));
+  this->clippingWindow.addCoordinate(new Coordinate(clipping_window_margin_distance        , clipping_window_margin_distance         ));
+  this->clippingWindow.addCoordinate(new Coordinate(clipping_window_margin_distance        , height - clipping_window_margin_distance));
+  this->clippingWindow.addCoordinate(new Coordinate(width - clipping_window_margin_distance, height - clipping_window_margin_distance));
+  this->clippingWindow.addCoordinate(new Coordinate(width - clipping_window_margin_distance, clipping_window_margin_distance         ));
+  this->clippingWindow.addCoordinate(new Coordinate(clipping_window_margin_distance        , clipping_window_margin_distance         ));
 }
 
 std::list<Coordinate*> ViewPort::getCoordinates()
