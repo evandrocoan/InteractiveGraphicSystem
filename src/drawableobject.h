@@ -25,12 +25,14 @@ public:
 
   std::string getName();
   std::list<Coordinate*>& getCoordinates();
+  std::list<Coordinate*>& getviewWindowCoordinates();
 
   /**
    * `get_geometric_center()` return a pointer which you must explicitly delete after using it.
    */
   void        apply(Transformation&);
   Coordinate* get_geometric_center();
+  Coordinate* get_window_geometric_center();
 
   friend std::ostream& operator<<(std::ostream &output, const DrawableObject &object);
 
@@ -39,5 +41,6 @@ protected:
 
   std::string name;
   std::list<Coordinate*> coordinates;
+  std::list<Coordinate*> viewWindowCoordinates;
 };
 #endif // GTKMM_APP_DRAWABLE_OBJECT
