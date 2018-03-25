@@ -182,6 +182,18 @@ public:
     }
   };
 
+  /**
+   * Add an observer to this controller, which should be notified every time the controller has some
+   * change which is of the interest of the observers.
+   *
+   * After register the observer callback and you may want to perform the first notification call on
+   * the just added observer.
+   *
+   * @param `callback` a function pointer to the observer to be notified
+   * @return           a Connection method allowing the observer to unsubscribe from observing this
+   *                   object. Useful to avoid null pointer exceptions when the observer function
+   *                   pointer is deleted.
+   */
   Connection connect(const Callback& callback)
   {
     auto item = std::make_shared<ConnectionItem>(callback, true);

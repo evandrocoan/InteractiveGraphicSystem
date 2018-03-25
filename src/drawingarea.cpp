@@ -7,6 +7,22 @@ DrawingArea::DrawingArea() :
       displayFile()
 {
   this->signal_size_allocate().connect(sigc::mem_fun(*this, &DrawingArea::on_my_size_allocate));
+  this->_connection = this->viewWindow.addObserver(std::bind(&DrawingArea::updateClipping, this));
+}
+
+DrawingArea::~DrawingArea()
+{
+  this->disconnectObserver();
+}
+
+void DrawingArea::disconnectObserver()
+{
+  if( !this->_connection.disconnect() )
+  {
+    LOG(1, "");
+    LOG(1, "");
+    LOG(1, "ERROR! Could not disconnect the object `%s` from its observer.", *this);
+  }
 }
 
 /**
@@ -51,6 +67,7 @@ void DrawingArea::apply(std::string object_name, Transformation &transformation)
     if( transformation.size() )
     {
       this->displayFile.apply(object_name, transformation);
+      this->viewWindow.observerController();
     }
     else
     {
@@ -231,12 +248,10 @@ void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
 
     this->viewPort.xMax += widthDiff;
     this->viewPort.yMax += heightDiff;
+
+    this->viewWindow.observerController();
     LOG(8, "Leaving:  %s", *this);
   }
-}
-
-DrawingArea::~DrawingArea()
-{
 }
 
 Signal<>::Connection DrawingArea::addObserver(const Signal<>::Callback &callback)
@@ -276,9 +291,6 @@ void DrawingArea::addPolygon(std::string name, std::vector<int> polygon_coord_li
 
 void DrawingArea::addObject(DrawableObject* object)
 {
-  Signal<>::Connection connection = this->viewWindow.addObserver(std::bind(&DrawableObject::updateClipping, object));
-  object->addConnection(connection);
-
   this->displayFile.addObject(object);
   this->queue_draw();
   this->observerController();
@@ -287,11 +299,21 @@ void DrawingArea::addObject(DrawableObject* object)
 void DrawingArea::removeObject(std::string name)
 {
   // LOG(4, "Removing an object by name is faster than by pointer because it internally calls `removeObjectByName()`");
-  this->displayFile.getObjectByName(name)->disconnectObserver();
   this->displayFile.removeObjectByName(name);
 
   this->queue_draw();
   this->observerController();
+}
+
+void DrawingArea::updateClipping()
+{
+  LOG(4, "Updating all objects clipping...");
+  auto objects = this->displayFile.getObjects();
+
+  for (auto object : objects)
+  {
+    object->updateClipping();
+  }
 }
 
 std::list<std::string> DrawingArea::getNamesList()

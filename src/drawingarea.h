@@ -35,14 +35,15 @@ public:
   DrawingArea();
   virtual ~DrawingArea();
 
+  Signal<>::Connection addObserver(const Signal<>::Callback&);
+  void disconnectObserver();
+
   void addPoint(std::string name, int, int);
   void addLine(std::string name, int, int, int, int);
   void addPolygon(std::string name, std::vector<int>);
 
   void removeObject(std::string name);
-
   std::list<std::string> getNamesList();
-  void apply(std::string object_name, Transformation&);
 
   void zoom_in (float scale = 1.5);
   void zoom_out(float scale = 1.5);
@@ -52,8 +53,10 @@ public:
   void move_left (int length = 10);
   void move_right(int length = 10);
 
+  void apply(std::string object_name, Transformation&);
+  void updateClipping();
+
   Coordinate convertCoordinateFromWindow(Coordinate&);
-  Signal<>::Connection addObserver(const Signal<>::Callback&);
 
   friend std::ostream& operator<<(std::ostream &output, const DrawingArea &object);
 
@@ -65,6 +68,7 @@ protected:
   DisplayFile displayFile;
 
   Signal<> observerController;
+  Signal<>::Connection _connection;
 
   void addObject(DrawableObject*);
   bool on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
