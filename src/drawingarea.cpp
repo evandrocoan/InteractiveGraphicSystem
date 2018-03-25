@@ -183,37 +183,36 @@ Coordinate DrawingArea::convertCoordinateFromWindow(Coordinate &coordinate)
  * A possible solution is to change the world window whenever the viewport of
  * the interface window were changed.
  *
- * @param `allocation` is a structure holding the position and size of a rectangle. The intersection
- *     of two rectangles can be computed with intersect(). To find the union of two rectangles use
- *     join(). Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of
-       GdkRectangle.
+ * @param `allocation` is the Current DrawingArea widget size like 556x469. Allocation is a
+ *     structure holding the position and size of a rectangle. The intersection of two rectangles
+ *     can be computed with intersect(). To find the union of two rectangles use join().
+ *     Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of
+ *     GdkRectangle.
  */
 void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
 {
   // NÃO ENTENDI A LÓGICA MATEMÁTICA.
-  LOG(8, "Entering: %s", *this);
+  LOG(8, "Entering: %s; Allocation: %sx%s", *this, allocation.get_width(), allocation.get_height());
 
   // This is true only when you resize the you DrawingArea widget window
   if (this->viewPort.xMax != allocation.get_width() || this->viewPort.yMax != allocation.get_height())
   {
-    float xMax;
-
     int widthDiff  = allocation.get_width()  - (this->viewPort.xMax - this->viewPort.xMin);
     int heightDiff = allocation.get_height() - (this->viewPort.yMax - this->viewPort.yMin);
 
+    // On the first time we run this algorithm, the ViewPort.xMax is set to zero. Therefore, we must
+    // to initialize this within the current size of the DrawingArea
     if (this->viewPort.xMax != 0)
     {
-      xMax = this->viewWindow.xMax
+      this->viewWindow.xMax = this->viewWindow.xMax
           + (float)(this->viewWindow.xMax - this->viewWindow.xMin) * ( (float)widthDiff
               / (float)(this->viewPort.xMax - this->viewPort.xMin)
           );
     }
     else
     {
-      xMax = (float)widthDiff;
+      this->viewWindow.xMax = (float)widthDiff;
     }
-
-    this->viewWindow.xMax = xMax;
 
     if (this->viewPort.yMax != 0)
     {
@@ -226,7 +225,7 @@ void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
     }
     else
     {
-      // LOG(8, "If we exchange this to `viewWindow.yMin` our world becomes up-side-down");
+      // LOG(8, "If we exchange this `viewWindow.yMax` to `viewWindow.yMin` our world becomes up-side-down");
       this->viewWindow.yMax = (float)heightDiff;
     }
 
