@@ -73,6 +73,12 @@ public:
 #ifndef OBSERVER_DESIGN_PATTER_SUBJECT_CONTROLLER_H
 #define OBSERVER_DESIGN_PATTER_SUBJECT_CONTROLLER_H
 
+#include <list>
+#include <memory>
+
+#include <functional>
+#include <algorithm>
+
 template<class... F>
 class SignalConnection;
 
