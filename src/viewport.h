@@ -41,6 +41,12 @@ public:
   void move_left (int length = 10);
   void move_right(int length = 10);
 
+  void move_center();
+
+
+  void rotate_left (long double angle = 10);
+  void rotate_right(long double angle = 10);
+
   Signal<>::Connection addObserver(const Signal<>::Callback&);
 
 protected:

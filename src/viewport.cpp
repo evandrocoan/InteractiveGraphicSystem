@@ -183,6 +183,10 @@ void ViewPort::updateViewport(Gtk::Allocation &allocation)
 
     this->xVpmax += widthDiff;
     this->yVpmax += heightDiff;
+
+    Coordinate viewWindow(this->viewWindow.xWmax/2,this->viewWindow.yWmax/2);
+    this->viewWindow.setCoordinate(viewWindow);
+
     LOG(8, "xVpmax: %d, yVpmax: %d", xVpmax, yVpmax);
   }
 }
@@ -248,5 +252,23 @@ void ViewPort::move_left(int length)
 void ViewPort::move_right(int length)
 {
   this->viewWindow.move_right(length);
+  this->queue_draw();
+}
+
+void ViewPort::move_center()
+{
+  this->viewWindow.move_center();
+  this->queue_draw();
+}
+
+void ViewPort::rotate_left(long double angle)
+{
+  this->viewWindow.rotate_left(angle);
+  this->queue_draw();
+}
+
+void ViewPort::rotate_right(long double angle)
+{
+  this->viewWindow.rotate_right(angle);
   this->queue_draw();
 }
