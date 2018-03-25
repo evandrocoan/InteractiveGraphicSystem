@@ -32,7 +32,9 @@ public:
   virtual ~ViewPort();
 
   std::list<Coordinate*> getCoordinates();
+
   void updateClippingWindowSize(int width, int height);
+
   friend std::ostream& operator<<(std::ostream &output, const ViewPort &object);
 
   int xMin;
