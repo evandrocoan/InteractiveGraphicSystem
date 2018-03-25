@@ -12,9 +12,6 @@ ViewWindow::~ViewWindow()
 {
 }
 
-/**
- * Prints a beauty version of the viewWindow when called on `std::cout<< viewWindow << std::end;`
- */
 std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
 {
   output
@@ -25,7 +22,9 @@ std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
 
 Signal<>::Connection ViewWindow::addObserver(const Signal<>::Callback &callback)
 {
-  return observerController.connect(callback);
+  auto connection = observerController.connect(callback);
+  this->observerController();
+  return connection;
 }
 
 void ViewWindow::zoom_in(float scale)

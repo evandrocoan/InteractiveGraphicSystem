@@ -9,7 +9,6 @@ DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordina
       name(name),
       coordinates(coordinates)
 {
-  this->updateClipping();
 }
 
 DrawableObject::~DrawableObject()
@@ -33,7 +32,7 @@ void DrawableObject::addConnection(Signal<>::Connection connection)
 
 void DrawableObject::updateClipping()
 {
-  LOG(4, "Updating clipping...");
+  LOG(4, "Generic clipping update...");
   this->clipped_coordinates = this->coordinates;
 }
 
