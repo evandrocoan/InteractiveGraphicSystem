@@ -1,6 +1,8 @@
 
 @startuml
   skinparam defaultFontName Consolas
+  skinparam nodesep 20
+  skinparam ranksep 30
 
   AddObject  *--  DrawingArea              : drawingArea&
 
@@ -60,8 +62,12 @@
     void         addLine()
     void         addPoint()
     void         addPolygon()
+    void         updateClipping();
     void         apply(Transformation&)
+    Signal<>::Connection _connection
+    std::list<Coordinate*> clipped_coordinates
     list<Coordinate*>& getCoordinates()
+    list<Coordinate*>& getClippedCoordinates()
   }
 
   class DrawingArea {
@@ -69,7 +75,6 @@
     void addPoint(std::string name, int, int)
     void addLine(std::string name, int, int, int, int)
     void addPolygon(std::string name, std::list<int>)
-
     bool       on_draw(const Cairo::Context>&)
     void       updateViewPort(Gtk::Allocation&)
     Coordinate convertCoordinateFromWindow(Coordinate&)
@@ -130,10 +135,12 @@
   }
 
   class ViewWindow {
-    float Xwmin
-    float Ywmin
-    float Xwmax
-    float Ywmax
+    float    Xwmin
+    float    Ywmin
+    float    Xwmax
+    float    Ywmax
+    Signal<> observerController
+    Signal<>::Connection addObserver(...)
     void zoom_in  (float scale)
     void zoom_out (float scale)
     void move_up   (int length)

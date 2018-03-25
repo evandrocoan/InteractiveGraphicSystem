@@ -8,6 +8,10 @@ ViewWindow::ViewWindow()
 {
 }
 
+ViewWindow::~ViewWindow()
+{
+}
+
 /**
  * Prints a beauty version of the viewWindow when called on `std::cout<< viewWindow << std::end;`
  */
@@ -17,6 +21,11 @@ std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
       << "(" << std::setw(4) << object.xMin << ", " << std::setw(4) << object.yMin << ")"
       << "(" << std::setw(4) << object.xMax << ", " << std::setw(4) << object.yMax << ")";
   return output;
+}
+
+Signal<>::Connection ViewWindow::addObserver(const Signal<>::Callback &callback)
+{
+  return observerController.connect(callback);
 }
 
 void ViewWindow::zoom_in(float scale)
@@ -47,6 +56,8 @@ void ViewWindow::zoom_in(float scale)
       this->yMax = yMaxNew;
     }
   }
+
+  this->observerController();
 }
 
 void ViewWindow::zoom_out(float scale)
@@ -77,32 +88,38 @@ void ViewWindow::zoom_out(float scale)
       this->yMax = yMaxNew;
     }
   }
+
+  this->observerController();
 }
 
 void ViewWindow::move_up(int length)
 {
   this->yMin += length;
   this->yMax += length;
+
+  this->observerController();
 }
 
 void ViewWindow::move_down(int length)
 {
   this->yMin -= length;
   this->yMax -= length;
+
+  this->observerController();
 }
 
 void ViewWindow::move_left(int length)
 {
   this->xMin -= length;
   this->xMax -= length;
+
+  this->observerController();
 }
 
 void ViewWindow::move_right(int length)
 {
   this->xMin += length;
   this->xMax += length;
-}
 
-ViewWindow::~ViewWindow()
-{
+  this->observerController();
 }

@@ -9,10 +9,32 @@ DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordina
       name(name),
       coordinates(coordinates)
 {
+  this->updateClipping();
 }
 
 DrawableObject::~DrawableObject()
 {
+}
+
+void DrawableObject::disconnectObserver()
+{
+  if( !this->_connection.disconnect() )
+  {
+    LOG(1, "");
+    LOG(1, "");
+    LOG(1, "ERROR! Could not disconnect the object `%s` from its observer.", *this);
+  }
+}
+
+void DrawableObject::addConnection(Signal<>::Connection connection)
+{
+  this->_connection = connection;
+}
+
+void DrawableObject::updateClipping()
+{
+  LOG(4, "Updating clipping...");
+  this->clipped_coordinates = this->coordinates;
 }
 
 std::string DrawableObject::getName()
@@ -40,6 +62,11 @@ Coordinate* DrawableObject::get_geometric_center()
 }
 
 std::list<Coordinate*>& DrawableObject::getCoordinates()
+{
+  return this->coordinates;
+}
+
+std::list<Coordinate*>& DrawableObject::getClippedCoordinates()
 {
   return this->coordinates;
 }
