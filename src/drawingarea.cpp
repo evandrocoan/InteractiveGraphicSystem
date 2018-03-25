@@ -250,7 +250,7 @@ void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
     this->viewPort.yMax += heightDiff;
 
     this->viewWindow.callObservers();
-    LOG(8, "Leaving:  %s", *this);
+    LOG(8, "Leaving:  %s %s", *this, this->viewPort._clippingWindow);
   }
 }
 
