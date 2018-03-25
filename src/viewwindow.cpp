@@ -4,7 +4,12 @@ ViewWindow::ViewWindow(int xWmin, int yWmin, int xWmax, int yWmax)
     : xWmin(xWmin),
       yWmin(yWmin),
       xWmax(xWmax),
-      yWmax(yWmax)
+      yWmax(yWmax),
+      coordinate(xWmax/2,yWmax/2),
+      top_left(0,0),
+      top_right(0,0),
+      bottom_left(0,0),
+      bottom_right(0,0)
 {
 }
 
@@ -70,28 +75,150 @@ void ViewWindow::zoom_out(float scale)
 
 void ViewWindow::move_up(int length)
 {
+  Transformation transformation;
+  Coordinate center(0,0,0);
+  transformation.add_translation("windowUp",Coordinate(1,length));
+  transformation.set_geometric_center(center);
+  transformation.apply(this->coordinate);
+
   this->yWmin += length;
   this->yWmax += length;
 }
 
 void ViewWindow::move_down(int length)
 {
+  Transformation transformation;
+  Coordinate center(0,0,0);
+  transformation.add_translation("windowDown",Coordinate(1,-length));
+  transformation.set_geometric_center(center);
+  transformation.apply(this->coordinate);
+
   this->yWmin -= length;
   this->yWmax -= length;
 }
 
 void ViewWindow::move_left(int length)
 {
+
+  Transformation transformation;
+  Coordinate center(0,0,0);
+  transformation.add_translation("windowLeft",Coordinate(-length, 1));
+  transformation.set_geometric_center(center);
+  transformation.apply(this->coordinate);
+
   this->xWmin -= length;
   this->xWmax -= length;
+
 }
 
 void ViewWindow::move_right(int length)
 {
+  Transformation transformation;
+  Coordinate center(0,0,0);
+  transformation.add_translation("windowRight",Coordinate(length, 1));
+  transformation.set_geometric_center(center);
+  transformation.apply(this->coordinate);
+
   this->xWmin += length;
   this->xWmax += length;
 }
 
+void ViewWindow::rotate_left(long double angle)
+{
+  this->initPoints();
+
+  Transformation transformation;
+  Coordinate center(0,0,0);
+  
+  transformation.add_translation("Center with the world",Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
+  transformation.add_rotation("Window Rotation", Array<3, long double>{angle, 0.0, 0.0});
+  transformation.add_translation("Back to initial position",Coordinate(this->coordinate.getx(), this->coordinate.gety()));
+  transformation.set_geometric_center(center);
+
+  transformation.apply(this->bottom_left);
+  transformation.apply(this->bottom_right);
+  transformation.apply(this->top_left);
+  transformation.apply(this->top_right);
+  transformation.apply(this->coordinate);
+
+  this->setPoints();
+
+  
+}
+
+void ViewWindow::rotate_right(long double angle)
+{
+
+  this->initPoints();
+
+  Transformation transformation;
+  Coordinate center(0,0,0);
+  
+  transformation.add_translation("Center with the world",Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
+  transformation.add_rotation("Window Rotation", Array<3, long double>{-angle, 0.0, 0.0});
+  transformation.add_translation("Back to initial position",Coordinate(this->coordinate.getx(), this->coordinate.gety()));
+  transformation.set_geometric_center(center);
+
+  transformation.apply(this->bottom_left);
+  transformation.apply(this->bottom_right);
+  transformation.apply(this->top_left);
+  transformation.apply(this->top_right);
+  transformation.apply(this->coordinate);
+
+  this->setPoints();
+  
+}
+
 ViewWindow::~ViewWindow()
 {
+}
+
+Coordinate ViewWindow::getCoordinate()
+{
+  return this->coordinate;
+}
+
+void ViewWindow::setCoordinate(Coordinate coordinate)
+{
+  this->coordinate = coordinate;
+}
+
+void ViewWindow::initPoints(){
+
+  this->top_left = Coordinate(this->xWmin, this->yWmax);
+  this->top_right = Coordinate(this->xWmax, this->yWmax);
+  this->bottom_left = Coordinate(this->xWmin, this->yWmin);
+  this->bottom_right = Coordinate(this->xWmax, this->yWmin);
+
+}
+
+void ViewWindow::setPoints(){
+
+  this->xWmin = this->bottom_left.getx();
+  this->yWmin = this->bottom_left.gety();
+
+  this->xWmax = this->top_right.getx();
+  this->yWmax = this->top_right.gety();
+
+}
+
+void ViewWindow::move_center(){
+
+  this->initPoints();
+
+  Transformation transformation;
+  Coordinate center(0,0,0);
+  
+  transformation.add_translation("Center with the world",Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
+  transformation.set_geometric_center(center);
+
+  transformation.apply(this->bottom_left);
+  transformation.apply(this->bottom_right);
+  transformation.apply(this->top_left);
+  transformation.apply(this->top_right);
+  transformation.apply(this->coordinate);
+
+ this->setPoints();
+
+
 }
