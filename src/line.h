@@ -7,22 +7,10 @@
 class Line : public DrawableObject
 {
 public:
-  Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2) :
-      DrawableObject(name)
-  {
-    coordinates.push_back(line_cord1);
-    coordinates.push_back(line_cord2);
-  }
+  Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2);
+  ~Line();
 
-  ~Line()
-  {
-  }
-
-  virtual void updateClipping(ClippingWindow& axes)
-  {
-    LOG(4, "Line clipping update... %s", axes);
-    this->clipped_coordinates = this->coordinates;
-  }
+  virtual void updateClipping(ClippingWindow& axes);
 };
 
 #endif // GTKMM_APP_LINE
