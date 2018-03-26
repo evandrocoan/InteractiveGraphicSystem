@@ -14,6 +14,7 @@
 #include <list>
 #include <string>
 
+#include "axes.h"
 #include "coordinate.h"
 #include "transformation.h"
 #include "subject_controller.h"
@@ -35,9 +36,14 @@ public:
   Coordinate* get_geometric_center();
 
   void         apply(Transformation&);
-  virtual void updateClipping();
+  virtual void updateClipping(Axes&);
 
+  /**
+   * Making operator<< virtual?
+   * https://stackoverflow.com/questions/4571611/making-operator-virtual
+   */
   friend std::ostream& operator<<(std::ostream &output, const DrawableObject &object);
+  virtual void printMyself(std::ostream &output) const;
 
 protected:
   DrawableObject(std::string name);
