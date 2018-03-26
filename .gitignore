@@ -4,6 +4,7 @@
 binaries
 objects
 Debug
+Release
 
 *.sublime-workspace
 
