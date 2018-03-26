@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include "axes.h"
+#include "clippingwindow.h"
 
 /**
  * The Drawing Area Widget
@@ -49,9 +49,9 @@ public:
   int xMax;
   int yMax;
 
-  Axes axes;
+  ClippingWindow axes;
 
-  Axes& getCoordinates();
+  ClippingWindow& getCoordinates();
 
   void updateClippingWindowSize(int width, int height);
 

@@ -3,11 +3,10 @@
 
 #include "coordinate.h"
 
-class Axes : public Array<4, Coordinate*>
+class ClippingWindow : public Array<4, Coordinate*>
 {
 public:
-  Axes(std::string name) :
-      name(name)
+  ClippingWindow()
   {
       this->_data[0] = new Coordinate(0, 0, 1);
       this->_data[1] = new Coordinate(0, 0, 1);
@@ -20,7 +19,7 @@ public:
       this->y2 = {this->_data[2], this->_data[3]};
   }
 
-  ~Axes()
+  ~ClippingWindow()
   {
   }
 
@@ -28,8 +27,6 @@ public:
   {
     return this->_data[index];
   }
-
-  std::string name;
 
   /**
    * Lines representing the clipping window saved on viewport coordinates:
@@ -103,9 +100,9 @@ public:
     (*this->_data[3])[1] = clipping_window_margin_distance;
   }
 
-  friend std::ostream& operator<<(std::ostream &output, const Axes &object)
+  friend std::ostream& operator<<(std::ostream &output, const ClippingWindow &object)
   {
-    output << object.name << "["
+    output << "ClippingWindow" << "["
         << "x1" << *object.x1[0] << *object.x1[1] << " "
         << "y1" << *object.y1[0] << *object.y1[1] << " "
         << "x2" << *object.x2[0] << *object.x2[1] << " "
