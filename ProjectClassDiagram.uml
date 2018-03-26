@@ -12,6 +12,10 @@
   DisplayFile        -left[hidden]> ViewWindow
   DisplayFile "1\n"  *-down- "*" DrawableObject
 
+  DrawingArea *-- ViewPort                 : viewPort
+  DrawingArea *-- ViewWindow               : viewWindow
+  DrawingArea *-down- DisplayFile          : displayFile
+
   Line    <|-up- DrawableObject
   Point   <|-up- DrawableObject
   Polygon <|-up- DrawableObject
@@ -24,9 +28,7 @@
   TransformationData *-- TransformationType: type
   TransformationData *-- RotationType      : rotation_type
 
-  DrawingArea *-- ViewPort                 : viewPort
-  DrawingArea *-- ViewWindow               : viewWindow
-  DrawingArea *-down- DisplayFile          : displayFile
+  ViewPort *-- Axes                        : axes
 
   class AddObject {
     Gtk::Grid       point_grid
@@ -42,6 +44,15 @@
     Gtk::Grid translation_grid
     Gtk::Grid coodinate_input_grid
     Gtk::Box& getBox()
+  }
+
+  class Axes {
+    Array<2, Coordinate*> x1;
+    Array<2, Coordinate*> x2;
+    Array<2, Coordinate*> y1;
+    Array<2, Coordinate*> y2;
+    Coordinate* _data[4]
+    Axes(std::string name)
   }
 
   class DisplayFile {
@@ -81,15 +92,15 @@
   }
 
   class Line {
-    Line(std::string name, Coordinate*, Coordinate*)
+    Line(Coordinate*, Coordinate*)
   }
 
   class Point {
-    Point(std::string name, Coordinate*)
+    Point(Coordinate*)
   }
 
   class Polygon {
-    Polygon(std::string name, list<Coordinate*>)
+    Polygon(list<Coordinate*>)
   }
 
   class MainWindow {
@@ -125,19 +136,18 @@
   }
 
   class ViewPort {
-    int     Xvpmin
-    int     Yvpmin
-    int     Xvpmax
-    int     Yvpmax
-    Polygon clippingWindow
+    int xMin
+    int yMin
+    int xMax
+    int yMax
     void updateClippingWindowSize(int, int)
   }
 
   class ViewWindow {
-    float    Xwmin
-    float    Ywmin
-    float    Xwmax
-    float    Ywmax
+    float xWmin
+    float yWmin
+    float xWmax
+    float yWmax
     Signal<> callObservers
     Signal<>::Connection addObserver(...)
     void zoom_in  (float scale)

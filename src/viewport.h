@@ -4,10 +4,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include "traits.h"
-
-#include "line.h"
-#include "polygon.h"
+#include "axes.h"
 
 /**
  * The Drawing Area Widget
@@ -52,76 +49,13 @@ public:
   int xMax;
   int yMax;
 
-  /**
-   * Lines representing the clipping window saved on `_clippingWindow` on viewport coordinates:
-   *
-   *                 x1_axe
-   *         +-------------------+
-   *         |                   |
-   *         |                   |
-   * y1_axe  |                   | y2_axe
-   *         |                   |
-   *         |                   |
-   *         +-------------------+
-   *                 x2_axe
-   *
-   *
-   * Now, the same lines represented on `ViewWindow` coordinates:
-   *
-   *                 x2_axe
-   *         +-------------------+
-   *         |                   |
-   *         |                   |
-   * y1_axe  |                   | y2_axe
-   *         |                   |
-   *         |                   |
-   *         +-------------------+
-   *                 x1_axe
-   */
-  Line* x1_axe;
-  Line* x2_axe;
-  Line* y1_axe;
-  Line* y2_axe;
+  Axes axes;
 
-  Polygon _clippingWindow;
-
-  std::list<Coordinate*> getCoordinates();
+  Axes& getCoordinates();
 
   void updateClippingWindowSize(int width, int height);
 
   friend std::ostream& operator<<(std::ostream &output, const ViewPort &object);
-
-protected:
-  /**
-   * The coordinates use to represent the `_clippingWindow` X Y axis with `ViewPort` coordinates:
-   *
-   * _firstCoordinate       _forthCoordinate
-   *          +-------------------+
-   *          |                   |
-   *          |                   |
-   *          |                   |
-   *          |                   |
-   *          |                   |
-   *          +-------------------+
-   * _secondCoordinate      _thirdCoordinate
-   *
-   *
-   * Now, the same coordinates represented on `ViewWindow` coordinates:
-   *
-   * _secondCoordinate       _thirdCoordinate
-   *          +-------------------+
-   *          |                   |
-   *          |                   |
-   *          |                   |
-   *          |                   |
-   *          |                   |
-   *          +-------------------+
-   * _firstCoordinate        _forthCoordinate
-   */
-  Coordinate* _firstCoordinate;
-  Coordinate* _secondCoordinate;
-  Coordinate* _thirdCoordinate;
-  Coordinate* _forthCoordinate;
 };
 
 #endif

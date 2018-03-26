@@ -15,9 +15,9 @@ DrawableObject::~DrawableObject()
 {
 }
 
-void DrawableObject::updateClipping()
+void DrawableObject::updateClipping(Axes& axes)
 {
-  LOG(4, "Generic clipping update...");
+  LOG(4, "Generic clipping update... %s", axes);
   this->clipped_coordinates = this->coordinates;
 }
 
@@ -60,12 +60,18 @@ std::list<Coordinate*>& DrawableObject::getClippedCoordinates()
  */
 std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
 {
-  output << object.name << "(";
+  object.printMyself(output);
+  return output;
+}
+
+void DrawableObject::printMyself(std::ostream& output) const
+{
+  output << this->name << "(";
 
   unsigned int index = 0;
-  unsigned int size = object.coordinates.size() - 1;
+  unsigned int size = this->coordinates.size() - 1;
 
-  for( auto coordinate : object.coordinates )
+  for( auto coordinate : this->coordinates )
   {
     output << *coordinate;
 
@@ -78,7 +84,6 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
   }
 
   output << ")";
-  return output;
 }
 
 void DrawableObject::apply(Transformation &transformation)
@@ -93,5 +98,4 @@ void DrawableObject::apply(Transformation &transformation)
   {
     transformation.apply(*coordinate);
   }
-
 }

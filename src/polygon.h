@@ -1,5 +1,5 @@
-#ifndef GTKMM_APP_WIREFRAME
-#define GTKMM_APP_WIREFRAME
+#ifndef GTKMM_APP_POLYGON
+#define GTKMM_APP_POLYGON
 
 #include "drawableobject.h"
 #include "coordinate.h"
@@ -7,10 +7,23 @@
 class Polygon : public DrawableObject
 {
 public:
-  Polygon(std::string name, std::list<Coordinate*> coordinates);
-  ~Polygon();
+  Polygon(std::string name, std::list<Coordinate*> coordinates) :
+      DrawableObject(name, coordinates)
+  {
+  }
 
-  void addCoordinate(Coordinate*);
-  void clearCoordinates();
+  ~Polygon()
+  {
+  }
+
+  void addCoordinate(Coordinate* coordinate)
+  {
+    this->coordinates.push_back(coordinate);
+  }
+
+  void clearCoordinates()
+  {
+    this->coordinates.clear();
+  }
 };
-#endif // GTKMM_APP_WIREFRAME
+#endif // GTKMM_APP_POLYGON
