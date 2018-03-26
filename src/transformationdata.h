@@ -1,6 +1,12 @@
 #ifndef GTKMM_APP_TRANSFORMATION_DATA
 #define GTKMM_APP_TRANSFORMATION_DATA
 
+#include <string>
+#include <iostream>
+
+#include "coordinate.h"
+#include "matrixform.h"
+
 enum RotationType
 {
   ON_WORLD_CENTER,
@@ -14,32 +20,6 @@ enum TransformationType
   ROTATION,
   TRANSLATION
 };
-
-inline std::ostream & operator<<(std::ostream &output, TransformationType object)
-{
-  switch (object)
-  {
-    case TransformationType::SCALING:     output << "SCALING"; break;
-    case TransformationType::ROTATION:    output << "ROTATION"; break;
-    case TransformationType::TRANSLATION: output << "TRANSLATION"; break;
-    default:
-      output << (int) object; break;
-  }
-  return output;
-}
-
-inline std::ostream & operator<<(std::ostream &output, RotationType object)
-{
-  switch (object)
-  {
-    case RotationType::ON_WORLD_CENTER:     output << "ON_WORLD_CENTER"; break;
-    case RotationType::ON_ITS_OWN_CENTER:   output << "ON_ITS_OWN_CENTER"; break;
-    case RotationType::ON_GIVEN_COORDINATE: output << "ON_GIVEN_COORDINATE"; break;
-    default:
-      output << (int) object; break;
-  }
-  return output;
-}
 
 /**
  * Ignoring the `translations` matrices, the `matrix` is the main operation applied after
@@ -60,28 +40,10 @@ struct TransformationData
    * of the object geometric center.
    */
   TransformationData(std::string name, MatrixForm matrix, TransformationType type,
-          RotationType rotation_type = RotationType::ON_WORLD_CENTER,
-          Coordinate rotation_center = _default_coordinate_value_parameter) :
-      name(name),
-      matrix(matrix),
-      type(type),
-      rotation_center{rotation_center},
-      rotation_type(rotation_type)
-  {
-  }
+      RotationType rotation_type = RotationType::ON_WORLD_CENTER,
+      Coordinate rotation_center = _default_coordinate_value_parameter);
 
-  /**
-   * Prints a basic information of this object when called on `std::cout<< matrix << std::end;`
-   */
-  friend std::ostream& operator<<( std::ostream &output, const TransformationData &data )
-  {
-    output << data.name << ", ";
-    output << data.type << ", ";
-    output << data.matrix << ", ";
-    output << data.rotation_type << ", ";
-    output << data.rotation_center;
-    return output;
-  }
+  friend std::ostream& operator<<(std::ostream &output, const TransformationData &object);
 };
 
 #endif // GTKMM_APP_TRANSFORMATION_DATA
