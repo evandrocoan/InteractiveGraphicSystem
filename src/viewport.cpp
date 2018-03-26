@@ -5,7 +5,7 @@ ViewPort::ViewPort() :
       yMin(0),
       xMax(0),
       yMax(0),
-      axes("X Y axes")
+      axes()
 {
 }
 
@@ -33,7 +33,7 @@ void ViewPort::updateClippingWindowSize(int width, int height)
   this->axes.updateClippingWindowSize(width, height);
 }
 
-Axes& ViewPort::getCoordinates()
+ClippingWindow& ViewPort::getCoordinates()
 {
   return this->axes;
 }

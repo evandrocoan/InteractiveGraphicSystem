@@ -114,7 +114,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 
   // LOG(8, "Draw the clipping window with a red border")
   cairo_context->set_source_rgb(0.99, 0.0, 0.0);
-  Axes axes = this->viewPort.getCoordinates();
+  ClippingWindow axes = this->viewPort.getCoordinates();
 
   cairo_context->line_to(axes.getPoint(0)->getx(), axes.getPoint(0)->gety());
   cairo_context->line_to(axes.getPoint(1)->getx(), axes.getPoint(1)->gety());

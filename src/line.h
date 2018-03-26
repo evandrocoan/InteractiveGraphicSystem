@@ -18,7 +18,7 @@ public:
   {
   }
 
-  virtual void updateClipping(Axes& axes)
+  virtual void updateClipping(ClippingWindow& axes)
   {
     LOG(4, "Line clipping update... %s", axes);
     this->clipped_coordinates = this->coordinates;

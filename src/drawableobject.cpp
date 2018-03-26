@@ -15,7 +15,7 @@ DrawableObject::~DrawableObject()
 {
 }
 
-void DrawableObject::updateClipping(Axes& axes)
+void DrawableObject::updateClipping(ClippingWindow& axes)
 {
   LOG(4, "Generic clipping update... %s", axes);
   this->clipped_coordinates = this->coordinates;
