@@ -47,25 +47,26 @@
   }
 
   class ClippingWindow {
-    Array<2, Coordinate*> x1;
-    Array<2, Coordinate*> x2;
-    Array<2, Coordinate*> y1;
-    Array<2, Coordinate*> y2;
+    Array<2, Coordinate*> x1
+    Array<2, Coordinate*> x2
+    Array<2, Coordinate*> y1
+    Array<2, Coordinate*> y2
     Coordinate* _data[4]
-    ClippingWindow(std::string name)
+    void updateClippingWindowSize(int, int)
+    Coordinate* getPoint(unsigned int index)
   }
 
   class DisplayFile {
     std::map<string, DrawableObject*>
 
-    std::list<std::string>     getNamesList();
-    std::list<DrawableObject*> getObjects();
-    DrawableObject*   getObjectByName(std::string name);
-    bool              isObjectOnByName(std::string name);
-    void            addObject(DrawableObject* object);
-    void            removeObject(DrawableObject* object);
-    void            removeObjectByName(std::string name);
-    void apply(std::string object_name, Transformation&);
+    std::list<std::string>     getNamesList()
+    std::list<DrawableObject*> getObjects()
+    DrawableObject*   getObjectByName(std::string name)
+    bool              isObjectOnByName(std::string name)
+    void            addObject(DrawableObject* object)
+    void            removeObject(DrawableObject* object)
+    void            removeObjectByName(std::string name)
+    void apply(std::string object_name, Transformation&)
   }
 
   class DrawableObject {
