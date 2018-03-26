@@ -7,23 +7,11 @@
 class Polygon : public DrawableObject
 {
 public:
-  Polygon(std::string name, std::list<Coordinate*> coordinates) :
-      DrawableObject(name, coordinates)
-  {
-  }
+  Polygon(std::string name, std::list<Coordinate*> coordinates);
+  ~Polygon();
 
-  ~Polygon()
-  {
-  }
-
-  void addCoordinate(Coordinate* coordinate)
-  {
-    this->coordinates.push_back(coordinate);
-  }
-
-  void clearCoordinates()
-  {
-    this->coordinates.clear();
-  }
+  void addCoordinate(Coordinate* coordinate);
+  void clearCoordinates();
 };
+
 #endif // GTKMM_APP_POLYGON
