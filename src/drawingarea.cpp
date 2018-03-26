@@ -37,7 +37,7 @@ std::ostream& operator<<( std::ostream &output, const DrawingArea &object )
 }
 
 /**
- * Move the X and Y axis to the center of the window when the program starts and recalculate the
+ * Move the X and Y axes to the center of the window when the program starts and recalculate the
  * clipping window size when the window size changes.
  *
  * @param allocation [description]
@@ -47,9 +47,6 @@ void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
   const int width = this->get_width();
   const int height = this->get_height();
 
-  this->viewPort.updateClippingWindowSize(width, height);
-  LOG(4, "Current viewport size %sx%s", width, height);
-
   if( !isCentered )
   {
     this->isCentered = true;
@@ -58,6 +55,9 @@ void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
     this->move_down(480);
     this->move_left(500);
   }
+
+  this->viewPort.updateClippingWindowSize(width, height);
+  LOG(4, "Current viewport size %sx%s", width, height);
 }
 
 void DrawingArea::apply(std::string object_name, Transformation &transformation)
@@ -103,9 +103,9 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   Coordinate originOnWindow(0, 0);
   Coordinate originOnWorld = convertCoordinateFromWindow(originOnWindow);
 
-  LOG(8, "Drawing X and Y axis with originOnWorld: %s", originOnWorld);
-  LOG(4, "Drawing axis X from (%s, %s) to (%s, %s)", this->viewPort.xMin, originOnWorld.gety(), this->viewPort.xMax, originOnWorld.gety() );
-  LOG(4, "Drawing axis Y from (%s, %s) to (%s, %s)", originOnWorld.getx(), this->viewPort.yMin, originOnWorld.getx(), this->viewPort.yMax );
+  LOG(8, "Drawing X and Y axes with originOnWorld: %s", originOnWorld);
+  LOG(4, "Drawing axes X from (%s, %s) to (%s, %s)", this->viewPort.xMin, originOnWorld.gety(), this->viewPort.xMax, originOnWorld.gety() );
+  LOG(4, "Drawing axes Y from (%s, %s) to (%s, %s)", originOnWorld.getx(), this->viewPort.yMin, originOnWorld.getx(), this->viewPort.yMax );
   cairo_context->move_to(this->viewPort.xMin + clipping_window_margin_distance, originOnWorld.gety());
   cairo_context->line_to(this->viewPort.xMax - clipping_window_margin_distance, originOnWorld.gety());
   cairo_context->move_to(originOnWorld.getx(), this->viewPort.yMin + clipping_window_margin_distance);
@@ -114,11 +114,13 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 
   // LOG(8, "Draw the clipping window with a red border")
   cairo_context->set_source_rgb(0.99, 0.0, 0.0);
+  Axes axes = this->viewPort.getCoordinates();
 
-  for (auto coordinate : this->viewPort.getCoordinates())
-  {
-    cairo_context->line_to(coordinate->getx(), coordinate->gety());
-  }
+  cairo_context->line_to(axes.getPoint(0)->getx(), axes.getPoint(0)->gety());
+  cairo_context->line_to(axes.getPoint(1)->getx(), axes.getPoint(1)->gety());
+  cairo_context->line_to(axes.getPoint(2)->getx(), axes.getPoint(2)->gety());
+  cairo_context->line_to(axes.getPoint(3)->getx(), axes.getPoint(3)->gety());
+  cairo_context->line_to(axes.getPoint(0)->getx(), axes.getPoint(0)->gety());
 
   // LOG(8, "Set color's objects as black:");
   cairo_context->stroke();
@@ -250,7 +252,7 @@ void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
     this->viewPort.yMax += heightDiff;
 
     this->viewWindow.callObservers();
-    LOG(8, "Leaving:  %s %s", *this, this->viewPort._clippingWindow);
+    LOG(8, "Leaving:  %s %s", *this, this->viewPort.axes);
   }
 }
 
@@ -292,6 +294,8 @@ void DrawingArea::addPolygon(std::string name, std::vector<int> polygon_coord_li
 void DrawingArea::addObject(DrawableObject* object)
 {
   this->displayFile.addObject(object);
+  object->updateClipping(this->viewPort.axes);
+
   this->queue_draw();
   this->callObservers();
 }
@@ -312,7 +316,7 @@ void DrawingArea::updateClipping()
 
   for (auto object : objects)
   {
-    object->updateClipping();
+    object->updateClipping(this->viewPort.axes);
   }
 }
 

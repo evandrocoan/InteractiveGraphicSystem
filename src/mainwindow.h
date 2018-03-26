@@ -19,9 +19,6 @@
 #include "addobject.h"
 #include "addtransformation.h"
 
-const double default_zoom_scale = 1.5;
-const char* const default_move_length = "1";
-
 class MainWindow
 {
 
