@@ -114,13 +114,12 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 
   // LOG(8, "Draw the clipping window with a red border")
   cairo_context->set_source_rgb(0.99, 0.0, 0.0);
-  ClippingWindow axes = this->viewPort.getCoordinates();
 
-  cairo_context->line_to(axes.getPoint(0)->getx(), axes.getPoint(0)->gety());
-  cairo_context->line_to(axes.getPoint(1)->getx(), axes.getPoint(1)->gety());
-  cairo_context->line_to(axes.getPoint(2)->getx(), axes.getPoint(2)->gety());
-  cairo_context->line_to(axes.getPoint(3)->getx(), axes.getPoint(3)->gety());
-  cairo_context->line_to(axes.getPoint(0)->getx(), axes.getPoint(0)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(1)->getx(), this->viewPort.getPoint(1)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(2)->getx(), this->viewPort.getPoint(2)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(3)->getx(), this->viewPort.getPoint(3)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
 
   // LOG(8, "Set color's objects as black:");
   cairo_context->stroke();
@@ -252,7 +251,7 @@ void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
     this->viewPort.yMax += heightDiff;
 
     this->viewWindow.callObservers();
-    LOG(8, "Leaving:  %s %s", *this, this->viewPort.axes);
+    LOG(8, "Leaving:  %s %s", *this, this->viewPort);
   }
 }
 
@@ -294,7 +293,7 @@ void DrawingArea::addPolygon(std::string name, std::vector<int> polygon_coord_li
 void DrawingArea::addObject(DrawableObject* object)
 {
   this->displayFile.addObject(object);
-  object->updateClipping(this->viewPort.axes);
+  object->updateClipping(this->viewPort);
 
   this->queue_draw();
   this->callObservers();
@@ -316,7 +315,7 @@ void DrawingArea::updateClipping()
 
   for (auto object : objects)
   {
-    object->updateClipping(this->viewPort.axes);
+    object->updateClipping(this->viewPort);
   }
 }
 
