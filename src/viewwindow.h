@@ -20,7 +20,7 @@ public:
   void zoom_in (float scale = 1.5);
   void zoom_out(float scale = 1.5);
 
-  Coordinate getCoordinate();
+  Coordinate& getCoordinate();
   void setCoordinate(Coordinate coordinate);
 
   void move_up   (int length = 10);
@@ -35,24 +35,20 @@ public:
 
   void initPoints();
   void setPoints();
-  void applyTransformation(Transformation transformation);
+  void applyTransformation(Transformation& transformation);
 
   float xWmin;
   float yWmin;
   float xWmax;
   float yWmax;
 
-  private: 
-
+private:
   Coordinate coordinate;
+
   Coordinate top_left;
   Coordinate top_right;
   Coordinate bottom_left;
   Coordinate bottom_right;
-
-  
-
-  
 };
 
 #endif

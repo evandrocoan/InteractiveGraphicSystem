@@ -116,7 +116,7 @@ void AddObject::on_button_save_point()
 
   Coordinate converted_coordinate = this->viewPort.coordinateWorldToWindow(*point_cord);
   Coordinate* point_cord_in_window = new Coordinate(converted_coordinate.getx(), converted_coordinate.gety());
-  
+
   Point* point = new Point(name, point_cord, point_cord_in_window);
 
   this->viewPort.addObject(point);
@@ -154,7 +154,7 @@ void AddObject::on_button_save_line()
   Coordinate* point_cord2_in_window = new Coordinate(converted_coordinate2.getx(), converted_coordinate2.gety());
 
   Line* line = new Line(name, point_cord1, point_cord2, point_cord1_in_window, point_cord2_in_window);
-  
+
   this->viewPort.addObject(line);
   this->window.close();
 }
@@ -198,10 +198,10 @@ void AddObject::on_button_add_coordinate()
 
   Coordinate* wire_cord = new Coordinate(x_coord, y_coord);
   polygon_coord_list.push_back(wire_cord);
-  
+
   Coordinate converted_coordinate = this->viewPort.coordinateWorldToWindow(*wire_cord);
   Coordinate* point_cord_in_window = new Coordinate(converted_coordinate.getx(), converted_coordinate.gety());
-  
+
 
   polygon_coord_list_in_window.push_back(point_cord_in_window);
 
