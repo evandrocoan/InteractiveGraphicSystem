@@ -178,7 +178,7 @@ void ViewWindow::move_center(){
   Coordinate center(0,0,0);
   
   transformation.add_translation("Center with the world",Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
-  transformation.set_geometric_center(center);
+  transformation.set_geometric_center(this->coordinate);
 
   this->applyTransformation(transformation);
 

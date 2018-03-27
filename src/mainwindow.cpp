@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+
 MainWindow::MainWindow() :
       addObject(this->viewPort),
       addTransformation(this->viewPort),
@@ -109,7 +110,6 @@ void MainWindow::setupButtons()
   left_box.add(grid_rotate);
   left_box.add(grid_other);
   left_box.add(this->addTransformation.getBox());
-
  
 }
 
