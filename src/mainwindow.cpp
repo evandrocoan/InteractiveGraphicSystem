@@ -40,6 +40,7 @@ MainWindow::MainWindow() :
   this->window.set_default_size(800, 500);
   this->window.add(this->main_box);
   this->window.show_all_children();
+
 }
 
 MainWindow::~MainWindow()
