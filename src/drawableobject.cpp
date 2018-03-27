@@ -5,9 +5,10 @@ DrawableObject::DrawableObject(std::string name) :
 {
 }
 
-DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordinates) :
+DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordinates,  std::list<Coordinate*> coordinates_in_window) :
       name(name),
-      coordinates(coordinates)
+      coordinates(coordinates),
+      viewWindowCoordinates(coordinates_in_window)
 {
 }
 
@@ -35,6 +36,27 @@ Coordinate* DrawableObject::get_geometric_center()
     y_axis += coordinate->gety();
     z_axis += coordinate->getz();
   }
+  
+
+  return new Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count);
+}
+
+Coordinate* DrawableObject::get_window_geometric_center()
+{
+  auto coordinates      = this->getviewWindowCoordinates();
+  int coordinates_count = coordinates.size();
+
+  long int x_axis = 0;
+  long int y_axis = 0;
+  long int z_axis = 0;
+
+  for(auto coordinate : coordinates)
+  {
+    x_axis += coordinate->getx();
+    y_axis += coordinate->gety();
+    z_axis += coordinate->getz();
+  }
+  
 
   return new Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count);
 }
@@ -42,6 +64,11 @@ Coordinate* DrawableObject::get_geometric_center()
 std::list<Coordinate*>& DrawableObject::getCoordinates()
 {
   return this->coordinates;
+}
+
+std::list<Coordinate*>& DrawableObject::getviewWindowCoordinates()
+{
+  return this->viewWindowCoordinates;
 }
 
 /**
@@ -54,7 +81,7 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
   unsigned int index = 0;
   unsigned int size = object.coordinates.size() - 1;
 
-  for( auto coordinate : object.coordinates )
+  for( auto coordinate : object.viewWindowCoordinates )
   {
     output << *coordinate;
 
@@ -72,8 +99,27 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
 
 void DrawableObject::apply(Transformation &transformation)
 {
+
+  LOG(8, "Entering apply");
   auto coordinates = this->getCoordinates();
   auto geometric_center = this->get_geometric_center();
+
+  transformation.set_geometric_center(*geometric_center);
+  delete geometric_center;
+
+  for(auto coordinate : coordinates)
+  {
+    transformation.apply(*coordinate);
+  }
+
+}
+
+void DrawableObject::applyInWindow(Transformation &transformation)
+{
+
+  LOG(8, "Entering applyInWindow");
+  auto coordinates = this->getviewWindowCoordinates();
+  auto geometric_center = this->get_window_geometric_center();
 
   transformation.set_geometric_center(*geometric_center);
   delete geometric_center;

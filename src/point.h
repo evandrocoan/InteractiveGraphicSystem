@@ -7,7 +7,7 @@
 class Point : public DrawableObject
 {
 public:
-  Point(std::string name, Coordinate* point_cord);
+  Point(std::string name, Coordinate* point_cord, Coordinate* point_cord_in_window);
   ~Point();
 };
 #endif // GTKMM_APP_POINT
