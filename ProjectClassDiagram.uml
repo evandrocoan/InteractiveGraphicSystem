@@ -56,7 +56,8 @@
 
   class DrawableObject {
     std::string        getName()
-    list<Coordinate*>& getCoordinates()
+    list<Coordinate> getCoordinatesWorld()
+    list<Coordinate> getCoordinatesWindow()
     void               apply(Transformation&)
   }
 
