@@ -103,7 +103,6 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   for (auto object : objects)
   {
     auto coordinates = object->getviewWindowCoordinates();
-
     Coordinate firstCoordinate = this->coordinateWindowToViewPort(**(coordinates.begin()));
 
     cairo_context->move_to(firstCoordinate.getx(), firstCoordinate.gety());
@@ -283,6 +282,11 @@ void ViewPort::removeObject(std::string name)
 std::list<std::string> ViewPort::getNamesList()
 {
   return this->displayFile.getNamesList();
+}
+
+std::list<DrawableObject*> ViewPort::getObjectsList()
+{
+  return this->displayFile.getObjects();
 }
 
 void ViewPort::zoom_in(float scale)

@@ -14,11 +14,37 @@ DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordina
 
 DrawableObject::~DrawableObject()
 {
+	this->destroyList(coordinates);
+}
+
+void DrawableObject::destroyList(std::list<Coordinate*> coordinates)
+{
+  while(!coordinates.empty())
+  {
+    // delete coordinates.front();
+    coordinates.pop_front();
+  }
 }
 
 std::string DrawableObject::getName()
 {
   return this->name;
+}
+
+std::list<Coordinate*>& DrawableObject::getCoordinates()
+{
+  return this->coordinates;
+}
+
+std::list<Coordinate*>& DrawableObject::getviewWindowCoordinates()
+{
+  return this->viewWindowCoordinates;
+}
+
+void DrawableObject::setCoordinates(std::list<Coordinate*> coordinates)
+{
+  this->destroyList(coordinates);
+  this->coordinates= coordinates;
 }
 
 Coordinate* DrawableObject::get_geometric_center()
@@ -36,7 +62,6 @@ Coordinate* DrawableObject::get_geometric_center()
     y_axis += coordinate->gety();
     z_axis += coordinate->getz();
   }
-  
 
   return new Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count);
 }
@@ -56,19 +81,8 @@ Coordinate* DrawableObject::get_window_geometric_center()
     y_axis += coordinate->gety();
     z_axis += coordinate->getz();
   }
-  
 
   return new Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count);
-}
-
-std::list<Coordinate*>& DrawableObject::getCoordinates()
-{
-  return this->coordinates;
-}
-
-std::list<Coordinate*>& DrawableObject::getviewWindowCoordinates()
-{
-  return this->viewWindowCoordinates;
 }
 
 /**
@@ -99,7 +113,6 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
 
 void DrawableObject::apply(Transformation &transformation)
 {
-
   LOG(8, "Entering apply");
   auto coordinates = this->getCoordinates();
   auto geometric_center = this->get_geometric_center();
