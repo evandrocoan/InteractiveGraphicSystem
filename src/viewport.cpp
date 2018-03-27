@@ -17,6 +17,10 @@ ViewPort::ViewPort() :
   this->y2 = {this->_data[2], this->_data[3]};
 }
 
+ViewPort::~ViewPort()
+{
+}
+
 Coordinate* ViewPort::getPoint(unsigned int index)
 {
   return this->_data[index];
@@ -55,8 +59,4 @@ std::ostream& operator<<( std::ostream &output, const ViewPort &object )
       << "x2" << *object.x2[0] << *object.x2[1] << " "
       << "y2" << *object.y2[0] << *object.y2[1] << "]";
   return output;
-}
-
-ViewPort::~ViewPort()
-{
 }
