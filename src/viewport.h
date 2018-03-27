@@ -48,9 +48,12 @@ public:
   void rotate_right(long double angle = 10);
 
   Signal<>::Connection addObserver(const Signal<>::Callback&);
+
   Coordinate convertCoordinateFromWindow(Coordinate&);
   Coordinate coordinateWindowToViewPort(Coordinate&);
+
   Coordinate coordinateWorldToWindow(Coordinate&);
+  std::list<Coordinate*> listCoordinateWorldToWindow(std::list<Coordinate*> coordinates);
 
   std::list<DrawableObject*> getObjectsList();
 

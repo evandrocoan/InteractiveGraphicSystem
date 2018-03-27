@@ -31,6 +31,7 @@ public:
   std::list<Coordinate*>& getCoordinates();
   std::list<Coordinate*>& getviewWindowCoordinates();
 
+  void setviewWindowCoordinates(std::list<Coordinate*> coordinates);
   void setCoordinates(std::list<Coordinate*> coordinates);
 
   /**
