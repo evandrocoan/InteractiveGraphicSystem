@@ -8,18 +8,18 @@ ViewPort::ViewPort() :
       xVpmax(0),
       yVpmax(0)
 {
-  
 }
 
-void ViewPort::on_init(){
-
+void ViewPort::on_init()
+{
   auto allocation = this->get_allocation();
   this->updateViewport(allocation);
 
   Coordinate windowCenter(this->xVpmax/2, this->yVpmax/2);
-  this->viewWindow.setCoordinate(windowCenter); 
+  this->viewWindow.setCoordinate(windowCenter);
   LOG(4, "centerWindow: %d , %d",this->xVpmax/2, this->yVpmax/2);
 
+  LOG(4, "Building the Y axe");
   Coordinate* bottom_axe = new Coordinate(0, -MAX_HEIGHT);
   Coordinate* top_axe = new Coordinate(0, MAX_WIDTH);
 
@@ -29,8 +29,7 @@ void ViewPort::on_init(){
   Coordinate* bottom_axe_in_window = new Coordinate(bottom_axe_converted.getx(), bottom_axe_converted.gety());
   Coordinate* top_axe_in_window = new Coordinate(top_axe_converted.getx(), top_axe_converted.gety());
 
-
-
+  LOG(4, "Building the X axe");
   Coordinate* left_axe = new Coordinate(-MAX_HEIGHT, 0);
   Coordinate* right_axe = new Coordinate(MAX_WIDTH, 0);
 
@@ -42,10 +41,9 @@ void ViewPort::on_init(){
 
   Line* lineY = new Line("Y axe", bottom_axe, top_axe, bottom_axe_in_window, top_axe_in_window);
   Line* lineX = new Line("X axe", left_axe, right_axe, left_axe_in_window, right_axe_in_window);
-  
+
   this->addObject(lineY);
   this->addObject(lineX);
-
 }
 
 void ViewPort::apply(std::string object_name, Transformation &transformation)
@@ -135,9 +133,8 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
  * @param  coord [description]
  * @return       [description]
  */
-Coordinate ViewPort::convertCoordinateFromWindow(Coordinate &coord)
+Coordinate ViewPort::convertCoordinateFromWindow(Coordinate& coord)
 {
-
   long int xW = coord.getx();
   long int xVp = (long int)(
       (double)(xW - this->viewWindow.xWmin) * ((double)(this->xVpmax - this->xVpmin) /
@@ -154,7 +151,7 @@ Coordinate ViewPort::convertCoordinateFromWindow(Coordinate &coord)
   return Coordinate(xVp, yVp);
 }
 
-Coordinate ViewPort::coordinateWindowToViewPort(Coordinate &coord)
+Coordinate ViewPort::coordinateWindowToViewPort(Coordinate& coord)
 {
   Coordinate centerWindow = this->viewWindow.getCoordinate();
   Coordinate centerWindow_converted = this->convertCoordinateFromWindow(centerWindow);
@@ -162,13 +159,23 @@ Coordinate ViewPort::coordinateWindowToViewPort(Coordinate &coord)
   long int x = coord.getx() + centerWindow_converted.getx();
   long int y = -coord.gety() + centerWindow_converted.gety();
 
-
   return Coordinate(x, y);
 }
 
-Coordinate ViewPort::coordinateWorldToWindow(Coordinate &coord)
+std::list<Coordinate*> ViewPort::listCoordinateWorldToWindow(std::list<Coordinate*> coordinates)
 {
+  std::list<Coordinate*> viewWindowCoordinates;
 
+  for( auto coordinate : coordinates )
+  {
+    viewWindowCoordinates.push_back( new Coordinate( this->coordinateWorldToWindow( *coordinate ) ) );
+  }
+
+  return viewWindowCoordinates;
+}
+
+Coordinate ViewPort::coordinateWorldToWindow(Coordinate& coord)
+{
   Coordinate coordinate = this->convertCoordinateFromWindow(coord);
 
   Coordinate centerWindow = this->viewWindow.getCoordinate();
@@ -176,7 +183,6 @@ Coordinate ViewPort::coordinateWorldToWindow(Coordinate &coord)
 
   long int x = coordinate.getx() - centerWindow_converted.getx();
   long int y = -(coordinate.gety() - centerWindow_converted.gety());
-
 
   return Coordinate(x, y);
 }
@@ -251,8 +257,6 @@ void ViewPort::updateViewport(Gtk::Allocation &allocation)
     this->yVpmax += heightDiff;
 
     LOG(8, "xVpmax: %d, yVpmax: %d", xVpmax, yVpmax);
-    
-    
   }
 }
 
@@ -267,6 +271,10 @@ Signal<>::Connection ViewPort::addObserver(const Signal<>::Callback &callback)
 
 void ViewPort::addObject(DrawableObject* object)
 {
+  auto worldCoordinates = object->getCoordinates();
+  auto viewWindowCoordinates = this->listCoordinateWorldToWindow(worldCoordinates);
+  object->setviewWindowCoordinates(viewWindowCoordinates);
+
   this->displayFile.addObject(object);
   this->queue_draw();
   this->observerController();
@@ -305,6 +313,7 @@ void ViewPort::move_up(int length)
 {
   Transformation transformation;
   Coordinate center = this->viewWindow.getCoordinate();
+
   transformation.add_translation("windowUp",Coordinate(0,-length));
   transformation.set_geometric_center(center);
 
@@ -318,6 +327,7 @@ void ViewPort::move_down(int length)
 {
   Transformation transformation;
   Coordinate center = this->viewWindow.getCoordinate();
+
   transformation.add_translation("windowDown",Coordinate(0,length));
   transformation.set_geometric_center(center);
 
@@ -331,6 +341,7 @@ void ViewPort::move_left(int length)
 {
   Transformation transformation;
   Coordinate center = this->viewWindow.getCoordinate();
+
   transformation.add_translation("windowLeft",Coordinate(length,0));
   transformation.set_geometric_center(center);
 
@@ -344,6 +355,7 @@ void ViewPort::move_right(int length)
 {
   Transformation transformation;
   Coordinate center = this->viewWindow.getCoordinate();
+
   transformation.add_translation("windowRight",Coordinate(-length,0));
   transformation.set_geometric_center(center);
 
@@ -357,6 +369,7 @@ void ViewPort::move_center()
 {
   Transformation transformation;
   Coordinate center = this->viewWindow.getCoordinate();
+
   transformation.add_translation("windowCenter",Coordinate(this->viewWindow.getCoordinate().getx(), this->viewWindow.getCoordinate().gety()));
   transformation.set_geometric_center(center);
 
@@ -371,7 +384,7 @@ void ViewPort::rotate_left(long double angle)
   Transformation transformation;
   Coordinate center = this->viewWindow.getCoordinate();
   Coordinate centerWorld = Coordinate(0,0);
-  
+
   transformation.add_translation("Center with the world",Coordinate(-center.getx(), -center.gety()));
   transformation.add_rotation("Window Rotation", Array<3, long double>{angle, 0.0, 0.0});
   transformation.add_translation("Back to initial position",Coordinate(center.getx(), center.gety()));
@@ -388,7 +401,7 @@ void ViewPort::rotate_right(long double angle)
   Transformation transformation;
   Coordinate center = this->viewWindow.getCoordinate();
   Coordinate centerWorld = Coordinate(0,0);
-  
+
   transformation.add_translation("Center with the world",Coordinate(-center.getx(), -center.gety()));
   transformation.add_rotation("Window Rotation", Array<3, long double>{-angle, 0.0, 0.0});
   transformation.add_translation("Back to initial position",Coordinate(center.getx(), center.gety()));
@@ -406,8 +419,6 @@ auto objects = this->displayFile.getObjects();
 
   for (auto object : objects)
   {
-   object->applyInWindow(transformation); 
+   object->applyInWindow(transformation);
   }
-
-
 }

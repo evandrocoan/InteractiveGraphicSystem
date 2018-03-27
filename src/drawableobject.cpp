@@ -41,9 +41,15 @@ std::list<Coordinate*>& DrawableObject::getviewWindowCoordinates()
   return this->viewWindowCoordinates;
 }
 
+void DrawableObject::setviewWindowCoordinates(std::list<Coordinate*> coordinates)
+{
+  this->destroyList(this->viewWindowCoordinates);
+  this->coordinates= coordinates;
+}
+
 void DrawableObject::setCoordinates(std::list<Coordinate*> coordinates)
 {
-  this->destroyList(coordinates);
+  this->destroyList(this->coordinates);
   this->coordinates= coordinates;
 }
 
