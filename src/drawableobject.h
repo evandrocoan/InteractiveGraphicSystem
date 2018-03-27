@@ -14,7 +14,7 @@
 #include <list>
 #include <string>
 
-#include "clippingwindow.h"
+#include "viewport.h"
 #include "coordinate.h"
 #include "transformation.h"
 #include "subject_controller.h"
@@ -36,7 +36,7 @@ public:
   Coordinate* get_geometric_center();
 
   void         apply(Transformation&);
-  virtual void updateClipping(ClippingWindow&);
+  virtual void updateClipping(ViewPort&);
 
   /**
    * Making operator<< virtual?
