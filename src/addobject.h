@@ -34,6 +34,7 @@ private:
 
   std::string            new_object_name;
   std::list<Coordinate*> polygon_coord_list;
+  std::list<Coordinate*> polygon_coord_list_in_window;
 
   Gtk::Grid line_grid;
   Gtk::Grid point_grid;

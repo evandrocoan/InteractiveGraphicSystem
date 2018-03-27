@@ -16,21 +16,25 @@
 
 #include "coordinate.h"
 #include "transformation.h"
+#include "debugger.h"
 
 class DrawableObject
 {
 public:
-  DrawableObject(std::string name, std::list<Coordinate*> coordinates);
+  DrawableObject(std::string name, std::list<Coordinate*> coordinates, std::list<Coordinate*> coordinates_in_window);
   ~DrawableObject();
 
   std::string getName();
   std::list<Coordinate*>& getCoordinates();
+  std::list<Coordinate*>& getviewWindowCoordinates();
 
   /**
    * `get_geometric_center()` return a pointer which you must explicitly delete after using it.
    */
   void        apply(Transformation&);
+  void        applyInWindow(Transformation&);
   Coordinate* get_geometric_center();
+  Coordinate* get_window_geometric_center();
 
   friend std::ostream& operator<<(std::ostream &output, const DrawableObject &object);
 
@@ -39,5 +43,11 @@ protected:
 
   std::string name;
   std::list<Coordinate*> coordinates;
+  std::list<Coordinate*> viewWindowCoordinates;
+
+  private: 
+
+
+
 };
 #endif // GTKMM_APP_DRAWABLE_OBJECT

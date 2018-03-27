@@ -21,6 +21,7 @@
 #include "addtransformation.h"
 
 #define DEFAULT_ZOOM_SCALE  1.5
+#define DEFAULT_ROTATE_ANGLE "10"
 #define DEFAULT_MOVE_LENGTH "10"
 
 
@@ -47,6 +48,11 @@ protected:
   Gtk::Button button_move_left;
   Gtk::Button button_move_right;
 
+  Gtk::Button button_move_center;
+
+  Gtk::Button button_rotate_left;
+  Gtk::Button button_rotate_right;
+
   Gtk::Button button_zoom_in;
   Gtk::Button button_zoom_out;
 
@@ -62,9 +68,13 @@ protected:
   Gtk::Grid grid_move;
   Gtk::Grid grid_zoom;
   Gtk::Grid grid_list_obj;
+  Gtk::Grid grid_rotate;
+
+  Gtk::Grid grid_other;
 
   Gtk::Entry entry_move_length;
   Gtk::Entry entry_zoom_scale;
+  Gtk::Entry entry_rotate_angle;
 
   void setupButtons();
   void connectButtons();
@@ -73,6 +83,11 @@ protected:
   void on_button_move_down();
   void on_button_move_left();
   void on_button_move_right();
+
+  void on_button_move_center();
+
+  void on_button_rotate_left();
+  void on_button_rotate_right();
 
   void on_button_zoom_in();
   void on_button_zoom_out();
