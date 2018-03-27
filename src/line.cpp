@@ -11,7 +11,7 @@ Line::~Line()
 {
 }
 
-void Line::updateClipping(ClippingWindow& axes)
+void Line::updateClipping(ViewPort& axes)
 {
   LOG(4, "Line clipping update... %s", axes);
   this->clipped_coordinates = this->coordinates;

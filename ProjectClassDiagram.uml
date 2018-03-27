@@ -28,8 +28,6 @@
   TransformationData *-- TransformationType: type
   TransformationData *-- RotationType      : rotation_type
 
-  ViewPort *-- ClippingWindow              : axes
-
   class AddObject {
     Gtk::Grid       point_grid
     Gtk::Grid       line_grid
@@ -44,16 +42,6 @@
     Gtk::Grid translation_grid
     Gtk::Grid coodinate_input_grid
     Gtk::Box& getBox()
-  }
-
-  class ClippingWindow {
-    Array<2, Coordinate*> x1
-    Array<2, Coordinate*> x2
-    Array<2, Coordinate*> y1
-    Array<2, Coordinate*> y2
-    Coordinate* _data[4]
-    void updateClippingWindowSize(int, int)
-    Coordinate* getPoint(unsigned int index)
   }
 
   class DisplayFile {
@@ -141,6 +129,12 @@
     int yMin
     int xMax
     int yMax
+    Array<2, Coordinate*> x1
+    Array<2, Coordinate*> x2
+    Array<2, Coordinate*> y1
+    Array<2, Coordinate*> y2
+    Coordinate* _data[4]
+    Coordinate* getPoint(unsigned int index)
     void updateClippingWindowSize(int, int)
   }
 

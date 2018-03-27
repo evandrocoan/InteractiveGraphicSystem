@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iomanip>
 
-#include "clippingwindow.h"
+#include "coordinate.h"
 
 /**
  * The Drawing Area Widget
@@ -25,7 +25,7 @@
  * And beyond these two systems, there is the world which has its start point symmetric with the
  * ViewWindow.
  */
-class ViewPort
+class ViewPort : public Array<4, Coordinate*>
 {
 public:
   ViewPort();
@@ -49,12 +49,79 @@ public:
   int xMax;
   int yMax;
 
-  ClippingWindow axes;
+  /**
+   * Lines representing the clipping window saved on viewport coordinates:
+   *
+   *                 x1_axe
+   *         +-------------------+
+   *         |                   |
+   *         |                   |
+   * y1_axe  |                   | y2_axe
+   *         |                   |
+   *         |                   |
+   *         +-------------------+
+   *                 x2_axe
+   *
+   *
+   * Now, the same lines represented on `ViewWindow` coordinates:
+   *
+   *                 x2_axe
+   *         +-------------------+
+   *         |                   |
+   *         |                   |
+   * y1_axe  |                   | y2_axe
+   *         |                   |
+   *         |                   |
+   *         +-------------------+
+   *                 x1_axe
+   */
+  Array<2, Coordinate*> x1;
+  Array<2, Coordinate*> x2;
+  Array<2, Coordinate*> y1;
+  Array<2, Coordinate*> y2;
 
-  ClippingWindow& getCoordinates();
+  /**
+   * The coordinates use to represent the X Y axis with `ViewPort` coordinates:
+   *
+   * firstCoordinate       forthCoordinate
+   *          +-------------------+
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          +-------------------+
+   * secondCoordinate      thirdCoordinate
+   *
+   *
+   * Now, the same coordinates represented on `ViewWindow` coordinates:
+   *
+   * secondCoordinate       thirdCoordinate
+   *          +-------------------+
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          |                   |
+   *          +-------------------+
+   * firstCoordinate        forthCoordinate
+   *
+   * `getPoint(int)` return one of these points accordingly to the indexes 0, 1, 2 and 3.
+   */
+  Coordinate* getPoint(unsigned int index);
 
+  /**
+   * Update the clipping window coordinates represented on the 4 internal points accessed by
+   * `getPoint(int)`.
+   *
+   * @param width   the total view port widget width
+   * @param height  the total view port widget height
+   */
   void updateClippingWindowSize(int width, int height);
 
+  /**
+   * Prints a friend representation of the view port.
+   */
   friend std::ostream& operator<<(std::ostream &output, const ViewPort &object);
 };
 
