@@ -48,6 +48,10 @@ public:
   void rotate_right(long double angle = 10);
 
   Signal<>::Connection addObserver(const Signal<>::Callback&);
+  Coordinate convertCoordinateFromWindow(Coordinate&);
+  Coordinate coordinateWindowToViewPort(Coordinate&);
+  Coordinate coordinateWorldToWindow(Coordinate&);
+  
 
 protected:
   ViewWindow  viewWindow;
@@ -61,7 +65,13 @@ protected:
 
   bool       on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
   void       updateViewport(Gtk::Allocation&);
-  Coordinate convertCoordinateFromWindow(Coordinate&);
+  void computeWindowCoordinate(Transformation transformation);
+
+  private:
+
+  void on_init();
+  bool onInit = true;
+
 };
 
 #endif

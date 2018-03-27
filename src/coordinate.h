@@ -35,21 +35,7 @@ struct Coordinate : public Array<GTKMM_APP_MATRICES_DIMENSION, GTKMM_APP_MATRICE
   {
     return this->_data[2];
   }
-
-    void setx(GTKMM_APP_MATRICES_DATATYPE x) 
-  {
-    this->_data[0] = x;
-  }
-
-  void sety(GTKMM_APP_MATRICES_DATATYPE y) 
-  {
-    this->_data[1] = y;
-  }
-
-  void setz(GTKMM_APP_MATRICES_DATATYPE z) 
-  {
-    this->_data[2] = z;
-  }
+  
 };
 
 // How to set default parameter as class object in c++?

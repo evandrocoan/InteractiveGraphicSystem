@@ -5,10 +5,10 @@ DrawableObject::DrawableObject(std::string name) :
 {
 }
 
-DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordinates) :
+DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordinates,  std::list<Coordinate*> coordinates_in_window) :
       name(name),
       coordinates(coordinates),
-      viewWindowCoordinates(coordinates)
+      viewWindowCoordinates(coordinates_in_window)
 {
 }
 
@@ -81,7 +81,7 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
   unsigned int index = 0;
   unsigned int size = object.coordinates.size() - 1;
 
-  for( auto coordinate : object.coordinates )
+  for( auto coordinate : object.viewWindowCoordinates )
   {
     output << *coordinate;
 
@@ -99,6 +99,25 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
 
 void DrawableObject::apply(Transformation &transformation)
 {
+
+  LOG(8, "Entering apply");
+  auto coordinates = this->getCoordinates();
+  auto geometric_center = this->get_geometric_center();
+
+  transformation.set_geometric_center(*geometric_center);
+  delete geometric_center;
+
+  for(auto coordinate : coordinates)
+  {
+    transformation.apply(*coordinate);
+  }
+
+}
+
+void DrawableObject::applyInWindow(Transformation &transformation)
+{
+
+  LOG(8, "Entering applyInWindow");
   auto coordinates = this->getviewWindowCoordinates();
   auto geometric_center = this->get_window_geometric_center();
 
