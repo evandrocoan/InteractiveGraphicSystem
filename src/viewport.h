@@ -13,6 +13,7 @@
 #include "subject_controller.h"
 #include "coordinate.h"
 #include "debugger.h"
+#include "line.h"
 
 /**
  * The Drawing Area Widget
@@ -41,7 +42,17 @@ public:
   void move_left (int length = 10);
   void move_right(int length = 10);
 
+  void move_center();
+
+
+  void rotate_left (long double angle = 10);
+  void rotate_right(long double angle = 10);
+
   Signal<>::Connection addObserver(const Signal<>::Callback&);
+  Coordinate convertCoordinateFromWindow(Coordinate&);
+  Coordinate coordinateWindowToViewPort(Coordinate&);
+  Coordinate coordinateWorldToWindow(Coordinate&);
+  
 
 protected:
   ViewWindow  viewWindow;
@@ -55,7 +66,13 @@ protected:
 
   bool       on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
   void       updateViewport(Gtk::Allocation&);
-  Coordinate convertCoordinateFromWindow(Coordinate&);
+  void computeWindowCoordinate(Transformation transformation);
+
+  private:
+
+  void on_init();
+  bool onInit = true;
+
 };
 
 #endif
