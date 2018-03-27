@@ -44,7 +44,6 @@ public:
 
   void move_center();
 
-
   void rotate_left (long double angle = 10);
   void rotate_right(long double angle = 10);
 
@@ -52,7 +51,8 @@ public:
   Coordinate convertCoordinateFromWindow(Coordinate&);
   Coordinate coordinateWindowToViewPort(Coordinate&);
   Coordinate coordinateWorldToWindow(Coordinate&);
-  
+
+  std::list<DrawableObject*> getObjectsList();
 
 protected:
   ViewWindow  viewWindow;
@@ -64,15 +64,15 @@ protected:
   int xVpmax;
   int yVpmax;
 
-  bool       on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
-  void       updateViewport(Gtk::Allocation&);
+  bool on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
+  void updateViewport(Gtk::Allocation&);
+
   void computeWindowCoordinate(Transformation transformation);
 
-  private:
+private:
 
   void on_init();
   bool onInit = true;
-
 };
 
 #endif
