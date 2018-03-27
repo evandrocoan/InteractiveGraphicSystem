@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+
 MainWindow::MainWindow() :
       addObject(this->viewPort),
       addTransformation(this->viewPort),
@@ -7,10 +8,15 @@ MainWindow::MainWindow() :
       button_move_down("down"),
       button_move_left("left"),
       button_move_right("right"),
+      button_move_center("Center with the world"),
+      button_rotate_left("left"),
+      button_rotate_right("right"),
       button_zoom_in("+"),
       button_zoom_out("-"),
       button_add_object("Add Object"),
       button_delete_object("Delete Object"),
+	  button_open_file("Open File"),
+	  button_save_file("Save File"),
       main_box(Gtk::ORIENTATION_HORIZONTAL),
       left_box(Gtk::ORIENTATION_VERTICAL),
       left_frame("Controllers"),
@@ -54,6 +60,10 @@ void MainWindow::setupButtons()
   entry_move_length.set_width_chars(1);
   entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
 
+  LOG(4, "Inicializando dado da entrada do tamanho da rotaçao");
+  entry_rotate_angle.set_width_chars(1);
+  entry_rotate_angle.set_text(DEFAULT_ROTATE_ANGLE);
+
   LOG(4, "Inicializando dado da entrada do tamanho do zoom");
   entry_zoom_scale.set_width_chars(1);
   char array[4];
@@ -82,13 +92,32 @@ void MainWindow::setupButtons()
   grid_zoom.attach(entry_zoom_scale, 2, 1, 1, 1);
   grid_zoom.attach(button_zoom_in, 3, 1, 1, 1);
 
+  LOG(4, "Adicionando os botões de rotaçao na grade de rotaçao");
+  grid_rotate.set_column_homogeneous(true);
+  grid_rotate.attach(button_rotate_left, 1, 1, 1, 1);
+  grid_rotate.attach(entry_rotate_angle, 2, 1, 1, 1);
+  grid_rotate.attach(button_rotate_right, 3, 1, 1, 1);
+
+  LOG(4, "Adding the other button");
+  grid_other.set_column_homogeneous(true);
+  grid_other.attach(button_move_center, 1, 1, 1, 1);
+
+  LOG(4, "Adicionando os botões de abrir e salvar um arquivo na grade de arquivo");
+  grid_file.set_column_homogeneous(true);
+  grid_file.attach(button_open_file, 1, 1, 1, 1);
+  grid_file.attach(button_save_file, 2, 1, 1, 1);
+
   LOG(4, "Adding the draw options box to left frame");
   left_box.set_border_width(10);
   left_box.set_spacing(10);
   left_box.add(grid_list_obj);
   left_box.add(grid_move);
   left_box.add(grid_zoom);
+  left_box.add(grid_rotate);
+  left_box.add(grid_other);
+  left_box.add(grid_file);
   left_box.add(this->addTransformation.getBox());
+ 
 }
 
 void MainWindow::connectButtons()
@@ -99,11 +128,19 @@ void MainWindow::connectButtons()
   this->button_move_left.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_left));
   this->button_move_right.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_right));
 
+  this->button_move_center.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_center));
+
   this->button_zoom_in.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_zoom_in));
   this->button_zoom_out.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_zoom_out));
 
+  this->button_rotate_left.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_left));
+  this->button_rotate_right.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_right));
+
   this->button_add_object.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_add_object));
   this->button_delete_object.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_delete_object));
+
+  this->button_open_file.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_open_file));
+  this->button_save_file.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_save_file));
 }
 
 /**
@@ -189,6 +226,11 @@ void MainWindow::on_button_move_right()
   }
 }
 
+void MainWindow::on_button_move_center()
+{
+  this->viewPort.move_center();
+}
+
 void MainWindow::on_button_zoom_in()
 {
   float zoom_scale = atof(entry_zoom_scale.get_text().raw().c_str());
@@ -225,6 +267,34 @@ void MainWindow::on_button_zoom_out()
   }
 }
 
+void MainWindow::on_button_rotate_left()
+{
+  long double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+
+  if (rotate_angle == 0)
+  {
+    entry_move_length.set_text(DEFAULT_ROTATE_ANGLE);
+  }
+  else
+  {
+    this->viewPort.rotate_left(rotate_angle);
+  }
+}
+
+void MainWindow::on_button_rotate_right()
+{
+  long double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+
+  if (rotate_angle == 0)
+  {
+    entry_move_length.set_text(DEFAULT_ROTATE_ANGLE);
+  }
+  else
+  {
+    this->viewPort.rotate_right(rotate_angle);
+  }
+}
+
 void MainWindow::on_button_add_object()
 {
   LOG(2, "Entering...");
@@ -240,4 +310,29 @@ void MainWindow::on_button_delete_object()
     this->viewPort.removeObject(name);
   }
 }
+
+void MainWindow::on_button_open_file()
+{
+	choose_file_window = new ChooseFileWindow(Gtk::FILE_CHOOSER_ACTION_OPEN);
+	choose_file_window->show();
+	std::string file_path = choose_file_window->get_file_path();
+	std::list<DrawableObject*> objects_list = rw_object_service.read(file_path);
+	for (DrawableObject* object : objects_list)
+	{
+	  this->viewPort.addObject(object);
+	}
+	this->viewPort.queue_draw();
+	LOG(2, "Sucessfull opened the objects from file\n");
+}
+
+void MainWindow::on_button_save_file()
+{
+	choose_file_window = new ChooseFileWindow(Gtk::FILE_CHOOSER_ACTION_SAVE);
+	choose_file_window->show();
+	std::string file_path = choose_file_window->get_file_path();
+	rw_object_service.write(this->viewPort.getObjectsList(), file_path);
+	LOG(2, "Sucessfull saved the objects on file\n");
+}
+
+
 
