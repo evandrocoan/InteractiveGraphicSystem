@@ -8,17 +8,19 @@ MainWindow::MainWindow() :
       button_move_down("down"),
       button_move_left("left"),
       button_move_right("right"),
+      button_move_center("Center with the world"),
       button_rotate_left("left"),
       button_rotate_right("right"),
       button_zoom_in("+"),
       button_zoom_out("-"),
       button_add_object("Add Object"),
       button_delete_object("Delete Object"),
+	  button_open_file("Open File"),
+	  button_save_file("Save File"),
       main_box(Gtk::ORIENTATION_HORIZONTAL),
       left_box(Gtk::ORIENTATION_VERTICAL),
       left_frame("Controllers"),
-      right_frame("ViewPort"),
-      button_move_center("Center with the world")
+      right_frame("ViewPort")
 {
   LOG(2, "Entering...");
   this->main_box.pack_start(left_frame, Gtk::PACK_SHRINK, 10);
@@ -41,7 +43,6 @@ MainWindow::MainWindow() :
   this->window.set_default_size(800, 500);
   this->window.add(this->main_box);
   this->window.show_all_children();
-
 }
 
 MainWindow::~MainWindow()
@@ -101,6 +102,11 @@ void MainWindow::setupButtons()
   grid_other.set_column_homogeneous(true);
   grid_other.attach(button_move_center, 1, 1, 1, 1);
 
+  LOG(4, "Adicionando os botões de abrir e salvar um arquivo na grade de arquivo");
+  grid_file.set_column_homogeneous(true);
+  grid_file.attach(button_open_file, 1, 1, 1, 1);
+  grid_file.attach(button_save_file, 2, 1, 1, 1);
+
   LOG(4, "Adding the draw options box to left frame");
   left_box.set_border_width(10);
   left_box.set_spacing(10);
@@ -109,6 +115,7 @@ void MainWindow::setupButtons()
   left_box.add(grid_zoom);
   left_box.add(grid_rotate);
   left_box.add(grid_other);
+  left_box.add(grid_file);
   left_box.add(this->addTransformation.getBox());
  
 }
@@ -131,7 +138,9 @@ void MainWindow::connectButtons()
 
   this->button_add_object.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_add_object));
   this->button_delete_object.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_delete_object));
-  
+
+  this->button_open_file.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_open_file));
+  this->button_save_file.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_save_file));
 }
 
 /**
@@ -219,10 +228,7 @@ void MainWindow::on_button_move_right()
 
 void MainWindow::on_button_move_center()
 {
- 
-  
   this->viewPort.move_center();
-  
 }
 
 void MainWindow::on_button_zoom_in()
@@ -304,4 +310,29 @@ void MainWindow::on_button_delete_object()
     this->viewPort.removeObject(name);
   }
 }
+
+void MainWindow::on_button_open_file()
+{
+	choose_file_window = new ChooseFileWindow(Gtk::FILE_CHOOSER_ACTION_OPEN);
+	choose_file_window->show();
+	std::string file_path = choose_file_window->get_file_path();
+	std::list<DrawableObject*> objects_list = rw_object_service.read(file_path);
+	for (DrawableObject* object : objects_list)
+	{
+	  this->viewPort.addObject(object);
+	}
+	this->viewPort.queue_draw();
+	LOG(2, "Sucessfull opened the objects from file\n");
+}
+
+void MainWindow::on_button_save_file()
+{
+	choose_file_window = new ChooseFileWindow(Gtk::FILE_CHOOSER_ACTION_SAVE);
+	choose_file_window->show();
+	std::string file_path = choose_file_window->get_file_path();
+	rw_object_service.write(this->viewPort.getObjectsList(), file_path);
+	LOG(2, "Sucessfull saved the objects on file\n");
+}
+
+
 

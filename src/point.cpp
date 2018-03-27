@@ -10,3 +10,4 @@ Point::Point(std::string name, Coordinate* point_cord, Coordinate* point_cord_in
 Point::~Point()
 {
 }
+
