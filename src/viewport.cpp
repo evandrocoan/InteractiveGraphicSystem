@@ -8,6 +8,7 @@ ViewPort::ViewPort() :
       xVpmax(0),
       yVpmax(0)
 {
+  
 }
 
 void ViewPort::on_init(){
@@ -17,7 +18,33 @@ void ViewPort::on_init(){
 
   Coordinate windowCenter(this->xVpmax/2, this->yVpmax/2);
   this->viewWindow.setCoordinate(windowCenter); 
-  LOG(4, "centerWindo: %d , %d",this->xVpmax/2, this->yVpmax/2);
+  LOG(4, "centerWindow: %d , %d",this->xVpmax/2, this->yVpmax/2);
+
+  Coordinate* bottom_axe = new Coordinate(0, -MAX_HEIGHT);
+  Coordinate* top_axe = new Coordinate(0, MAX_WIDTH);
+
+  Coordinate bottom_axe_converted = this->coordinateWorldToWindow(*bottom_axe);
+  Coordinate top_axe_converted = this->coordinateWorldToWindow(*top_axe);
+
+  Coordinate* bottom_axe_in_window = new Coordinate(bottom_axe_converted.getx(), bottom_axe_converted.gety());
+  Coordinate* top_axe_in_window = new Coordinate(top_axe_converted.getx(), top_axe_converted.gety());
+
+
+
+  Coordinate* left_axe = new Coordinate(-MAX_HEIGHT, 0);
+  Coordinate* right_axe = new Coordinate(MAX_WIDTH, 0);
+
+  Coordinate left_axe_converted = this->coordinateWorldToWindow(*left_axe);
+  Coordinate right_axe_converted = this->coordinateWorldToWindow(*right_axe);
+
+  Coordinate* left_axe_in_window = new Coordinate(left_axe_converted.getx(), left_axe_converted.gety());
+  Coordinate* right_axe_in_window = new Coordinate(right_axe_converted.getx(), right_axe_converted.gety());
+
+  Line* lineY = new Line("Y axe", bottom_axe, top_axe, bottom_axe_in_window, top_axe_in_window);
+  Line* lineX = new Line("X axe", left_axe, right_axe, left_axe_in_window, right_axe_in_window);
+  
+  this->addObject(lineY);
+  this->addObject(lineX);
 
 }
 
@@ -66,15 +93,6 @@ bool ViewPort::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   // LOG(8, "Draw x and y axis");
   cairo_context->set_line_width(1);
   cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
-  Coordinate originOnWindow(0, 0);
-  Coordinate originOnWorld  = convertCoordinateFromWindow(originOnWindow);
-  
-
-  cairo_context->move_to(this->xVpmin, originOnWorld.gety());
-  cairo_context->line_to(this->xVpmax, originOnWorld.gety());
-  cairo_context->move_to(originOnWorld.getx(), this->yVpmin);
-  cairo_context->line_to(originOnWorld.getx(), this->yVpmax);
-  cairo_context->stroke();
 
   // LOG(8, "Set color's objects as black:");
   cairo_context->set_source_rgb(0, 0, 0);

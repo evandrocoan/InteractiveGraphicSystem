@@ -13,6 +13,7 @@
 #include "subject_controller.h"
 #include "coordinate.h"
 #include "debugger.h"
+#include "line.h"
 
 /**
  * The Drawing Area Widget
