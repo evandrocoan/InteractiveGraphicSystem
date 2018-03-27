@@ -7,7 +7,7 @@
 class Polygon : public DrawableObject
 {
 public:
-  Polygon(std::string name, std::list<Coordinate*> coordinates);
+  Polygon(std::string name, std::list<Coordinate*> coordinates, std::list<Coordinate*> coordinates_in_window);
   ~Polygon();
 };
 #endif // GTKMM_APP_WIREFRAME

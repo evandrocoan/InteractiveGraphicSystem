@@ -113,7 +113,11 @@ void AddObject::on_button_save_point()
   int y_coord = atoi(y_string.c_str());
 
   Coordinate* point_cord = new Coordinate(x_coord, y_coord);
-  Point* point = new Point(name, point_cord);
+
+  Coordinate converted_coordinate = this->viewPort.coordinateWorldToWindow(*point_cord);
+  Coordinate* point_cord_in_window = new Coordinate(converted_coordinate.getx(), converted_coordinate.gety());
+
+  Point* point = new Point(name, point_cord, point_cord_in_window);
 
   this->viewPort.addObject(point);
   this->window.close();
@@ -143,7 +147,13 @@ void AddObject::on_button_save_line()
   Coordinate* point_cord1 = new Coordinate(x1_cord, y1_cord);
   Coordinate* point_cord2 = new Coordinate(x2_cord, y2_cord);
 
-  Line* line = new Line(name, point_cord1, point_cord2);
+  Coordinate converted_coordinate1 = this->viewPort.coordinateWorldToWindow(*point_cord1);
+  Coordinate converted_coordinate2 = this->viewPort.coordinateWorldToWindow(*point_cord2);
+
+  Coordinate* point_cord1_in_window = new Coordinate(converted_coordinate1.getx(), converted_coordinate1.gety());
+  Coordinate* point_cord2_in_window = new Coordinate(converted_coordinate2.getx(), converted_coordinate2.gety());
+
+  Line* line = new Line(name, point_cord1, point_cord2, point_cord1_in_window, point_cord2_in_window);
 
   this->viewPort.addObject(line);
   this->window.close();
@@ -162,7 +172,7 @@ void AddObject::on_button_save_polygon()
       return;
     }
 
-    Polygon* polygon = new Polygon(name, polygon_coord_list);
+    Polygon* polygon = new Polygon(name, polygon_coord_list, polygon_coord_list_in_window);
     this->viewPort.addObject(polygon);
 
     while(!polygon_coord_list.empty())
@@ -188,6 +198,12 @@ void AddObject::on_button_add_coordinate()
 
   Coordinate* wire_cord = new Coordinate(x_coord, y_coord);
   polygon_coord_list.push_back(wire_cord);
+
+  Coordinate converted_coordinate = this->viewPort.coordinateWorldToWindow(*wire_cord);
+  Coordinate* point_cord_in_window = new Coordinate(converted_coordinate.getx(), converted_coordinate.gety());
+
+
+  polygon_coord_list_in_window.push_back(point_cord_in_window);
 
   wire_x_field.set_text("");
   wire_y_field.set_text("");
