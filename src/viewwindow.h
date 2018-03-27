@@ -33,6 +33,10 @@ public:
   void rotate_right(long double angle = 10.0);
   void move_center();
 
+  void initPoints();
+  void setPoints();
+  void applyTransformation(Transformation transformation);
+
   float xWmin;
   float yWmin;
   float xWmax;
@@ -46,8 +50,7 @@ public:
   Coordinate bottom_left;
   Coordinate bottom_right;
 
-  void initPoints();
-  void setPoints();
+  
 
   
 };
