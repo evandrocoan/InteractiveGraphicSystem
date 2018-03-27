@@ -83,7 +83,7 @@ public:
   /**
    * The coordinates use to represent the X Y axis with `ViewPort` coordinates:
    *
-   * firstCoordinate       forthCoordinate
+   * firstCoordinate        forthCoordinate
    *          +-------------------+
    *          |                   |
    *          |                   |
@@ -91,7 +91,7 @@ public:
    *          |                   |
    *          |                   |
    *          +-------------------+
-   * secondCoordinate      thirdCoordinate
+   * secondCoordinate       thirdCoordinate
    *
    *
    * Now, the same coordinates represented on `ViewWindow` coordinates:
@@ -114,8 +114,8 @@ public:
    * Update the clipping window coordinates represented on the 4 internal points accessed by
    * `getPoint(int)`.
    *
-   * @param width   the total view port widget width
-   * @param height  the total view port widget height
+   * @param width   the total DrawingArea widget width
+   * @param height  the total DrawingArea widget height
    */
   void updateClippingWindowSize(int width, int height);
 
