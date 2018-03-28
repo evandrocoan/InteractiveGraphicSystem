@@ -148,14 +148,14 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   // cairo_context->line_to(originOnWorld.getx(), this->viewPort.yMax - clipping_window_margin_distance);
   // cairo_context->stroke();
 
-  // // LOG(8, "Draw the clipping window with a red border")
-  // cairo_context->set_source_rgb(0.99, 0.0, 0.0);
+  // LOG(8, "Draw the clipping window with a red border")
+  cairo_context->set_source_rgb(0.99, 0.0, 0.0);
 
-  // cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
-  // cairo_context->line_to(this->viewPort.getPoint(1)->getx(), this->viewPort.getPoint(1)->gety());
-  // cairo_context->line_to(this->viewPort.getPoint(2)->getx(), this->viewPort.getPoint(2)->gety());
-  // cairo_context->line_to(this->viewPort.getPoint(3)->getx(), this->viewPort.getPoint(3)->gety());
-  // cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(1)->getx(), this->viewPort.getPoint(1)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(2)->getx(), this->viewPort.getPoint(2)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(3)->getx(), this->viewPort.getPoint(3)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
 
   // LOG(8, "Set color's objects as black:");
   cairo_context->stroke();
