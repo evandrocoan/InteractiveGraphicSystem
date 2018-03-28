@@ -73,7 +73,6 @@ protected:
   Gtk::Grid grid_file;
 
   Gtk::Grid grid_rotate;
-  Gtk::Grid grid_other;
 
   Gtk::Entry entry_move_length;
   Gtk::Entry entry_zoom_scale;
