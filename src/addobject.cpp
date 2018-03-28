@@ -1,7 +1,7 @@
 #include "addobject.h"
 
-AddObject::AddObject(ViewPort &viewPort) :
-      viewPort(viewPort),
+AddObject::AddObject(DrawingArea &drawingArea) :
+      drawingArea(drawingArea),
       m_vbox(Gtk::ORIENTATION_VERTICAL),
       button_close("Close"),
       button_save_line("Save Line"),
@@ -112,14 +112,9 @@ void AddObject::on_button_save_point()
   int x_coord = atoi(x_string.c_str());
   int y_coord = atoi(y_string.c_str());
 
-  Coordinate* point_cord = new Coordinate(x_coord, y_coord);
+  this->drawingArea.addPoint(name, x_coord, y_coord);
+  this->drawingArea.queue_draw();
 
-  Coordinate converted_coordinate = this->viewPort.coordinateWorldToWindow(*point_cord);
-  Coordinate* point_cord_in_window = new Coordinate(converted_coordinate.getx(), converted_coordinate.gety());
-
-  Point* point = new Point(name, point_cord, point_cord_in_window);
-
-  this->viewPort.addObject(point);
   this->window.close();
 }
 
@@ -144,18 +139,9 @@ void AddObject::on_button_save_line()
   int x2_cord = atoi(x2_string.c_str());
   int y2_cord = atoi(y2_string.c_str());
 
-  Coordinate* point_cord1 = new Coordinate(x1_cord, y1_cord);
-  Coordinate* point_cord2 = new Coordinate(x2_cord, y2_cord);
+  this->drawingArea.addLine(name, x1_cord, y1_cord, x2_cord, y2_cord);
+  this->drawingArea.queue_draw();
 
-  Coordinate converted_coordinate1 = this->viewPort.coordinateWorldToWindow(*point_cord1);
-  Coordinate converted_coordinate2 = this->viewPort.coordinateWorldToWindow(*point_cord2);
-
-  Coordinate* point_cord1_in_window = new Coordinate(converted_coordinate1.getx(), converted_coordinate1.gety());
-  Coordinate* point_cord2_in_window = new Coordinate(converted_coordinate2.getx(), converted_coordinate2.gety());
-
-  Line* line = new Line(name, point_cord1, point_cord2, point_cord1_in_window, point_cord2_in_window);
-
-  this->viewPort.addObject(line);
   this->window.close();
 }
 
@@ -172,8 +158,8 @@ void AddObject::on_button_save_polygon()
       return;
     }
 
-    Polygon* polygon = new Polygon(name, polygon_coord_list, polygon_coord_list_in_window);
-    this->viewPort.addObject(polygon);
+    this->drawingArea.addPolygon(name, polygon_coord_list);
+    this->drawingArea.queue_draw();
 
     while(!polygon_coord_list.empty())
     {
@@ -192,18 +178,16 @@ void AddObject::on_button_add_coordinate()
 {
   std::string x_string = wire_x_field.get_text().raw();
   std::string y_string = wire_y_field.get_text().raw();
+  // std::string z_string = wire_z_field.get_text().raw();
 
   int x_coord = atoi(x_string.c_str());
   int y_coord = atoi(y_string.c_str());
+  // int z_coord = atoi(z_string.c_str());
 
-  Coordinate* wire_cord = new Coordinate(x_coord, y_coord);
-  polygon_coord_list.push_back(wire_cord);
-
-  Coordinate converted_coordinate = this->viewPort.coordinateWorldToWindow(*wire_cord);
-  Coordinate* point_cord_in_window = new Coordinate(converted_coordinate.getx(), converted_coordinate.gety());
-
-
-  polygon_coord_list_in_window.push_back(point_cord_in_window);
+  polygon_coord_list.push_back(x_coord);
+  polygon_coord_list.push_back(y_coord);
+  // polygon_coord_list.push_back(z_coord);
+  polygon_coord_list.push_back(1);
 
   wire_x_field.set_text("");
   wire_y_field.set_text("");

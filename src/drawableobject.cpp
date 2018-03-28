@@ -5,10 +5,11 @@ DrawableObject::DrawableObject(std::string name) :
 {
 }
 
-DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordinates,  std::list<Coordinate*> coordinates_in_window) :
+DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordinates) :
       name(name),
       coordinates(coordinates),
-      viewWindowCoordinates(coordinates_in_window)
+      viewWindowCoordinates(coordinates),
+      clipped_coordinates(coordinates)
 {
 }
 
@@ -24,6 +25,12 @@ void DrawableObject::destroyList(std::list<Coordinate*> coordinates)
     // delete coordinates.front();
     coordinates.pop_front();
   }
+}
+
+void DrawableObject::updateClipping(ViewPort& axes)
+{
+  LOG(4, "Generic clipping update... %s", axes);
+  this->clipped_coordinates = this->coordinates;
 }
 
 std::string DrawableObject::getName()
@@ -91,30 +98,53 @@ Coordinate* DrawableObject::get_window_geometric_center()
   return new Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count);
 }
 
+std::list<Coordinate*>& DrawableObject::getClippedCoordinates()
+{
+  return this->coordinates;
+}
+
 /**
- * Prints a more beauty version of the matrix when called on `std::cout<< matrix << std::end;`
+ * Prints a more beauty version of the object when called on `std::cout<< object << std::end;`
  */
 std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
 {
-  output << object.name << "(";
+  object.printMyself(output);
+  return output;
+}
 
-  unsigned int index = 0;
-  unsigned int size = object.coordinates.size() - 1;
+void DrawableObject::printMyself(std::ostream& output) const
+{
+  unsigned int size;
+  unsigned int index;
+  std::list< std::list<Coordinate*> > coordinates_lists;
 
-  for( auto coordinate : object.viewWindowCoordinates )
+  coordinates_lists.push_back(this->coordinates);
+  coordinates_lists.push_back(this->clipped_coordinates);
+  coordinates_lists.push_back(this->viewWindowCoordinates);
+
+  output << this->name;
+
+  for( auto coordinates_list : coordinates_lists )
   {
-    output << *coordinate;
+    index = 0;
+    size = coordinates_list.size() - 1;
 
-    if( index != size )
+    output << "-" << index << "(";
+
+    for( auto coordinate : coordinates_list )
     {
-      output << ", ";
+      output << *coordinate;
+
+      if( index != size )
+      {
+        output << ", ";
+      }
+
+      index++;
     }
 
-    index++;
+    output << ")";
   }
-
-  output << ")";
-  return output;
 }
 
 void DrawableObject::apply(Transformation &transformation)
@@ -130,7 +160,6 @@ void DrawableObject::apply(Transformation &transformation)
   {
     transformation.apply(*coordinate);
   }
-
 }
 
 void DrawableObject::applyInWindow(Transformation &transformation)

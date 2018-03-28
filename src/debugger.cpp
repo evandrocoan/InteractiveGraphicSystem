@@ -32,6 +32,6 @@
   std::chrono::time_point<std::chrono::high_resolution_clock> _debugger_current_saved_chrono_time = std::chrono::high_resolution_clock::now();
 
   // Default debug level, if not defined on any other file
-  int _debugger_int_debug_level = 15;
+  int _debugger_int_debug_level = 127;
 #endif
 
