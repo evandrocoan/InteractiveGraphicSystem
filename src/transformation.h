@@ -7,12 +7,14 @@
 
 #include <cmath>
 #include <vector>
+
 #include <string>
+#include <iostream>
 
 #include "traits.h"
 #include "debugger.h"
-#include "coordinate.h"
 
+#include "coordinate.h"
 #include "matrixform.h"
 #include "transformationdata.h"
 
