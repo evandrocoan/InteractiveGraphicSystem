@@ -119,10 +119,6 @@ void MainWindow::setupButtons()
   grid_rotate.attach(entry_rotate_angle, 2, 1, 1, 1);
   grid_rotate.attach(button_rotate_right, 3, 1, 1, 1);
 
-  LOG(4, "Adding the other button");
-  grid_other.set_column_homogeneous(true);
-  grid_other.attach(button_move_center, 1, 1, 1, 1);
-
   LOG(4, "Adicionando os botões de abrir e salvar um arquivo na grade de arquivo");
   grid_file.set_column_homogeneous(true);
   grid_file.attach(button_open_file, 1, 1, 1, 1);
@@ -135,10 +131,8 @@ void MainWindow::setupButtons()
   left_box.add(grid_move);
   left_box.add(grid_zoom);
   left_box.add(grid_rotate);
-  left_box.add(grid_other);
   left_box.add(grid_file);
   left_box.add(this->addTransformation.getBox());
-
 }
 
 void MainWindow::connectButtons()
