@@ -7,7 +7,9 @@ DrawableObject::DrawableObject(std::string name) :
 
 DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordinates) :
       name(name),
-      coordinates(coordinates)
+      coordinates(coordinates),
+      viewWindowCoordinates(coordinates),
+      clipped_coordinates(coordinates)
 {
 }
 
@@ -112,26 +114,37 @@ std::ostream& operator<<( std::ostream &output, const DrawableObject &object )
 
 void DrawableObject::printMyself(std::ostream& output) const
 {
-  auto coordinates = this->viewWindowCoordinates;
+  unsigned int size;
+  unsigned int index;
+  std::list< std::list<Coordinate*> > coordinates_lists;
 
-  unsigned int index = 0;
-  unsigned int size  = coordinates.size() - 1;
+  coordinates_lists.push_back(this->coordinates);
+  coordinates_lists.push_back(this->clipped_coordinates);
+  coordinates_lists.push_back(this->viewWindowCoordinates);
 
-  output << this->name << "(";
+  output << this->name;
 
-  for( auto coordinate : coordinates )
+  for( auto coordinates_list : coordinates_lists )
   {
-    output << *coordinate;
+    index = 0;
+    size = coordinates_list.size() - 1;
 
-    if( index != size )
+    output << "-" << index << "(";
+
+    for( auto coordinate : coordinates_list )
     {
-      output << ", ";
+      output << *coordinate;
+
+      if( index != size )
+      {
+        output << ", ";
+      }
+
+      index++;
     }
 
-    index++;
+    output << ")";
   }
-
-  output << ")";
 }
 
 void DrawableObject::apply(Transformation &transformation)
