@@ -103,7 +103,7 @@ void DrawableObject::clearWorldCoordinates()
 
 Coordinate* DrawableObject::getWindowGeometricCenter()
 {
-  auto worldCoordinates      = this->getViewWindowCoordinates();
+  auto worldCoordinates = this->getViewWindowCoordinates();
   int coordinatesCount = worldCoordinates.size();
 
   long int x_axis = 0;

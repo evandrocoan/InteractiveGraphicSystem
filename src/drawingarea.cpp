@@ -496,20 +496,6 @@ void DrawingArea::move_right(int length)
   this->queue_draw();
 }
 
-void DrawingArea::move_center()
-{
-  Transformation transformation;
-  Coordinate center = this->viewWindow.getCoordinate();
-
-  transformation.add_translation("windowCenter",Coordinate(this->viewWindow.getCoordinate().getx(), this->viewWindow.getCoordinate().gety()));
-  transformation.set_geometric_center(center);
-
-  this->computeWindowCoordinate(transformation);
-
-  this->viewWindow.move_center();
-  this->queue_draw();
-}
-
 void DrawingArea::rotate_left(GTKMM_APP_MATRICES_DATATYPE angle)
 {
   Transformation transformation;
