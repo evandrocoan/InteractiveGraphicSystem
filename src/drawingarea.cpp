@@ -167,7 +167,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   for (auto object : objects)
   {
     // auto coordinates = object->getClippedCoordinates();
-    auto coordinates = object->getviewWindowCoordinates();
+    auto coordinates = object->getViewWindowCoordinates();
     int coordinates_count = coordinates.size();
 
     if (coordinates_count == 0)
@@ -379,13 +379,13 @@ void DrawingArea::addPolygon(std::string name, std::vector<GTKMM_APP_MATRICES_DA
 
 void DrawingArea::addObject(DrawableObject* object)
 {
-  auto worldCoordinates = object->getCoordinates();
+  auto worldCoordinates = object->getWorldCoordinates();
   auto viewWindowCoordinates = this->listCoordinateWorldToWindow(worldCoordinates);
 
-  object->setviewWindowCoordinates(viewWindowCoordinates);
+  object->setViewWindowCoordinates(viewWindowCoordinates);
   object->updateClipping(this->viewPort);
 
-  if (object->getCoordinates().size() == 0)
+  if (object->getWorldCoordinates().size() == 0)
   {
     LOG(1, "");
     LOG(1, "");

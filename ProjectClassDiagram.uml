@@ -64,10 +64,9 @@
     void         addPolygon()
     void         updateClipping();
     void         apply(Transformation&)
-    std::list<Coordinate*> clipped_coordinates
-    list<Coordinate*>& getCoordinates()
+    list<Coordinate*>& getWorldCoordinates()
     list<Coordinate*>& getClippedCoordinates()
-    list<Coordinate*>& getviewWindowCoordinates()
+    list<Coordinate*>& getViewWindowCoordinates()
   }
 
   class DrawingArea {
