@@ -26,23 +26,23 @@ public:
   virtual ~DrawableObject();
   std::string getName();
 
-  std::list<Coordinate*>& getCoordinates();
-  std::list<Coordinate*>& getviewWindowCoordinates();
+  void addWorldCoordinate(Coordinate* coordinate);
+  void clearWorldCoordinates();
 
-  void setviewWindowCoordinates(std::list<Coordinate*> coordinates);
-  void setCoordinates(std::list<Coordinate*> coordinates);
-
+  std::list<Coordinate*>& getWorldCoordinates();
+  std::list<Coordinate*>& getViewWindowCoordinates();
   std::list<Coordinate*>& getClippedCoordinates();
 
+  void setViewWindowCoordinates(std::list<Coordinate*> viewWindowCoordinates);
+
   /**
-   * `get_geometric_center()` return a pointer which you must explicitly delete after using it.
+   * `getGeometricCenter()` return a pointer which you must explicitly delete after using it.
    */
-  Coordinate* get_geometric_center();
-  Coordinate* get_window_geometric_center();
+  Coordinate* getGeometricCenter();
+  Coordinate* getWindowGeometricCenter();
 
   void apply(Transformation&);
   void applyInWindow(Transformation&);
-
   virtual void updateClipping(ViewPort&);
 
   /**
@@ -54,15 +54,14 @@ public:
 
 protected:
   DrawableObject(std::string name);
-  DrawableObject(std::string name, std::list<Coordinate*> coordinates);
+  DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates);
+
+  void destroyList(std::list<Coordinate*> coordinates);
 
   std::string name;
 
-  std::list<Coordinate*> coordinates;
+  std::list<Coordinate*> worldCoordinates;
   std::list<Coordinate*> viewWindowCoordinates;
-  std::list<Coordinate*> clipped_coordinates;
-
-private:
-  void destroyList(std::list<Coordinate*> coordinates);
+  std::list<Coordinate*> clippedCoordinates;
 };
 #endif // GTKMM_APP_DRAWABLE_OBJECT
