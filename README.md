@@ -20,6 +20,20 @@ git submodule update
 ```
 
 
+### Segmentation fault
+
+In case of segmentation fault, you need to run the program from the command line with:
+```
+$ gdb binaries/main.exe
+gdb $ run
+gdb $ bt
+```
+
+See:
+
+1. https://stackoverflow.com/questions/7848771/how-can-one-see-content-of-stack-with-gdb
+
+
 ### Required dependencies for MSYS2 on Windows
 
 To run `GTK+` and `GTKmm` on Windows you will need `MSYS2`,

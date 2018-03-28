@@ -167,14 +167,22 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   for (auto object : objects)
   {
     // auto coordinates = object->getClippedCoordinates();
-    // Coordinate firstCoordinate = this->convertCoordinateFromWindow(**(coordinates.begin()));
     auto coordinates = object->getviewWindowCoordinates();
+    int coordinates_count = coordinates.size();
+
+    if (coordinates_count == 0)
+    {
+      LOG(1, "ERROR: The object `%s` has no coordinates.", *object);
+      continue;
+    }
+
+    // Coordinate firstCoordinate = this->convertCoordinateFromWindow(**(coordinates.begin()));
     Coordinate firstCoordinate = this->coordinateWindowToViewPort(**(coordinates.begin()));
 
-    cairo_context->move_to(firstCoordinate.getx(), firstCoordinate.gety());
     LOG(8, "object coordinates: %s", *object);
+    cairo_context->move_to(firstCoordinate.getx(), firstCoordinate.gety());
 
-    if (coordinates.size() == 1)
+    if (coordinates_count == 1)
     {
       cairo_context->line_to(firstCoordinate.getx()+1, firstCoordinate.gety()+1);
     }
@@ -376,6 +384,17 @@ void DrawingArea::addObject(DrawableObject* object)
 
   object->setviewWindowCoordinates(viewWindowCoordinates);
   object->updateClipping(this->viewPort);
+
+  if (object->getCoordinates().size() == 0)
+  {
+    LOG(1, "");
+    LOG(1, "");
+    LOG(1, "ERROR: The object `%s` has no coordinates.", *object);
+  }
+  else
+  {
+    LOG(4, "Adding the object `%s`", *object);
+  }
 
   this->displayFile.addObject(object);
   this->callObservers();
