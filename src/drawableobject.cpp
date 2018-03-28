@@ -7,10 +7,15 @@ DrawableObject::DrawableObject(std::string name) :
 
 DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordinates) :
       name(name),
-      coordinates(coordinates),
-      viewWindowCoordinates(coordinates),
-      clipped_coordinates(coordinates)
+      coordinates(coordinates)
 {
+  LOG(4, "Deep coping initializing the other attributes");
+
+  for( auto coordinate : coordinates )
+  {
+    this->viewWindowCoordinates.push_back(new Coordinate(*coordinate));
+    this->clipped_coordinates.push_back(new Coordinate(*coordinate));
+  }
 }
 
 DrawableObject::~DrawableObject()
@@ -18,6 +23,10 @@ DrawableObject::~DrawableObject()
 	this->destroyList(coordinates);
 }
 
+/**
+ * https://stackoverflow.com/questions/307082/cleaning-up-an-stl-list-vector-of-pointers
+ * Cleaning up an STL list/vector of pointers
+ */
 void DrawableObject::destroyList(std::list<Coordinate*> coordinates)
 {
   while(!coordinates.empty())
