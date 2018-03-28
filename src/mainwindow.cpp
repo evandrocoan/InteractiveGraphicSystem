@@ -1,26 +1,29 @@
 #include "mainwindow.h"
 
-
+/**
+ * https://en.wikipedia.org/wiki/Template:Unicode_chart_Arrows
+ */
 MainWindow::MainWindow() :
-      addObject(this->viewPort),
-      addTransformation(this->viewPort),
-      button_move_up("up"),
-      button_move_down("down"),
-      button_move_left("left"),
-      button_move_right("right"),
+      addObject(this->drawingArea),
+      addTransformation(this->drawingArea),
+      rw_object_service(this->drawingArea),
+      button_move_up("↑"),
+      button_move_down("↓"),
+      button_move_left("←"),
+      button_move_right("→"),
       button_move_center("Center with the world"),
       button_rotate_left("left"),
       button_rotate_right("right"),
       button_zoom_in("+"),
       button_zoom_out("-"),
-      button_add_object("Add Object"),
-      button_delete_object("Delete Object"),
-	  button_open_file("Open File"),
-	  button_save_file("Save File"),
+      button_add_object("Add"),
+      button_delete_object("Rem"),
+      button_open_file("Open File"),
+      button_save_file("Save File"),
       main_box(Gtk::ORIENTATION_HORIZONTAL),
       left_box(Gtk::ORIENTATION_VERTICAL),
       left_frame("Controllers"),
-      right_frame("ViewPort")
+      right_frame("DrawingArea")
 {
   LOG(2, "Entering...");
   this->main_box.pack_start(left_frame, Gtk::PACK_SHRINK, 10);
@@ -30,12 +33,13 @@ MainWindow::MainWindow() :
   LOG(4, "Draw options");
   this->setupButtons();
   this->connectButtons();
+  this->setDefaultTooltips();
 
-  LOG(4, "ViewPort");
+  LOG(4, "DrawingArea");
   this->main_box.pack_start(this->right_frame, Gtk::PACK_EXPAND_WIDGET, 10);
-  this->right_frame.add(this->viewPort);
-  this->viewPort.show();
-  this->viewPort.addObserver(std::bind(&MainWindow::updateDropdownList, this));
+  this->right_frame.add(this->drawingArea);
+  this->drawingArea.show();
+  this->drawingArea.addObserver(std::bind(&MainWindow::updateDropdownList, this));
 
   LOG(4, "Show all components");
   this->window.set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan, Hugo Vincent");
@@ -54,43 +58,60 @@ Gtk::Window& MainWindow::getWindow()
   return this->window;
 }
 
+void MainWindow::setDefaultTooltips()
+{
+  button_add_object   .set_tooltip_text("Add new object");
+  button_delete_object.set_tooltip_text("Remove current selected object");
+  objects_list        .set_tooltip_text("The list of all created objects on the DrawingArea");
+
+  entry_move_length   .set_tooltip_text("How many pixels to move the ViewWindow");
+  entry_zoom_scale    .set_tooltip_text("A scaling factor as `1.1` or `0.9` to `zoom in` or `zoom out` the ViewWindow");
+  button_zoom_in      .set_tooltip_text("Apply the scaling factor to the ViewWindow over the Drawing World");
+  button_zoom_out     .set_tooltip_text("Apply inverted the scaling factor to the ViewWindow over the Drawing World");
+
+  button_move_up      .set_tooltip_text("Move the ViewWindow on the drawing area upwards");
+  button_move_down    .set_tooltip_text("Move the ViewWindow on the drawing area downwards");
+  button_move_left    .set_tooltip_text("Move the ViewWindow on the drawing area to the left");
+  button_move_right   .set_tooltip_text("Move the ViewWindow on the drawing area to the right");
+}
+
 void MainWindow::setupButtons()
 {
   LOG(4, "Inicializando dado da entrada do tamanho de movimentação");
-  entry_move_length.set_width_chars(1);
-  entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+  entry_move_length.set_width_chars(3);
+  entry_move_length.set_text(default_move_length);
 
   LOG(4, "Inicializando dado da entrada do tamanho da rotaçao");
   entry_rotate_angle.set_width_chars(1);
-  entry_rotate_angle.set_text(DEFAULT_ROTATE_ANGLE);
+  entry_rotate_angle.set_text(default_rotate_angle);
 
   LOG(4, "Inicializando dado da entrada do tamanho do zoom");
-  entry_zoom_scale.set_width_chars(1);
+  entry_zoom_scale.set_width_chars(3);
   char array[4];
 
-  sprintf(array, "%f", DEFAULT_ZOOM_SCALE);
+  sprintf(array, "%f", default_zoom_scale);
   array[3] = '\0';
   entry_zoom_scale.set_text(array);
 
   LOG(4, "Montando a estrutura da grade de lista de objetos");
   grid_list_obj.set_column_homogeneous(true);
-  grid_list_obj.attach(button_add_object, 1, 1, 1, 1);
-  grid_list_obj.attach(objects_list, 1, 2, 1, 1);
-  grid_list_obj.attach(button_delete_object, 1, 3, 1, 1);
+  grid_list_obj.attach(button_add_object,    1, 1, 1, 1);
+  grid_list_obj.attach(button_delete_object, 2, 1, 1, 1);
+  grid_list_obj.attach(objects_list,         1, 2, 2, 1);
 
   LOG(4, "Adicionando os botões de movimentações na grade de movimentação");
-  grid_move.set_column_homogeneous(true);
-  grid_move.attach(button_move_up, 2, 1, 1, 1);
-  grid_move.attach(button_move_left, 1, 2, 1, 1);
+  // grid_move.set_column_homogeneous(true);
+  grid_move.attach(button_move_left,  1, 2, 1, 1);
+  grid_move.attach(button_move_up,    2, 1, 1, 1);
   grid_move.attach(entry_move_length, 2, 2, 1, 1);
+  grid_move.attach(button_move_down,  2, 3, 1, 1);
   grid_move.attach(button_move_right, 3, 2, 1, 1);
-  grid_move.attach(button_move_down, 2, 3, 1, 1);
 
   LOG(4, "Adicionando os botões de movimentações na grade de zoom");
   grid_zoom.set_column_homogeneous(true);
-  grid_zoom.attach(button_zoom_out, 1, 1, 1, 1);
+  grid_zoom.attach(button_zoom_out,  1, 1, 1, 1);
   grid_zoom.attach(entry_zoom_scale, 2, 1, 1, 1);
-  grid_zoom.attach(button_zoom_in, 3, 1, 1, 1);
+  grid_zoom.attach(button_zoom_in,   3, 1, 1, 1);
 
   LOG(4, "Adicionando os botões de rotaçao na grade de rotaçao");
   grid_rotate.set_column_homogeneous(true);
@@ -117,7 +138,7 @@ void MainWindow::setupButtons()
   left_box.add(grid_other);
   left_box.add(grid_file);
   left_box.add(this->addTransformation.getBox());
- 
+
 }
 
 void MainWindow::connectButtons()
@@ -144,12 +165,12 @@ void MainWindow::connectButtons()
 }
 
 /**
- * Called when the `ViewPort` objects list is updated.
+ * Called when the `DrawingArea` objects list is updated.
  */
 void MainWindow::updateDropdownList()
 {
   LOG(2, "Entering...");
-  auto names = this->viewPort.getNamesList();
+  auto names = this->drawingArea.getNamesList();
 
   LOG(4, "limpa a lista de objetos para reimprimi-la");
   this->objects_list.remove_all();
@@ -176,11 +197,11 @@ void MainWindow::on_button_move_up()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+    entry_move_length.set_text(default_move_length);
   }
   else
   {
-    this->viewPort.move_up(move_length);
+    this->drawingArea.move_up(move_length);
   }
 }
 
@@ -190,11 +211,11 @@ void MainWindow::on_button_move_down()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+    entry_move_length.set_text(default_move_length);
   }
   else
   {
-    this->viewPort.move_down(move_length);
+    this->drawingArea.move_down(move_length);
   }
 }
 
@@ -204,11 +225,11 @@ void MainWindow::on_button_move_left()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+    entry_move_length.set_text(default_move_length);
   }
   else
   {
-    this->viewPort.move_left(move_length);
+    this->drawingArea.move_left(move_length);
   }
 }
 
@@ -218,17 +239,17 @@ void MainWindow::on_button_move_right()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+    entry_move_length.set_text(default_move_length);
   }
   else
   {
-    this->viewPort.move_right(move_length);
+    this->drawingArea.move_right(move_length);
   }
 }
 
 void MainWindow::on_button_move_center()
 {
-  this->viewPort.move_center();
+  this->drawingArea.move_center();
 }
 
 void MainWindow::on_button_zoom_in()
@@ -238,14 +259,14 @@ void MainWindow::on_button_zoom_in()
   if (zoom_scale <=1)
   {
     char array[4];
-    sprintf(array, "%f", DEFAULT_ZOOM_SCALE);
+    sprintf(array, "%f", default_zoom_scale);
 
     array[3] = '\0';
     entry_zoom_scale.set_text(array);
   }
   else
   {
-    this->viewPort.zoom_in(zoom_scale);
+    this->drawingArea.zoom_in(zoom_scale);
   }
 }
 
@@ -256,42 +277,42 @@ void MainWindow::on_button_zoom_out()
   if (zoom_scale <=1)
   {
     char array[4];
-    sprintf(array, "%f", DEFAULT_ZOOM_SCALE);
+    sprintf(array, "%f", default_zoom_scale);
 
     array[3] = '\0';
     entry_zoom_scale.set_text(array);
   }
   else
   {
-    this->viewPort.zoom_out(zoom_scale);
+    this->drawingArea.zoom_out(zoom_scale);
   }
 }
 
 void MainWindow::on_button_rotate_left()
 {
-  long double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+  GTKMM_APP_MATRICES_DATATYPE rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
 
   if (rotate_angle == 0)
   {
-    entry_move_length.set_text(DEFAULT_ROTATE_ANGLE);
+    entry_move_length.set_text(default_rotate_angle);
   }
   else
   {
-    this->viewPort.rotate_left(rotate_angle);
+    this->drawingArea.rotate_left(rotate_angle);
   }
 }
 
 void MainWindow::on_button_rotate_right()
 {
-  long double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+  GTKMM_APP_MATRICES_DATATYPE rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
 
   if (rotate_angle == 0)
   {
-    entry_move_length.set_text(DEFAULT_ROTATE_ANGLE);
+    entry_move_length.set_text(default_rotate_angle);
   }
   else
   {
-    this->viewPort.rotate_right(rotate_angle);
+    this->drawingArea.rotate_right(rotate_angle);
   }
 }
 
@@ -307,7 +328,8 @@ void MainWindow::on_button_delete_object()
 
   if(!(name.empty()))
   {
-    this->viewPort.removeObject(name);
+    this->drawingArea.removeObject(name);
+    this->drawingArea.queue_draw();
   }
 }
 
@@ -315,22 +337,22 @@ void MainWindow::on_button_open_file()
 {
 	choose_file_window = new ChooseFileWindow(Gtk::FILE_CHOOSER_ACTION_OPEN);
 	choose_file_window->show();
-	std::string file_path = choose_file_window->get_file_path();
-	std::list<DrawableObject*> objects_list = rw_object_service.read(file_path);
-	for (DrawableObject* object : objects_list)
-	{
-	  this->viewPort.addObject(object);
-	}
-	this->viewPort.queue_draw();
-	LOG(2, "Sucessfull opened the objects from file\n");
+
+  std::string file_path = choose_file_window->get_file_path();
+	this->rw_object_service.read(file_path);
+
+	this->drawingArea.queue_draw();
+  LOG(2, "Successfully opened the objects from file\n");
 }
 
 void MainWindow::on_button_save_file()
 {
 	choose_file_window = new ChooseFileWindow(Gtk::FILE_CHOOSER_ACTION_SAVE);
 	choose_file_window->show();
+
 	std::string file_path = choose_file_window->get_file_path();
-	rw_object_service.write(this->viewPort.getObjectsList(), file_path);
+	this->rw_object_service.write(this->drawingArea.getObjectsList(), file_path);
+
 	LOG(2, "Sucessfull saved the objects on file\n");
 }
 

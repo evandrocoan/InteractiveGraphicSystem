@@ -1,13 +1,16 @@
-#ifndef GTKMM_APP_RECT
-#define GTKMM_APP_RECT
+#ifndef GTKMM_APP_LINE
+#define GTKMM_APP_LINE
 
-#include "drawableobject.h"
 #include "coordinate.h"
+#include "drawableobject.h"
 
 class Line : public DrawableObject
 {
 public:
-  Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2, Coordinate* line_cord1_in_window, Coordinate* line_cord2_in_window);
+  Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2);
   ~Line();
+
+  virtual void updateClipping(ViewPort& axes);
 };
-#endif // GTKMM_APP_RECT
+
+#endif // GTKMM_APP_LINE

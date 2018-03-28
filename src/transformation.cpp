@@ -62,7 +62,10 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
   return output;
 }
 
-void Transformation::add_rotation(std::string name, Array<3, long double> degrees, Coordinate coordinate, RotationType type)
+void Transformation::add_rotation(std::string name,
+                                  Array<3, GTKMM_APP_MATRICES_DATATYPE> degrees,
+                                  Coordinate coordinate,
+                                  RotationType type)
 {
   MatrixForm rotation =
   {
