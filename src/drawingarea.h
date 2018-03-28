@@ -88,9 +88,8 @@ protected:
   void computeWindowCoordinate(Transformation transformation);
 
 private:
-
   void on_init();
-  bool onInit = true;
+
 };
 
 #endif // GTKMM_APP_DRAWINGAREA

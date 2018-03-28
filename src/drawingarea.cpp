@@ -52,6 +52,7 @@ void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
     this->isCentered = true;
     LOG(4, "Moving ViewWindow (0, 0) to the window center...");
 
+    this->on_init();
     this->move_down(480);
     this->move_left(500);
   }
@@ -123,12 +124,6 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   // LOG(8, "Chama-mes 5 vezes seguidas para desenhar a mesma coisa por que?");
   auto allocation = this->get_allocation();
   this->updateViewPort(allocation);
-
-  if(this->onInit)
-  {
-    this->on_init();
-    this->onInit = false;
-  }
 
   // LOG(8, "Paint white background");
   cairo_context->set_source_rgb(1, 1, 1);
