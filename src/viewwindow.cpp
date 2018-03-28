@@ -198,20 +198,6 @@ void ViewWindow::rotate_right(GTKMM_APP_MATRICES_DATATYPE angle)
   this->callObservers();
 }
 
-void ViewWindow::move_center()
-{
-  this->initPoints();
-
-  Transformation transformation;
-  Coordinate center(0,0,0);
-
-  transformation.add_translation("Center with the world", Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
-  transformation.set_geometric_center(this->coordinate);
-
-  this->applyTransformation(transformation);
-  this->setPoints();
-}
-
 Coordinate& ViewWindow::getCoordinate()
 {
   return this->coordinate;

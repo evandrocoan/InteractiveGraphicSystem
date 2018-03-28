@@ -13,7 +13,6 @@ MainWindow::MainWindow() :
       button_move_down("↓"),
       button_move_left("←"),
       button_move_right("→"),
-      button_move_center("Center with the world"),
       button_rotate_left("↺"),
       button_rotate_right("↻"),
       button_zoom_in("+"),
@@ -145,8 +144,6 @@ void MainWindow::connectButtons()
   this->button_move_left.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_left));
   this->button_move_right.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_right));
 
-  this->button_move_center.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_center));
-
   this->button_zoom_in.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_zoom_in));
   this->button_zoom_out.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_zoom_out));
 
@@ -241,11 +238,6 @@ void MainWindow::on_button_move_right()
   {
     this->drawingArea.move_right(move_length);
   }
-}
-
-void MainWindow::on_button_move_center()
-{
-  this->drawingArea.move_center();
 }
 
 void MainWindow::on_button_zoom_in()

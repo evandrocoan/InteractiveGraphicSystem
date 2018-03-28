@@ -53,7 +53,6 @@ public:
   void move_left (int length = 10);
   void move_right(int length = 10);
 
-  void move_center();
   void rotate_left (GTKMM_APP_MATRICES_DATATYPE angle = 10);
   void rotate_right(GTKMM_APP_MATRICES_DATATYPE angle = 10);
 
