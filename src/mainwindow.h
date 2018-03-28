@@ -7,24 +7,19 @@
 #include <gtkmm/window.h>
 #include <gtkmm/box.h>
 #include <gtkmm/frame.h>
-#include <gtkmm/viewport.h>
 #include <gtkmm/adjustment.h>
 #include <gtkmm/buttonbox.h>
 #include <gtkmm/comboboxtext.h>
 #include <gtkmm/grid.h>
 #include <glibmm/refptr.h>
 
-#include "viewport.h"
+#include "drawingarea.h"
 #include "debugger.h"
 #include "viewwindow.h"
 #include "addobject.h"
 #include "addtransformation.h"
 #include "ChooseFileWindow.h"
 #include "RwObjectService.h"
-
-#define DEFAULT_ZOOM_SCALE  1.5
-#define DEFAULT_ROTATE_ANGLE "10"
-#define DEFAULT_MOVE_LENGTH "10"
 
 class MainWindow
 {
@@ -37,12 +32,15 @@ public:
   Gtk::Window& getWindow();
 
 protected:
-  Gtk::ComboBoxText objects_list;
   Gtk::Window       window;
+  Gtk::ComboBoxText objects_list;
 
-  ViewPort          viewPort;
+  DrawingArea       drawingArea;
   AddObject         addObject;
   AddTransformation addTransformation;
+
+  RwObjectService   rw_object_service;
+  ChooseFileWindow* choose_file_window;
 
   Gtk::Button button_move_up;
   Gtk::Button button_move_down;
@@ -62,7 +60,6 @@ protected:
 
   Gtk::Button button_open_file;
   Gtk::Button button_save_file;
-
 
   Gtk::Box main_box;
   Gtk::Box left_box;
@@ -84,6 +81,7 @@ protected:
 
   void setupButtons();
   void connectButtons();
+  void setDefaultTooltips();
 
   void on_button_move_up();
   void on_button_move_down();
@@ -101,12 +99,8 @@ protected:
   void on_button_add_object();
   void on_button_delete_object();
 
-  RwObjectService rw_object_service;
-  ChooseFileWindow* choose_file_window;
-  std::list<DrawableObject*> get_drawable_objects();
   void on_button_open_file();
   void on_button_save_file();
-
 };
 
 #endif // GTKMM_APP_MAIN_WINDOW

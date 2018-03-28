@@ -1,16 +1,35 @@
 #include "viewwindow.h"
 
-ViewWindow::ViewWindow(int xWmin, int yWmin, int xWmax, int yWmax)
-    : xWmin(xWmin),
-      yWmin(yWmin),
-      xWmax(xWmax),
-      yWmax(yWmax),
-      coordinate(xWmax/2,yWmax/2),
+ViewWindow::ViewWindow() :
+      xMin(0),
+      yMin(0),
+      xMax(0),
+      yMax(0),
+      coordinate(0, 0),
       top_left(0,0),
       top_right(0,0),
       bottom_left(0,0),
       bottom_right(0,0)
 {
+}
+
+ViewWindow::~ViewWindow()
+{
+}
+
+std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
+{
+  output
+      << "(" << std::setw(4) << object.xMin << ", " << std::setw(4) << object.yMin << ")"
+      << "(" << std::setw(4) << object.xMax << ", " << std::setw(4) << object.yMax << ")";
+  return output;
+}
+
+Signal<>::Connection ViewWindow::addObserver(const Signal<>::Callback &callback)
+{
+  auto connection = callObservers.connect(callback);
+  this->callObservers();
+  return connection;
 }
 
 void ViewWindow::zoom_in(float scale)
@@ -21,26 +40,28 @@ void ViewWindow::zoom_in(float scale)
   }
   else
   {
-    float width = this->xWmax - this->xWmin;
-    float height = this->yWmax - this->yWmin;
+    float width = this->xMax - this->xMin;
+    float height = this->yMax - this->yMin;
 
-    float xWminNew = this->xWmin + (width - (width / scale)) / 2;
-    float xWmaxNew = this->xWmax - (width - (width / scale)) / 2;
-    float yWminNew = this->yWmin + (height - (height / scale)) / 2;
-    float yWmaxNew = this->yWmax - (height - (height/ scale)) / 2;
+    float xMinNew = this->xMin + (width - (width / scale)) / 2;
+    float xMaxNew = this->xMax - (width - (width / scale)) / 2;
+    float yMinNew = this->yMin + (height - (height / scale)) / 2;
+    float yMaxNew = this->yMax - (height - (height/ scale)) / 2;
 
-    if ((xWmaxNew - xWminNew) < MIN_WIDTH || (yWmaxNew - yWminNew) < MIN_HEIGHT)
+    if ((xMaxNew - xMinNew) < MIN_WIDTH || (yMaxNew - yMinNew) < MIN_HEIGHT)
     {
       return;
     }
     else
     {
-      this->xWmin = xWminNew;
-      this->xWmax = xWmaxNew;
-      this->yWmin = yWminNew;
-      this->yWmax = yWmaxNew;
+      this->xMin = xMinNew;
+      this->xMax = xMaxNew;
+      this->yMin = yMinNew;
+      this->yMax = yMaxNew;
     }
   }
+
+  this->callObservers();
 }
 
 void ViewWindow::zoom_out(float scale)
@@ -51,26 +72,28 @@ void ViewWindow::zoom_out(float scale)
   }
   else
   {
-    float width = this->xWmax - this->xWmin;
-    float height = this->yWmax - this->yWmin;
+    float width = this->xMax - this->xMin;
+    float height = this->yMax - this->yMin;
 
-    float xWminNew = this->xWmin - ((width * scale) - width) / 2;
-    float xWmaxNew = this->xWmax + ((width * scale) - width) / 2;
-    float yWminNew = this->yWmin - ((height * scale) - height) / 2;
-    float yWmaxNew = this->yWmax + ((height * scale) - height) / 2;
+    float xMinNew = this->xMin - ((width * scale) - width) / 2;
+    float xMaxNew = this->xMax + ((width * scale) - width) / 2;
+    float yMinNew = this->yMin - ((height * scale) - height) / 2;
+    float yMaxNew = this->yMax + ((height * scale) - height) / 2;
 
-    if ((xWmaxNew - xWminNew) > MAX_WIDTH || (yWmaxNew - yWminNew) > MAX_HEIGHT)
+    if ((xMaxNew - xMinNew) > MAX_WIDTH || (yMaxNew - yMinNew) > MAX_HEIGHT)
     {
       return;
     }
     else
     {
-      this->xWmin = xWminNew;
-      this->xWmax = xWmaxNew;
-      this->yWmin = yWminNew;
-      this->yWmax = yWmaxNew;
+      this->xMin = xMinNew;
+      this->xMax = xMaxNew;
+      this->yMin = yMinNew;
+      this->yMax = yMaxNew;
     }
   }
+
+  this->callObservers();
 }
 
 void ViewWindow::move_up(int length)
@@ -84,6 +107,10 @@ void ViewWindow::move_up(int length)
 
   this->applyTransformation(transformation);
   this->setPoints();
+
+  // this->yMin += length;
+  // this->yMax += length;
+  this->callObservers();
 }
 
 void ViewWindow::move_down(int length)
@@ -97,11 +124,14 @@ void ViewWindow::move_down(int length)
 
   this->applyTransformation(transformation);
   this->setPoints();
+
+  // this->yMin -= length;
+  // this->yMax -= length;
+  this->callObservers();
 }
 
 void ViewWindow::move_left(int length)
 {
-
   this->initPoints();
 
   Transformation transformation;
@@ -112,6 +142,9 @@ void ViewWindow::move_left(int length)
   this->applyTransformation(transformation);
   this->setPoints();
 
+  // this->xMin -= length;
+  // this->xMax -= length;
+  this->callObservers();
 }
 
 void ViewWindow::move_right(int length)
@@ -125,9 +158,13 @@ void ViewWindow::move_right(int length)
 
   this->applyTransformation(transformation);
   this->setPoints();
+
+  // this->xMin += length;
+  // this->xMax += length;
+  this->callObservers();
 }
 
-void ViewWindow::rotate_left(long double angle)
+void ViewWindow::rotate_left(GTKMM_APP_MATRICES_DATATYPE angle)
 {
   this->initPoints();
 
@@ -135,47 +172,44 @@ void ViewWindow::rotate_left(long double angle)
   Coordinate center(0,0,0);
 
   transformation.add_translation("Center with the world",Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
-  transformation.add_rotation("Window Rotation", Array<3, long double>{-angle, 0.0, 0.0});
+  transformation.add_rotation("Window Rotation", Array<3, GTKMM_APP_MATRICES_DATATYPE>{-angle, 0.0, 0.0});
   transformation.add_translation("Back to initial position",Coordinate(this->coordinate.getx(), this->coordinate.gety()));
   transformation.set_geometric_center(center);
 
   this->applyTransformation(transformation);
   this->setPoints();
+  this->callObservers();
 }
 
-void ViewWindow::rotate_right(long double angle)
+void ViewWindow::rotate_right(GTKMM_APP_MATRICES_DATATYPE angle)
 {
-
   this->initPoints();
 
   Transformation transformation;
   Coordinate center(0,0,0);
 
   transformation.add_translation("Center with the world",Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
-  transformation.add_rotation("Window Rotation", Array<3, long double>{angle, 0.0, 0.0});
+  transformation.add_rotation("Window Rotation", Array<3, GTKMM_APP_MATRICES_DATATYPE>{angle, 0.0, 0.0});
   transformation.add_translation("Back to initial position",Coordinate(this->coordinate.getx(), this->coordinate.gety()));
   transformation.set_geometric_center(center);
 
   this->applyTransformation(transformation);
   this->setPoints();
+  this->callObservers();
 }
 
-void ViewWindow::move_center(){
-
+void ViewWindow::move_center()
+{
   this->initPoints();
 
   Transformation transformation;
   Coordinate center(0,0,0);
 
-  transformation.add_translation("Center with the world",Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
+  transformation.add_translation("Center with the world", Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
   transformation.set_geometric_center(this->coordinate);
 
   this->applyTransformation(transformation);
   this->setPoints();
-}
-
-ViewWindow::~ViewWindow()
-{
 }
 
 Coordinate& ViewWindow::getCoordinate()
@@ -188,25 +222,25 @@ void ViewWindow::setCoordinate(Coordinate coordinate)
   this->coordinate = coordinate;
 }
 
-void ViewWindow::initPoints(){
-
-  this->top_left = Coordinate(this->xWmin, this->yWmax);
-  this->top_right = Coordinate(this->xWmax, this->yWmax);
-  this->bottom_left = Coordinate(this->xWmin, this->yWmin);
-  this->bottom_right = Coordinate(this->xWmax, this->yWmin);
+void ViewWindow::initPoints()
+{
+  this->top_left = Coordinate(this->xMin, this->yMax);
+  this->top_right = Coordinate(this->xMax, this->yMax);
+  this->bottom_left = Coordinate(this->xMin, this->yMin);
+  this->bottom_right = Coordinate(this->xMax, this->yMin);
 }
 
-void ViewWindow::setPoints(){
+void ViewWindow::setPoints()
+{
+  this->xMin = this->bottom_left.getx();
+  this->yMin = this->bottom_left.gety();
 
-  this->xWmin = this->bottom_left.getx();
-  this->yWmin = this->bottom_left.gety();
-
-  this->xWmax = this->top_right.getx();
-  this->yWmax = this->top_right.gety();
+  this->xMax = this->top_right.getx();
+  this->yMax = this->top_right.gety();
 }
 
-void ViewWindow::applyTransformation(Transformation& transformation){
-
+void ViewWindow::applyTransformation(Transformation& transformation)
+{
   transformation.apply(this->bottom_left);
   transformation.apply(this->bottom_right);
   transformation.apply(this->top_left);

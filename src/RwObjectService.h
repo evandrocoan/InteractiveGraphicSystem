@@ -14,21 +14,23 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+
+#include "drawingarea.h"
 #include "drawableobject.h"
-#include "polygon.h"
-#include "point.h"
-#include "line.h"
 
 using namespace std;
 
 class RwObjectService
 {
 public:
-  RwObjectService();
+  RwObjectService(DrawingArea&);
   ~RwObjectService();
-  list<DrawableObject*> read(string file_path);
+
+  void read(string file_path);
   void write(list<DrawableObject*> objects_list, string file_path);
+
 protected:
+  DrawingArea& drawingArea;
   vector<string> split(string str, char delimiter);
 };
 
