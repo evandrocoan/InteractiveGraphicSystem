@@ -72,7 +72,6 @@ public:
   Coordinate& getCoordinate();
   void setCoordinate(Coordinate coordinate);
 
-  void move_center();
   void initPoints();
   void setPoints();
   void applyTransformation(Transformation& transformation);

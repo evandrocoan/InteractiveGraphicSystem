@@ -47,8 +47,6 @@ protected:
   Gtk::Button button_move_left;
   Gtk::Button button_move_right;
 
-  Gtk::Button button_move_center;
-
   Gtk::Button button_rotate_left;
   Gtk::Button button_rotate_right;
 
@@ -84,8 +82,6 @@ protected:
   void on_button_move_down();
   void on_button_move_left();
   void on_button_move_right();
-
-  void on_button_move_center();
 
   void on_button_rotate_left();
   void on_button_rotate_right();
