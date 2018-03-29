@@ -53,7 +53,7 @@ public:
 
   void updateObjectCoordinates();
   void apply(std::string object_name, Transformation&);
-  Coordinate convertCoordinateFromWindow(Coordinate&);
+  Coordinate convertCoordinateFromWindowToWorld(Coordinate&);
 
   std::list<std::string> getNamesList();
   std::list<DrawableObject*> getObjectsList();

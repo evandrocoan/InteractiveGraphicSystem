@@ -120,7 +120,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   // cairo_context->set_line_width(1);
   // cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
   // Coordinate originOnWindow(0, 0);
-  // Coordinate originOnWorld = convertCoordinateFromWindow(originOnWindow);
+  // Coordinate originOnWorld = convertCoordinateFromWindowToWorld(originOnWindow);
 
   // LOG(8, "Drawing X and Y axes with originOnWorld: %s", originOnWorld);
   // LOG(4, "Drawing axes X from (%s, %s) to (%s, %s)", this->viewPort.xMin, originOnWorld.gety(), this->viewPort.xMax, originOnWorld.gety() );
@@ -159,7 +159,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
       continue;
     }
 
-    Coordinate firstCoordinate = this->convertCoordinateFromWindow(**(coordinates.begin()));
+    Coordinate firstCoordinate = this->convertCoordinateFromWindowToWorld(**(coordinates.begin()));
 
     LOG(8, "object coordinates: %s", *object);
     cairo_context->move_to(firstCoordinate.getx(), firstCoordinate.gety());
@@ -172,7 +172,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
     {
       for (auto coordinate : coordinates)
       {
-        Coordinate coordinateConverted = this->convertCoordinateFromWindow(*coordinate);
+        Coordinate coordinateConverted = this->convertCoordinateFromWindowToWorld(*coordinate);
         cairo_context->line_to(coordinateConverted.getx(), coordinateConverted.gety());
       }
 
@@ -191,7 +191,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
  * @param  coordinate [description]
  * @return            [description]
  */
-Coordinate DrawingArea::convertCoordinateFromWindow(Coordinate &coordinate)
+Coordinate DrawingArea::convertCoordinateFromWindowToWorld(Coordinate &coordinate)
 {
   long int xW = coordinate.getx();
   long int yW = coordinate.gety();
