@@ -9,8 +9,8 @@ Line::~Line()
 {
 }
 
-void Line::updateClipping(ViewPort& axes)
+void Line::updateClippingCoordinates(ViewPort& axes)
 {
   LOG(4, "Line clipping update... %s", axes);
-  this->clippedCoordinates = this->worldCoordinates;
+  this->clippingCoordinates = this->worldCoordinates;
 }
