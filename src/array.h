@@ -16,6 +16,14 @@ struct Array
    */
   std::array<array_datatype, array_width> _data;
 
+  // Array(const Array& object)
+  // {
+  //   for( unsigned int index = 0; index < array_width; index++ )
+  //   {
+  //     this->_data[index] = new array_datatype(*object._data[index]);
+  //   }
+  // }
+
   /**
    * std::array constructor inheritance
    * https://stackoverflow.com/questions/24280521/stdarray-constructor-inheritance

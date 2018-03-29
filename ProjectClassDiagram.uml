@@ -62,12 +62,11 @@
     void         addLine()
     void         addPoint()
     void         addPolygon()
-    void         updateClipping();
+    void         updateClippingCoordinates();
     void         apply(Transformation&)
-    std::list<Coordinate*> clipped_coordinates
-    list<Coordinate*>& getCoordinates()
-    list<Coordinate*>& getClippedCoordinates()
-    list<Coordinate*>& getviewWindowCoordinates()
+    list<Coordinate*>& getWorldCoordinates()
+    list<Coordinate*>& getClippingCoordinates()
+    list<Coordinate*>& getViewWindowCoordinates()
   }
 
   class DrawingArea {
@@ -76,8 +75,8 @@
     void addPoint(std::string name, int, int)
     void addLine(std::string name, int, int, int, int)
     void addPolygon(std::string name, std::list<int>)
-    Coordinate convertCoordinateFromWindow(Coordinate&)
-    void updateClipping();
+    Coordinate convertCoordinateFromWindowToWorld(Coordinate&)
+    void updateClippingCoordinates();
     void apply(std::string object_name, Transformation&)
   }
 
@@ -136,7 +135,7 @@
     Array<2, Coordinate*> y2
     Coordinate* _data[4]
     Coordinate* getPoint(unsigned int index)
-    void updateClippingWindowSize(int, int)
+    void updateClippingCoordinatesWindowSize(int, int)
   }
 
   class ViewWindow {

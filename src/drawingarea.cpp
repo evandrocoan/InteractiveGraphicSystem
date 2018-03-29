@@ -7,7 +7,7 @@ DrawingArea::DrawingArea() :
       displayFile()
 {
   this->signal_size_allocate().connect(sigc::mem_fun(*this, &DrawingArea::on_my_size_allocate));
-  this->_connection = this->viewWindow.addObserver(std::bind(&DrawingArea::updateClipping, this));
+  this->_connection = this->viewWindow.addObserver(std::bind(&DrawingArea::updateObjectCoordinates, this));
 }
 
 DrawingArea::~DrawingArea()
@@ -44,6 +44,8 @@ std::ostream& operator<<( std::ostream &output, const DrawingArea &object )
  */
 void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
 {
+  this->updateViewPort(allocation);
+
   const int width = this->get_width();
   const int height = this->get_height();
 
@@ -52,11 +54,12 @@ void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
     this->isCentered = true;
     LOG(4, "Moving ViewWindow (0, 0) to the window center...");
 
-    this->move_down(480);
-    this->move_left(500);
+    this->on_init();
+    this->move_down(height/2);
+    this->move_left(width/2);
   }
 
-  this->viewPort.updateClippingWindowSize(width, height);
+  this->viewPort.updateClippingCoordinatesWindowSize(width, height);
   LOG(4, "Current viewport size %sx%s", width, height);
 }
 
@@ -82,26 +85,15 @@ void DrawingArea::apply(std::string object_name, Transformation &transformation)
 
 void DrawingArea::on_init()
 {
-  auto allocation = this->get_allocation();
-  this->updateViewPort(allocation);
-
-  Coordinate windowCenter(this->viewPort.xMax/2, this->viewPort.yMax/2);
-  this->viewWindow.setCoordinate(windowCenter);
   LOG(4, "centerWindow: %d , %d",this->viewPort.xMax/2, this->viewPort.yMax/2);
 
   LOG(4, "Building the Y axe");
-  Coordinate* bottom_axe = new Coordinate(0, -MAX_HEIGHT);
-  Coordinate* top_axe = new Coordinate(0, MAX_WIDTH);
-
-  Coordinate bottom_axe_converted = this->coordinateWorldToWindow(*bottom_axe);
-  Coordinate top_axe_converted = this->coordinateWorldToWindow(*top_axe);
+  Coordinate* bottom_axe = new Coordinate(0, -world_axes_size);
+  Coordinate* top_axe = new Coordinate(0, world_axes_size);
 
   LOG(4, "Building the X axe");
-  Coordinate* left_axe = new Coordinate(-MAX_HEIGHT, 0);
-  Coordinate* right_axe = new Coordinate(MAX_WIDTH, 0);
-
-  Coordinate left_axe_converted = this->coordinateWorldToWindow(*left_axe);
-  Coordinate right_axe_converted = this->coordinateWorldToWindow(*right_axe);
+  Coordinate* left_axe = new Coordinate(-world_axes_size, 0);
+  Coordinate* right_axe = new Coordinate(world_axes_size, 0);
 
   Line* lineY = new Line("Y axe", bottom_axe, top_axe);
   Line* lineX = new Line("X axe", left_axe, right_axe);
@@ -121,15 +113,6 @@ void DrawingArea::on_init()
 bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 {
   // LOG(8, "Chama-mes 5 vezes seguidas para desenhar a mesma coisa por que?");
-  auto allocation = this->get_allocation();
-  this->updateViewPort(allocation);
-
-  if(this->onInit)
-  {
-    this->on_init();
-    this->onInit = false;
-  }
-
   // LOG(8, "Paint white background");
   cairo_context->set_source_rgb(1, 1, 1);
   cairo_context->paint();
@@ -137,7 +120,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   // cairo_context->set_line_width(1);
   // cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
   // Coordinate originOnWindow(0, 0);
-  // Coordinate originOnWorld = convertCoordinateFromWindow(originOnWindow);
+  // Coordinate originOnWorld = convertCoordinateFromWindowToWorld(originOnWindow);
 
   // LOG(8, "Drawing X and Y axes with originOnWorld: %s", originOnWorld);
   // LOG(4, "Drawing axes X from (%s, %s) to (%s, %s)", this->viewPort.xMin, originOnWorld.gety(), this->viewPort.xMax, originOnWorld.gety() );
@@ -148,14 +131,14 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   // cairo_context->line_to(originOnWorld.getx(), this->viewPort.yMax - clipping_window_margin_distance);
   // cairo_context->stroke();
 
-  // // LOG(8, "Draw the clipping window with a red border")
-  // cairo_context->set_source_rgb(0.99, 0.0, 0.0);
+  // LOG(8, "Draw the clipping window with a red border")
+  cairo_context->set_source_rgb(0.99, 0.0, 0.0);
 
-  // cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
-  // cairo_context->line_to(this->viewPort.getPoint(1)->getx(), this->viewPort.getPoint(1)->gety());
-  // cairo_context->line_to(this->viewPort.getPoint(2)->getx(), this->viewPort.getPoint(2)->gety());
-  // cairo_context->line_to(this->viewPort.getPoint(3)->getx(), this->viewPort.getPoint(3)->gety());
-  // cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(1)->getx(), this->viewPort.getPoint(1)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(2)->getx(), this->viewPort.getPoint(2)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(3)->getx(), this->viewPort.getPoint(3)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
 
   // LOG(8, "Set color's objects as black:");
   cairo_context->stroke();
@@ -166,8 +149,8 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 
   for (auto object : objects)
   {
-    // auto coordinates = object->getClippedCoordinates();
-    auto coordinates = object->getviewWindowCoordinates();
+    // auto coordinates = object->getViewWindowCoordinates();
+    auto coordinates = object->getClippingCoordinates();
     int coordinates_count = coordinates.size();
 
     if (coordinates_count == 0)
@@ -176,8 +159,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
       continue;
     }
 
-    // Coordinate firstCoordinate = this->convertCoordinateFromWindow(**(coordinates.begin()));
-    Coordinate firstCoordinate = this->coordinateWindowToViewPort(**(coordinates.begin()));
+    Coordinate firstCoordinate = this->convertCoordinateFromWindowToWorld(**(coordinates.begin()));
 
     LOG(8, "object coordinates: %s", *object);
     cairo_context->move_to(firstCoordinate.getx(), firstCoordinate.gety());
@@ -190,8 +172,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
     {
       for (auto coordinate : coordinates)
       {
-        // Coordinate coordinateConverted = this->convertCoordinateFromWindow(*coordinate);
-        Coordinate coordinateConverted = this->coordinateWindowToViewPort(*coordinate);
+        Coordinate coordinateConverted = this->convertCoordinateFromWindowToWorld(*coordinate);
         cairo_context->line_to(coordinateConverted.getx(), coordinateConverted.gety());
       }
 
@@ -210,7 +191,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
  * @param  coordinate [description]
  * @return            [description]
  */
-Coordinate DrawingArea::convertCoordinateFromWindow(Coordinate &coordinate)
+Coordinate DrawingArea::convertCoordinateFromWindowToWorld(Coordinate &coordinate)
 {
   long int xW = coordinate.getx();
   long int yW = coordinate.gety();
@@ -227,42 +208,6 @@ Coordinate DrawingArea::convertCoordinateFromWindow(Coordinate &coordinate)
   );
 
   return Coordinate(xVp, yVp);
-}
-
-Coordinate DrawingArea::coordinateWindowToViewPort(Coordinate& coord)
-{
-  Coordinate centerWindow = this->viewWindow.getCoordinate();
-  Coordinate centerWindow_converted = this->convertCoordinateFromWindow(centerWindow);
-
-  long int x = coord.getx() + centerWindow_converted.getx();
-  long int y = -coord.gety() + centerWindow_converted.gety();
-
-  return Coordinate(x, y);
-}
-
-std::list<Coordinate*> DrawingArea::listCoordinateWorldToWindow(std::list<Coordinate*> coordinates)
-{
-  std::list<Coordinate*> viewWindowCoordinates;
-
-  for( auto coordinate : coordinates )
-  {
-    viewWindowCoordinates.push_back( new Coordinate( this->coordinateWorldToWindow( *coordinate ) ) );
-  }
-
-  return viewWindowCoordinates;
-}
-
-Coordinate DrawingArea::coordinateWorldToWindow(Coordinate& coord)
-{
-  Coordinate coordinate = this->convertCoordinateFromWindow(coord);
-
-  Coordinate centerWindow = this->viewWindow.getCoordinate();
-  Coordinate centerWindow_converted = this->convertCoordinateFromWindow(centerWindow);
-
-  long int x = coordinate.getx() - centerWindow_converted.getx();
-  long int y = -(coordinate.gety() - centerWindow_converted.gety());
-
-  return Coordinate(x, y);
 }
 
 /**
@@ -333,9 +278,6 @@ void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
     this->viewPort.xMax += widthDiff;
     this->viewPort.yMax += heightDiff;
 
-    this->viewWindow.initPoints();
-    this->viewWindow.setPoints();
-
     this->viewWindow.callObservers();
     LOG(8, "Leaving:  %s %s", *this, this->viewPort);
   }
@@ -379,13 +321,7 @@ void DrawingArea::addPolygon(std::string name, std::vector<GTKMM_APP_MATRICES_DA
 
 void DrawingArea::addObject(DrawableObject* object)
 {
-  auto worldCoordinates = object->getCoordinates();
-  auto viewWindowCoordinates = this->listCoordinateWorldToWindow(worldCoordinates);
-
-  object->setviewWindowCoordinates(viewWindowCoordinates);
-  object->updateClipping(this->viewPort);
-
-  if (object->getCoordinates().size() == 0)
+  if (object->getWorldCoordinates().size() == 0)
   {
     LOG(1, "");
     LOG(1, "");
@@ -395,6 +331,9 @@ void DrawingArea::addObject(DrawableObject* object)
   {
     LOG(4, "Adding the object `%s`", *object);
   }
+
+  object->updateWindowCoordinates(this->viewWindow);
+  object->updateClippingCoordinates(this->viewPort);
 
   this->displayFile.addObject(object);
   this->callObservers();
@@ -407,14 +346,15 @@ void DrawingArea::removeObject(std::string name)
   this->callObservers();
 }
 
-void DrawingArea::updateClipping()
+void DrawingArea::updateObjectCoordinates()
 {
   LOG(4, "Updating all objects clipping...");
   auto objects = this->displayFile.getObjects();
 
   for (auto object : objects)
   {
-    object->updateClipping(this->viewPort);
+    object->updateWindowCoordinates(this->viewWindow);
+    object->updateClippingCoordinates(this->viewPort);
   }
 }
 
@@ -442,114 +382,36 @@ void DrawingArea::zoom_out(float scale)
 
 void DrawingArea::move_up(int length)
 {
-  Transformation transformation;
-  Coordinate center = this->viewWindow.getCoordinate();
-
-  transformation.add_translation("windowUp",Coordinate(0,-length));
-  transformation.set_geometric_center(center);
-
-  this->computeWindowCoordinate(transformation);
   this->viewWindow.move_up(length);
-
   this->queue_draw();
 }
 
 void DrawingArea::move_down(int length)
 {
-  Transformation transformation;
-  Coordinate center = this->viewWindow.getCoordinate();
-
-  transformation.add_translation("windowDown",Coordinate(0,length));
-  transformation.set_geometric_center(center);
-
-  this->computeWindowCoordinate(transformation);
   this->viewWindow.move_down(length);
-
   this->queue_draw();
 }
 
 void DrawingArea::move_left(int length)
 {
-  Transformation transformation;
-  Coordinate center = this->viewWindow.getCoordinate();
-
-  transformation.add_translation("windowLeft",Coordinate(length,0));
-  transformation.set_geometric_center(center);
-
-  this->computeWindowCoordinate(transformation);
   this->viewWindow.move_left(length);
-
   this->queue_draw();
 }
 
 void DrawingArea::move_right(int length)
 {
-  Transformation transformation;
-  Coordinate center = this->viewWindow.getCoordinate();
-
-  transformation.add_translation("windowRight",Coordinate(-length,0));
-  transformation.set_geometric_center(center);
-
-  this->computeWindowCoordinate(transformation);
   this->viewWindow.move_right(length);
-
-  this->queue_draw();
-}
-
-void DrawingArea::move_center()
-{
-  Transformation transformation;
-  Coordinate center = this->viewWindow.getCoordinate();
-
-  transformation.add_translation("windowCenter",Coordinate(this->viewWindow.getCoordinate().getx(), this->viewWindow.getCoordinate().gety()));
-  transformation.set_geometric_center(center);
-
-  this->computeWindowCoordinate(transformation);
-
-  this->viewWindow.move_center();
   this->queue_draw();
 }
 
 void DrawingArea::rotate_left(GTKMM_APP_MATRICES_DATATYPE angle)
 {
-  Transformation transformation;
-  Coordinate center = this->viewWindow.getCoordinate();
-  Coordinate centerWorld = Coordinate(0,0);
-
-  transformation.add_translation("Center with the world",Coordinate(-center.getx(), -center.gety()));
-  transformation.add_rotation("Window Rotation", Array<3, GTKMM_APP_MATRICES_DATATYPE>{angle, 0.0, 0.0});
-  transformation.add_translation("Back to initial position",Coordinate(center.getx(), center.gety()));
-  transformation.set_geometric_center(centerWorld);
-
-  this->computeWindowCoordinate(transformation);
-
   this->viewWindow.rotate_left(angle);
   this->queue_draw();
 }
 
 void DrawingArea::rotate_right(GTKMM_APP_MATRICES_DATATYPE angle)
 {
-  Transformation transformation;
-  Coordinate center = this->viewWindow.getCoordinate();
-  Coordinate centerWorld = Coordinate(0,0);
-
-  transformation.add_translation("Center with the world",Coordinate(-center.getx(), -center.gety()));
-  transformation.add_rotation("Window Rotation", Array<3, GTKMM_APP_MATRICES_DATATYPE>{-angle, 0.0, 0.0});
-  transformation.add_translation("Back to initial position",Coordinate(center.getx(), center.gety()));
-  transformation.set_geometric_center(centerWorld);
-
-  this->computeWindowCoordinate(transformation);
-
   this->viewWindow.rotate_right(angle);
   this->queue_draw();
-}
-
-void DrawingArea::computeWindowCoordinate(Transformation transformation)
-{
-  auto objects = this->displayFile.getObjects();
-
-  for (auto object : objects)
-  {
-    object->applyInWindow(transformation);
-  }
 }
