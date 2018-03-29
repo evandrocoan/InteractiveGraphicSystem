@@ -30,7 +30,7 @@ Coordinate* ViewPort::getPoint(unsigned int index)
  * Accessing the [] operator from a pointer
  * https://stackoverflow.com/questions/8493829/accessing-the-operator-from-a-pointer
  */
-void ViewPort::updateClippingWindowSize(int width, int height)
+void ViewPort::updateClippingCoordinatesWindowSize(int width, int height)
 {
   (*this->_data[0])[0] = clipping_window_margin_distance;
   (*this->_data[0])[1] = clipping_window_margin_distance;

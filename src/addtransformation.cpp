@@ -143,20 +143,27 @@ void AddTransformation::on_button_save_transformation()
 
   if(this->transformation_type == TransformationType::TRANSLATION)
   {
-    name = tfm::format("T %s %s %s", main_value_a, main_value_b, main_value_c);
+    name = tfm::format("%s %s %s %s", this->transformation_type, main_value_a, main_value_b, main_value_c);
     this->transformation.add_translation(name, Coordinate(x_coord, y_coord, z_coord));
   }
-  else if(this->transformation_type == TransformationType::SCALING)
+  else if(this->transformation_type == TransformationType::ROTATION)
   {
-    name = tfm::format("S %s %s %s %s %s", x_rotation, this->rotation_type, main_value_a, main_value_b, main_value_c);
+    name = tfm::format("%s %s %s %s %s %s",
+                       this->transformation_type,
+                       x_rotation,
+                       this->rotation_type,
+                       main_value_a,
+                       main_value_b,
+                       main_value_c);
+
     this->transformation.add_rotation(name,
         Array<3, GTKMM_APP_MATRICES_DATATYPE>{x_rotation, 0.0, 0.0},
         Coordinate(x_coord, y_coord, z_coord),
         this->rotation_type);
   }
-  else if(this->transformation_type == TransformationType::ROTATION)
+  else if(this->transformation_type == TransformationType::SCALING)
   {
-    name = tfm::format("R %s %s %s", main_value_a, main_value_b, main_value_c);
+    name = tfm::format("%s %s %s %s", this->transformation_type, main_value_a, main_value_b, main_value_c);
     this->transformation.add_scaling(name, Coordinate(x_coord, y_coord, z_coord));
   }
   else

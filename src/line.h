@@ -10,7 +10,7 @@ public:
   Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2);
   ~Line();
 
-  virtual void updateClipping(ViewPort& axes);
+  virtual void updateClippingCoordinates(ViewPort& axes);
 };
 
 #endif // GTKMM_APP_LINE

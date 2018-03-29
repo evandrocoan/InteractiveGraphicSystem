@@ -5,32 +5,35 @@ DrawableObject::DrawableObject(std::string name) :
 {
 }
 
-DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> coordinates) :
+DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates) :
       name(name),
-      coordinates(coordinates),
-      viewWindowCoordinates(coordinates),
-      clipped_coordinates(coordinates)
+      worldCoordinates(worldCoordinates)
 {
+  LOG(4, "Deep coping initializing the other attributes");
+
+  for( auto coordinate : worldCoordinates )
+  {
+    this->viewWindowCoordinates.push_back(new Coordinate(*coordinate));
+    this->clippingCoordinates.push_back(new Coordinate(*coordinate));
+  }
 }
 
 DrawableObject::~DrawableObject()
 {
-	this->destroyList(coordinates);
+	this->destroyList(worldCoordinates);
 }
 
-void DrawableObject::destroyList(std::list<Coordinate*> coordinates)
+/**
+ * https://stackoverflow.com/questions/307082/cleaning-up-an-stl-list-vector-of-pointers
+ * Cleaning up an STL list/vector of pointers
+ */
+void DrawableObject::destroyList(std::list<Coordinate*>& worldCoordinates)
 {
-  while(!coordinates.empty())
+  while(!worldCoordinates.empty())
   {
-    // delete coordinates.front();
-    coordinates.pop_front();
+    // delete worldCoordinates.front();
+    worldCoordinates.pop_front();
   }
-}
-
-void DrawableObject::updateClipping(ViewPort& axes)
-{
-  LOG(4, "Generic clipping update... %s", axes);
-  this->clipped_coordinates = this->coordinates;
 }
 
 std::string DrawableObject::getName()
@@ -38,32 +41,38 @@ std::string DrawableObject::getName()
   return this->name;
 }
 
-std::list<Coordinate*>& DrawableObject::getCoordinates()
+std::list<Coordinate*>& DrawableObject::getWorldCoordinates()
 {
-  return this->coordinates;
+  return this->worldCoordinates;
 }
 
-std::list<Coordinate*>& DrawableObject::getviewWindowCoordinates()
+std::list<Coordinate*>& DrawableObject::getClippingCoordinates()
+{
+  return this->clippingCoordinates;
+}
+
+std::list<Coordinate*>& DrawableObject::getViewWindowCoordinates()
 {
   return this->viewWindowCoordinates;
 }
 
-void DrawableObject::setviewWindowCoordinates(std::list<Coordinate*> coordinates)
+void DrawableObject::addWorldCoordinate(Coordinate* worldCoordinates)
 {
-  this->destroyList(this->viewWindowCoordinates);
-  this->coordinates= coordinates;
+  this->worldCoordinates.push_back(worldCoordinates);
+  this->viewWindowCoordinates.push_back(worldCoordinates);
+  this->clippingCoordinates.push_back(worldCoordinates);
 }
 
-void DrawableObject::setCoordinates(std::list<Coordinate*> coordinates)
+void DrawableObject::clearWorldCoordinates()
 {
-  this->destroyList(this->coordinates);
-  this->coordinates= coordinates;
+  this->worldCoordinates.clear();
+  this->viewWindowCoordinates.clear();
+  this->clippingCoordinates.clear();
 }
 
-Coordinate* DrawableObject::get_geometric_center()
+Coordinate DrawableObject::getGeometricCenter(const std::list<Coordinate*>& coordinates)
 {
-  auto coordinates      = this->getCoordinates();
-  int coordinates_count = coordinates.size();
+  int coordinatesCount = coordinates.size();
 
   long int x_axis = 0;
   long int y_axis = 0;
@@ -76,31 +85,7 @@ Coordinate* DrawableObject::get_geometric_center()
     z_axis += coordinate->getz();
   }
 
-  return new Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count);
-}
-
-Coordinate* DrawableObject::get_window_geometric_center()
-{
-  auto coordinates      = this->getviewWindowCoordinates();
-  int coordinates_count = coordinates.size();
-
-  long int x_axis = 0;
-  long int y_axis = 0;
-  long int z_axis = 0;
-
-  for(auto coordinate : coordinates)
-  {
-    x_axis += coordinate->getx();
-    y_axis += coordinate->gety();
-    z_axis += coordinate->getz();
-  }
-
-  return new Coordinate(x_axis/coordinates_count, y_axis/coordinates_count, z_axis/coordinates_count);
-}
-
-std::list<Coordinate*>& DrawableObject::getClippedCoordinates()
-{
-  return this->coordinates;
+  return Coordinate(x_axis/coordinatesCount, y_axis/coordinatesCount, z_axis/coordinatesCount);
 }
 
 /**
@@ -118,8 +103,8 @@ void DrawableObject::printMyself(std::ostream& output) const
   unsigned int index;
   std::list< std::list<Coordinate*> > coordinates_lists;
 
-  coordinates_lists.push_back(this->coordinates);
-  coordinates_lists.push_back(this->clipped_coordinates);
+  coordinates_lists.push_back(this->worldCoordinates);
+  coordinates_lists.push_back(this->clippingCoordinates);
   coordinates_lists.push_back(this->viewWindowCoordinates);
 
   output << this->name;
@@ -149,12 +134,10 @@ void DrawableObject::printMyself(std::ostream& output) const
 
 void DrawableObject::apply(Transformation &transformation)
 {
-  LOG(8, "Entering apply");
-  auto coordinates = this->getCoordinates();
-  auto geometric_center = this->get_geometric_center();
-
-  transformation.set_geometric_center(*geometric_center);
-  delete geometric_center;
+  LOG(8, "Entering...");
+  auto coordinates = this->getWorldCoordinates();
+  auto geometricCenter = DrawableObject::getGeometricCenter(coordinates);
+  transformation.set_geometric_center(geometricCenter);
 
   for(auto coordinate : coordinates)
   {
@@ -162,19 +145,23 @@ void DrawableObject::apply(Transformation &transformation)
   }
 }
 
-void DrawableObject::applyInWindow(Transformation &transformation)
+void DrawableObject::updateWindowCoordinates(ViewWindow &transformation)
 {
-
-  LOG(8, "Entering applyInWindow");
-  auto coordinates = this->getviewWindowCoordinates();
-  auto geometric_center = this->get_window_geometric_center();
-
-  transformation.set_geometric_center(*geometric_center);
-  delete geometric_center;
+  LOG(8, "Entering...");
+  Coordinate* new_coordinate;
+  auto coordinates = this->getWorldCoordinates();
+  DrawableObject::destroyList(this->viewWindowCoordinates);
 
   for(auto coordinate : coordinates)
   {
-    transformation.apply(*coordinate);
+    new_coordinate = new Coordinate(*coordinate);
+    transformation.apply(*new_coordinate);
+    this->viewWindowCoordinates.push_back(new_coordinate);
   }
+}
 
+void DrawableObject::updateClippingCoordinates(ViewPort& axes)
+{
+  LOG(4, "Generic clipping update... %s", axes);
+  this->clippingCoordinates = this->worldCoordinates;
 }

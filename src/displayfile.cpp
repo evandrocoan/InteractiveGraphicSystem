@@ -12,7 +12,6 @@ void DisplayFile::apply(std::string object_name, Transformation &transformation)
 {
   auto object = this->getObjectByName(object_name);
   object->apply(transformation);
-  object->applyInWindow(transformation);
 }
 
 void DisplayFile::addObject(DrawableObject* object)

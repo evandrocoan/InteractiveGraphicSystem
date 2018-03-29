@@ -47,8 +47,6 @@ protected:
   Gtk::Button button_move_left;
   Gtk::Button button_move_right;
 
-  Gtk::Button button_move_center;
-
   Gtk::Button button_rotate_left;
   Gtk::Button button_rotate_right;
 
@@ -70,10 +68,7 @@ protected:
   Gtk::Grid grid_move;
   Gtk::Grid grid_zoom;
   Gtk::Grid grid_list_obj;
-  Gtk::Grid grid_file;
-
   Gtk::Grid grid_rotate;
-  Gtk::Grid grid_other;
 
   Gtk::Entry entry_move_length;
   Gtk::Entry entry_zoom_scale;
@@ -88,8 +83,6 @@ protected:
   void on_button_move_left();
   void on_button_move_right();
 
-  void on_button_move_center();
-
   void on_button_rotate_left();
   void on_button_rotate_right();
 
@@ -98,6 +91,7 @@ protected:
 
   void on_button_add_object();
   void on_button_delete_object();
+  void on_objects_list_change();
 
   void on_button_open_file();
   void on_button_save_file();

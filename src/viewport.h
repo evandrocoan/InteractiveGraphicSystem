@@ -117,7 +117,7 @@ public:
    * @param width   the total DrawingArea widget width
    * @param height  the total DrawingArea widget height
    */
-  void updateClippingWindowSize(int width, int height);
+  void updateClippingCoordinatesWindowSize(int width, int height);
 
   /**
    * Prints a friend representation of the view port.
