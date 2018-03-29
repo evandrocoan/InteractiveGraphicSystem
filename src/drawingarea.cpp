@@ -86,12 +86,12 @@ void DrawingArea::on_init()
   LOG(4, "centerWindow: %d , %d",this->viewPort.xMax/2, this->viewPort.yMax/2);
 
   LOG(4, "Building the Y axe");
-  Coordinate* bottom_axe = new Coordinate(0, -MAX_HEIGHT);
-  Coordinate* top_axe = new Coordinate(0, MAX_WIDTH);
+  Coordinate* bottom_axe = new Coordinate(0, -world_axes_size);
+  Coordinate* top_axe = new Coordinate(0, world_axes_size);
 
   LOG(4, "Building the X axe");
-  Coordinate* left_axe = new Coordinate(-MAX_HEIGHT, 0);
-  Coordinate* right_axe = new Coordinate(MAX_WIDTH, 0);
+  Coordinate* left_axe = new Coordinate(-world_axes_size, 0);
+  Coordinate* right_axe = new Coordinate(world_axes_size, 0);
 
   Line* lineY = new Line("Y axe", bottom_axe, top_axe);
   Line* lineX = new Line("X axe", left_axe, right_axe);
