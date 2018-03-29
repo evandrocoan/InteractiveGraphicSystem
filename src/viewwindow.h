@@ -30,8 +30,6 @@ public:
   ViewWindow();
   virtual ~ViewWindow();
 
-  Signal<>::Connection addObserver(const Signal<>::Callback&);
-
   void zoom_in (float scale = 1.5);
   void zoom_out(float scale = 1.5);
 
@@ -65,24 +63,14 @@ public:
    * Prints a beauty version of the viewWindow when called on `std::cout<< viewWindow << std::end;`
    */
   friend std::ostream& operator<<(std::ostream &output, const ViewWindow &object);
+  void apply(Coordinate& coordinate);
 
   Signal<> callObservers;
-
-  // Deprecate these
-  Coordinate& getCoordinate();
-  void setCoordinate(Coordinate coordinate);
-
-  void initPoints();
-  void setPoints();
-  void applyTransformation(Transformation& transformation);
+  Signal<>::Connection addObserver(const Signal<>::Callback&);
 
 private:
-  Coordinate coordinate;
-
-  Coordinate top_left;
-  Coordinate top_right;
-  Coordinate bottom_left;
-  Coordinate bottom_right;
+  Coordinate worldCenter;
+  Transformation transformation;
 };
 
 #endif

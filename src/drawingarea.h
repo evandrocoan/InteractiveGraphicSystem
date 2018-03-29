@@ -35,15 +35,10 @@ public:
   DrawingArea();
   virtual ~DrawingArea();
 
-  Signal<>::Connection addObserver(const Signal<>::Callback&);
-  void disconnectObserver();
-
   void addPoint(std::string name, int, int);
   void addLine(std::string name, int, int, int, int);
   void addPolygon(std::string name, std::vector<GTKMM_APP_MATRICES_DATATYPE>);
-
   void removeObject(std::string name);
-  std::list<std::string> getNamesList();
 
   void zoom_in (float scale = 1.5);
   void zoom_out(float scale = 1.5);
@@ -56,18 +51,16 @@ public:
   void rotate_left (GTKMM_APP_MATRICES_DATATYPE angle = 10);
   void rotate_right(GTKMM_APP_MATRICES_DATATYPE angle = 10);
 
+  void updateObjectCoordinates();
   void apply(std::string object_name, Transformation&);
-  void updateClipping();
-
   Coordinate convertCoordinateFromWindow(Coordinate&);
 
-  friend std::ostream& operator<<(std::ostream &output, const DrawingArea &object);
-
-  Coordinate coordinateWindowToViewPort(Coordinate&);
-  Coordinate coordinateWorldToWindow(Coordinate&);
-
-  std::list<Coordinate*> listCoordinateWorldToWindow(std::list<Coordinate*> coordinates);
+  std::list<std::string> getNamesList();
   std::list<DrawableObject*> getObjectsList();
+
+  void disconnectObserver();
+  Signal<>::Connection addObserver(const Signal<>::Callback&);
+  friend std::ostream& operator<<(std::ostream &output, const DrawingArea &object);
 
 protected:
   ViewPort   viewPort;
@@ -85,11 +78,8 @@ protected:
   void updateViewPort     (Gtk::Allocation&);
   void on_my_size_allocate(Gtk::Allocation&);
 
-  void computeWindowCoordinate(Transformation transformation);
-
 private:
   void on_init();
-
 };
 
 #endif // GTKMM_APP_DRAWINGAREA
