@@ -2,6 +2,8 @@
 
 /**
  * https://en.wikipedia.org/wiki/Template:Unicode_chart_Arrows
+ *
+ * https://www.utf8icons.com/character/9993/envelope
  */
 MainWindow::MainWindow() :
       addObject(this->drawingArea),
@@ -11,15 +13,14 @@ MainWindow::MainWindow() :
       button_move_down("↓"),
       button_move_left("←"),
       button_move_right("→"),
-      button_move_center("Center with the world"),
-      button_rotate_left("left"),
-      button_rotate_right("right"),
+      button_rotate_left("↺"),
+      button_rotate_right("↻"),
       button_zoom_in("+"),
       button_zoom_out("-"),
       button_add_object("Add"),
       button_delete_object("Rem"),
-      button_open_file("Open File"),
-      button_save_file("Save File"),
+      button_open_file("Open"),
+      button_save_file("Save"),
       main_box(Gtk::ORIENTATION_HORIZONTAL),
       left_box(Gtk::ORIENTATION_VERTICAL),
       left_frame("Controllers"),
@@ -63,11 +64,15 @@ void MainWindow::setDefaultTooltips()
   button_add_object   .set_tooltip_text("Add new object");
   button_delete_object.set_tooltip_text("Remove current selected object");
   objects_list        .set_tooltip_text("The list of all created objects on the DrawingArea");
+  button_rotate_right .set_tooltip_text("Rotate the window to the right");
+  button_rotate_left  .set_tooltip_text("Rotate the window to the left");
 
   entry_move_length   .set_tooltip_text("How many pixels to move the ViewWindow");
   entry_zoom_scale    .set_tooltip_text("A scaling factor as `1.1` or `0.9` to `zoom in` or `zoom out` the ViewWindow");
   button_zoom_in      .set_tooltip_text("Apply the scaling factor to the ViewWindow over the Drawing World");
   button_zoom_out     .set_tooltip_text("Apply inverted the scaling factor to the ViewWindow over the Drawing World");
+  button_open_file    .set_tooltip_text("Select a file to load the OBJ file");
+  button_save_file    .set_tooltip_text("Select a file to save the current drawing to the OBJ");
 
   button_move_up      .set_tooltip_text("Move the ViewWindow on the drawing area upwards");
   button_move_down    .set_tooltip_text("Move the ViewWindow on the drawing area downwards");
@@ -97,7 +102,9 @@ void MainWindow::setupButtons()
   grid_list_obj.set_column_homogeneous(true);
   grid_list_obj.attach(button_add_object,    1, 1, 1, 1);
   grid_list_obj.attach(button_delete_object, 2, 1, 1, 1);
-  grid_list_obj.attach(objects_list,         1, 2, 2, 1);
+  grid_list_obj.attach(button_open_file,     1, 2, 1, 1);
+  grid_list_obj.attach(button_save_file,     2, 2, 1, 1);
+  grid_list_obj.attach(objects_list,         1, 3, 2, 1);
 
   LOG(4, "Adicionando os botões de movimentações na grade de movimentação");
   // grid_move.set_column_homogeneous(true);
@@ -119,15 +126,6 @@ void MainWindow::setupButtons()
   grid_rotate.attach(entry_rotate_angle, 2, 1, 1, 1);
   grid_rotate.attach(button_rotate_right, 3, 1, 1, 1);
 
-  LOG(4, "Adding the other button");
-  grid_other.set_column_homogeneous(true);
-  grid_other.attach(button_move_center, 1, 1, 1, 1);
-
-  LOG(4, "Adicionando os botões de abrir e salvar um arquivo na grade de arquivo");
-  grid_file.set_column_homogeneous(true);
-  grid_file.attach(button_open_file, 1, 1, 1, 1);
-  grid_file.attach(button_save_file, 2, 1, 1, 1);
-
   LOG(4, "Adding the draw options box to left frame");
   left_box.set_border_width(10);
   left_box.set_spacing(10);
@@ -135,21 +133,18 @@ void MainWindow::setupButtons()
   left_box.add(grid_move);
   left_box.add(grid_zoom);
   left_box.add(grid_rotate);
-  left_box.add(grid_other);
-  left_box.add(grid_file);
   left_box.add(this->addTransformation.getBox());
-
 }
 
 void MainWindow::connectButtons()
 {
   LOG(4, "Determinando ações quando clicado cada botão;");
+  this->objects_list.signal_changed().connect(sigc::mem_fun(*this, &MainWindow::on_objects_list_change));
+
   this->button_move_up.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_up));
   this->button_move_down.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_down));
   this->button_move_left.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_left));
   this->button_move_right.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_right));
-
-  this->button_move_center.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_center));
 
   this->button_zoom_in.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_zoom_in));
   this->button_zoom_out.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_zoom_out));
@@ -185,7 +180,11 @@ void MainWindow::updateDropdownList()
   // https://stackoverflow.com/questions/14912210/set-gtk-comboboxtext-default-item
   LOG(4, "Selecting the last item on the ComboBoxText");
   this->objects_list.set_active(names.size()-1);
+  this->on_objects_list_change();
+}
 
+void MainWindow::on_objects_list_change()
+{
   // Also update the name on the `addTransformation` window
   Glib::ustring name = (std::string)objects_list.get_active_text();
   this->addTransformation.object_name = name;
@@ -245,11 +244,6 @@ void MainWindow::on_button_move_right()
   {
     this->drawingArea.move_right(move_length);
   }
-}
-
-void MainWindow::on_button_move_center()
-{
-  this->drawingArea.move_center();
 }
 
 void MainWindow::on_button_zoom_in()

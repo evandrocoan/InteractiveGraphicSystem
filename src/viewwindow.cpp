@@ -5,11 +5,7 @@ ViewWindow::ViewWindow() :
       yMin(0),
       xMax(0),
       yMax(0),
-      coordinate(0, 0),
-      top_left(0,0),
-      top_right(0,0),
-      bottom_left(0,0),
-      bottom_right(0,0)
+      worldCenter(0, 0)
 {
 }
 
@@ -98,157 +94,49 @@ void ViewWindow::zoom_out(float scale)
 
 void ViewWindow::move_up(int length)
 {
-  this->initPoints();
-
-  Transformation transformation;
-  Coordinate center(0,0,0);
-  transformation.add_translation("windowUp",Coordinate(0,length));
-  transformation.set_geometric_center(center);
-
-  this->applyTransformation(transformation);
-  this->setPoints();
-
-  // this->yMin += length;
-  // this->yMax += length;
+  this->yMin += length;
+  this->yMax += length;
   this->callObservers();
 }
 
 void ViewWindow::move_down(int length)
 {
-  this->initPoints();
-
-  Transformation transformation;
-  Coordinate center(0,0,0);
-  transformation.add_translation("windowDown",Coordinate(0,-length));
-  transformation.set_geometric_center(center);
-
-  this->applyTransformation(transformation);
-  this->setPoints();
-
-  // this->yMin -= length;
-  // this->yMax -= length;
+  this->yMin -= length;
+  this->yMax -= length;
   this->callObservers();
 }
 
 void ViewWindow::move_left(int length)
 {
-  this->initPoints();
-
-  Transformation transformation;
-  Coordinate center(0,0,0);
-  transformation.add_translation("windowLeft",Coordinate(-length,0));
-  transformation.set_geometric_center(center);
-
-  this->applyTransformation(transformation);
-  this->setPoints();
-
-  // this->xMin -= length;
-  // this->xMax -= length;
+  this->xMin -= length;
+  this->xMax -= length;
   this->callObservers();
 }
 
 void ViewWindow::move_right(int length)
 {
-  this->initPoints();
-
-  Transformation transformation;
-  Coordinate center(0,0,0);
-  transformation.add_translation("windowRight",Coordinate(length,0));
-  transformation.set_geometric_center(center);
-
-  this->applyTransformation(transformation);
-  this->setPoints();
-
-  // this->xMin += length;
-  // this->xMax += length;
+  this->xMin += length;
+  this->xMax += length;
   this->callObservers();
 }
 
 void ViewWindow::rotate_left(GTKMM_APP_MATRICES_DATATYPE angle)
 {
-  this->initPoints();
+  this->transformation.add_rotation("Window Rotation", Array<3, GTKMM_APP_MATRICES_DATATYPE>{angle, 0.0, 0.0});
+  this->transformation.set_geometric_center(this->worldCenter);
 
-  Transformation transformation;
-  Coordinate center(0,0,0);
-
-  transformation.add_translation("Center with the world",Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
-  transformation.add_rotation("Window Rotation", Array<3, GTKMM_APP_MATRICES_DATATYPE>{-angle, 0.0, 0.0});
-  transformation.add_translation("Back to initial position",Coordinate(this->coordinate.getx(), this->coordinate.gety()));
-  transformation.set_geometric_center(center);
-
-  this->applyTransformation(transformation);
-  this->setPoints();
   this->callObservers();
 }
 
 void ViewWindow::rotate_right(GTKMM_APP_MATRICES_DATATYPE angle)
 {
-  this->initPoints();
+  this->transformation.add_rotation("Window Rotation", Array<3, GTKMM_APP_MATRICES_DATATYPE>{-angle, 0.0, 0.0});
+  this->transformation.set_geometric_center(this->worldCenter);
 
-  Transformation transformation;
-  Coordinate center(0,0,0);
-
-  transformation.add_translation("Center with the world",Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
-  transformation.add_rotation("Window Rotation", Array<3, GTKMM_APP_MATRICES_DATATYPE>{angle, 0.0, 0.0});
-  transformation.add_translation("Back to initial position",Coordinate(this->coordinate.getx(), this->coordinate.gety()));
-  transformation.set_geometric_center(center);
-
-  this->applyTransformation(transformation);
-  this->setPoints();
   this->callObservers();
 }
 
-void ViewWindow::move_center()
+void ViewWindow::apply(Coordinate& coordinate)
 {
-  this->initPoints();
-
-  Transformation transformation;
-  Coordinate center(0,0,0);
-
-  transformation.add_translation("Center with the world", Coordinate(-this->coordinate.getx(), -this->coordinate.gety()));
-  transformation.set_geometric_center(this->coordinate);
-
-  this->applyTransformation(transformation);
-  this->setPoints();
+  transformation.apply(coordinate);
 }
-
-Coordinate& ViewWindow::getCoordinate()
-{
-  return this->coordinate;
-}
-
-void ViewWindow::setCoordinate(Coordinate coordinate)
-{
-  this->coordinate = coordinate;
-}
-
-void ViewWindow::initPoints()
-{
-  this->top_left = Coordinate(this->xMin, this->yMax);
-  this->top_right = Coordinate(this->xMax, this->yMax);
-  this->bottom_left = Coordinate(this->xMin, this->yMin);
-  this->bottom_right = Coordinate(this->xMax, this->yMin);
-}
-
-void ViewWindow::setPoints()
-{
-  this->xMin = this->bottom_left.getx();
-  this->yMin = this->bottom_left.gety();
-
-  this->xMax = this->top_right.getx();
-  this->yMax = this->top_right.gety();
-}
-
-void ViewWindow::applyTransformation(Transformation& transformation)
-{
-  transformation.apply(this->bottom_left);
-  transformation.apply(this->bottom_right);
-  transformation.apply(this->top_left);
-  transformation.apply(this->top_right);
-  transformation.apply(this->coordinate);
-}
-
-
-
-
-

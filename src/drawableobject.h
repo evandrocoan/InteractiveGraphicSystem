@@ -17,6 +17,7 @@
 #include "debugger.h"
 
 #include "viewport.h"
+#include "viewwindow.h"
 #include "coordinate.h"
 #include "transformation.h"
 
@@ -26,24 +27,19 @@ public:
   virtual ~DrawableObject();
   std::string getName();
 
-  std::list<Coordinate*>& getCoordinates();
-  std::list<Coordinate*>& getviewWindowCoordinates();
+  void addWorldCoordinate(Coordinate* coordinate);
+  void clearWorldCoordinates();
 
-  void setviewWindowCoordinates(std::list<Coordinate*> coordinates);
-  void setCoordinates(std::list<Coordinate*> coordinates);
+  std::list<Coordinate*>& getWorldCoordinates();
+  std::list<Coordinate*>& getViewWindowCoordinates();
+  std::list<Coordinate*>& getClippingCoordinates();
 
-  std::list<Coordinate*>& getClippedCoordinates();
-
-  /**
-   * `get_geometric_center()` return a pointer which you must explicitly delete after using it.
-   */
-  Coordinate* get_geometric_center();
-  Coordinate* get_window_geometric_center();
+  static Coordinate getGeometricCenter(const std::list<Coordinate*>&);
+  static void destroyList(std::list<Coordinate*>& coordinates);
 
   void apply(Transformation&);
-  void applyInWindow(Transformation&);
-
-  virtual void updateClipping(ViewPort&);
+  virtual void updateWindowCoordinates(ViewWindow&);
+  virtual void updateClippingCoordinates(ViewPort&);
 
   /**
    * Making operator<< virtual?
@@ -54,15 +50,12 @@ public:
 
 protected:
   DrawableObject(std::string name);
-  DrawableObject(std::string name, std::list<Coordinate*> coordinates);
+  DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates);
 
   std::string name;
 
-  std::list<Coordinate*> coordinates;
+  std::list<Coordinate*> worldCoordinates;
   std::list<Coordinate*> viewWindowCoordinates;
-  std::list<Coordinate*> clipped_coordinates;
-
-private:
-  void destroyList(std::list<Coordinate*> coordinates);
+  std::list<Coordinate*> clippingCoordinates;
 };
 #endif // GTKMM_APP_DRAWABLE_OBJECT

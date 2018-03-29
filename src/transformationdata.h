@@ -21,6 +21,9 @@ enum TransformationType
   TRANSLATION
 };
 
+std::ostream& operator<<(std::ostream &output, const RotationType object);
+std::ostream& operator<<(std::ostream &output, const TransformationType object);
+
 /**
  * Ignoring the `translations` matrices, the `matrix` is the main operation applied after
  * moving the object to the world center.
