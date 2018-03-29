@@ -75,7 +75,7 @@
     void addPoint(std::string name, int, int)
     void addLine(std::string name, int, int, int, int)
     void addPolygon(std::string name, std::list<int>)
-    Coordinate convertCoordinateFromWindow(Coordinate&)
+    Coordinate convertCoordinateFromWindowToWorld(Coordinate&)
     void updateClippingCoordinates();
     void apply(std::string object_name, Transformation&)
   }
