@@ -91,6 +91,7 @@ protected:
 
   void on_button_add_object();
   void on_button_delete_object();
+  void on_objects_list_change();
 
   void on_button_open_file();
   void on_button_save_file();
