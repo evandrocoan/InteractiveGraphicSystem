@@ -139,6 +139,8 @@ void MainWindow::setupButtons()
 void MainWindow::connectButtons()
 {
   LOG(4, "Determinando ações quando clicado cada botão;");
+  this->objects_list.signal_changed().connect(sigc::mem_fun(*this, &MainWindow::on_objects_list_change));
+
   this->button_move_up.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_up));
   this->button_move_down.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_down));
   this->button_move_left.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_left));
@@ -178,7 +180,11 @@ void MainWindow::updateDropdownList()
   // https://stackoverflow.com/questions/14912210/set-gtk-comboboxtext-default-item
   LOG(4, "Selecting the last item on the ComboBoxText");
   this->objects_list.set_active(names.size()-1);
+  this->on_objects_list_change();
+}
 
+void MainWindow::on_objects_list_change()
+{
   // Also update the name on the `addTransformation` window
   Glib::ustring name = (std::string)objects_list.get_active_text();
   this->addTransformation.object_name = name;
