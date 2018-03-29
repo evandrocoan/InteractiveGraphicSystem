@@ -44,6 +44,8 @@ std::ostream& operator<<( std::ostream &output, const DrawingArea &object )
  */
 void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
 {
+  this->updateViewPort(allocation);
+
   const int width = this->get_width();
   const int height = this->get_height();
 
@@ -53,8 +55,8 @@ void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
     LOG(4, "Moving ViewWindow (0, 0) to the window center...");
 
     this->on_init();
-    this->move_down(480);
-    this->move_left(500);
+    this->move_down(height/2);
+    this->move_left(width/2);
   }
 
   this->viewPort.updateClippingCoordinatesWindowSize(width, height);
@@ -111,9 +113,6 @@ void DrawingArea::on_init()
 bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 {
   // LOG(8, "Chama-mes 5 vezes seguidas para desenhar a mesma coisa por que?");
-  auto allocation = this->get_allocation();
-  this->updateViewPort(allocation);
-
   // LOG(8, "Paint white background");
   cairo_context->set_source_rgb(1, 1, 1);
   cairo_context->paint();
