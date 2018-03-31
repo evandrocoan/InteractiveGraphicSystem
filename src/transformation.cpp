@@ -91,9 +91,9 @@ void Transformation::add_scaling(std::string name, Coordinate move)
 {
   MatrixForm scaling =
   {
-    {move.getx(), 0          , 0},
-    {0          , move.gety(), 0},
-    {0          , 0          , 1}
+    {move.x     , 0     , 0},
+    {0          , move.y, 0},
+    {0          , 0     , 1}
   };
 
   TransformationData transformation{name, scaling, TransformationType::SCALING};
@@ -104,9 +104,9 @@ void Transformation::add_translation(std::string name, Coordinate movement)
 {
   MatrixForm translation =
   {
-    {1              , 0              , 0},
-    {0              , 1              , 0},
-    {movement.getx(), movement.gety(), 1}
+    {1         , 0         , 0},
+    {0         , 1         , 0},
+    {movement.x, movement.y, 1}
   };
 
   TransformationData transformation{name, translation, TransformationType::TRANSLATION};
@@ -218,9 +218,9 @@ void Transformation::_scaling_on_its_own_center(TransformationData &transformati
 
   MatrixForm move_to_center
   {
-    {1             ,  0            , 0},
-    {0             ,  1            , 0},
-    {-center.getx(), -center.gety(), 1}
+    {1        ,  0       , 0},
+    {0        ,  1       , 0},
+    {-center.x, -center.y, 1}
   };
 
   if( index == 0 )
@@ -236,8 +236,8 @@ void Transformation::_scaling_on_its_own_center(TransformationData &transformati
   this->_transformation.multiply(transformation_data.matrix);
 
   LOG(4, "Move back to its origin");
-  move_to_center[2][0] = center.getx();
-  move_to_center[2][1] = center.gety();
+  move_to_center[2][0] = center.x;
+  move_to_center[2][1] = center.y;
   move_to_center[2][2] = 1;
 
   this->_transformation.multiply(move_to_center);
@@ -249,9 +249,9 @@ void Transformation::_scaling_on_coordinate(TransformationData &transformation_d
 
   MatrixForm move_to_center
   {
-    {1                                 ,  0                                , 0},
-    {0                                 ,  1                                , 0},
-    {-transformation_data.center.getx(), -transformation_data.center.gety(), 1}
+    {1                            ,  0                           , 0},
+    {0                            ,  1                           , 0},
+    {-transformation_data.center.x, -transformation_data.center.y, 1}
   };
 
   if( index == 0 )
@@ -267,8 +267,8 @@ void Transformation::_scaling_on_coordinate(TransformationData &transformation_d
   this->_transformation.multiply(transformation_data.matrix);
 
   LOG(4, "Move back to its origin");
-  move_to_center[2][0] = center.getx();
-  move_to_center[2][1] = center.gety();
+  move_to_center[2][0] = center.x;
+  move_to_center[2][1] = center.y;
   move_to_center[2][2] = 1;
 
   this->_transformation.multiply(move_to_center);
@@ -326,9 +326,9 @@ void Transformation::_rotation_on_its_own_center(TransformationData &transformat
 
   MatrixForm move_to_center
   {
-    {1             ,  0            , 0},
-    {0             ,  1            , 0},
-    {-center.getx(), -center.gety(), 1}
+    {1        ,  0       , 0},
+    {0        ,  1       , 0},
+    {-center.x, -center.y, 1}
   };
 
   if( index == 0 )
@@ -344,8 +344,8 @@ void Transformation::_rotation_on_its_own_center(TransformationData &transformat
   this->_transformation.multiply(transformation_data.matrix);
 
   LOG(4, "Move back to its origin");
-  move_to_center[2][0] = center.getx();
-  move_to_center[2][1] = center.gety();
+  move_to_center[2][0] = center.x;
+  move_to_center[2][1] = center.y;
   move_to_center[2][2] = 1;
 
   this->_transformation.multiply(move_to_center);
@@ -358,9 +358,9 @@ void Transformation::_rotation_on_coordinate(TransformationData &transformation_
 
   MatrixForm move_to_center
   {
-    {1                                 ,  0                                , 0},
-    {0                                 ,  1                                , 0},
-    {-transformation_data.center.getx(), -transformation_data.center.gety(), 1}
+    {1                            ,  0                           , 0},
+    {0                            ,  1                           , 0},
+    {-transformation_data.center.x, -transformation_data.center.y, 1}
   };
 
   if( index == 0 )
@@ -376,8 +376,8 @@ void Transformation::_rotation_on_coordinate(TransformationData &transformation_
   this->_transformation.multiply(transformation_data.matrix);
 
   LOG(4, "Move back to its origin");
-  move_to_center[2][0] = center.getx();
-  move_to_center[2][1] = center.gety();
+  move_to_center[2][0] = center.x;
+  move_to_center[2][1] = center.y;
   move_to_center[2][2] = 1;
 
   this->_transformation.multiply(move_to_center);

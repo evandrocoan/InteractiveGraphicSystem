@@ -127,22 +127,22 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   // Coordinate originOnWorld = convertCoordinateToViewPort(originOnWindow);
 
   // LOG(8, "Drawing X and Y axes with originOnWorld: %s", originOnWorld);
-  // LOG(4, "Drawing axes X from (%s, %s) to (%s, %s)", this->viewPort.xMin, originOnWorld.gety(), this->viewPort.xMax, originOnWorld.gety() );
-  // LOG(4, "Drawing axes Y from (%s, %s) to (%s, %s)", originOnWorld.getx(), this->viewPort.yMin, originOnWorld.getx(), this->viewPort.yMax );
-  // cairo_context->move_to(this->viewPort.xMin + clipping_window_margin_distance, originOnWorld.gety());
-  // cairo_context->line_to(this->viewPort.xMax - clipping_window_margin_distance, originOnWorld.gety());
-  // cairo_context->move_to(originOnWorld.getx(), this->viewPort.yMin + clipping_window_margin_distance);
-  // cairo_context->line_to(originOnWorld.getx(), this->viewPort.yMax - clipping_window_margin_distance);
+  // LOG(4, "Drawing axes X from (%s, %s) to (%s, %s)", this->viewPort.xMin, originOnWorld.y, this->viewPort.xMax, originOnWorld.y );
+  // LOG(4, "Drawing axes Y from (%s, %s) to (%s, %s)", originOnWorld.x, this->viewPort.yMin, originOnWorld.x, this->viewPort.yMax );
+  // cairo_context->move_to(this->viewPort.xMin + clipping_window_margin_distance, originOnWorld.y);
+  // cairo_context->line_to(this->viewPort.xMax - clipping_window_margin_distance, originOnWorld.y);
+  // cairo_context->move_to(originOnWorld.x, this->viewPort.yMin + clipping_window_margin_distance);
+  // cairo_context->line_to(originOnWorld.x, this->viewPort.yMax - clipping_window_margin_distance);
   // cairo_context->stroke();
 
   // LOG(8, "Draw the clipping window with a red border")
   cairo_context->set_source_rgb(0.99, 0.0, 0.0);
 
-  cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
-  cairo_context->line_to(this->viewPort.getPoint(1)->getx(), this->viewPort.getPoint(1)->gety());
-  cairo_context->line_to(this->viewPort.getPoint(2)->getx(), this->viewPort.getPoint(2)->gety());
-  cairo_context->line_to(this->viewPort.getPoint(3)->getx(), this->viewPort.getPoint(3)->gety());
-  cairo_context->line_to(this->viewPort.getPoint(0)->getx(), this->viewPort.getPoint(0)->gety());
+  cairo_context->line_to(this->viewPort.getPoint(0)->x, this->viewPort.getPoint(0)->y);
+  cairo_context->line_to(this->viewPort.getPoint(1)->x, this->viewPort.getPoint(1)->y);
+  cairo_context->line_to(this->viewPort.getPoint(2)->x, this->viewPort.getPoint(2)->y);
+  cairo_context->line_to(this->viewPort.getPoint(3)->x, this->viewPort.getPoint(3)->y);
+  cairo_context->line_to(this->viewPort.getPoint(0)->x, this->viewPort.getPoint(0)->y);
 
   // LOG(8, "Set color's objects as black:");
   cairo_context->stroke();
@@ -166,22 +166,22 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
     Coordinate firstCoordinate = this->convertCoordinateToViewPort(**(coordinates.begin()));
 
     LOG(8, "object coordinates: %s", *object);
-    cairo_context->move_to(firstCoordinate.getx(), firstCoordinate.gety());
+    cairo_context->move_to(firstCoordinate.x, firstCoordinate.y);
 
     if (coordinates_count == 1)
     {
-      cairo_context->line_to(firstCoordinate.getx()+1, firstCoordinate.gety()+1);
+      cairo_context->line_to(firstCoordinate.x+1, firstCoordinate.y+1);
     }
     else
     {
       for (auto coordinate : coordinates)
       {
         Coordinate coordinateConverted = this->convertCoordinateToViewPort(*coordinate);
-        cairo_context->line_to(coordinateConverted.getx(), coordinateConverted.gety());
+        cairo_context->line_to(coordinateConverted.x, coordinateConverted.y);
       }
 
       // LOG(8, "Draw a line until the first coordinate, closing the polygon")
-      cairo_context->line_to(firstCoordinate.getx(), firstCoordinate.gety());
+      cairo_context->line_to(firstCoordinate.x, firstCoordinate.y);
     }
   }
 
@@ -215,8 +215,8 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
  */
 Coordinate DrawingArea::convertCoordinateToViewPort(Coordinate &coordinate)
 {
-  big_double xC = coordinate.getx();
-  big_double yC = coordinate.gety();
+  big_double xC = coordinate.x;
+  big_double yC = coordinate.y;
 
   big_double xWmin = this->viewWindow.xMin;
   big_double yWmin = this->viewWindow.yMin;
