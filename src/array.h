@@ -88,52 +88,53 @@ struct Array
     return this->_data[line];
   }
 
-  Array& operator+=(const array_datatype& step)
-  {
-    for( unsigned int index = 0; index < array_width; index++ )
-    {
-      this->_data[index] += step;
-    }
-    return *this;
-  }
+  /**
+   * Data to Object operators.
+   */
+  bool operator<=(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] > data ) { return false; } } return true; }
 
-  Array& operator-=(const array_datatype& step)
-  {
-    for( unsigned int index = 0; index < array_width; index++ )
-    {
-      this->_data[index] -= step;
-    }
-    return *this;
-  }
+  bool operator<(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] >= data ) { return false; } } return true; }
 
-  Array& operator+=(const Array& object)
-  {
-    for( unsigned int index = 0; index < array_width; index++ )
-    {
-      this->_data[index] += object._data[index];
-    }
-    return *this;
-  }
+  bool operator>=(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] < data ) { return false; } } return true; }
 
-  Array& operator-=(const Array& object)
-  {
-    for( unsigned int index = 0; index < array_width; index++ )
-    {
-      this->_data[index] -= object._data[index];
-    }
-    return *this;
-  }
+  bool operator>(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] <= data ) { return false; } } return true; }
 
-  Array operator-() const
-  {
-    Array negative_value{*this};
-    for( unsigned int index = 0; index < array_width; index++ )
-    {
-      negative_value._data[index] = -negative_value._data[index];
-    }
-    return negative_value;
-  }
+  bool operator==(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] != data ) { return false; } } return true; }
 
+  bool operator!=(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] == data ) { return false; } } return true; }
+
+  /**
+   * Object to Object operators.
+   */
+  bool operator<=(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
+
+  bool operator<(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] >= object._data[index] ) { return false; } } return true; }
+
+  bool operator>=(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] < object._data[index] ) { return false; } } return true; }
+
+  bool operator>(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] <= object._data[index] ) { return false; } } return true; }
+
+  bool operator==(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] != object._data[index] ) { return false; } } return true; }
+
+  bool operator!=(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] == object._data[index] ) { return false; } } return true; }
+
+  /**
+   * Set all the values on the array to the specified single data parameter.
+   *
+   * @param `initial` the value to the used
+   */
   void clear(array_datatype initial = 0)
   {
     unsigned int column_index = 0;

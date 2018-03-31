@@ -74,16 +74,13 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
   return output;
 }
 
-void Transformation::add_rotation(std::string name,
-                                  Array<3, COORDINATE_TYPE> degrees,
-                                  Coordinate coordinate,
-                                  TransformationPoint type)
+void Transformation::add_rotation(std::string name, Coordinate degrees, Coordinate coordinate, TransformationPoint type)
 {
   MatrixForm rotation =
   {
-    {std::cos(this->convert_degrees_to_radians(degrees[0])), -std::sin(this->convert_degrees_to_radians(degrees[0])), 0},
-    {std::sin(this->convert_degrees_to_radians(degrees[0])),  std::cos(this->convert_degrees_to_radians(degrees[0])), 0},
-    {0                                                     ,  0                                                     , 1}
+    {std::cos(convert_degrees_to_radians(degrees[0])), -std::sin(convert_degrees_to_radians(degrees[0])), 0},
+    {std::sin(convert_degrees_to_radians(degrees[0])),  std::cos(convert_degrees_to_radians(degrees[0])), 0},
+    {0                                               ,  0                                               , 1}
   };
 
   TransformationData transformation{name, rotation, TransformationType::ROTATION, type, coordinate};
@@ -384,9 +381,4 @@ void Transformation::_rotation_on_coordinate(TransformationData &transformation_
   move_to_center[2][2] = 1;
 
   this->_transformation.multiply(move_to_center);
-}
-
-COORDINATE_TYPE Transformation::convert_degrees_to_radians(COORDINATE_TYPE degrees)
-{
-  return M_PI * (fmod(degrees, 360.0) / 180.0);
 }
