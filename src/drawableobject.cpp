@@ -74,9 +74,9 @@ Coordinate DrawableObject::getGeometricCenter(const std::list<Coordinate*>& coor
 {
   int coordinatesCount = coordinates.size();
 
-  long int x_axis = 0;
-  long int y_axis = 0;
-  long int z_axis = 0;
+  big_double x_axis = 0;
+  big_double y_axis = 0;
+  big_double z_axis = 0;
 
   for(auto coordinate : coordinates)
   {

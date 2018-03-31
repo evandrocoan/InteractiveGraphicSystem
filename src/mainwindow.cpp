@@ -248,7 +248,7 @@ void MainWindow::on_button_move_right()
 
 void MainWindow::on_button_zoom_in()
 {
-  long int zoom_scale = atof(entry_zoom_scale.get_text().raw().c_str());
+  big_double zoom_scale = atof(entry_zoom_scale.get_text().raw().c_str());
 
   if (zoom_scale <=1)
   {
@@ -284,7 +284,7 @@ void MainWindow::on_button_zoom_out()
 
 void MainWindow::on_button_rotate_left()
 {
-  COORDINATE_TYPE rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+  big_double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
 
   if (rotate_angle == 0)
   {
@@ -298,7 +298,7 @@ void MainWindow::on_button_rotate_left()
 
 void MainWindow::on_button_rotate_right()
 {
-  COORDINATE_TYPE rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+  big_double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
 
   if (rotate_angle == 0)
   {

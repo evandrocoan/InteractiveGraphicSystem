@@ -1,9 +1,9 @@
 #ifndef GTKMM_APP_TRAITS_H
 #define GTKMM_APP_TRAITS_H
 
-#define COORDINATE_TYPE    long double
-#define MATRICES_DIMENSION 3
+typedef long double big_double;
 
+const int MATRICES_DIMENSION = 3;
 const int MINIMUM_ZOOM_LIMIT = 1;
 const int MAXIMUM_ZOOM_LIMIT = 5000;
 

@@ -11,12 +11,12 @@ ViewWindow::~ViewWindow()
 {
 }
 
-long double ViewWindow::width()
+big_double ViewWindow::width()
 {
   return this->_dimentions[0];
 }
 
-long double ViewWindow::height()
+big_double ViewWindow::height()
 {
   return this->_dimentions[1];
 }

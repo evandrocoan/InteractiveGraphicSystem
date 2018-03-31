@@ -36,8 +36,8 @@ public:
   void rotate(Coordinate steps);
   void apply(Coordinate&);
 
-  long double width();
-  long double height();
+  big_double width();
+  big_double height();
 
   /**
    * `ViewWindow` coordinates:
@@ -52,10 +52,10 @@ public:
    *         +-------------------+
    *   (xMin, yMin) usually (0, 0)
    */
-  constexpr static const long double xMin = -1.0;
-  constexpr static const long double yMin = -1.0;
-  constexpr static const long double xMax =  1.0;
-  constexpr static const long double yMax =  1.0;
+  constexpr static const big_double xMin = -1.0;
+  constexpr static const big_double yMin = -1.0;
+  constexpr static const big_double xMax =  1.0;
+  constexpr static const big_double yMax =  1.0;
 
   /**
    * Prints a beauty version of the viewWindow when called on `std::cout<< viewWindow << std::end;`
