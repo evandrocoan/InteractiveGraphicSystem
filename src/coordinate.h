@@ -1,6 +1,7 @@
 #ifndef GTKMM_APP_COORDINATE_H
 #define GTKMM_APP_COORDINATE_H
 
+#include <limits>
 #include <iostream>
 
 #include "traits.h"
@@ -65,6 +66,75 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
 
   Coordinate& operator-=(const Array& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
       { this->_data[index] -= object._data[index]; } return *this; }
+
+  /**
+   * Double Data to Object precision comparison.
+   */
+  bool operator!=(const big_double& data) { return !(*this == data); }
+  bool operator<=(const big_double& data) { return *this > data;     }
+  bool operator>=(const big_double& data) { return *this < data;     }
+
+  bool operator<(const big_double& data) {
+  if( *this == data ) { return false; }
+  for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+    { if( this->_data[index] > data ) { return false; } } return true; }
+
+  bool operator>(const big_double& data) {
+    if( *this == data ) { return false; }
+    for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+      { if( this->_data[index] < data ) { return false; } } return true; }
+
+  /**
+   * Comparing doubles
+   * https://stackoverflow.com/questions/4010240/comparing-doubles
+   *
+   * What's a good way to check for ``close enough'' floating-point equality?
+   * http://c-faq.com/fp/fpequal.html
+   */
+  bool operator==(const big_double& data)
+  {
+    for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+    {
+      if( this->_data[index] == data
+          || std::abs(this->_data[index] - data)
+             < std::abs( std::min( this->_data[index], data ) ) * std::numeric_limits< big_double >::epsilon() )
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  /**
+   * Double Object to Object precision comparison.
+   */
+  bool operator!=(const Coordinate& object) { return !(*this == object); }
+  bool operator<=(const Coordinate& object) { return *this > object;     }
+  bool operator>=(const Coordinate& object) { return *this < object;     }
+
+  bool operator<(const Coordinate& object) {
+  if( *this == object ) { return false; }
+  for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+    { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
+
+  bool operator>(const Coordinate& object) {
+    if( *this == object ) { return false; }
+    for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+      { if( this->_data[index] < object._data[index] ) { return false; } } return true; }
+
+  bool operator==(const Coordinate& object)
+  {
+    for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+    {
+      if( this->_data[index] == object._data[index]
+          || std::abs(this->_data[index] - object._data[index])
+             < std::abs( std::min( this->_data[index], object._data[index] ) ) * std::numeric_limits< big_double >::epsilon() )
+      {
+        return false;
+      }
+    }
+    return true;
+  }
 
   /**
    * Compute the 1/x for all values on the coordinate.

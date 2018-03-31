@@ -89,7 +89,7 @@ struct Array
   }
 
   /**
-   * Data to Object operators.
+   * Generic Data to Object operators.
    */
   bool operator<=(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] > data ) { return false; } } return true; }
@@ -110,7 +110,7 @@ struct Array
       { if( this->_data[index] == data ) { return false; } } return true; }
 
   /**
-   * Object to Object operators.
+   * Generic Object to Object operators.
    */
   bool operator<=(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
