@@ -6,5 +6,5 @@
 
 // Initializes these helper variables for function parameter default values
 MatrixForm _default_matrix_value_parameter{};
-Coordinate _default_coordinate_value_parameter{};
+Coordinate _default_coordinate_value_parameter{0.0, 0.0, 1.0};
 
