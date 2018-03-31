@@ -80,9 +80,9 @@ Coordinate DrawableObject::getGeometricCenter(const std::list<Coordinate*>& coor
 
   for(auto coordinate : coordinates)
   {
-    x_axis += coordinate->getx();
-    y_axis += coordinate->gety();
-    z_axis += coordinate->getz();
+    x_axis += coordinate->x;
+    y_axis += coordinate->y;
+    z_axis += coordinate->z;
   }
 
   return Coordinate(x_axis/coordinatesCount, y_axis/coordinatesCount, z_axis/coordinatesCount);

@@ -18,32 +18,63 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
 {
   typedef Array<MATRICES_DIMENSION, big_double> BaseClass;
 
-  // Inheriting constructors
-  // https://stackoverflow.com/questions/347358/inheriting-constructors
-  using BaseClass::Array;
+  /**
+   * C++ member variable aliases?
+   * https://stackoverflow.com/questions/494597/c-member-variable-aliases
+   *
+   * Memory allocation for references
+   * https://stackoverflow.com/questions/11661266/memory-allocation-for-references
+   *
+   * Does reference variable occupy memory?
+   * https://stackoverflow.com/questions/29322688/does-reference-variable-occupy-memory
+   */
+  big_double& x;
+  big_double& y;
+  big_double& z;
 
-  Coordinate(big_double x, big_double y, big_double z = 1) :
-      Array{x, y, z}
+  Coordinate() :
+      Array{},
+      x{this->_data[0]},
+      y{this->_data[1]},
+      z{this->_data[2]}
   {
+  }
+
+  Coordinate(big_double initial) :
+      Array{initial},
+      x{this->_data[0]},
+      y{this->_data[1]},
+      z{this->_data[2]}
+  {
+  }
+
+  Coordinate(big_double x, big_double y, big_double z = 1.0) :
+      Array{x, y, z},
+      x{this->_data[0]},
+      y{this->_data[1]},
+      z{this->_data[2]}
+  {
+  }
+
+  Coordinate(const Coordinate& object) :
+      Array{object},
+      x{this->_data[0]},
+      y{this->_data[1]},
+      z{this->_data[2]}
+  {
+  }
+
+  Coordinate& operator=(const Coordinate& object)
+  {
+    Array::operator=(object);
+    this->x = this->_data[0];
+    this->y = this->_data[1];
+    this->z = this->_data[2];
+    return *this;
   }
 
   ~Coordinate()
   {
-  }
-
-  big_double getx() const
-  {
-    return this->_data[0];
-  }
-
-  big_double gety() const
-  {
-    return this->_data[1];
-  }
-
-  big_double getz() const
-  {
-    return this->_data[2];
   }
 
   /**
