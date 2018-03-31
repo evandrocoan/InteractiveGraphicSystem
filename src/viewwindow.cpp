@@ -3,7 +3,7 @@
 ViewWindow::ViewWindow() :
       _angles(0, 0),
       _dimentions(100, 100),
-      _windowCenter(100, 100)
+      _windowCenter(0, 0)
 {
 }
 

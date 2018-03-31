@@ -59,8 +59,8 @@ void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
     this->isCentered = true;
     this->draw_xy_axes();
 
-    LOG(4, "Moving ViewWindow (0, 0) to the window center...");
-    this->move(-this->viewWindow.width(), -this->viewWindow.height());
+    // LOG(4, "Moving ViewWindow (0, 0) to the window center...");
+    // this->move(-this->viewWindow.width(), -this->viewWindow.height());
   }
 
   this->viewPort.updateClippingCoordinatesWindowSize(width, height);
