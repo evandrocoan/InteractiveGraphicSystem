@@ -33,4 +33,4 @@ protected:
 
 };
 
-#endif
+#endif // GTKMM_APP_DISPLAY_FILE

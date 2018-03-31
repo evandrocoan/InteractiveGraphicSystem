@@ -31,8 +31,8 @@ void DrawingArea::disconnectObserver()
 std::ostream& operator<<( std::ostream &output, const DrawingArea &object )
 {
   output
-      << "ViewPort" << object.viewPort << " "
-      << "ViewWindow" << object.viewWindow;
+      << object.viewPort << " "
+      << object.viewWindow;
   return output;
 }
 
@@ -40,23 +40,27 @@ std::ostream& operator<<( std::ostream &output, const DrawingArea &object )
  * Move the X and Y axes to the center of the window when the program starts and recalculate the
  * clipping window size when the window size changes.
  *
- * @param allocation [description]
+ * @param `allocation` is the Current DrawingArea widget size like 556x469. Allocation is a
+ *     structure holding the position and size of a rectangle. The intersection of two rectangles
+ *     can be computed with intersect(). To find the union of two rectangles use join().
+ *     Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of
+ *     GdkRectangle.
  */
 void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
 {
-  this->updateViewPort(allocation);
+  long double width = this->get_width();
+  long double height = this->get_height();
 
-  const int width = this->get_width();
-  const int height = this->get_height();
+  // TODO on `updateViewPortSize()`: Keep viewPort and viewWindow portions while resizing the viewPort
+  this->updateViewPortSize(width, height);
 
   if( !isCentered )
   {
     this->isCentered = true;
-    LOG(4, "Moving ViewWindow (0, 0) to the window center...");
+    this->draw_xy_axes();
 
-    this->on_init();
-    this->move_down(height/2);
-    this->move_left(width/2);
+    LOG(4, "Moving ViewWindow (0, 0) to the window center...");
+    this->move(-this->viewWindow.width(), -this->viewWindow.height());
   }
 
   this->viewPort.updateClippingCoordinatesWindowSize(width, height);
@@ -83,7 +87,7 @@ void DrawingArea::apply(std::string object_name, Transformation &transformation)
   }
 }
 
-void DrawingArea::on_init()
+void DrawingArea::draw_xy_axes()
 {
   LOG(4, "centerWindow: %d , %d",this->viewPort.xMax/2, this->viewPort.yMax/2);
 
@@ -120,7 +124,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   // cairo_context->set_line_width(1);
   // cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
   // Coordinate originOnWindow(0, 0);
-  // Coordinate originOnWorld = convertCoordinateFromWindowToWorld(originOnWindow);
+  // Coordinate originOnWorld = convertCoordinateToViewPort(originOnWindow);
 
   // LOG(8, "Drawing X and Y axes with originOnWorld: %s", originOnWorld);
   // LOG(4, "Drawing axes X from (%s, %s) to (%s, %s)", this->viewPort.xMin, originOnWorld.gety(), this->viewPort.xMax, originOnWorld.gety() );
@@ -150,7 +154,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   for (auto object : objects)
   {
     // auto coordinates = object->getViewWindowCoordinates();
-    auto coordinates = object->getClippingCoordinates();
+    auto coordinates = object->getViewWindowCoordinates();
     int coordinates_count = coordinates.size();
 
     if (coordinates_count == 0)
@@ -159,7 +163,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
       continue;
     }
 
-    Coordinate firstCoordinate = this->convertCoordinateFromWindowToWorld(**(coordinates.begin()));
+    Coordinate firstCoordinate = this->convertCoordinateToViewPort(**(coordinates.begin()));
 
     LOG(8, "object coordinates: %s", *object);
     cairo_context->move_to(firstCoordinate.getx(), firstCoordinate.gety());
@@ -172,7 +176,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
     {
       for (auto coordinate : coordinates)
       {
-        Coordinate coordinateConverted = this->convertCoordinateFromWindowToWorld(*coordinate);
+        Coordinate coordinateConverted = this->convertCoordinateToViewPort(*coordinate);
         cairo_context->line_to(coordinateConverted.getx(), coordinateConverted.gety());
       }
 
@@ -188,29 +192,6 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 /**
  * Transformada de viewport - Slide 2 de "02 - Conceitos Básicos"
  *
- * @param  coordinate [description]
- * @return            [description]
- */
-Coordinate DrawingArea::convertCoordinateFromWindowToWorld(Coordinate &coordinate)
-{
-  long int xW = coordinate.getx();
-  long int yW = coordinate.gety();
-
-  long int xVp = (long int)(
-      (double)(xW - this->viewWindow.xMin) * ((double)(this->viewPort.xMax - this->viewPort.xMin) /
-          (double)(this->viewWindow.xMax - this->viewWindow.xMin)
-      )
-  );
-
-  long int yVp = (this->viewPort.yMax - this->viewPort.yMin) - (long int)(
-      (double)(yW - this->viewWindow.yMin) * (double)(this->viewPort.yMax - this->viewPort.yMin) /
-          (double)(this->viewWindow.yMax - this->viewWindow.yMin)
-  );
-
-  return Coordinate(xVp, yVp);
-}
-
-/**
  * Resize `viewwindow` when `viewport` is resized:
  * http://www.di.ubi.pt/~agomes/cg/teoricas/04e-windows.pdf
  *
@@ -229,51 +210,71 @@ Coordinate DrawingArea::convertCoordinateFromWindowToWorld(Coordinate &coordinat
  * A possible solution is to change the world window whenever the viewport of
  * the interface window were changed.
  *
- * @param `allocation` is the Current DrawingArea widget size like 556x469. Allocation is a
- *     structure holding the position and size of a rectangle. The intersection of two rectangles
- *     can be computed with intersect(). To find the union of two rectangles use join().
- *     Gtk::Allocation is a typedef of Gdk::Rectangle because GtkAllocation is a typedef of
- *     GdkRectangle.
+ * @param  coordinate [description]
+ * @return            [description]
  */
-void DrawingArea::updateViewPort(Gtk::Allocation &allocation)
+Coordinate DrawingArea::convertCoordinateToViewPort(Coordinate &coordinate)
 {
-  // NÃO ENTENDI A LÓGICA MATEMÁTICA.
-  LOG(8, "Entering: %s; Allocation: %sx%s", *this, allocation.get_width(), allocation.get_height());
+  long double xC = coordinate.getx();
+  long double yC = coordinate.gety();
+
+  long double xWmin = this->viewWindow.xMin;
+  long double yWmin = this->viewWindow.yMin;
+  long double xWmax = this->viewWindow.xMax;
+  long double yWmax = this->viewWindow.yMax;
+
+  long double xVpmin = this->viewPort.xMin;
+  long double yVpmin = this->viewPort.yMin;
+  long double xVpmax = this->viewPort.xMax;
+  long double yVpmax = this->viewPort.yMax;
+
+  // double     x=((c.x-wmin.x) / (wmax.x-wmin.x)) *_width;
+  long double xVp =((xC - xWmin) / (xWmax - xWmin)) * (xVpmax - xVpmin);
+
+  // double     y = (1 -((c.y -wmin.y) /(wmax.y -wmin.y))) *_height;
+  long double yVp = (1.0 - ((yC - yWmin) / (yWmax - yWmin))) * (yVpmax - yVpmin);
+
+  // std::cout << "transformCoordinate: " << Coordinate(xVp, yVp);
+  // std::cout << ", Original: " << coordinate << std::endl;
+  // std::cout << ", wmin x: " << xWmin << ", y: " << yWmin;
+  // std::cout << ", wmax x: " << xWmax << ", y: " << yWmax;
+  // std::cout << ", _width x: " << xVpmax - xVpmin << ", _height: " << yVpmax - yVpmin << std::endl;
+  return Coordinate(xVp, yVp);
+}
+
+void DrawingArea::updateViewPortSize(long double width, long double height)
+{
+  LOG(8, "Entering: %s; Allocation: %sx%s", *this, width, height);
 
   // This is true only when you resize the you DrawingArea widget window
-  if (this->viewPort.xMax != allocation.get_width() || this->viewPort.yMax != allocation.get_height())
+  if (this->viewPort.xMax != width || this->viewPort.yMax != height)
   {
-    int widthDiff  = allocation.get_width()  - (this->viewPort.xMax - this->viewPort.xMin);
-    int heightDiff = allocation.get_height() - (this->viewPort.yMax - this->viewPort.yMin);
+    long double widthDiff  = width  - (this->viewPort.xMax - this->viewPort.xMin);
+    long double heightDiff = height - (this->viewPort.yMax - this->viewPort.yMin);
 
-    // On the first time we run this algorithm, the ViewPort.xMax is set to zero. Therefore, we must
-    // to initialize this within the current size of the DrawingArea
-    if (this->viewPort.xMax != 0)
-    {
-      this->viewWindow.xMax = this->viewWindow.xMax
-          + (float)(this->viewWindow.xMax - this->viewWindow.xMin) * ( (float)widthDiff
-              / (float)(this->viewPort.xMax - this->viewPort.xMin)
-          );
-    }
-    else
-    {
-      this->viewWindow.xMax = (float)widthDiff;
-    }
+    // Keep the window zoom size while resizing the window
+    // // On the first time we run this algorithm, the ViewPort.xMax is set to zero. Therefore, we must
+    // // to initialize this within the current size of the DrawingArea
+    // if (this->viewPort.xMax != 0)
+    // {
+    //   this->viewWindow.xMax = this->viewWindow.xMax + (this->viewWindow.xMax - this->viewWindow.xMin)
+    //       * widthDiff / (this->viewPort.xMax - this->viewPort.xMin);
+    // }
+    // else
+    // {
+    //   this->viewWindow.xMax = widthDiff;
+    // }
 
-    if (this->viewPort.yMax != 0)
-    {
-      this->viewWindow.yMin = (
-          this->viewWindow.yMin
-              - (float)(this->viewWindow.yMax
-                  - this->viewWindow.yMin
-              ) * ((float)heightDiff / (float)(this->viewPort.yMax - this->viewPort.yMin))
-      );
-    }
-    else
-    {
-      // LOG(8, "If we exchange this `viewWindow.yMax` to `viewWindow.yMin` our world becomes up-side-down");
-      this->viewWindow.yMax = (float)heightDiff;
-    }
+    // if (this->viewPort.yMax != 0)
+    // {
+    //   this->viewWindow.yMin = this->viewWindow.yMin - (this->viewWindow.yMax - this->viewWindow.yMin)
+    //       * (heightDiff / (this->viewPort.yMax - this->viewPort.yMin));
+    // }
+    // else
+    // {
+    //   // LOG(8, "If we exchange this `viewWindow.yMax` to `viewWindow.yMin` our world becomes up-side-down");
+    //   this->viewWindow.yMax = heightDiff;
+    // }
 
     this->viewPort.xMax += widthDiff;
     this->viewPort.yMax += heightDiff;
@@ -304,7 +305,7 @@ void DrawingArea::addPoint(std::string name, int x_coord, int y_coord)
   this->addObject(point);
 }
 
-void DrawingArea::addPolygon(std::string name, std::vector<GTKMM_APP_MATRICES_DATATYPE> polygon_coord_list)
+void DrawingArea::addPolygon(std::string name, std::vector<COORDINATE_TYPE> polygon_coord_list)
 {
   int unsigned coordinates_size = polygon_coord_list.size();
   std::list<Coordinate*> coordinates;
@@ -312,7 +313,7 @@ void DrawingArea::addPolygon(std::string name, std::vector<GTKMM_APP_MATRICES_DA
   for( unsigned int index = 2; index < coordinates_size; index++, index++, index++ )
   {
     LOG(1, "Currently we do not support 3D, forcing z `%s` to be 1", polygon_coord_list.at(index-2));
-    coordinates.push_back( new Coordinate( polygon_coord_list.at(index-1), polygon_coord_list.at(index), 1 ) );
+    coordinates.push_back( new Coordinate( polygon_coord_list.at(index-2), polygon_coord_list.at(index-1), 1 ) );
   }
 
   Polygon* polygon = new Polygon(name, coordinates);
@@ -356,6 +357,8 @@ void DrawingArea::updateObjectCoordinates()
     object->updateWindowCoordinates(this->viewWindow);
     object->updateClippingCoordinates(this->viewPort);
   }
+
+  this->queue_draw();
 }
 
 std::list<std::string> DrawingArea::getNamesList()
@@ -368,50 +371,17 @@ std::list<DrawableObject*> DrawingArea::getObjectsList()
   return this->displayFile.getObjects();
 }
 
-void DrawingArea::zoom_in(float scale)
+void DrawingArea::move(long int horizontal_step, long int vertical_step)
 {
-  this->viewWindow.zoom_in(scale);
-  this->queue_draw();
+  this->viewWindow.move(horizontal_step, vertical_step);
 }
 
-void DrawingArea::zoom_out(float scale)
+void DrawingArea::zoom(long int step)
 {
-  this->viewWindow.zoom_out(scale);
-  this->queue_draw();
+  this->viewWindow.zoom(step);
 }
 
-void DrawingArea::move_up(int length)
+void DrawingArea::rotate(Coordinate angle)
 {
-  this->viewWindow.move_up(length);
-  this->queue_draw();
-}
-
-void DrawingArea::move_down(int length)
-{
-  this->viewWindow.move_down(length);
-  this->queue_draw();
-}
-
-void DrawingArea::move_left(int length)
-{
-  this->viewWindow.move_left(length);
-  this->queue_draw();
-}
-
-void DrawingArea::move_right(int length)
-{
-  this->viewWindow.move_right(length);
-  this->queue_draw();
-}
-
-void DrawingArea::rotate_left(GTKMM_APP_MATRICES_DATATYPE angle)
-{
-  this->viewWindow.rotate_left(angle);
-  this->queue_draw();
-}
-
-void DrawingArea::rotate_right(GTKMM_APP_MATRICES_DATATYPE angle)
-{
-  this->viewWindow.rotate_right(angle);
-  this->queue_draw();
+  this->viewWindow.rotate(angle);
 }

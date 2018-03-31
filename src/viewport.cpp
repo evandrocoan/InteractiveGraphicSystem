@@ -50,7 +50,7 @@ void ViewPort::updateClippingCoordinatesWindowSize(int width, int height)
  */
 std::ostream& operator<<( std::ostream &output, const ViewPort &object )
 {
-  output
+  output << "ViewPort"
       << "(" << std::setw(4) << object.xMin << ", " << std::setw(4) << object.yMin << ")"
       << "(" << std::setw(4) << object.xMax << ", " << std::setw(4) << object.yMax << ") "
       << "ClippingWindow" << "["

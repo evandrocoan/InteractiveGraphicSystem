@@ -1,12 +1,12 @@
 #include "transformationdata.h"
 
 TransformationData::TransformationData(std::string name, MatrixForm matrix, TransformationType type,
-        RotationType rotation_type, Coordinate rotation_center) :
+        TransformationPoint point, Coordinate center) :
     name(name),
     matrix(matrix),
     type(type),
-    rotation_center{rotation_center},
-    rotation_type(rotation_type)
+    center{center},
+    point(point)
 {
 }
 
@@ -18,8 +18,8 @@ std::ostream& operator<<( std::ostream &output, const TransformationData &data )
   output << data.name << ", ";
   output << data.type << ", ";
   output << data.matrix << ", ";
-  output << data.rotation_type << ", ";
-  output << data.rotation_center;
+  output << data.point << ", ";
+  output << data.center;
   return output;
 }
 
@@ -36,13 +36,13 @@ inline std::ostream& operator<<(std::ostream &output, const TransformationType o
   return output;
 }
 
-inline std::ostream& operator<<(std::ostream &output, const RotationType object)
+inline std::ostream& operator<<(std::ostream &output, const TransformationPoint object)
 {
   switch (object)
   {
-    case RotationType::ON_WORLD_CENTER:     output << "ON_WORLD_CENTER"; break;
-    case RotationType::ON_ITS_OWN_CENTER:   output << "ON_ITS_OWN_CENTER"; break;
-    case RotationType::ON_GIVEN_COORDINATE: output << "ON_GIVEN_COORDINATE"; break;
+    case TransformationPoint::ON_WORLD_CENTER:     output << "ON_WORLD_CENTER"; break;
+    case TransformationPoint::ON_ITS_OWN_CENTER:   output << "ON_ITS_OWN_CENTER"; break;
+    case TransformationPoint::ON_GIVEN_COORDINATE: output << "ON_GIVEN_COORDINATE"; break;
     default:
       output << (int) object; break;
   }

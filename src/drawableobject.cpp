@@ -101,11 +101,12 @@ void DrawableObject::printMyself(std::ostream& output) const
 {
   unsigned int size;
   unsigned int index;
+  unsigned int index_external = 0;
   std::list< std::list<Coordinate*> > coordinates_lists;
 
   coordinates_lists.push_back(this->worldCoordinates);
-  coordinates_lists.push_back(this->clippingCoordinates);
   coordinates_lists.push_back(this->viewWindowCoordinates);
+  coordinates_lists.push_back(this->clippingCoordinates);
 
   output << this->name;
 
@@ -114,7 +115,7 @@ void DrawableObject::printMyself(std::ostream& output) const
     index = 0;
     size = coordinates_list.size() - 1;
 
-    output << "-" << index << "(";
+    output << "_" << index_external << "(";
 
     for( auto coordinate : coordinates_list )
     {
@@ -128,6 +129,7 @@ void DrawableObject::printMyself(std::ostream& output) const
       index++;
     }
 
+    index_external++;
     output << ")";
   }
 }
@@ -145,9 +147,9 @@ void DrawableObject::apply(Transformation &transformation)
   }
 }
 
-void DrawableObject::updateWindowCoordinates(ViewWindow &transformation)
+void DrawableObject::updateWindowCoordinates(ViewWindow &viewwindow)
 {
-  LOG(8, "Entering...");
+  LOG(8, "Entering... %s", viewwindow);
   Coordinate* new_coordinate;
   auto coordinates = this->getWorldCoordinates();
   DrawableObject::destroyList(this->viewWindowCoordinates);
@@ -155,13 +157,13 @@ void DrawableObject::updateWindowCoordinates(ViewWindow &transformation)
   for(auto coordinate : coordinates)
   {
     new_coordinate = new Coordinate(*coordinate);
-    transformation.apply(*new_coordinate);
+    viewwindow.apply(*new_coordinate);
     this->viewWindowCoordinates.push_back(new_coordinate);
   }
 }
 
-void DrawableObject::updateClippingCoordinates(ViewPort& axes)
+void DrawableObject::updateClippingCoordinates(ViewPort& viewport)
 {
-  LOG(4, "Generic clipping update... %s", axes);
+  LOG(4, "Generic clipping update... %s", viewport);
   this->clippingCoordinates = this->worldCoordinates;
 }
