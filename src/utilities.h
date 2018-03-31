@@ -50,7 +50,7 @@
 
 inline big_double convert_degrees_to_radians(big_double degrees)
 {
-  return M_PI * (fmod(degrees, 360.0) / 180.0);
+  return M_PI * (std::fmod(degrees, 360.0) / 180.0);
 }
 
 /**
