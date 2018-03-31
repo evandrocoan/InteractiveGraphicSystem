@@ -3,6 +3,7 @@
 Transformation::Transformation() :
     _transformation{}
 {
+  this->clear();
 }
 
 Transformation::~Transformation()
@@ -12,8 +13,18 @@ Transformation::~Transformation()
 void Transformation::apply(Coordinate &point)
 {
   LOG(4, "Applying transformation %s on %s", this->_transformation, point);
-  point.multiply(this->_transformation);
-  // LOG(4, "point.multiply: %s", point);
+
+  if( this->isInitialized )
+  {
+    point.multiply(this->_transformation);
+    LOG(4, "point.multiply: %s", point);
+  }
+}
+
+void Transformation::clear()
+{
+  this->isInitialized = false;
+  this->transformations.clear();
 }
 
 void Transformation::remove_transformation(std::string name)
@@ -46,6 +57,8 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
   unsigned int index = 0;
   unsigned int size = object.transformations.size() - 1;
 
+  output << "(" << object._transformation << ") ";
+
   for( auto transformation_data : object.transformations )
   {
     output << transformation_data;
@@ -58,14 +71,13 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
     index++;
   }
 
-  output << "(" << object._transformation << ")";
   return output;
 }
 
 void Transformation::add_rotation(std::string name,
-                                  Array<3, GTKMM_APP_MATRICES_DATATYPE> degrees,
+                                  Array<3, COORDINATE_TYPE> degrees,
                                   Coordinate coordinate,
-                                  RotationType type)
+                                  TransformationPoint type)
 {
   MatrixForm rotation =
   {
@@ -104,7 +116,7 @@ void Transformation::add_translation(std::string name, Coordinate movement)
   this->transformations.push_back(transformation);
 }
 
-void Transformation::set_geometric_center(Coordinate &center = _default_coordinate_value_parameter)
+void Transformation::set_geometric_center(Coordinate &center)
 {
   LOG(4, "Center on %s - %s", center, *this);
   unsigned int index = 0;
@@ -115,15 +127,7 @@ void Transformation::set_geometric_center(Coordinate &center = _default_coordina
     {
       case TransformationType::TRANSLATION:
       {
-        if( index == 0 )
-        {
-          this->_transformation = transformation_data.matrix;
-        }
-        else
-        {
-          this->_transformation.multiply(transformation_data.matrix);
-        }
-        // LOG(4, "_transformation.multiply: %s", this->_transformation);
+        this->_set_translation_data(transformation_data, index, center);
         break;
       }
 
@@ -148,12 +152,73 @@ void Transformation::set_geometric_center(Coordinate &center = _default_coordina
     }
 
     index++;
+    this->isInitialized = true;
   }
+}
+
+void Transformation::_set_translation_data(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
+{
+  if( index == 0 )
+  {
+    this->_transformation = transformation_data.matrix;
+  }
+  else
+  {
+    this->_transformation.multiply(transformation_data.matrix);
+  }
+  LOG(4, "_transformation.multiply: %s", this->_transformation);
 }
 
 void Transformation::_set_scaling_data(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
 {
   LOG(2, "Entering...");
+
+  switch(transformation_data.point)
+  {
+    case TransformationPoint::ON_WORLD_CENTER:
+    {
+      this->_scaling_on_world_center(transformation_data, index, center);
+      break;
+    }
+
+    case TransformationPoint::ON_ITS_OWN_CENTER:
+    {
+      this->_scaling_on_its_own_center(transformation_data, index, center);
+      break;
+    }
+
+    case TransformationPoint::ON_GIVEN_COORDINATE:
+    {
+      this->_scaling_on_coordinate(transformation_data, index, center);
+      break;
+    }
+
+    default:
+    {
+      LOG(1, "");
+      LOG(1, "");
+      LOG(1, "ERROR! Invalid TransformationPoint used: %d", transformation_data.point);
+    }
+  }
+}
+
+void Transformation::_scaling_on_world_center(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
+{
+  LOG(4, "Just rotate it, as all scalings are based on the world center");
+  if( index == 0 )
+  {
+    this->_transformation = transformation_data.matrix;
+  }
+  else
+  {
+    this->_transformation.multiply(transformation_data.matrix);
+  }
+}
+
+void Transformation::_scaling_on_its_own_center(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
+{
+  LOG(2, "Entering...");
+
   MatrixForm move_to_center
   {
     {1             ,  0            , 0},
@@ -170,7 +235,38 @@ void Transformation::_set_scaling_data(TransformationData &transformation_data, 
     this->_transformation.multiply(move_to_center);
   }
 
-  LOG(4, "Do the rotation on the origin");
+  LOG(4, "Do the scaling on the origin");
+  this->_transformation.multiply(transformation_data.matrix);
+
+  LOG(4, "Move back to its origin");
+  move_to_center[2][0] = center.getx();
+  move_to_center[2][1] = center.gety();
+  move_to_center[2][2] = 1;
+
+  this->_transformation.multiply(move_to_center);
+}
+
+void Transformation::_scaling_on_coordinate(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
+{
+  LOG(2, "Entering...");
+
+  MatrixForm move_to_center
+  {
+    {1                                 ,  0                                , 0},
+    {0                                 ,  1                                , 0},
+    {-transformation_data.center.getx(), -transformation_data.center.gety(), 1}
+  };
+
+  if( index == 0 )
+  {
+    this->_transformation = move_to_center;
+  }
+  else
+  {
+    this->_transformation.multiply(move_to_center);
+  }
+
+  LOG(4, "Do the scaling on the origin");
   this->_transformation.multiply(transformation_data.matrix);
 
   LOG(4, "Move back to its origin");
@@ -185,29 +281,21 @@ void Transformation::_set_rotation_data(TransformationData &transformation_data,
 {
   LOG(2, "Entering...");
 
-  switch(transformation_data.rotation_type)
+  switch(transformation_data.point)
   {
-    case RotationType::ON_WORLD_CENTER:
+    case TransformationPoint::ON_WORLD_CENTER:
     {
-      LOG(4, "Just rotate it, as all rotations are based on the world center");
-      if( index == 0 )
-      {
-        this->_transformation = transformation_data.matrix;
-      }
-      else
-      {
-        this->_transformation.multiply(transformation_data.matrix);
-      }
+      this->_rotation_on_world_center(transformation_data, index, center);
       break;
     }
 
-    case RotationType::ON_ITS_OWN_CENTER:
+    case TransformationPoint::ON_ITS_OWN_CENTER:
     {
-      this->_rotation_on_center(transformation_data, index, center);
+      this->_rotation_on_its_own_center(transformation_data, index, center);
       break;
     }
 
-    case RotationType::ON_GIVEN_COORDINATE:
+    case TransformationPoint::ON_GIVEN_COORDINATE:
     {
       this->_rotation_on_coordinate(transformation_data, index, center);
       break;
@@ -217,12 +305,25 @@ void Transformation::_set_rotation_data(TransformationData &transformation_data,
     {
       LOG(1, "");
       LOG(1, "");
-      LOG(1, "ERROR! Invalid RotationType used: %d", transformation_data.rotation_type);
+      LOG(1, "ERROR! Invalid TransformationPoint used: %d", transformation_data.point);
     }
   }
 }
 
-void Transformation::_rotation_on_center(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
+void Transformation::_rotation_on_world_center(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
+{
+  LOG(4, "Just rotate it, as all rotations are based on the world center");
+  if( index == 0 )
+  {
+    this->_transformation = transformation_data.matrix;
+  }
+  else
+  {
+    this->_transformation.multiply(transformation_data.matrix);
+  }
+}
+
+void Transformation::_rotation_on_its_own_center(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
 {
   LOG(2, "Entering...");
 
@@ -257,13 +358,12 @@ void Transformation::_rotation_on_center(TransformationData &transformation_data
 void Transformation::_rotation_on_coordinate(TransformationData &transformation_data, unsigned int &index, Coordinate &center)
 {
   LOG(2, "Entering...");
-  auto rotation_center = transformation_data.rotation_center;
 
   MatrixForm move_to_center
   {
-    {1                      ,  0                     , 0},
-    {0                      ,  1                     , 0},
-    {-rotation_center.getx(), -rotation_center.gety(), 1}
+    {1                                 ,  0                                , 0},
+    {0                                 ,  1                                , 0},
+    {-transformation_data.center.getx(), -transformation_data.center.gety(), 1}
   };
 
   if( index == 0 )
@@ -279,14 +379,14 @@ void Transformation::_rotation_on_coordinate(TransformationData &transformation_
   this->_transformation.multiply(transformation_data.matrix);
 
   LOG(4, "Move back to its origin");
-  move_to_center[2][0] = rotation_center.getx();
-  move_to_center[2][1] = rotation_center.gety();
+  move_to_center[2][0] = center.getx();
+  move_to_center[2][1] = center.gety();
   move_to_center[2][2] = 1;
 
   this->_transformation.multiply(move_to_center);
 }
 
-GTKMM_APP_MATRICES_DATATYPE Transformation::convert_degrees_to_radians(GTKMM_APP_MATRICES_DATATYPE degrees)
+COORDINATE_TYPE Transformation::convert_degrees_to_radians(COORDINATE_TYPE degrees)
 {
   return M_PI * (fmod(degrees, 360.0) / 180.0);
 }

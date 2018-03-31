@@ -30,16 +30,13 @@ public:
   ViewWindow();
   virtual ~ViewWindow();
 
-  void zoom_in (float scale = 1.5);
-  void zoom_out(float scale = 1.5);
+  void zoom(long int step = 50);
+  void move(long int horizontal_step = 50, long int vertical_step = 50);
+  void rotate(Coordinate coordinate);
+  void apply(Coordinate&);
 
-  void move_up   (int length = 10);
-  void move_down (int length = 10);
-  void move_left (int length = 10);
-  void move_right(int length = 10);
-
-  void rotate_left (GTKMM_APP_MATRICES_DATATYPE angle = 10.0);
-  void rotate_right(GTKMM_APP_MATRICES_DATATYPE angle = 10.0);
+  long double width();
+  long double height();
 
   /**
    * `ViewWindow` coordinates:
@@ -54,23 +51,28 @@ public:
    *         +-------------------+
    *   (xMin, yMin) usually (0, 0)
    */
-  float xMin;
-  float yMin;
-  float xMax;
-  float yMax;
+  constexpr static const long double xMin = -1.0;
+  constexpr static const long double yMin = -1.0;
+  constexpr static const long double xMax =  1.0;
+  constexpr static const long double yMax =  1.0;
 
   /**
    * Prints a beauty version of the viewWindow when called on `std::cout<< viewWindow << std::end;`
    */
   friend std::ostream& operator<<(std::ostream &output, const ViewWindow &object);
-  void apply(Coordinate& coordinate);
 
-  Signal<> callObservers;
+  void callObservers();
   Signal<>::Connection addObserver(const Signal<>::Callback&);
 
-private:
-  Coordinate worldCenter;
-  Transformation transformation;
+protected:
+  long int _width;
+  long int _height;
+
+  Coordinate _angle;
+  Coordinate _windowCenter;
+
+  Signal<> _observers;
+  Transformation _transformation;
 };
 
-#endif
+#endif // GTKMM_APP_VIEW_WINDOW

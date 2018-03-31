@@ -7,6 +7,10 @@
 
 #include "stacktrace.h"
 
+/**
+ * C++ static polymorphism (CRTP) and using typedefs from derived classes
+ * https://stackoverflow.com/questions/6006614/c-static-polymorphism-crtp-and-using-typedefs-from-derived-classes
+ */
 template <unsigned int array_width, typename array_datatype=long int>
 struct Array
 {
@@ -15,14 +19,6 @@ struct Array
    * https://stackoverflow.com/questions/2034916/is-it-okay-to-inherit-implementation-from-stl-containers-rather-than-delegate
    */
   std::array<array_datatype, array_width> _data;
-
-  // Array(const Array& object)
-  // {
-  //   for( unsigned int index = 0; index < array_width; index++ )
-  //   {
-  //     this->_data[index] = new array_datatype(*object._data[index]);
-  //   }
-  // }
 
   /**
    * std::array constructor inheritance
@@ -74,25 +70,68 @@ struct Array
    * @param  line the current line you want to access
    * @return      a pointer to the current line
    */
-  array_datatype operator[](unsigned int line)&&
+  array_datatype operator[](unsigned int line) &&
   {
     assert(line < array_width);
-    assert(line >= 0);
     return this->_data[line];
   }
 
-  array_datatype const& operator[](unsigned int line)const&
+  array_datatype const& operator[](unsigned int line) const&
   {
     assert(line < array_width);
-    assert(line >= 0);
     return this->_data[line];
   }
 
-  array_datatype& operator[](unsigned int line)&
+  array_datatype& operator[](unsigned int line) &
   {
     assert(line < array_width);
-    assert(line >= 0);
     return this->_data[line];
+  }
+
+  Array& operator+=(const array_datatype& step)
+  {
+    for( unsigned int index = 0; index < array_width; index++ )
+    {
+      this->_data[index] += step;
+    }
+    return *this;
+  }
+
+  Array& operator-=(const array_datatype& step)
+  {
+    for( unsigned int index = 0; index < array_width; index++ )
+    {
+      this->_data[index] -= step;
+    }
+    return *this;
+  }
+
+  Array& operator+=(const Array& object)
+  {
+    for( unsigned int index = 0; index < array_width; index++ )
+    {
+      this->_data[index] += object._data[index];
+    }
+    return *this;
+  }
+
+  Array& operator-=(const Array& object)
+  {
+    for( unsigned int index = 0; index < array_width; index++ )
+    {
+      this->_data[index] -= object._data[index];
+    }
+    return *this;
+  }
+
+  Array operator-() const
+  {
+    Array negative_value{*this};
+    for( unsigned int index = 0; index < array_width; index++ )
+    {
+      negative_value._data[index] = -negative_value._data[index];
+    }
+    return negative_value;
   }
 
   void clear(array_datatype initial = 0)

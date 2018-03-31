@@ -26,7 +26,7 @@
 
   Transformation "1" *-- "*" TransformationData: transformations
   TransformationData *-- TransformationType: type
-  TransformationData *-- RotationType      : rotation_type
+  TransformationData *-- TransformationPoint: point
 
   class AddObject {
     Gtk::Grid       point_grid
@@ -100,7 +100,7 @@
     Gtk::Window& getWindow()
   }
 
-  class RotationType {
+  class TransformationPoint {
     enum ON_WORLD_CENTER
     enum ON_ITS_OWN_CENTER
     enum ON_GIVEN_COORDINATE
@@ -114,7 +114,7 @@
 
   class TransformationData {
     MatrixForm  matrix
-    Coordinate  rotation_center
+    Coordinate  center
     std::string name
   }
 

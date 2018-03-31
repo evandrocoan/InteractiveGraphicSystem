@@ -31,18 +31,24 @@ public:
    * Create and configure correctly a rotation.
    *
    * @param degrees [description]
-   * @param type    an enum RotationType valid value
-   * @param point   this is a optional value, only required when using RotationType::ON_GIVEN_COORDINATE
+   * @param type    an enum TransformationPoint valid value
+   * @param point   this is a optional value, only required when using TransformationPoint::ON_GIVEN_COORDINATE
    */
   void add_rotation(std::string name,
                     Array<3, long double> degrees,
                     Coordinate coordinate=_default_coordinate_value_parameter,
-                    RotationType type=RotationType::ON_WORLD_CENTER);
+                    TransformationPoint type=TransformationPoint::ON_WORLD_CENTER);
 
   unsigned int size();
   void remove_transformation(std::string name);
 
-  static inline GTKMM_APP_MATRICES_DATATYPE convert_degrees_to_radians(GTKMM_APP_MATRICES_DATATYPE degrees);
+  /**
+   * Remove all transformations from this container and set it as uninitialized. So, calling it
+   * to convert some point will take no effect, i.e., destroy your data.
+   */
+  void clear();
+
+  static inline COORDINATE_TYPE convert_degrees_to_radians(COORDINATE_TYPE degrees);
 
   std::vector<TransformationData>& getTransformations();
   friend std::ostream& operator<<(std::ostream &output, const Transformation &object);
@@ -56,7 +62,7 @@ public:
    * create new transformations, you must call `set_geometric_center()` before using it again.
    */
   void apply(Coordinate&);
-  void set_geometric_center(Coordinate&);
+  void set_geometric_center(Coordinate& center = _default_coordinate_value_parameter);
 
 protected:
 
@@ -75,11 +81,19 @@ protected:
    * to transform the object when calling `apply()`.
    */
   MatrixForm _transformation;
+  bool isInitialized;
 
-  void _set_scaling_data      (TransformationData&, unsigned int &index, Coordinate &center);
-  void _set_rotation_data     (TransformationData&, unsigned int &index, Coordinate &center);
-  void _rotation_on_center    (TransformationData&, unsigned int &index, Coordinate &center);
-  void _rotation_on_coordinate(TransformationData&, unsigned int &index, Coordinate &center);
+  void _set_translation_data(TransformationData&, unsigned int &index, Coordinate &center);
+  void _set_scaling_data    (TransformationData&, unsigned int &index, Coordinate &center);
+  void _set_rotation_data   (TransformationData&, unsigned int &index, Coordinate &center);
+
+  void _scaling_on_coordinate    (TransformationData&, unsigned int &index, Coordinate &center);
+  void _scaling_on_world_center  (TransformationData&, unsigned int &index, Coordinate &center);
+  void _scaling_on_its_own_center(TransformationData&, unsigned int &index, Coordinate &center);
+
+  void _rotation_on_coordinate    (TransformationData&, unsigned int &index, Coordinate &center);
+  void _rotation_on_world_center  (TransformationData&, unsigned int &index, Coordinate &center);
+  void _rotation_on_its_own_center(TransformationData&, unsigned int &index, Coordinate &center);
 };
 
 #endif // GTKMM_APP_TRANSFORMATION

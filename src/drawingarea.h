@@ -37,23 +37,16 @@ public:
 
   void addPoint(std::string name, int, int);
   void addLine(std::string name, int, int, int, int);
-  void addPolygon(std::string name, std::vector<GTKMM_APP_MATRICES_DATATYPE>);
+  void addPolygon(std::string name, std::vector<COORDINATE_TYPE>);
   void removeObject(std::string name);
 
-  void zoom_in (float scale = 1.5);
-  void zoom_out(float scale = 1.5);
-
-  void move_up   (int length = 10);
-  void move_down (int length = 10);
-  void move_left (int length = 10);
-  void move_right(int length = 10);
-
-  void rotate_left (GTKMM_APP_MATRICES_DATATYPE angle = 10);
-  void rotate_right(GTKMM_APP_MATRICES_DATATYPE angle = 10);
+  void zoom(long int step = 50);
+  void move(long int horizontal_step = 50, long int vertical_step = 50);
+  void rotate(Coordinate coordinate);
 
   void updateObjectCoordinates();
   void apply(std::string object_name, Transformation&);
-  Coordinate convertCoordinateFromWindowToWorld(Coordinate&);
+  Coordinate convertCoordinateToViewPort(Coordinate&);
 
   std::list<std::string> getNamesList();
   std::list<DrawableObject*> getObjectsList();
@@ -72,14 +65,14 @@ protected:
   Signal<> callObservers;
   Signal<>::Connection _connection;
 
-  void addObject(DrawableObject*);
   bool on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
-
-  void updateViewPort     (Gtk::Allocation&);
   void on_my_size_allocate(Gtk::Allocation&);
 
+  void addObject(DrawableObject*);
+  void updateViewPortSize (long double width, long double height);
+
 private:
-  void on_init();
+  void draw_xy_axes();
 };
 
 #endif // GTKMM_APP_DRAWINGAREA

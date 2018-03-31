@@ -136,10 +136,10 @@ void AddTransformation::on_button_save_transformation()
   std::string main_value_b = main_value_field_b.get_text().raw();
   std::string main_value_c = main_value_field_c.get_text().raw();
 
-  GTKMM_APP_MATRICES_DATATYPE x_rotation{std::stold(x_rotation_value)};
-  GTKMM_APP_MATRICES_DATATYPE x_coord{std::stold(main_value_a.c_str())};
-  GTKMM_APP_MATRICES_DATATYPE y_coord{std::stold(main_value_b.c_str())};
-  GTKMM_APP_MATRICES_DATATYPE z_coord{std::stold(main_value_c.c_str())};
+  COORDINATE_TYPE x_rotation{std::stold(x_rotation_value)};
+  COORDINATE_TYPE x_coord{std::stold(main_value_a.c_str())};
+  COORDINATE_TYPE y_coord{std::stold(main_value_b.c_str())};
+  COORDINATE_TYPE z_coord{std::stold(main_value_c.c_str())};
 
   if(this->transformation_type == TransformationType::TRANSLATION)
   {
@@ -151,15 +151,15 @@ void AddTransformation::on_button_save_transformation()
     name = tfm::format("%s %s %s %s %s %s",
                        this->transformation_type,
                        x_rotation,
-                       this->rotation_type,
+                       this->transformation_point,
                        main_value_a,
                        main_value_b,
                        main_value_c);
 
     this->transformation.add_rotation(name,
-        Array<3, GTKMM_APP_MATRICES_DATATYPE>{x_rotation, 0.0, 0.0},
+        Array<3, COORDINATE_TYPE>{x_rotation, 0.0, 0.0},
         Coordinate(x_coord, y_coord, z_coord),
-        this->rotation_type);
+        this->transformation_point);
   }
   else if(this->transformation_type == TransformationType::SCALING)
   {
@@ -225,16 +225,16 @@ void AddTransformation::on_rotation_radiobutton()
 
 void AddTransformation::on_own_center_rotation_radiobutton()
 {
-  this->rotation_type = RotationType::ON_ITS_OWN_CENTER;
+  this->transformation_point = TransformationPoint::ON_ITS_OWN_CENTER;
 }
 
 void AddTransformation::on_world_center_rotation_radiobutton()
 {
-  this->rotation_type = RotationType::ON_WORLD_CENTER;
+  this->transformation_point = TransformationPoint::ON_WORLD_CENTER;
 }
 
 void AddTransformation::on_given_coordinate_rotation_radiobutton()
 {
-  this->rotation_type = RotationType::ON_GIVEN_COORDINATE;
+  this->transformation_point = TransformationPoint::ON_GIVEN_COORDINATE;
 }
 

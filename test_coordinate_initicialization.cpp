@@ -13,8 +13,8 @@ struct MyCustomClassType
   int var;
   Coordinate coordinate;
 
-  MyCustomClassType(Coordinate rotation_center = _default_coordinate_value_parameter) :
-      coordinate{rotation_center}
+  MyCustomClassType(Coordinate center = _default_coordinate_value_parameter) :
+      coordinate{center}
   {
   }
 
