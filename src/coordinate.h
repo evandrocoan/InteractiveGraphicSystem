@@ -101,16 +101,16 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
   /**
    * Double Data to Object precision comparison.
    */
-  bool operator!=(const big_double& data) { return !(*this == data); }
-  bool operator<=(const big_double& data) { return *this > data;     }
-  bool operator>=(const big_double& data) { return *this < data;     }
+  bool operator!=(const big_double& data) const { return !(*this == data); }
+  bool operator<=(const big_double& data) const { return *this > data;     }
+  bool operator>=(const big_double& data) const { return *this < data;     }
 
-  bool operator<(const big_double& data) {
+  bool operator<(const big_double& data) const {
   if( *this == data ) { return false; }
   for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
     { if( this->_data[index] > data ) { return false; } } return true; }
 
-  bool operator>(const big_double& data) {
+  bool operator>(const big_double& data) const {
     if( *this == data ) { return false; }
     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
       { if( this->_data[index] < data ) { return false; } } return true; }
@@ -122,7 +122,7 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
    * What's a good way to check for ``close enough'' floating-point equality?
    * http://c-faq.com/fp/fpequal.html
    */
-  bool operator==(const big_double& data)
+  bool operator==(const big_double& data) const
   {
     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
     {
@@ -139,21 +139,21 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
   /**
    * Double Object to Object precision comparison.
    */
-  bool operator!=(const Coordinate& object) { return !(*this == object); }
-  bool operator<=(const Coordinate& object) { return *this > object;     }
-  bool operator>=(const Coordinate& object) { return *this < object;     }
+  bool operator!=(const Coordinate& object) const { return !(*this == object); }
+  bool operator<=(const Coordinate& object) const { return *this > object;     }
+  bool operator>=(const Coordinate& object) const { return *this < object;     }
 
-  bool operator<(const Coordinate& object) {
+  bool operator<(const Coordinate& object) const {
   if( *this == object ) { return false; }
   for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
     { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
 
-  bool operator>(const Coordinate& object) {
+  bool operator>(const Coordinate& object) const {
     if( *this == object ) { return false; }
     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
       { if( this->_data[index] < object._data[index] ) { return false; } } return true; }
 
-  bool operator==(const Coordinate& object)
+  bool operator==(const Coordinate& object) const
   {
     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
     {

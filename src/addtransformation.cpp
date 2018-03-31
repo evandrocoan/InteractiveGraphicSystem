@@ -158,8 +158,8 @@ void AddTransformation::on_button_save_transformation()
 
     this->transformation.add_rotation(name,
         Coordinate(x_rotation, 0.0, 0.0),
-        Coordinate(x_coord, y_coord, z_coord),
-        this->transformation_point);
+        this->transformation_point,
+        Coordinate(x_coord, y_coord, z_coord));
   }
   else if(this->transformation_type == TransformationType::SCALING)
   {
