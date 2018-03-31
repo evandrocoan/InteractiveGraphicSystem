@@ -25,9 +25,6 @@ public:
   Transformation();
   ~Transformation();
 
-  void add_scaling(std::string name, Coordinate scale);
-  void add_translation(std::string name, Coordinate movement);
-
   /**
    * Create and configure correctly a rotation.
    *
@@ -35,21 +32,22 @@ public:
    * @param type    an enum TransformationPoint valid value
    * @param point   this is a optional value, only required when using TransformationPoint::ON_GIVEN_COORDINATE
    */
-  void add_rotation(std::string name,
-                    Coordinate degrees,
-                    Coordinate coordinate=_default_coordinate_value_parameter,
-                    TransformationPoint type=TransformationPoint::ON_WORLD_CENTER);
-
-  unsigned int size();
-  void remove_transformation(std::string name);
+  void add_translation(const std::string name, const Coordinate movement);
+  void add_scaling(const std::string name, const Coordinate scale);
+  void add_rotation(const std::string name,
+                    const Coordinate degrees,
+                    const TransformationPoint type=TransformationPoint::ON_WORLD_CENTER,
+                    const Coordinate point=_default_coordinate_value_parameter);
 
   /**
    * Remove all transformations from this container and set it as uninitialized. So, calling it
    * to convert some point will take no effect, i.e., destroy your data.
    */
   void clear();
+  unsigned int size() const;
+  void remove_transformation(const std::string name);
 
-  std::vector<TransformationData>& getTransformations();
+  const std::vector<TransformationData>& getTransformations() const;
   friend std::ostream& operator<<(std::ostream &output, const Transformation &object);
 
   /**
@@ -60,8 +58,8 @@ public:
    * Note: After calling `set_geometric_center()`, you cannot create new transformations. If you
    * create new transformations, you must call `set_geometric_center()` before using it again.
    */
-  void apply(Coordinate&);
-  void set_geometric_center(Coordinate& center = _default_coordinate_value_parameter);
+  void apply(Coordinate&) const;
+  void set_geometric_center(const Coordinate& center = _default_coordinate_value_parameter);
 
 protected:
 
@@ -79,20 +77,27 @@ protected:
    * These values are set after calling `set_geometric_center()`. They will be the values used
    * to transform the object when calling `apply()`.
    */
-  MatrixForm _transformation;
   bool isInitialized;
+  MatrixForm _transformation;
 
-  void _set_translation_data(TransformationData&, unsigned int &index, Coordinate &center);
-  void _set_scaling_data    (TransformationData&, unsigned int &index, Coordinate &center);
-  void _set_rotation_data   (TransformationData&, unsigned int &index, Coordinate &center);
+  /**
+   * Accordingly creates the translation, scaling and rotation matrices, given their parameters.
+   */
+  const MatrixForm _get_translation_matrix(const Coordinate& moves) const;
+  const MatrixForm _get_scaling_matrix(const Coordinate& factors) const;
+  const MatrixForm _get_rotation_matrix(const Coordinate& degrees) const;
 
-  void _scaling_on_coordinate    (TransformationData&, unsigned int &index, Coordinate &center);
-  void _scaling_on_world_center  (TransformationData&, unsigned int &index, Coordinate &center);
-  void _scaling_on_its_own_center(TransformationData&, unsigned int &index, Coordinate &center);
+  void _set_translation_data(const TransformationData&, const unsigned int &index, const Coordinate &center);
+  void _set_scaling_data    (const TransformationData&, const unsigned int &index, const Coordinate &center);
+  void _set_rotation_data   (const TransformationData&, const unsigned int &index, const Coordinate &center);
 
-  void _rotation_on_coordinate    (TransformationData&, unsigned int &index, Coordinate &center);
-  void _rotation_on_world_center  (TransformationData&, unsigned int &index, Coordinate &center);
-  void _rotation_on_its_own_center(TransformationData&, unsigned int &index, Coordinate &center);
+  void _scaling_on_coordinate    (const TransformationData&, const unsigned int &index, const Coordinate &center);
+  void _scaling_on_world_center  (const TransformationData&, const unsigned int &index, const Coordinate &center);
+  void _scaling_on_its_own_center(const TransformationData&, const unsigned int &index, const Coordinate &center);
+
+  void _rotation_on_coordinate    (const TransformationData&, const unsigned int &index, const Coordinate &center);
+  void _rotation_on_world_center  (const TransformationData&, const unsigned int &index, const Coordinate &center);
+  void _rotation_on_its_own_center(const TransformationData&, const unsigned int &index, const Coordinate &center);
 };
 
 #endif // GTKMM_APP_TRANSFORMATION

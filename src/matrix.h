@@ -23,12 +23,12 @@ struct Matrix : public Array< matrix_height, Array< matrix_width, matrix_datatyp
   {
   }
 
-  Matrix(matrix_datatype initial)
+  Matrix(const matrix_datatype initial)
   {
     this->clear(initial);
   }
 
-  Matrix(std::initializer_list< std::initializer_list< matrix_datatype > > raw_data)
+  Matrix(const std::initializer_list< std::initializer_list< matrix_datatype > > raw_data)
   {
     // std::cout << raw_data.size() << std::endl;
     assert(raw_data.size() == matrix_height);
@@ -53,7 +53,7 @@ struct Matrix : public Array< matrix_height, Array< matrix_width, matrix_datatyp
     }
   }
 
-  void clear(matrix_datatype initial=0)
+  void clear(const matrix_datatype initial=0)
   {
     unsigned int line;
     unsigned int column;
@@ -67,7 +67,7 @@ struct Matrix : public Array< matrix_height, Array< matrix_width, matrix_datatyp
     }
   }
 
-  void multiply(Matrix &matrix)
+  void multiply(const Matrix &matrix)
   {
     unsigned int line;
     unsigned int column;

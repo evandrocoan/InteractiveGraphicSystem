@@ -91,43 +91,43 @@ struct Array
   /**
    * Generic Data to Object operators.
    */
-  bool operator<=(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator<=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] > data ) { return false; } } return true; }
 
-  bool operator<(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator<(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] >= data ) { return false; } } return true; }
 
-  bool operator>=(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator>=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] < data ) { return false; } } return true; }
 
-  bool operator>(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator>(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] <= data ) { return false; } } return true; }
 
-  bool operator==(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator==(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] != data ) { return false; } } return true; }
 
-  bool operator!=(const array_datatype& data) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator!=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] == data ) { return false; } } return true; }
 
   /**
    * Generic Object to Object operators.
    */
-  bool operator<=(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator<=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
 
-  bool operator<(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator<(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] >= object._data[index] ) { return false; } } return true; }
 
-  bool operator>=(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator>=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] < object._data[index] ) { return false; } } return true; }
 
-  bool operator>(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator>(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] <= object._data[index] ) { return false; } } return true; }
 
-  bool operator==(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator==(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] != object._data[index] ) { return false; } } return true; }
 
-  bool operator!=(const Array& object) { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator!=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] == object._data[index] ) { return false; } } return true; }
 
   /**
@@ -135,7 +135,7 @@ struct Array
    *
    * @param `initial` the value to the used
    */
-  void clear(array_datatype initial = 0)
+  void clear(const array_datatype initial = 0)
   {
     unsigned int column_index = 0;
 
@@ -149,7 +149,7 @@ struct Array
    * The Array<> type includes the Matrix<> type, because you can multiply a `Array` by an `Matrix`,
    * but not a vice-versa.
    */
-  void multiply(Array< array_width, Array< array_width, array_datatype > > &matrix)
+  void multiply(const Array< array_width, Array< array_width, array_datatype > > &matrix)
   {
     unsigned int column;
     unsigned int step;
