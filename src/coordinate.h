@@ -13,15 +13,15 @@
  * C++ static polymorphism (CRTP) and using typedefs from derived classes
  * https://stackoverflow.com/questions/6006614/c-static-polymorphism-crtp-and-using-typedefs-from-derived-classes
  */
-struct Coordinate : public Array<MATRICES_DIMENSION, COORDINATE_TYPE>
+struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
 {
-  typedef Array<MATRICES_DIMENSION, COORDINATE_TYPE> BaseClass;
+  typedef Array<MATRICES_DIMENSION, big_double> BaseClass;
 
   // Inheriting constructors
   // https://stackoverflow.com/questions/347358/inheriting-constructors
   using BaseClass::Array;
 
-  Coordinate(COORDINATE_TYPE x, COORDINATE_TYPE y, COORDINATE_TYPE z = 1) :
+  Coordinate(big_double x, big_double y, big_double z = 1) :
       Array{x, y, z}
   {
   }
@@ -30,17 +30,17 @@ struct Coordinate : public Array<MATRICES_DIMENSION, COORDINATE_TYPE>
   {
   }
 
-  COORDINATE_TYPE getx() const
+  big_double getx() const
   {
     return this->_data[0];
   }
 
-  COORDINATE_TYPE gety() const
+  big_double gety() const
   {
     return this->_data[1];
   }
 
-  COORDINATE_TYPE getz() const
+  big_double getz() const
   {
     return this->_data[2];
   }
@@ -51,10 +51,10 @@ struct Coordinate : public Array<MATRICES_DIMENSION, COORDINATE_TYPE>
   Coordinate operator-() const { Coordinate negative_value{*this}; for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
       { negative_value._data[index] = -negative_value._data[index]; } return negative_value; }
 
-  Coordinate& operator+=(const COORDINATE_TYPE& data) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  Coordinate& operator+=(const big_double& data) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
       { this->_data[index] += data; } return *this; }
 
-  Coordinate& operator-=(const COORDINATE_TYPE& data) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  Coordinate& operator-=(const big_double& data) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
       { this->_data[index] -= data; } return *this; }
 
   /**

@@ -48,7 +48,7 @@
 
 #include "traits.h"
 
-inline COORDINATE_TYPE convert_degrees_to_radians(COORDINATE_TYPE degrees)
+inline big_double convert_degrees_to_radians(big_double degrees)
 {
   return M_PI * (fmod(degrees, 360.0) / 180.0);
 }

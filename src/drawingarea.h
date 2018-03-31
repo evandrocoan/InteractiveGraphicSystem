@@ -37,11 +37,11 @@ public:
 
   void addPoint(std::string name, int, int);
   void addLine(std::string name, int, int, int, int);
-  void addPolygon(std::string name, std::vector<COORDINATE_TYPE>);
+  void addPolygon(std::string name, std::vector<big_double>);
   void removeObject(std::string name);
 
-  void zoom(long int step = 50);
-  void move(long int horizontal_step = 50, long int vertical_step = 50);
+  void zoom(big_double step = 50);
+  void move(big_double horizontal_step = 50, big_double vertical_step = 50);
   void rotate(Coordinate coordinate);
 
   void updateObjectCoordinates();
@@ -69,7 +69,7 @@ protected:
   void on_my_size_allocate(Gtk::Allocation&);
 
   void addObject(DrawableObject*);
-  void updateViewPortSize (long double width, long double height);
+  void updateViewPortSize (big_double width, big_double height);
 
 private:
   void draw_xy_axes();
