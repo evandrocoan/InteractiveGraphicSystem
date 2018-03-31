@@ -69,7 +69,7 @@ protected:
   void on_my_size_allocate(Gtk::Allocation&);
 
   void addObject(DrawableObject*);
-  void updateViewPortSize (big_double width, big_double height);
+  void updateViewPortSize(big_double width, big_double height);
 
 private:
   void draw_xy_axes();

@@ -1,6 +1,12 @@
 #ifndef GTKMM_APP_COORDINATE_H
 #define GTKMM_APP_COORDINATE_H
 
+/**
+ * 'fabs' : ambiguous call to overloaded function when using templates
+ * https://stackoverflow.com/questions/10744451/fabs-ambiguous-call-to-overloaded-function-when-using-templates
+ */
+#include <cmath>
+
 #include <limits>
 #include <iostream>
 
@@ -127,8 +133,8 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
     {
       if( this->_data[index] == data
-          || std::abs(this->_data[index] - data)
-             < std::abs( std::min( this->_data[index], data ) ) * std::numeric_limits< big_double >::epsilon() )
+          || std::fabs(this->_data[index] - data)
+             < std::fabs( std::min( this->_data[index], data ) ) * std::numeric_limits< big_double >::epsilon() )
       {
         return false;
       }
@@ -158,8 +164,8 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
     {
       if( this->_data[index] == object._data[index]
-          || std::abs(this->_data[index] - object._data[index])
-             < std::abs( std::min( this->_data[index], object._data[index] ) ) * std::numeric_limits< big_double >::epsilon() )
+          || std::fabs(this->_data[index] - object._data[index])
+             < std::fabs( std::min( this->_data[index], object._data[index] ) ) * std::numeric_limits< big_double >::epsilon() )
       {
         return false;
       }
