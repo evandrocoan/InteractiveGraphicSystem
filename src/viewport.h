@@ -5,6 +5,7 @@
 #include <iomanip>
 
 #include "coordinate.h"
+#include "noncopyable.h"
 
 /**
  * The Drawing Area Widget
@@ -25,25 +26,25 @@
  * And beyond these two systems, there is the world which has its start point symmetric with the
  * ViewWindow.
  */
-class ViewPort : public Array<4, Coordinate*>
+class ViewPort : public NonCopyable, public Array<4, Coordinate*>
 {
 public:
   ViewPort();
   virtual ~ViewPort();
 
-   /**
-    * `ViewPort` coordinates:
-    *
-    *   (xMin, yMin) usually (0, 0)
-    *         +-------------------+
-    *         |                   |
-    *         |                   |
-    *         |                   |
-    *         |                   |
-    *         |                   |
-    *         +-------------------+
-    *                        (xMax, yMax) something like (600, 500)
-    */
+  /**
+   * `ViewPort` coordinates:
+   *
+   *   (xMin, yMin) usually (0, 0)
+   *         +-------------------+
+   *         |                   |
+   *         |                   |
+   *         |                   |
+   *         |                   |
+   *         |                   |
+   *         +-------------------+
+   *                        (xMax, yMax) something like (600, 500)
+   */
   int xMin;
   int yMin;
   int xMax;
@@ -125,4 +126,4 @@ public:
   friend std::ostream& operator<<(std::ostream &output, const ViewPort &object);
 };
 
-#endif
+#endif // GTKMM_APP_VIEWPORT

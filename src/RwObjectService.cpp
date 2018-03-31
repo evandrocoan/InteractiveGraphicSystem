@@ -20,7 +20,7 @@ void RwObjectService::read(string file_path)
 {
   string line;
   ifstream myfile(file_path);
-  vector<GTKMM_APP_MATRICES_DATATYPE> coord_vector;
+  vector<COORDINATE_TYPE> coord_vector;
   string name;
 
   if(myfile.is_open())

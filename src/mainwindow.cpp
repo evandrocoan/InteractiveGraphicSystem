@@ -94,7 +94,7 @@ void MainWindow::setupButtons()
   entry_zoom_scale.set_width_chars(3);
   char array[4];
 
-  sprintf(array, "%f", default_zoom_scale);
+  sprintf(array, "%d", default_zoom_scale);
   array[3] = '\0';
   entry_zoom_scale.set_text(array);
 
@@ -200,7 +200,7 @@ void MainWindow::on_button_move_up()
   }
   else
   {
-    this->drawingArea.move_up(move_length);
+    this->drawingArea.move(0, move_length);
   }
 }
 
@@ -214,7 +214,7 @@ void MainWindow::on_button_move_down()
   }
   else
   {
-    this->drawingArea.move_down(move_length);
+    this->drawingArea.move(0, -move_length);
   }
 }
 
@@ -228,7 +228,7 @@ void MainWindow::on_button_move_left()
   }
   else
   {
-    this->drawingArea.move_left(move_length);
+    this->drawingArea.move(-move_length, 0);
   }
 }
 
@@ -242,25 +242,25 @@ void MainWindow::on_button_move_right()
   }
   else
   {
-    this->drawingArea.move_right(move_length);
+    this->drawingArea.move(move_length, 0);
   }
 }
 
 void MainWindow::on_button_zoom_in()
 {
-  float zoom_scale = atof(entry_zoom_scale.get_text().raw().c_str());
+  long int zoom_scale = atof(entry_zoom_scale.get_text().raw().c_str());
 
   if (zoom_scale <=1)
   {
     char array[4];
-    sprintf(array, "%f", default_zoom_scale);
+    sprintf(array, "%d", default_zoom_scale);
 
     array[3] = '\0';
     entry_zoom_scale.set_text(array);
   }
   else
   {
-    this->drawingArea.zoom_in(zoom_scale);
+    this->drawingArea.zoom(-zoom_scale);
   }
 }
 
@@ -271,20 +271,20 @@ void MainWindow::on_button_zoom_out()
   if (zoom_scale <=1)
   {
     char array[4];
-    sprintf(array, "%f", default_zoom_scale);
+    sprintf(array, "%d", default_zoom_scale);
 
     array[3] = '\0';
     entry_zoom_scale.set_text(array);
   }
   else
   {
-    this->drawingArea.zoom_out(zoom_scale);
+    this->drawingArea.zoom(zoom_scale);
   }
 }
 
 void MainWindow::on_button_rotate_left()
 {
-  GTKMM_APP_MATRICES_DATATYPE rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+  COORDINATE_TYPE rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
 
   if (rotate_angle == 0)
   {
@@ -292,13 +292,13 @@ void MainWindow::on_button_rotate_left()
   }
   else
   {
-    this->drawingArea.rotate_left(rotate_angle);
+    this->drawingArea.rotate(Coordinate(rotate_angle, 0, 0));
   }
 }
 
 void MainWindow::on_button_rotate_right()
 {
-  GTKMM_APP_MATRICES_DATATYPE rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+  COORDINATE_TYPE rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
 
   if (rotate_angle == 0)
   {
@@ -306,7 +306,7 @@ void MainWindow::on_button_rotate_right()
   }
   else
   {
-    this->drawingArea.rotate_right(rotate_angle);
+    this->drawingArea.rotate(Coordinate(-rotate_angle, 0, 0));
   }
 }
 

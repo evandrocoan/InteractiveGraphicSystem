@@ -27,8 +27,8 @@ public:
 
   Gtk::Box& getBox();
   std::string object_name;
-  RotationType rotation_type;
   TransformationType transformation_type;
+  TransformationPoint transformation_point;
 
 protected:
   DrawingArea    &drawingArea;
