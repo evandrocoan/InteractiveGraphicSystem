@@ -13,6 +13,7 @@
 
 #include "traits.h"
 #include "debugger.h"
+#include "utilities.h"
 
 #include "coordinate.h"
 #include "matrixform.h"
@@ -35,7 +36,7 @@ public:
    * @param point   this is a optional value, only required when using TransformationPoint::ON_GIVEN_COORDINATE
    */
   void add_rotation(std::string name,
-                    Array<3, long double> degrees,
+                    Coordinate degrees,
                     Coordinate coordinate=_default_coordinate_value_parameter,
                     TransformationPoint type=TransformationPoint::ON_WORLD_CENTER);
 
@@ -47,8 +48,6 @@ public:
    * to convert some point will take no effect, i.e., destroy your data.
    */
   void clear();
-
-  static inline COORDINATE_TYPE convert_degrees_to_radians(COORDINATE_TYPE degrees);
 
   std::vector<TransformationData>& getTransformations();
   friend std::ostream& operator<<(std::ostream &output, const Transformation &object);

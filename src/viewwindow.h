@@ -5,11 +5,12 @@
 #include <ostream>
 #include <iomanip>
 
+#include "debugger.h"
+#include "utilities.h"
+#include "subject_controller.h"
+
 #include "coordinate.h"
 #include "transformation.h"
-#include "debugger.h"
-
-#include "subject_controller.h"
 
 #define MIN_WIDTH 15
 #define MIN_HEIGHT 15
@@ -30,9 +31,9 @@ public:
   ViewWindow();
   virtual ~ViewWindow();
 
-  void zoom(long int step = 50);
-  void move(long int horizontal_step = 50, long int vertical_step = 50);
-  void rotate(Coordinate coordinate);
+  void zoom(Coordinate steps);
+  void move(Coordinate steps);
+  void rotate(Coordinate steps);
   void apply(Coordinate&);
 
   long double width();
@@ -65,14 +66,13 @@ public:
   Signal<>::Connection addObserver(const Signal<>::Callback&);
 
 protected:
-  long int _width;
-  long int _height;
-
-  Coordinate _angle;
+  Coordinate _angles;
+  Coordinate _dimentions;
   Coordinate _windowCenter;
 
   Signal<> _observers;
   Transformation _transformation;
+  Transformation _angle_rotation;
 };
 
 #endif // GTKMM_APP_VIEW_WINDOW

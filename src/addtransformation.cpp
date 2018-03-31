@@ -157,7 +157,7 @@ void AddTransformation::on_button_save_transformation()
                        main_value_c);
 
     this->transformation.add_rotation(name,
-        Array<3, COORDINATE_TYPE>{x_rotation, 0.0, 0.0},
+        Coordinate(x_rotation, 0.0, 0.0),
         Coordinate(x_coord, y_coord, z_coord),
         this->transformation_point);
   }

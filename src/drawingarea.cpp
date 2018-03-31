@@ -373,12 +373,12 @@ std::list<DrawableObject*> DrawingArea::getObjectsList()
 
 void DrawingArea::move(long int horizontal_step, long int vertical_step)
 {
-  this->viewWindow.move(horizontal_step, vertical_step);
+  this->viewWindow.move(Coordinate(horizontal_step, vertical_step));
 }
 
 void DrawingArea::zoom(long int step)
 {
-  this->viewWindow.zoom(step);
+  this->viewWindow.zoom(Coordinate(step, step));
 }
 
 void DrawingArea::rotate(Coordinate angle)
