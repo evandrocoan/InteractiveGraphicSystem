@@ -48,8 +48,8 @@ std::ostream& operator<<( std::ostream &output, const DrawingArea &object )
  */
 void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
 {
-  long double width = this->get_width();
-  long double height = this->get_height();
+  big_double width = this->get_width();
+  big_double height = this->get_height();
 
   // TODO on `updateViewPortSize()`: Keep viewPort and viewWindow portions while resizing the viewPort
   this->updateViewPortSize(width, height);
@@ -215,24 +215,24 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
  */
 Coordinate DrawingArea::convertCoordinateToViewPort(Coordinate &coordinate)
 {
-  long double xC = coordinate.getx();
-  long double yC = coordinate.gety();
+  big_double xC = coordinate.getx();
+  big_double yC = coordinate.gety();
 
-  long double xWmin = this->viewWindow.xMin;
-  long double yWmin = this->viewWindow.yMin;
-  long double xWmax = this->viewWindow.xMax;
-  long double yWmax = this->viewWindow.yMax;
+  big_double xWmin = this->viewWindow.xMin;
+  big_double yWmin = this->viewWindow.yMin;
+  big_double xWmax = this->viewWindow.xMax;
+  big_double yWmax = this->viewWindow.yMax;
 
-  long double xVpmin = this->viewPort.xMin;
-  long double yVpmin = this->viewPort.yMin;
-  long double xVpmax = this->viewPort.xMax;
-  long double yVpmax = this->viewPort.yMax;
+  big_double xVpmin = this->viewPort.xMin;
+  big_double yVpmin = this->viewPort.yMin;
+  big_double xVpmax = this->viewPort.xMax;
+  big_double yVpmax = this->viewPort.yMax;
 
   // double     x=((c.x-wmin.x) / (wmax.x-wmin.x)) *_width;
-  long double xVp =((xC - xWmin) / (xWmax - xWmin)) * (xVpmax - xVpmin);
+  big_double xVp =((xC - xWmin) / (xWmax - xWmin)) * (xVpmax - xVpmin);
 
   // double     y = (1 -((c.y -wmin.y) /(wmax.y -wmin.y))) *_height;
-  long double yVp = (1.0 - ((yC - yWmin) / (yWmax - yWmin))) * (yVpmax - yVpmin);
+  big_double yVp = (1.0 - ((yC - yWmin) / (yWmax - yWmin))) * (yVpmax - yVpmin);
 
   // std::cout << "transformCoordinate: " << Coordinate(xVp, yVp);
   // std::cout << ", Original: " << coordinate << std::endl;
@@ -242,15 +242,15 @@ Coordinate DrawingArea::convertCoordinateToViewPort(Coordinate &coordinate)
   return Coordinate(xVp, yVp);
 }
 
-void DrawingArea::updateViewPortSize(long double width, long double height)
+void DrawingArea::updateViewPortSize(big_double width, big_double height)
 {
   LOG(8, "Entering: %s; Allocation: %sx%s", *this, width, height);
 
   // This is true only when you resize the you DrawingArea widget window
   if (this->viewPort.xMax != width || this->viewPort.yMax != height)
   {
-    long double widthDiff  = width  - (this->viewPort.xMax - this->viewPort.xMin);
-    long double heightDiff = height - (this->viewPort.yMax - this->viewPort.yMin);
+    big_double widthDiff  = width  - (this->viewPort.xMax - this->viewPort.xMin);
+    big_double heightDiff = height - (this->viewPort.yMax - this->viewPort.yMin);
 
     // Keep the window zoom size while resizing the window
     // // On the first time we run this algorithm, the ViewPort.xMax is set to zero. Therefore, we must
@@ -305,7 +305,7 @@ void DrawingArea::addPoint(std::string name, int x_coord, int y_coord)
   this->addObject(point);
 }
 
-void DrawingArea::addPolygon(std::string name, std::vector<COORDINATE_TYPE> polygon_coord_list)
+void DrawingArea::addPolygon(std::string name, std::vector<big_double> polygon_coord_list)
 {
   int unsigned coordinates_size = polygon_coord_list.size();
   std::list<Coordinate*> coordinates;
@@ -371,12 +371,12 @@ std::list<DrawableObject*> DrawingArea::getObjectsList()
   return this->displayFile.getObjects();
 }
 
-void DrawingArea::move(long int horizontal_step, long int vertical_step)
+void DrawingArea::move(big_double horizontal_step, big_double vertical_step)
 {
   this->viewWindow.move(Coordinate(horizontal_step, vertical_step));
 }
 
-void DrawingArea::zoom(long int step)
+void DrawingArea::zoom(big_double step)
 {
   this->viewWindow.zoom(Coordinate(step, step));
 }

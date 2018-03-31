@@ -30,7 +30,7 @@ private:
   Gtk::Notebook m_notebook;
 
   std::string new_object_name;
-  std::vector<COORDINATE_TYPE> polygon_coord_list;
+  std::vector<big_double> polygon_coord_list;
 
   Gtk::Grid line_grid;
   Gtk::Grid point_grid;
