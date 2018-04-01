@@ -20,7 +20,7 @@ public:
   void removeObject(DrawableObject* object);
 
   void removeObjectByName(std::string name);
-  void apply(std::string object_name, Transformation&);
+  DrawableObject* apply(std::string object_name, Transformation&);
 
   bool            isObjectOnByName(std::string name);
   DrawableObject* getObjectByName(std::string name);

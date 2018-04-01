@@ -11,6 +11,11 @@ ViewWindow::~ViewWindow()
 {
 }
 
+const Transformation& ViewWindow::transformation() const
+{
+  return this->_transformation;
+}
+
 big_double ViewWindow::width()
 {
   return this->_dimentions[0];
@@ -28,7 +33,7 @@ std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
   return output;
 }
 
-Signal<>::Connection ViewWindow::addObserver(const Signal<>::Callback &callback)
+ViewWindow::ChangedConnection ViewWindow::addObserver(const ViewWindow::ChangedCallback& callback)
 {
   auto connection = this->_observers.connect(callback);
   this->callObservers();
@@ -87,10 +92,5 @@ void ViewWindow::callObservers()
   this->_transformation.set_geometric_center();
   LOG(4, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
   LOG(4, "_transformation: %s", _transformation);
-  this->_observers();
-}
-
-void ViewWindow::apply(Coordinate& coordinate)
-{
-  this->_transformation.apply(coordinate);
+  this->_observers(this->_transformation);
 }
