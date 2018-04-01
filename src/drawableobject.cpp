@@ -138,6 +138,7 @@ void DrawableObject::apply(Transformation &transformation)
 {
   LOG(8, "Entering...");
   auto coordinates = this->getWorldCoordinates();
+
   auto geometricCenter = DrawableObject::getGeometricCenter(coordinates);
   transformation.set_geometric_center(geometricCenter);
 
@@ -147,17 +148,18 @@ void DrawableObject::apply(Transformation &transformation)
   }
 }
 
-void DrawableObject::updateWindowCoordinates(ViewWindow &viewwindow)
+void DrawableObject::updateWindowCoordinates(const Transformation& transformation)
 {
-  LOG(8, "Entering... %s", viewwindow);
+  LOG(8, "Entering... %s", transformation);
   Coordinate* new_coordinate;
+
   auto coordinates = this->getWorldCoordinates();
   DrawableObject::destroyList(this->viewWindowCoordinates);
 
   for(auto coordinate : coordinates)
   {
     new_coordinate = new Coordinate(*coordinate);
-    viewwindow.apply(*new_coordinate);
+    transformation.apply(*new_coordinate);
     this->viewWindowCoordinates.push_back(new_coordinate);
   }
 }

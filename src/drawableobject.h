@@ -38,7 +38,7 @@ public:
   static void destroyList(std::list<Coordinate*>& coordinates);
 
   void apply(Transformation&);
-  virtual void updateWindowCoordinates(ViewWindow&);
+  virtual void updateWindowCoordinates(const Transformation&);
   virtual void updateClippingCoordinates(ViewPort&);
 
   /**

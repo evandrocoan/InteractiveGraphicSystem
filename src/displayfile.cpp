@@ -8,10 +8,11 @@ DisplayFile::~DisplayFile()
 {
 }
 
-void DisplayFile::apply(std::string object_name, Transformation &transformation)
+DrawableObject* DisplayFile::apply(std::string object_name, Transformation &transformation)
 {
   auto object = this->getObjectByName(object_name);
   object->apply(transformation);
+  return object;
 }
 
 void DisplayFile::addObject(DrawableObject* object)

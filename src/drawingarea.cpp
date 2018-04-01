@@ -7,7 +7,7 @@ DrawingArea::DrawingArea() :
       displayFile()
 {
   this->signal_size_allocate().connect(sigc::mem_fun(*this, &DrawingArea::on_my_size_allocate));
-  this->_connection = this->viewWindow.addObserver(std::bind(&DrawingArea::updateObjectCoordinates, this));
+  this->_connection = this->viewWindow.addObserver(std::bind(&DrawingArea::updateAllObjectCoordinates, this, std::placeholders::_1));
 }
 
 DrawingArea::~DrawingArea()
@@ -73,8 +73,8 @@ void DrawingArea::apply(std::string object_name, Transformation &transformation)
   {
     if( transformation.size() )
     {
-      this->displayFile.apply(object_name, transformation);
-      this->viewWindow.callObservers();
+      DrawableObject* object = this->displayFile.apply(object_name, transformation);
+      this->updateObjectCoordinates(object);
     }
     else
     {
@@ -279,12 +279,12 @@ void DrawingArea::updateViewPortSize(big_double width, big_double height)
     this->viewPort.xMax += widthDiff;
     this->viewPort.yMax += heightDiff;
 
-    this->viewWindow.callObservers();
+    this->updateAllObjectCoordinates(this->viewWindow.transformation());
     LOG(8, "Leaving:  %s %s", *this, this->viewPort);
   }
 }
 
-Signal<>::Connection DrawingArea::addObserver(const Signal<>::Callback &callback)
+DrawingArea::ChangedConnection DrawingArea::addObserver(const DrawingArea::ChangedCallback& callback)
 {
   return this->callObservers.connect(callback);
 }
@@ -320,7 +320,7 @@ void DrawingArea::addPolygon(std::string name, std::vector<big_double> polygon_c
   this->addObject(polygon);
 }
 
-void DrawingArea::addObject(DrawableObject* object)
+void DrawingArea::updateObjectCoordinates(DrawableObject* object)
 {
   if (object->getWorldCoordinates().size() == 0)
   {
@@ -333,9 +333,13 @@ void DrawingArea::addObject(DrawableObject* object)
     LOG(4, "Adding the object `%s`", *object);
   }
 
-  object->updateWindowCoordinates(this->viewWindow);
+  object->updateWindowCoordinates(this->viewWindow.transformation());
   object->updateClippingCoordinates(this->viewPort);
+}
 
+void DrawingArea::addObject(DrawableObject* object)
+{
+  this->updateObjectCoordinates(object);
   this->displayFile.addObject(object);
   this->callObservers();
 }
@@ -347,14 +351,14 @@ void DrawingArea::removeObject(std::string name)
   this->callObservers();
 }
 
-void DrawingArea::updateObjectCoordinates()
+void DrawingArea::updateAllObjectCoordinates(const Transformation& transformation)
 {
   LOG(4, "Updating all objects clipping...");
   auto objects = this->displayFile.getObjects();
 
   for (auto object : objects)
   {
-    object->updateWindowCoordinates(this->viewWindow);
+    object->updateWindowCoordinates(transformation);
     object->updateClippingCoordinates(this->viewPort);
   }
 
