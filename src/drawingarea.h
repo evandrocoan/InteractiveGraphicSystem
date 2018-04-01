@@ -44,16 +44,27 @@ public:
   void move(big_double horizontal_step = 50, big_double vertical_step = 50);
   void rotate(Coordinate coordinate);
 
-  void updateObjectCoordinates();
-  void apply(std::string object_name, Transformation&);
+  void updateObjectCoordinates(DrawableObject*);
+  void updateAllObjectCoordinates(const Transformation&);
+
   Coordinate convertCoordinateToViewPort(Coordinate&);
+  void apply(std::string object_name, Transformation&);
 
   std::list<std::string> getNamesList();
   std::list<DrawableObject*> getObjectsList();
 
-  void disconnectObserver();
-  Signal<>::Connection addObserver(const Signal<>::Callback&);
   friend std::ostream& operator<<(std::ostream &output, const DrawingArea &object);
+
+  /**
+   * Implementations types for the Observer Design Pattern with C++ 11 templates and function
+   * pointers, instead of tight coupled inheritance.
+   */
+  typedef Signal<> ChangedSignal;
+  typedef ChangedSignal::Callback ChangedCallback;
+  typedef ChangedSignal::Connection ChangedConnection;
+
+  void disconnectObserver();
+  ChangedConnection addObserver(const ChangedCallback&);
 
 protected:
   ViewPort   viewPort;
@@ -62,8 +73,8 @@ protected:
   bool isCentered;
   DisplayFile displayFile;
 
-  Signal<> callObservers;
-  Signal<>::Connection _connection;
+  ChangedSignal callObservers;
+  ViewWindow::ChangedConnection _connection;
 
   bool on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
   void on_my_size_allocate(Gtk::Allocation&);

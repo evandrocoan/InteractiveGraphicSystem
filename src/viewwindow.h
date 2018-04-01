@@ -34,10 +34,16 @@ public:
   void zoom(Coordinate steps);
   void move(Coordinate steps);
   void rotate(Coordinate steps);
-  void apply(Coordinate&);
+
+  const Transformation& transformation() const;
 
   big_double width();
   big_double height();
+
+  /**
+   * Prints a beauty version of the viewWindow when called on `std::cout<< viewWindow << std::end;`
+   */
+  friend std::ostream& operator<<(std::ostream &output, const ViewWindow &object);
 
   /**
    * `ViewWindow` coordinates:
@@ -58,19 +64,23 @@ public:
   constexpr static const big_double yMax =  1.0;
 
   /**
-   * Prints a beauty version of the viewWindow when called on `std::cout<< viewWindow << std::end;`
+   * Implementations types for the Observer Design Pattern with C++ 11 templates and function
+   * pointers, instead of tight coupled inheritance.
    */
-  friend std::ostream& operator<<(std::ostream &output, const ViewWindow &object);
+  typedef Signal<Transformation> ChangedSignal;
+  typedef ChangedSignal::Callback ChangedCallback;
+  typedef ChangedSignal::Connection ChangedConnection;
 
-  void callObservers();
-  Signal<>::Connection addObserver(const Signal<>::Callback&);
+  ChangedConnection addObserver(const ChangedCallback&);
 
 protected:
   Coordinate _angles;
   Coordinate _dimentions;
   Coordinate _windowCenter;
 
-  Signal<> _observers;
+  void callObservers();
+  ChangedSignal _observers;
+
   Transformation _transformation;
   Transformation _angle_rotation;
 };
