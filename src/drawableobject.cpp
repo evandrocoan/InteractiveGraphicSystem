@@ -36,56 +36,42 @@ void DrawableObject::destroyList(std::list<Coordinate*>& worldCoordinates)
   }
 }
 
-std::string DrawableObject::getName()
+std::string DrawableObject::getName() const
 {
   return this->name;
 }
 
-std::list<Coordinate*>& DrawableObject::getWorldCoordinates()
+const std::list<Coordinate*>& DrawableObject::getWorldCoordinates() const
 {
   return this->worldCoordinates;
 }
 
-std::list<Coordinate*>& DrawableObject::getClippingCoordinates()
-{
-  return this->clippingCoordinates;
-}
-
-std::list<Coordinate*>& DrawableObject::getViewWindowCoordinates()
+const std::list<Coordinate*>& DrawableObject::getViewWindowCoordinates() const
 {
   return this->viewWindowCoordinates;
 }
 
-void DrawableObject::addWorldCoordinate(Coordinate* worldCoordinates)
+const std::list<Coordinate*>& DrawableObject::getClippingCoordinates() const
 {
-  this->worldCoordinates.push_back(worldCoordinates);
-  this->viewWindowCoordinates.push_back(worldCoordinates);
-  this->clippingCoordinates.push_back(worldCoordinates);
-}
-
-void DrawableObject::clearWorldCoordinates()
-{
-  this->worldCoordinates.clear();
-  this->viewWindowCoordinates.clear();
-  this->clippingCoordinates.clear();
+  return this->clippingCoordinates;
 }
 
 Coordinate DrawableObject::getGeometricCenter(const std::list<Coordinate*>& coordinates)
 {
   int coordinatesCount = coordinates.size();
 
-  big_double x_axis = 0;
-  big_double y_axis = 0;
-  big_double z_axis = 0;
+  big_double x_axes = 0;
+  big_double y_axes = 0;
+  big_double z_axes = 0;
 
   for(auto coordinate : coordinates)
   {
-    x_axis += coordinate->x;
-    y_axis += coordinate->y;
-    z_axis += coordinate->z;
+    x_axes += coordinate->x;
+    y_axes += coordinate->y;
+    z_axes += coordinate->z;
   }
 
-  return Coordinate(x_axis/coordinatesCount, y_axis/coordinatesCount, z_axis/coordinatesCount);
+  return Coordinate(x_axes/coordinatesCount, y_axes/coordinatesCount, z_axes/coordinatesCount);
 }
 
 /**
@@ -136,7 +122,7 @@ void DrawableObject::printMyself(std::ostream& output) const
 
 void DrawableObject::apply(Transformation &transformation)
 {
-  LOG(8, "Entering...");
+  LOG(8, "Entering... %s", transformation);
   auto coordinates = this->getWorldCoordinates();
 
   auto geometricCenter = DrawableObject::getGeometricCenter(coordinates);
@@ -164,8 +150,8 @@ void DrawableObject::updateWindowCoordinates(const Transformation& transformatio
   }
 }
 
-void DrawableObject::updateClippingCoordinates(ViewPort& viewport)
+void DrawableObject::updateClippingCoordinates(const Axes& axes)
 {
-  LOG(4, "Generic clipping update... %s", viewport);
+  LOG(4, "Generic clipping update... %s", axes);
   this->clippingCoordinates = this->worldCoordinates;
 }
