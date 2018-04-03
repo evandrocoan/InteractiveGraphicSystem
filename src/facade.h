@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "debugger.h"
+#include "noncopyable.h"
 
 #include "world.h"
 #include "viewwindow.h"
@@ -15,7 +16,7 @@
  * A header only communication interface between the application logic and the user graphical
  * interface.
  */
-class Facade
+class Facade : public NonCopyable
 {
 public:
   DrawingArea& drawingArea()       { return this->_drawingArea; }
