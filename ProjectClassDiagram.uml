@@ -2,31 +2,39 @@
 @startuml
   skinparam defaultFontName Consolas
   skinparam nodesep 20
-  skinparam ranksep 30
+  skinparam ranksep 50
 
-  AddObject  *--  DrawingArea              : drawingArea&
+  Axes *-- Axe
+  AddObject  *--  Facade                 : facade&
+  AddTransformation  *--  Facade         : facade&
 
-  AddTransformation  *--  DrawingArea      : drawingArea&
-  AddTransformation  *-down- Transformation: transformation
+  DisplayFile "1"  *-down- "*" DrawableObject
 
-  DisplayFile        -left[hidden]> ViewWindow
-  DisplayFile "1\n"  *-down- "*" DrawableObject
-
-  DrawingArea *-- ViewPort                 : viewPort
-  DrawingArea *-- ViewWindow               : viewWindow
-  DrawingArea *-down- DisplayFile          : displayFile
+  DrawingArea <.. ViewWindow : observe drawing area size update
+  ViewWindow <.. World : observe window\n coordinates update
+  World <.. ViewWindow : observe world\n object creation
 
   Line    <|-up- DrawableObject
   Point   <|-up- DrawableObject
   Polygon <|-up- DrawableObject
 
-  MainWindow *-down-  DrawingArea          : drawingArea
-  MainWindow *-right- AddObject            : addObject
-  MainWindow *-left-  AddTransformation    : addTransformation
+  MainWindow *-- Facade                  : facade
+  MainWindow *-left- AddObject          : addObject
+  MainWindow *-right- AddTransformation : addTransformation
 
   Transformation "1" *-- "*" TransformationData: transformations
   TransformationData *-- TransformationType: type
-  TransformationData *-- RotationType      : rotation_type
+  TransformationData *-- TransformationPoint: point
+
+  ViewWindow *-- Axes
+  ViewWindow -right[hidden]> World
+
+  Facade *-left- DrawingArea            : drawingArea
+  Facade *-down- ViewWindow             : viewWindow
+  Facade *-right- Transformation        : transformation
+  Facade *-- World                      : World
+
+  World *-- DisplayFile : points\n lines\n polygons
 
   class AddObject {
     Gtk::Grid       point_grid
@@ -44,10 +52,23 @@
     Gtk::Box& getBox()
   }
 
-  class DisplayFile {
-    std::map<string, DrawableObject*>
+  class Axe {
+    Coordinate& a
+    Coordinate& b
+  }
 
-    std::list<std::string>     getNamesList()
+  class Axes {
+    Axe x1
+    Axe x2
+    Axe y1
+    Axe y2
+    Array<4, Coordinate*> _clippingWindowCoordinates
+  }
+
+  class DisplayFile {
+    ViewWindow& _displayFile
+    std::map<string, DrawableObject*>
+    std::list<std::string>     objectNames()
     std::list<DrawableObject*> getObjects()
     DrawableObject*   getObjectByName(std::string name)
     bool              isObjectOnByName(std::string name)
@@ -62,7 +83,6 @@
     void         addLine()
     void         addPoint()
     void         addPolygon()
-    void         updateClippingCoordinates();
     void         apply(Transformation&)
     list<Coordinate*>& getWorldCoordinates()
     list<Coordinate*>& getClippingCoordinates()
@@ -70,14 +90,16 @@
   }
 
   class DrawingArea {
-    Signal<> callObservers
-    Signal<>::Connection _connection
-    void addPoint(std::string name, int, int)
-    void addLine(std::string name, int, int, int, int)
-    void addPolygon(std::string name, std::list<int>)
-    Coordinate convertCoordinateFromWindowToWorld(Coordinate&)
-    void updateClippingCoordinates();
-    void apply(std::string object_name, Transformation&)
+    bool _isCentered
+    const ViewWindow& _viewWindow
+    const DisplayFile& _displayFile
+    UpdateViewPortSize _updateViewPortSize
+    void draw_xy_axes()
+    bool on_draw(Cairo::Context>&) override
+    void on_my_size_allocate(Gtk::Allocation&)
+  }
+
+  class Facade {
   }
 
   class Line {
@@ -100,7 +122,7 @@
     Gtk::Window& getWindow()
   }
 
-  class RotationType {
+  class TransformationPoint {
     enum ON_WORLD_CENTER
     enum ON_ITS_OWN_CENTER
     enum ON_GIVEN_COORDINATE
@@ -114,7 +136,7 @@
 
   class TransformationData {
     MatrixForm  matrix
-    Coordinate  rotation_center
+    Coordinate  center
     std::string name
   }
 
@@ -124,33 +146,26 @@
     enum TRANSLATION
   }
 
-  class ViewPort {
-    int xMin
-    int yMin
-    int xMax
-    int yMax
-    Array<2, Coordinate*> x1
-    Array<2, Coordinate*> x2
-    Array<2, Coordinate*> y1
-    Array<2, Coordinate*> y2
-    Coordinate* _data[4]
-    Coordinate* getPoint(unsigned int index)
-    void updateClippingCoordinatesWindowSize(int, int)
+  class ViewWindow {
+    big_double xVpMin
+    big_double yVpMin
+    big_double xVpMax
+    big_double yVpMax
+    big_double xWiMin
+    big_double yWiMin
+    big_double xWiMax
+    big_double yWiMax
+    ChangedSignal _viewWindowObservers
+    ChangedConnection addObserver(...)
+    void move(Coordinate moves)
+    void zoom(Coordinate factors)
+    void updateWindowSize(int, int)
   }
 
-  class ViewWindow {
-    float xWmin
-    float yWmin
-    float xWmax
-    float yWmax
-    Signal<> callObservers
-    Signal<>::Connection addObserver(...)
-    void zoom_in  (float scale)
-    void zoom_out (float scale)
-    void move_up   (int length)
-    void move_down (int length)
-    void move_left (int length)
-    void move_right(int length)
+  class World {
+    void addPoint(std::string name, int, int)
+    void addLine(std::string name, int, int, int, int)
+    void addPolygon(std::string name, std::list<int>)
   }
 
 @enduml

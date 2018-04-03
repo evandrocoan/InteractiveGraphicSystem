@@ -1,7 +1,7 @@
 #include "addobject.h"
 
-AddObject::AddObject(DrawingArea &drawingArea) :
-      drawingArea(drawingArea),
+AddObject::AddObject(Facade &facade) :
+      facade(facade),
       m_vbox(Gtk::ORIENTATION_VERTICAL),
       button_close("Close"),
       button_save_line("Save Line"),
@@ -112,8 +112,8 @@ void AddObject::on_button_save_point()
   int x_coord = atoi(x_string.c_str());
   int y_coord = atoi(y_string.c_str());
 
-  this->drawingArea.addPoint(name, x_coord, y_coord);
-  this->drawingArea.queue_draw();
+  this->facade.addPoint(name, x_coord, y_coord);
+  this->facade.queue_draw();
 
   this->window.close();
 }
@@ -139,8 +139,8 @@ void AddObject::on_button_save_line()
   int x2_cord = atoi(x2_string.c_str());
   int y2_cord = atoi(y2_string.c_str());
 
-  this->drawingArea.addLine(name, x1_cord, y1_cord, x2_cord, y2_cord);
-  this->drawingArea.queue_draw();
+  this->facade.addLine(name, x1_cord, y1_cord, x2_cord, y2_cord);
+  this->facade.queue_draw();
 
   this->window.close();
 }
@@ -158,8 +158,8 @@ void AddObject::on_button_save_polygon()
       return;
     }
 
-    this->drawingArea.addPolygon(name, polygon_coord_list);
-    this->drawingArea.queue_draw();
+    this->facade.addPolygon(name, polygon_coord_list);
+    this->facade.queue_draw();
 
     while(!polygon_coord_list.empty())
     {

@@ -13,25 +13,22 @@
 #include <gtkmm/listviewtext.h>
 #include <gtkmm/radiobutton.h>
 
-#include "point.h"
-#include "line.h"
-#include "polygon.h"
-#include "drawingarea.h"
-#include "coordinate.h"
+#include "facade.h"
 
 class AddTransformation
 {
 public:
-  AddTransformation(DrawingArea &drawingArea);
+  AddTransformation(Facade &facade);
   ~AddTransformation();
 
-  Gtk::Box& getBox();
+  Gtk::Box&   getBox();
   std::string object_name;
-  RotationType rotation_type;
-  TransformationType transformation_type;
+
+  TransformationType  transformation_type;
+  TransformationPoint transformation_point;
 
 protected:
-  DrawingArea    &drawingArea;
+  Facade& facade;
   Transformation transformation;
 
   Gtk::Entry x_rotation_field;

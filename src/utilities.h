@@ -20,10 +20,6 @@
 *****************************************************************************************
 */
 
-
-#include <string>
-#include <cstdarg>
-
 /* Deprecated the usage of `#pragma once` due:
 
 > #pragma once does have one drawback (other than being non-standard) and that is if you have the
@@ -36,12 +32,32 @@
 #ifndef GTKMM_APP_DEBUGGER_INT_UTILITIES_H
 #define GTKMM_APP_DEBUGGER_INT_UTILITIES_H
 
+#include <string>
+#include <cstdarg>
+
+// M_PI flagged as undeclared identifier
+// https://stackoverflow.com/questions/26065359/m-pi-flagged-as-undeclared-identifier
+#define _USE_MATH_DEFINES
+
+#include <cmath>
+#include <vector>
+
+#ifndef M_PI
+  #define M_PI 3.14159265358979323846
+#endif
+
+#include "traits.h"
+
+inline big_double convert_degrees_to_radians(big_double degrees)
+{
+  return M_PI * (std::fmod(degrees, 360.0) / 180.0);
+}
+
 /**
  *  Calculates a static array size.
  */
 #if !defined STATIC_ARRAY_SIZE
   #define STATIC_ARRAY_SIZE( array ) ( sizeof( ( array ) ) / sizeof( ( array )[0] ) )
-
 #endif
 
 /**

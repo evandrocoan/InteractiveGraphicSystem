@@ -8,10 +8,11 @@ DisplayFile::~DisplayFile()
 {
 }
 
-void DisplayFile::apply(std::string object_name, Transformation &transformation)
+DrawableObject* DisplayFile::apply(std::string object_name, Transformation &transformation)
 {
   auto object = this->getObjectByName(object_name);
   object->apply(transformation);
+  return object;
 }
 
 void DisplayFile::addObject(DrawableObject* object)
@@ -56,11 +57,11 @@ void DisplayFile::removeObjectByName(std::string name)
   this->objectsMap.erase(name);
 }
 
-std::list<std::string> DisplayFile::getNamesList()
+std::list<std::string> DisplayFile::objectNames() const
 {
   std::list<std::string> list;
 
-  for(std::map<std::string, DrawableObject*>::iterator it = objectsMap.begin(); it != objectsMap.end(); it++)
+  for(auto it = objectsMap.begin(); it != objectsMap.end(); it++)
   {
     list.push_back(it->first);
   }
@@ -68,12 +69,11 @@ std::list<std::string> DisplayFile::getNamesList()
   return list;
 }
 
-std::list<DrawableObject*> DisplayFile::getObjects()
+std::list<DrawableObject*> DisplayFile::getObjects() const
 {
   std::list<DrawableObject*> list;
 
-  for(std::map<std::string, DrawableObject*>::iterator it = objectsMap.begin();
-      it != objectsMap.end(); it++)
+  for(auto it = objectsMap.begin(); it != objectsMap.end(); it++)
   {
     list.push_back(it->second);
   }
