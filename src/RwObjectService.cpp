@@ -16,12 +16,12 @@ RwObjectService::~RwObjectService()
 {
 }
 
-void RwObjectService::read(string file_path)
+void RwObjectService::read(std::string file_path)
 {
-  string line;
-  ifstream myfile(file_path);
-  vector<big_double> coord_vector;
-  string name;
+  std::string line;
+  std::ifstream myfile(file_path);
+  std::vector<big_double> coord_vector;
+  std::string name;
 
   if(myfile.is_open())
   {
@@ -33,7 +33,7 @@ void RwObjectService::read(string file_path)
       }
       if (line.front() == 'v')
       {
-        vector<string> sep = split(line, ' ');
+        std::vector<std::string> sep = split(line, ' ');
 
         if (sep.size() > 3)
         {
@@ -72,21 +72,21 @@ void RwObjectService::read(string file_path)
   }
 }
 
-void RwObjectService::write(list<DrawableObject*> objects_list, string file_path)
+void RwObjectService::write(std::list<DrawableObject*> objects_list, std::string file_path)
 {
-  ofstream myfile;
+  std::ofstream myfile;
   myfile.open(file_path);
   myfile << "# Starting the file objects\n\n";
 
   for (auto it_obj = objects_list.begin(); it_obj != objects_list.end(); ++it_obj)
   {
     myfile << "o " + (*it_obj)->getName() + "\n\n";
-    list<Coordinate*> objectCoordinates = (*it_obj)->getWorldCoordinates();
+    std::list<Coordinate*> objectCoordinates = (*it_obj)->getWorldCoordinates();
 
     for (std::list<Coordinate*>::iterator it_cord = objectCoordinates.begin(); it_cord != objectCoordinates.end(); ++it_cord)
     {
-      string line_cord = "v " + to_string((*it_cord)->x) + " " + to_string((*it_cord)->y)
-          + " " + to_string((*it_cord)->z) + "\n";
+      std::string line_cord = "v " + std::to_string((*it_cord)->x) + " " + std::to_string((*it_cord)->y)
+          + " " + std::to_string((*it_cord)->z) + "\n";
 
       myfile << line_cord;
     }
@@ -95,7 +95,7 @@ void RwObjectService::write(list<DrawableObject*> objects_list, string file_path
 
     for (unsigned int i = 1; i < objectCoordinates.size()+1; i++)
     {
-      myfile << to_string(i) + " ";
+      myfile << std::to_string(i) + " ";
     }
 
     myfile << "\n\n";
@@ -104,11 +104,11 @@ void RwObjectService::write(list<DrawableObject*> objects_list, string file_path
   myfile.close();
 }
 
-vector<string> RwObjectService::split(string str, char delimiter)
+std::vector<std::string> RwObjectService::split(std::string str, char delimiter)
 {
-  vector<string> internal;
-  stringstream ss(str); // Turn the string into a stream.
-  string tok;
+  std::vector<std::string> internal;
+  std::stringstream ss(str); // Turn the std::string into a stream.
+  std::string tok;
 
   while(getline(ss, tok, delimiter)) {
     internal.push_back(tok);
