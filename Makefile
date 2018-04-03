@@ -19,7 +19,10 @@ TARGETDIR:= binaries
 
 # Stack smashing detected
 # https://stackoverflow.com/questions/1345670/stack-smashing-detected
-CFLAGS := -O0 -ggdb -Wall -std=c++11 -fstack-protector
+# 
+# https://stackoverflow.com/questions/38939991/how-to-disable-gnu-c-extensions
+# How to disable GNU C extensions?
+CFLAGS := -O0 -ggdb -Wall -lstdc+ -Werror -lstdc+ -std=c++11 -fstack-protector
 # CFLAGS := -Wall -O3 -g -std=c++11
 
 LIBS := `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
