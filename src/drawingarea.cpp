@@ -90,8 +90,8 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
  */
 void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
 {
-  big_double width = this->get_width();
-  big_double height = this->get_height();
+  big_double width = allocation.get_width();
+  big_double height = allocation.get_height();
 
   this->_updateViewPortSize(width, height);
 }
