@@ -31,9 +31,9 @@ struct Axes
         new Coordinate(xWiMax - CLIPPING_WINDOW_MARGIN_DISTANCE, yWiMax - CLIPPING_WINDOW_MARGIN_DISTANCE, 1),
         new Coordinate(xWiMax - CLIPPING_WINDOW_MARGIN_DISTANCE, yWiMin + CLIPPING_WINDOW_MARGIN_DISTANCE, 1)
       },
-      x1(*this->_clippingWindowCoordinates[1], *this->_clippingWindowCoordinates[2]),
+      x1(*this->_clippingWindowCoordinates[3], *this->_clippingWindowCoordinates[0]),
       y1(*this->_clippingWindowCoordinates[0], *this->_clippingWindowCoordinates[1]),
-      x2(*this->_clippingWindowCoordinates[3], *this->_clippingWindowCoordinates[0]),
+      x2(*this->_clippingWindowCoordinates[1], *this->_clippingWindowCoordinates[2]),
       y2(*this->_clippingWindowCoordinates[2], *this->_clippingWindowCoordinates[3])
   {
   }
@@ -55,45 +55,22 @@ struct Axes
   const Coordinate& operator[](unsigned int line) const { return *(this->_clippingWindowCoordinates[line]); }
 
   /**
-   * The coordinates use to represent the X Y axes with `ViewPort` coordinates:
-   *   First Coordinate        Forth Coordinate
-   *            +-------------------+
-   *            |                   |
-   *            |                   |
-   *            |                   |
-   *            |                   |
-   *            |                   |
-   *            +-------------------+
-   *   Second Coordinate       Third Coordinate
+   * The Clock-Wise coordinates use to represent the X Y axes with `Window` Normalized coordinates:
    *
-   * Now, the same coordinates represented on `ViewWindow` coordinates:
-   *   Second Coordinate       Third Coordinate
-   *            +-------------------+
-   *            |                   |
-   *            |                   |
-   *            |                   |
-   *            |                   |
-   *            |                   |
-   *            +-------------------+
-   *   First Coordinate        Forth Coordinate
+   *   Second Coordinate[1]       Third Coordinate[2]
+   *               +-------------------+
+   *               |                   |
+   *               |                   |
+   *               |                   |
+   *               |                   |
+   *               |                   |
+   *               +-------------------+
+   *   First Coordinate[0]        Forth Coordinate[3]
    */
   Array<4, Coordinate*> _clippingWindowCoordinates;
 
   /**
-   * Lines representing the clipping window saved on `ViewWindow` Normalized coordinates:
-   *
-   *                 x1_axe
-   *         +-------------------+
-   *         |                   |
-   *         |                   |
-   * y1_axe  |                   | y2_axe
-   *         |                   |
-   *         |                   |
-   *         +-------------------+
-   *                 x2_axe
-   *
-   *
-   * Now, the same lines represented on `ViewWindow` coordinates:
+   * Lines representing the Clipping Area saved on `Window` Normalized coordinates:
    *
    *                 x2_axe
    *         +-------------------+
