@@ -8,7 +8,7 @@
 class Line : public DrawableObject
 {
 public:
-  Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2);
+  Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2, Coordinate _borderColor);
   ~Line();
 
   virtual void updateClippingCoordinates(const Axes&);
