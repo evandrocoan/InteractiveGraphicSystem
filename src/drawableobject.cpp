@@ -1,41 +1,43 @@
 #include "drawableobject.h"
 
-DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates) :
-      DrawableObject(name, worldCoordinates, Coordinate(0, 0))
+DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> _worldCoordinates) :
+      DrawableObject(name, _worldCoordinates, Coordinate(0, 0))
 {
 }
 
-DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates, Coordinate _borderColor, Coordinate _fillingColor) :
+DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> _worldCoordinates, Coordinate _borderColor, Coordinate _fillingColor) :
       name(name),
       _isDrawable(false),
       _borderColor(_borderColor),
       _fillingColor(_fillingColor),
-      worldCoordinates(worldCoordinates)
+      _worldCoordinates(_worldCoordinates)
 {
   LOG(4, "Deep coping initializing the coordinate attributes");
 
-  for( auto coordinate : worldCoordinates )
+  for( auto coordinate : _worldCoordinates )
   {
-    this->windowCoordinates.push_back(new Coordinate(*coordinate));
-    this->clippingCoordinates.push_back(new Coordinate(*coordinate));
+    this->_windowCoordinates.push_back(new Coordinate(*coordinate));
+    this->_clippingCoordinates.push_back(new Coordinate(*coordinate));
   }
 }
 
 DrawableObject::~DrawableObject()
 {
-	this->destroyList(worldCoordinates);
+  this->destroyList(this->_worldCoordinates);
+  this->destroyList(this->_windowCoordinates);
+	this->destroyList(this->_clippingCoordinates);
 }
 
 /**
  * https://stackoverflow.com/questions/307082/cleaning-up-an-stl-list-vector-of-pointers
  * Cleaning up an STL list/vector of pointers
  */
-void DrawableObject::destroyList(std::list<Coordinate*>& worldCoordinates)
+void DrawableObject::destroyList(std::list<Coordinate*>& _worldCoordinates)
 {
-  while(!worldCoordinates.empty())
+  while(!_worldCoordinates.empty())
   {
-    // delete worldCoordinates.front();
-    worldCoordinates.pop_front();
+    // delete _worldCoordinates.front();
+    _worldCoordinates.pop_front();
   }
 }
 
@@ -44,19 +46,19 @@ std::string DrawableObject::getName() const
   return this->name;
 }
 
-const std::list<Coordinate*>& DrawableObject::getWorldCoordinates() const
+const std::list<Coordinate*>& DrawableObject::worldCoordinates() const
 {
-  return this->worldCoordinates;
+  return this->_worldCoordinates;
 }
 
-const std::list<Coordinate*>& DrawableObject::getWindowCoordinates() const
+const std::list<Coordinate*>& DrawableObject::windowCoordinates() const
 {
-  return this->windowCoordinates;
+  return this->_windowCoordinates;
 }
 
-const std::list<Coordinate*>& DrawableObject::getClippingCoordinates() const
+const std::list<Coordinate*>& DrawableObject::clippingCoordinates() const
 {
-  return this->clippingCoordinates;
+  return this->_clippingCoordinates;
 }
 
 Coordinate DrawableObject::getGeometricCenter(const std::list<Coordinate*>& coordinates)
@@ -93,9 +95,9 @@ void DrawableObject::printMyself(std::ostream& output) const
   unsigned int index_external = 0;
   std::list< std::list<Coordinate*> > coordinates_lists;
 
-  coordinates_lists.push_back(this->worldCoordinates);
-  coordinates_lists.push_back(this->windowCoordinates);
-  coordinates_lists.push_back(this->clippingCoordinates);
+  coordinates_lists.push_back(this->_worldCoordinates);
+  coordinates_lists.push_back(this->_windowCoordinates);
+  coordinates_lists.push_back(this->_clippingCoordinates);
 
   output << this->name;
 
@@ -126,7 +128,7 @@ void DrawableObject::printMyself(std::ostream& output) const
 void DrawableObject::apply(Transformation &transformation)
 {
   LOG(8, "Entering... %s", transformation);
-  auto coordinates = this->getWorldCoordinates();
+  auto coordinates = this->worldCoordinates();
 
   auto geometricCenter = DrawableObject::getGeometricCenter(coordinates);
   transformation.set_geometric_center(geometricCenter);
@@ -142,19 +144,19 @@ void DrawableObject::updateWindowCoordinates(const Transformation& transformatio
   LOG(8, "Entering... %s", transformation);
   Coordinate* new_coordinate;
 
-  auto coordinates = this->getWorldCoordinates();
-  DrawableObject::destroyList(this->windowCoordinates);
+  auto coordinates = this->worldCoordinates();
+  DrawableObject::destroyList(this->_windowCoordinates);
 
   for(auto coordinate : coordinates)
   {
     new_coordinate = new Coordinate(*coordinate);
     transformation.apply(*new_coordinate);
-    this->windowCoordinates.push_back(new_coordinate);
+    this->_windowCoordinates.push_back(new_coordinate);
   }
 }
 
 void DrawableObject::updateClippingCoordinates(const Axes& axes)
 {
   LOG(4, "Generic clipping update... %s", axes);
-  this->clippingCoordinates = this->windowCoordinates;
+  this->_clippingCoordinates = this->_windowCoordinates;
 }

@@ -17,14 +17,14 @@ void Line::updateClippingCoordinates(const Axes& axes)
 
 bool Line::_liangBaskyLineClip(const Axes& axes)
 {
-  this->destroyList(this->clippingCoordinates);
+  this->destroyList(this->_clippingCoordinates);
 
-  for( auto coordinate : this->windowCoordinates )
+  for( auto coordinate : this->_windowCoordinates )
   {
-    this->clippingCoordinates.push_back(new Coordinate(*coordinate));
+    this->_clippingCoordinates.push_back(new Coordinate(*coordinate));
   }
 
-  auto front = this->clippingCoordinates.begin();
+  auto front = this->_clippingCoordinates.begin();
 
   auto& c1 = **front; ++front;
   auto& c2 = **front;
