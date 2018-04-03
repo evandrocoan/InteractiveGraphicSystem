@@ -27,7 +27,7 @@ public:
   std::string getName() const;
 
   const std::list<Coordinate*>& getWorldCoordinates() const;
-  const std::list<Coordinate*>& getViewWindowCoordinates() const;
+  const std::list<Coordinate*>& getWindowCoordinates() const;
   const std::list<Coordinate*>& getClippingCoordinates() const;
 
   static Coordinate getGeometricCenter(const std::list<Coordinate*>&);
@@ -51,7 +51,7 @@ protected:
   std::string name;
 
   std::list<Coordinate*> worldCoordinates;
-  std::list<Coordinate*> viewWindowCoordinates;
+  std::list<Coordinate*> windowCoordinates;
   std::list<Coordinate*> clippingCoordinates;
 };
 #endif // GTKMM_APP_DRAWABLE_OBJECT
