@@ -18,20 +18,18 @@
 #include "facade.h"
 #include "drawableobject.h"
 
-using namespace std;
-
 class RwObjectService
 {
 public:
   RwObjectService(Facade&);
   ~RwObjectService();
 
-  void read(string file_path);
-  void write(list<DrawableObject*> objects_list, string file_path);
+  void read(std::string file_path);
+  void write(std::list<DrawableObject*> objects_list, std::string file_path);
 
 protected:
   Facade& facade;
-  vector<string> split(string str, char delimiter);
+  std::vector<std::string> split(std::string str, char delimiter);
 };
 
 #endif /* RWOBJECTSERVICE_H_ */
