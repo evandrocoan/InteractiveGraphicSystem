@@ -42,10 +42,10 @@ public:
     this->_updateViewPortSize = this->_drawingArea.addObserver(std::bind(&ViewWindow::updateViewPortSize, &this->_viewWindow, _1, _2));
 
     // ViewWindow observe World object creation/deletion
-    this->_updateObjectCoordinates = this->_world.addObserver(std::bind(&updateObjectCoordinates, this, _1));
+    this->_updateObjectCoordinates = this->_world.addObserver(std::bind(&Facade::updateObjectCoordinates, this, _1));
 
     // World observe ViewWindow coordinates update
-    this->_updateAllObjectCoordinates = this->_viewWindow.addObserver(std::bind(&updateAllObjectCoordinates, this, _1, _2));
+    this->_updateAllObjectCoordinates = this->_viewWindow.addObserver(std::bind(&Facade::updateAllObjectCoordinates, this, _1, _2));
   }
 
   /**
