@@ -7,12 +7,17 @@
   Axes *-- Axe
   AddObject  *--  Facade                 : facade&
   AddTransformation  *--  Facade         : facade&
+  AddTransformation *-- Transformation: transformation
 
   DisplayFile "1"  *-down- "*" DrawableObject
 
+  Facade *-left- DrawingArea            : _drawingArea
+  Facade *-down- ViewWindow             : _viewWindow
+  Facade *-- World                      : _world
+
+  World <.right. ViewWindow : observe world\n object creation
   DrawingArea <.. ViewWindow : observe drawing area size update
   ViewWindow <.. World : observe window\n coordinates update
-  World <.. ViewWindow : observe world\n object creation
 
   Line    <|-up- DrawableObject
   Point   <|-up- DrawableObject
@@ -27,12 +32,7 @@
   TransformationData *-- TransformationPoint: point
 
   ViewWindow *-- Axes
-  ViewWindow -right[hidden]> World
-
-  Facade *-left- DrawingArea            : drawingArea
-  Facade *-down- ViewWindow             : viewWindow
-  Facade *-right- Transformation        : transformation
-  Facade *-- World                      : World
+  ' ViewWindow -right[hidden]> World
 
   World *-- DisplayFile : points\n lines\n polygons
 
