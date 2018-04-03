@@ -13,18 +13,18 @@
 #include <gtkmm/notebook.h>
 #include <gtkmm/box.h>
 
-#include "drawingarea.h"
+#include "facade.h"
 
 class AddObject
 {
 public:
-  AddObject(DrawingArea &drawingArea);
+  AddObject(Facade &facade);
   ~AddObject();
   Gtk::Window& getWindow();
 
 private:
   Gtk::Window window;
-  DrawingArea &drawingArea;
+  Facade &facade;
 
   Gtk::Box      m_vbox;
   Gtk::Notebook m_notebook;

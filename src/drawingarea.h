@@ -18,7 +18,7 @@
 #include "polygon.h"
 #include "coordinate.h"
 
-#include "viewport.h"
+#include "world.h"
 #include "viewwindow.h"
 #include "displayfile.h"
 
@@ -29,29 +29,11 @@
  * Drawing Straight Lines
  * https://developer.gnome.org/gtkmm-tutorial/stable/sec-cairo-drawing-lines.html.en#cairo-example-lines
  */
-class DrawingArea : public Gtk::DrawingArea
+class DrawingArea : public Gtk::DrawingArea, public NonCopyable
 {
 public:
-  DrawingArea();
+  DrawingArea(const World&, const ViewWindow&);
   virtual ~DrawingArea();
-
-  void addPoint(std::string name, int, int);
-  void addLine(std::string name, int, int, int, int);
-  void addPolygon(std::string name, std::vector<big_double>);
-  void removeObject(std::string name);
-
-  void zoom(big_double step = 50);
-  void move(big_double horizontal_step = 50, big_double vertical_step = 50);
-  void rotate(Coordinate coordinate);
-
-  void updateObjectCoordinates(DrawableObject*);
-  void updateAllObjectCoordinates(const Transformation&);
-
-  Coordinate convertCoordinateToViewPort(Coordinate&);
-  void apply(std::string object_name, Transformation&);
-
-  std::list<std::string> getNamesList();
-  std::list<DrawableObject*> getObjectsList();
 
   friend std::ostream& operator<<(std::ostream &output, const DrawingArea &object);
 
@@ -59,31 +41,17 @@ public:
    * Implementations types for the Observer Design Pattern with C++ 11 templates and function
    * pointers, instead of tight coupled inheritance.
    */
-  typedef Signal<> ChangedSignal;
-  typedef ChangedSignal::Callback ChangedCallback;
-  typedef ChangedSignal::Connection ChangedConnection;
-
-  void disconnectObserver();
-  ChangedConnection addObserver(const ChangedCallback&);
+  typedef Signal<unsigned int, unsigned int> UpdateViewPortSize;
+  UpdateViewPortSize::Connection addObserver(const UpdateViewPortSize::Callback&);
 
 protected:
-  ViewPort   viewPort;
-  ViewWindow viewWindow;
+  UpdateViewPortSize _updateViewPortSize;
 
-  bool isCentered;
-  DisplayFile displayFile;
-
-  ChangedSignal callObservers;
-  ViewWindow::ChangedConnection _connection;
+  const World& _world;
+  const ViewWindow& _viewWindow;
 
   bool on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
   void on_my_size_allocate(Gtk::Allocation&);
-
-  void addObject(DrawableObject*);
-  void updateViewPortSize(big_double width, big_double height);
-
-private:
-  void draw_xy_axes();
 };
 
 #endif // GTKMM_APP_DRAWINGAREA

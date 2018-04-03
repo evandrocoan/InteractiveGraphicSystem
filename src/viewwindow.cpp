@@ -1,6 +1,7 @@
 #include "viewwindow.h"
 
 ViewWindow::ViewWindow() :
+      _axes(ViewWindow::xWiMin, ViewWindow::yWiMin, ViewWindow::xWiMax, ViewWindow::yWiMax),
       _angles(0, 0),
       _dimentions(100, 100),
       _windowCenter(0, 0)
@@ -11,19 +12,11 @@ ViewWindow::~ViewWindow()
 {
 }
 
-const Transformation& ViewWindow::transformation() const
+ViewWindow::UpdateAllObjectCoordinates::Connection ViewWindow::addObserver(const ViewWindow::UpdateAllObjectCoordinates::Callback& callback)
 {
-  return this->_transformation;
-}
-
-big_double ViewWindow::width()
-{
-  return this->_dimentions[0];
-}
-
-big_double ViewWindow::height()
-{
-  return this->_dimentions[1];
+  auto connection = this->_updateAllObjectCoordinates.connect(callback);
+  this->callObservers();
+  return connection;
 }
 
 std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
@@ -33,27 +26,20 @@ std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
   return output;
 }
 
-ViewWindow::ChangedConnection ViewWindow::addObserver(const ViewWindow::ChangedCallback& callback)
+void ViewWindow::zoom(Coordinate steps)
 {
-  auto connection = this->_observers.connect(callback);
-  this->callObservers();
-  return connection;
-}
-
-void ViewWindow::zoom(Coordinate step)
-{
-  if( (this->_dimentions[0] + step[0] <= MINIMUM_ZOOM_LIMIT
-      || this->_dimentions[1] + step[0] <= MINIMUM_ZOOM_LIMIT)
-    && step[0] < 0 )
+  if( (this->_dimentions[0] + steps[0] <= MINIMUM_ZOOM_LIMIT
+      || this->_dimentions[1] + steps[0] <= MINIMUM_ZOOM_LIMIT)
+    && steps[0] < 0 )
   {
     LOG(1, "");
     LOG(1, "");
     LOG(1, "ERROR: You reached the maximum zoom limit! %s", *this);
     return;
   }
-  else if( (this->_dimentions[0] + step[0] >= MAXIMUM_ZOOM_LIMIT
-            || this->_dimentions[1] + step[0] >= MAXIMUM_ZOOM_LIMIT)
-          && step[0] > 0)
+  else if( (this->_dimentions[0] + steps[0] >= MAXIMUM_ZOOM_LIMIT
+            || this->_dimentions[1] + steps[0] >= MAXIMUM_ZOOM_LIMIT)
+          && steps[0] > 0)
   {
     LOG(1, "");
     LOG(1, "");
@@ -62,18 +48,18 @@ void ViewWindow::zoom(Coordinate step)
   }
   else
   {
-    this->_dimentions += step;
+    this->_dimentions += steps;
     this->callObservers();
   }
 }
 
-void ViewWindow::move(Coordinate movement)
+void ViewWindow::move(Coordinate moves)
 {
   this->_angle_rotation.clear();
   this->_angle_rotation.add_rotation("Transformation on the ViewWindow by Rotation", this->_angles);
-  this->_angle_rotation.apply(movement);
+  this->_angle_rotation.apply(moves);
 
-  this->_windowCenter += movement;
+  this->_windowCenter += moves;
   this->callObservers();
 }
 
@@ -92,5 +78,90 @@ void ViewWindow::callObservers()
   this->_transformation.set_geometric_center();
   LOG(4, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
   LOG(4, "_transformation: %s", _transformation);
-  this->_observers(this->_transformation);
+  this->_updateAllObjectCoordinates(this->_transformation, this->_axes);
+}
+
+/**
+ * TODO: Keep viewPort and viewWindow portions while resizing the viewPort.
+ */
+void ViewWindow::updateViewPortSize(big_double width, big_double height)
+{
+  LOG(4, "Current drawing area widget size %sx%s - %s", width, height, *this);
+
+  // This is true only when you resize the you ViewWindow widget window
+  if (this->xVpMax != width || this->yVpMax != height)
+  {
+    big_double widthDiff  = width  - (this->xVpMax - this->xVpMin);
+    big_double heightDiff = height - (this->yVpMax - this->yVpMin);
+
+    // Keep the window zoom size while resizing the window
+    // // On the first time we run this algorithm, the xVpMax is set to zero. Therefore, we must
+    // // to initialize this within the current size of the ViewWindow
+    // if (this->xVpMax != 0)
+    // {
+    //   this->viewWindow.xMax = this->viewWindow.xMax + (this->viewWindow.xMax - this->viewWindow.xMin)
+    //       * widthDiff / (this->xVpMax - this->xVpMin);
+    // }
+    // else
+    // {
+    //   this->viewWindow.xMax = widthDiff;
+    // }
+
+    // if (this->yVpMax != 0)
+    // {
+    //   this->viewWindow.yMin = this->viewWindow.yMin - (this->viewWindow.yMax - this->viewWindow.yMin)
+    //       * (heightDiff / (this->yVpMax - this->yVpMin));
+    // }
+    // else
+    // {
+    //   // LOG(8, "If we exchange this `viewWindow.yMax` to `viewWindow.yMin` our world becomes up-side-down");
+    //   this->viewWindow.yMax = heightDiff;
+    // }
+
+    this->xVpMax += widthDiff;
+    this->yVpMax += heightDiff;
+
+    this->callObservers();
+    LOG(8, "Leaving:  %s", *this);
+  }
+}
+
+/**
+ * Transformada de viewport - Slide 2 de "02 - Conceitos Básicos"
+ *
+ * Resize `viewwindow` when `viewport` is resized:
+ * http://www.di.ubi.pt/~agomes/cg/teoricas/04e-windows.pdf
+ *
+ * A strategy of keeping proportions automatically between window and viewport.
+ *
+ * Window-Viewport Mapping, important conclusion: As the world window increases in size the image in
+ * viewport decreases in size and vice-versa.
+ *
+ * The user may enlarge or reduce the size of a viewport with w pixels wide and h pixels high by
+ * pulling away the right-bottom of its interface window.
+ *
+ * To avoid distortion, we must change the size of the world window accordingly.
+ *
+ * For that, we assume that the initial world window is a square with side length L.
+ *
+ * A possible solution is to change the world window whenever the viewport of
+ * the interface window were changed.
+ *
+ * @param  coordinate a normalized coordinate as from -1 to 1
+ * @return            the viewport coordinate as from 0 to 500
+ */
+Coordinate ViewWindow::convertCoordinateToViewPort(const Coordinate &c) const
+{
+  // double     x=((c.x -wmin.x) / (wmax.x-wmin.x)) *_width;
+  big_double xVp =((c.x - xWiMin) / (xWiMax - xWiMin)) * (xVpMax - xVpMin);
+
+  // double    y = (1.0 - ((c.y -wmin.y) /(wmax.y -wmin.y))) *_height;
+  big_double yVp = (1.0 - ((c.y - yWiMin) / (yWiMax - yWiMin))) * (yVpMax - yVpMin);
+
+  // std::cout << "transformCoordinate: " << Coordinate(xVp, yVp);
+  // std::cout << ", Original: " << coordinate << std::endl;
+  // std::cout << ", wiMin x: " << xWiMin << ", y: " << yWiMin;
+  // std::cout << ", wiMax x: " << xWiMax << ", y: " << yWiMax;
+  // std::cout << ", _width x: " << xVpMax - xVpMin << ", _height: " << yVpMax - yVpMin << std::endl;
+  return Coordinate(xVp, yVp);
 }

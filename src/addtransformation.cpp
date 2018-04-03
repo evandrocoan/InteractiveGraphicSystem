@@ -1,7 +1,7 @@
 #include "addtransformation.h"
 
-AddTransformation::AddTransformation(DrawingArea &drawingArea) :
-      drawingArea(drawingArea),
+AddTransformation::AddTransformation(Facade &facade) :
+      facade(facade),
       main_vertical_box(Gtk::ORIENTATION_VERTICAL),
       list_view_text(1),
       translation_radiobutton("T"),
@@ -204,8 +204,8 @@ void AddTransformation::on_button_remove_transformation()
 
 void AddTransformation::on_button_apply()
 {
-  this->drawingArea.apply(this->object_name, this->transformation);
-  this->drawingArea.queue_draw();
+  this->facade.apply(this->object_name, this->transformation);
+  this->facade.queue_draw();
 }
 
 void AddTransformation::on_translation_radiobutton()

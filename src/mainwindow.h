@@ -13,11 +13,10 @@
 #include <gtkmm/grid.h>
 #include <glibmm/refptr.h>
 
-#include "drawingarea.h"
-#include "debugger.h"
-#include "viewwindow.h"
+#include "facade.h"
 #include "addobject.h"
 #include "addtransformation.h"
+
 #include "ChooseFileWindow.h"
 #include "RwObjectService.h"
 
@@ -35,7 +34,7 @@ protected:
   Gtk::Window       window;
   Gtk::ComboBoxText objects_list;
 
-  DrawingArea       drawingArea;
+  Facade            facade;
   AddObject         addObject;
   AddTransformation addTransformation;
 
