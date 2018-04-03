@@ -16,9 +16,9 @@ public:
   World();
   ~World();
 
-  void addPoint(const std::string name, const int, const int);
-  void addLine(const std::string name, const int, const int, const int, const int);
-  void addPolygon(const std::string name, const std::vector<big_double>);
+  void addPoint(const std::string name, const int, const int, Coordinate _borderColor);
+  void addLine(const std::string name, const int, const int, const int, const int, Coordinate _borderColor);
+  void addPolygon(const std::string name, const std::vector<big_double>, Coordinate _borderColor, Coordinate _fillingColor);
   void removeObject(const std::string name);
 
   const DisplayFile& displayFile() const { return this->_displayFile; }

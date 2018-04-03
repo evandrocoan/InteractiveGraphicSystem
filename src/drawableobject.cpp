@@ -1,15 +1,18 @@
 #include "drawableobject.h"
 
-DrawableObject::DrawableObject(std::string name) :
-      name(name)
+DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates) :
+      DrawableObject(name, worldCoordinates, Coordinate(0, 0))
 {
 }
 
-DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates) :
+DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates, Coordinate _borderColor, Coordinate _fillingColor) :
       name(name),
+      _isDrawable(false),
+      _borderColor(_borderColor),
+      _fillingColor(_fillingColor),
       worldCoordinates(worldCoordinates)
 {
-  LOG(4, "Deep coping initializing the other attributes");
+  LOG(4, "Deep coping initializing the coordinate attributes");
 
   for( auto coordinate : worldCoordinates )
   {

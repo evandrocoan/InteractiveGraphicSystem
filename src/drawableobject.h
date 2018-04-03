@@ -34,7 +34,10 @@ public:
   static void destroyList(std::list<Coordinate*>& coordinates);
 
   void apply(Transformation&);
-  bool isDrawable() { return this->_isDrawable; }
+  bool isDrawable() const { return this->_isDrawable;   }
+
+  const Coordinate& borderColor()  const { return this->_borderColor;  }
+  const Coordinate& fillingColor() const { return this->_fillingColor; }
 
   /**
    * Apply the `Transformation` to the `this->worldCoordinates` creating the Window Coordinates and
@@ -51,11 +54,15 @@ public:
   virtual void printMyself(std::ostream &output) const;
 
 protected:
-  DrawableObject(std::string name);
   DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates);
+  DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates,
+      Coordinate _borderColor, Coordinate _fillingColor=_default_coordinate_value_parameter);
 
-  bool _isDrawable;
   std::string name;
+  bool _isDrawable;
+
+  Coordinate _borderColor;
+  Coordinate _fillingColor;
 
   std::list<Coordinate*> worldCoordinates;
   std::list<Coordinate*> windowCoordinates;
