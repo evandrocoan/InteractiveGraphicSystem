@@ -56,8 +56,7 @@ public:
    */
   void updateObjectCoordinates(DrawableObject* object)
   {
-    if( object != nullptr )
-    {
+    if( object != nullptr ) {
       this->_world.updateObjectCoordinates(object, this->_viewWindow.transformation(), this->_viewWindow.axes());
     }
     this->_updateDropdownList();
@@ -92,20 +91,19 @@ public:
    */
   typedef Signal<> UpdateDropdownList;
 
-  UpdateDropdownList::Connection addObserver(const UpdateDropdownList::Callback& callback)
-  {
+  UpdateDropdownList::Connection addObserver(const UpdateDropdownList::Callback& callback) {
     return this->_updateDropdownList.connect(callback);
   }
 
 protected:
   UpdateDropdownList _updateDropdownList;
 
-  World _world;
-  ViewWindow _viewWindow;
+  World       _world;
+  ViewWindow  _viewWindow;
   DrawingArea _drawingArea;
 
-  DrawingArea::UpdateViewPortSize::Connection         _updateViewPortSize;
-  World::UpdateObjectCoordinates::Connection    _updateObjectCoordinates;
+  DrawingArea::UpdateViewPortSize::Connection        _updateViewPortSize;
+  World::UpdateObjectCoordinates::Connection         _updateObjectCoordinates;
   ViewWindow::UpdateAllObjectCoordinates::Connection _updateAllObjectCoordinates;
 };
 
