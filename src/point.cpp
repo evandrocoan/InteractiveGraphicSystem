@@ -12,13 +12,13 @@ Point::~Point()
 void Point::updateClippingCoordinates(const Axes& axes)
 {
   LOG(4, "Point clipping update... %s", axes);
-  this->destroyList(this->clippingCoordinates);
+  this->destroyList(this->_clippingCoordinates);
 
-  for( auto coordinate : this->windowCoordinates )
+  for( auto coordinate : this->_windowCoordinates )
   {
-    this->clippingCoordinates.push_back(new Coordinate(*coordinate));
+    this->_clippingCoordinates.push_back(new Coordinate(*coordinate));
   }
 
-  auto& c = **this->clippingCoordinates.begin();
+  auto& c = **this->_clippingCoordinates.begin();
   this->_isDrawable = ( c.x >= axes.xWiMin && c.x <= axes.xWiMax && c.y >= axes.yWiMin && c.y <= axes.yWiMax );
 }
