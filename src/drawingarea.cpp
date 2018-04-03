@@ -34,10 +34,6 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 
   this->_draw_clipping_axes(cairo_context);
 
-  // LOG(8, "Set color's objects as black:");
-  cairo_context->stroke();
-  cairo_context->set_source_rgb(0, 0, 0);
-
   // LOG(8, "Draw displayFile objects");
   auto objects = this->_world.displayFile().getObjects();
 
@@ -59,9 +55,14 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
       continue;
     }
 
-    auto firstCoordinate = this->_viewWindow.convertCoordinateToViewPort(**(coordinates.begin()));
+    auto border = object->borderColor();
+    auto filling = object->fillingColor();
+
+    LOG(8, "Set object border and filing colors: %s %s", border, filling);
+    cairo_context->set_source_rgb(border.x, border.y, border.z);
 
     LOG(8, "object coordinates: %s", *object);
+    auto firstCoordinate = this->_viewWindow.convertCoordinateToViewPort(**(coordinates.begin()));
     cairo_context->move_to(firstCoordinate.x, firstCoordinate.y);
 
     if (coordinates_count == 1)
@@ -79,9 +80,10 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
       // LOG(8, "Draw a line until the first coordinate, closing the polygon")
       cairo_context->line_to(firstCoordinate.x, firstCoordinate.y);
     }
+
+    cairo_context->stroke();
   }
 
-  cairo_context->stroke();
   return true;
 }
 
@@ -125,4 +127,5 @@ void DrawingArea::_draw_clipping_axes(const Cairo::RefPtr<Cairo::Context>& cairo
   cairo_context->line_to(this->_viewWindow.viewPort(2).x, this->_viewWindow.viewPort(2).y);
   cairo_context->line_to(this->_viewWindow.viewPort(3).x, this->_viewWindow.viewPort(3).y);
   cairo_context->line_to(this->_viewWindow.viewPort(0).x, this->_viewWindow.viewPort(0).y);
+  cairo_context->stroke();
 }

@@ -1,7 +1,7 @@
 #include "point.h"
 
-Point::Point(std::string name, Coordinate* point_cord) :
-      DrawableObject(name, std::list<Coordinate*>{point_cord})
+Point::Point(std::string name, Coordinate* point_cord, Coordinate _borderColor) :
+      DrawableObject(name, std::list<Coordinate*>{point_cord}, _borderColor)
 {
 }
 

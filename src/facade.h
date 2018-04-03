@@ -22,10 +22,18 @@ public:
   DrawingArea& drawingArea()       { return this->_drawingArea; }
   const DisplayFile& displayFile() { return this->_world.displayFile(); }
 
-  void addPoint(std::string name, int x, int y)                     { this->_world.addPoint(name, x, y);          }
-  void addLine(std::string name, int x1, int y1, int x2, int y2)    { this->_world.addLine(name, x1, y1, x2, y2); }
-  void addPolygon(std::string name, std::vector<big_double> points) { this->_world.addPolygon(name, points);      }
-  void removeObject(std::string name)                               { this->_world.removeObject(name);            }
+  void addPoint(std::string name, int x, int y, Coordinate _borderColor=_default_coordinate_value_parameter)
+  { this->_world.addPoint(name, x, y, _borderColor); }
+
+  void addLine(std::string name, int x1, int y1, int x2, int y2, Coordinate _borderColor=_default_coordinate_value_parameter)
+  { this->_world.addLine(name, x1, y1, x2, y2, _borderColor); }
+
+  void addPolygon(std::string name, std::vector<big_double> points,
+      Coordinate _borderColor=_default_coordinate_value_parameter,
+      Coordinate _fillingColor=_default_coordinate_value_parameter)
+  { this->_world.addPolygon(name, points, _borderColor, _fillingColor); }
+
+  void removeObject(std::string name) { this->_world.removeObject(name); }
 
   void move(Coordinate moves)        { this->_viewWindow.move(moves);        }
   void zoom(Coordinate factors)      { this->_viewWindow.zoom(factors);      }

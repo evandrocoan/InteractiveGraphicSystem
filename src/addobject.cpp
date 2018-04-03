@@ -112,7 +112,7 @@ void AddObject::on_button_save_point()
   int x_coord = atoi(x_string.c_str());
   int y_coord = atoi(y_string.c_str());
 
-  this->facade.addPoint(name, x_coord, y_coord);
+  this->facade.addPoint(name, x_coord, y_coord, Coordinate(0, 0, 0));
   this->facade.queue_draw();
 
   this->window.close();
@@ -139,7 +139,7 @@ void AddObject::on_button_save_line()
   int x2_cord = atoi(x2_string.c_str());
   int y2_cord = atoi(y2_string.c_str());
 
-  this->facade.addLine(name, x1_cord, y1_cord, x2_cord, y2_cord);
+  this->facade.addLine(name, x1_cord, y1_cord, x2_cord, y2_cord, Coordinate(0, 0, 0));
   this->facade.queue_draw();
 
   this->window.close();
@@ -158,7 +158,7 @@ void AddObject::on_button_save_polygon()
       return;
     }
 
-    this->facade.addPolygon(name, polygon_coord_list);
+    this->facade.addPolygon(name, polygon_coord_list, Coordinate(0, 0, 0), Coordinate(0, 0, 0));
     this->facade.queue_draw();
 
     while(!polygon_coord_list.empty())
