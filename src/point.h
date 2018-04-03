@@ -9,5 +9,7 @@ class Point : public DrawableObject
 public:
   Point(std::string name, Coordinate* point_cord);
   ~Point();
+
+  virtual void updateClippingCoordinates(const Axes&);
 };
 #endif // GTKMM_APP_POINT
