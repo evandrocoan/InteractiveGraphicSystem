@@ -32,28 +32,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   cairo_context->set_source_rgb(1, 1, 1);
   cairo_context->paint();
 
-  // cairo_context->set_line_width(1);
-  // cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
-  // Coordinate originOnWindow(0, 0);
-  // Coordinate originOnWorld = this->_viewWindow.convertCoordinateToViewPort(originOnWindow);
-
-  // LOG(8, "Drawing X and Y axes with originOnWorld: %s", originOnWorld);
-  // LOG(4, "Drawing axes X from (%s, %s) to (%s, %s)", this->viewPort.xMin, originOnWorld.y, this->viewPort.xMax, originOnWorld.y );
-  // LOG(4, "Drawing axes Y from (%s, %s) to (%s, %s)", originOnWorld.x, this->viewPort.yMin, originOnWorld.x, this->viewPort.yMax );
-  // cairo_context->move_to(this->viewPort.xMin + CLIPPING_WINDOW_MARGIN_DISTANCE, originOnWorld.y);
-  // cairo_context->line_to(this->viewPort.xMax - CLIPPING_WINDOW_MARGIN_DISTANCE, originOnWorld.y);
-  // cairo_context->move_to(originOnWorld.x, this->viewPort.yMin + CLIPPING_WINDOW_MARGIN_DISTANCE);
-  // cairo_context->line_to(originOnWorld.x, this->viewPort.yMax - CLIPPING_WINDOW_MARGIN_DISTANCE);
-  // cairo_context->stroke();
-
-  // LOG(8, "Draw the clipping window with a red border")
-  cairo_context->set_source_rgb(0.99, 0.0, 0.0);
-
-  cairo_context->line_to(this->_viewWindow.point(0).x, this->_viewWindow.point(0).y);
-  cairo_context->line_to(this->_viewWindow.point(1).x, this->_viewWindow.point(1).y);
-  cairo_context->line_to(this->_viewWindow.point(2).x, this->_viewWindow.point(2).y);
-  cairo_context->line_to(this->_viewWindow.point(3).x, this->_viewWindow.point(3).y);
-  cairo_context->line_to(this->_viewWindow.point(0).x, this->_viewWindow.point(0).y);
+  this->_draw_clipping_axes(cairo_context);
 
   // LOG(8, "Set color's objects as black:");
   cairo_context->stroke();
@@ -115,4 +94,29 @@ void DrawingArea::on_my_size_allocate(Gtk::Allocation& allocation)
   big_double height = this->get_height();
 
   this->_updateViewPortSize(width, height);
+}
+
+void DrawingArea::_draw_clipping_axes(const Cairo::RefPtr<Cairo::Context>& cairo_context)
+{
+  // cairo_context->set_line_width(1);
+  // cairo_context->set_source_rgb(0.741176, 0.717647, 0.419608);
+  // Coordinate originOnWindow(0, 0);
+  // Coordinate originOnWorld = this->_viewWindow.convertCoordinateToViewPort(originOnWindow);
+
+  // LOG(8, "Drawing X and Y axes with originOnWorld: %s", originOnWorld);
+  // LOG(4, "Drawing axes X from (%s, %s) to (%s, %s)", this->viewPort.xMin, originOnWorld.y, this->viewPort.xMax, originOnWorld.y );
+  // LOG(4, "Drawing axes Y from (%s, %s) to (%s, %s)", originOnWorld.x, this->viewPort.yMin, originOnWorld.x, this->viewPort.yMax );
+  // cairo_context->move_to(this->viewPort.xMin + CLIPPING_WINDOW_MARGIN_DISTANCE, originOnWorld.y);
+  // cairo_context->line_to(this->viewPort.xMax - CLIPPING_WINDOW_MARGIN_DISTANCE, originOnWorld.y);
+  // cairo_context->move_to(originOnWorld.x, this->viewPort.yMin + CLIPPING_WINDOW_MARGIN_DISTANCE);
+  // cairo_context->line_to(originOnWorld.x, this->viewPort.yMax - CLIPPING_WINDOW_MARGIN_DISTANCE);
+  // cairo_context->stroke();
+  // LOG(8, "Draw the clipping window with a red border")
+  cairo_context->set_source_rgb(0.99, 0.0, 0.0);
+
+  cairo_context->line_to(this->_viewWindow.viewPort(0).x, this->_viewWindow.viewPort(0).y);
+  cairo_context->line_to(this->_viewWindow.viewPort(1).x, this->_viewWindow.viewPort(1).y);
+  cairo_context->line_to(this->_viewWindow.viewPort(2).x, this->_viewWindow.viewPort(2).y);
+  cairo_context->line_to(this->_viewWindow.viewPort(3).x, this->_viewWindow.viewPort(3).y);
+  cairo_context->line_to(this->_viewWindow.viewPort(0).x, this->_viewWindow.viewPort(0).y);
 }

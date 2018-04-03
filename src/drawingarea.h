@@ -50,8 +50,10 @@ protected:
   const World& _world;
   const ViewWindow& _viewWindow;
 
-  bool on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
   void on_my_size_allocate(Gtk::Allocation&);
+
+  bool on_draw(const Cairo::RefPtr<Cairo::Context>&) override;
+  void _draw_clipping_axes(const Cairo::RefPtr<Cairo::Context>&);
 };
 
 #endif // GTKMM_APP_DRAWINGAREA

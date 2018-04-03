@@ -115,10 +115,10 @@ struct Axes
    */
   friend std::ostream& operator<<(std::ostream &output, const Axes &object)
   {
-    output << "Axes["
-         << object.x1 << ", "
-         << object.y1 << ", "
-         << object.x2 << ", "
+    output << "Axes[x1"
+         << object.x1 << ", y1"
+         << object.y1 << ", x2"
+         << object.x2 << ", y2"
          << object.y2 << "]";
     return output;
   }
