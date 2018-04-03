@@ -24,6 +24,10 @@ struct Axe
 struct Axes
 {
   Axes(big_double xWiMin, big_double yWiMin, big_double xWiMax, big_double yWiMax) :
+      xWiMin(xWiMin + CLIPPING_WINDOW_MARGIN_DISTANCE),
+      yWiMin(yWiMin + CLIPPING_WINDOW_MARGIN_DISTANCE),
+      xWiMax(xWiMax - CLIPPING_WINDOW_MARGIN_DISTANCE),
+      yWiMax(yWiMax - CLIPPING_WINDOW_MARGIN_DISTANCE),
       _clippingWindowCoordinates
       {
         new Coordinate(xWiMin + CLIPPING_WINDOW_MARGIN_DISTANCE, yWiMin + CLIPPING_WINDOW_MARGIN_DISTANCE, 1),
@@ -48,7 +52,6 @@ struct Axes
     }
   }
 
-
   /**
    * Return one of these coordinates points accordingly to the indexes 0, 1, 2 and 3.
    */
@@ -58,6 +61,7 @@ struct Axes
    * The Clock-Wise coordinates use to represent the X Y axes with `Window` Normalized coordinates:
    *
    *   Second Coordinate[1]       Third Coordinate[2]
+   *                              (xWiMax, yWiMax)
    *               +-------------------+
    *               |                   |
    *               |                   |
@@ -66,8 +70,13 @@ struct Axes
    *               |                   |
    *               +-------------------+
    *   First Coordinate[0]        Forth Coordinate[3]
+   *   (xWiMin, yWiMin)
    */
-  Array<4, Coordinate*> _clippingWindowCoordinates;
+  const big_double xWiMin;
+  const big_double yWiMin;
+  const big_double xWiMax;
+  const big_double yWiMax;
+  const Array<4, Coordinate*> _clippingWindowCoordinates;
 
   /**
    * Lines representing the Clipping Area saved on `Window` Normalized coordinates:
