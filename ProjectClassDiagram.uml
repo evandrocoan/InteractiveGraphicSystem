@@ -84,9 +84,9 @@
     void         addPoint()
     void         addPolygon()
     void         apply(Transformation&)
-    list<Coordinate*>& getWorldCoordinates()
-    list<Coordinate*>& getWindowCoordinates()
-    list<Coordinate*>& getClippingCoordinates()
+    list<Coordinate*>& worldCoordinates()
+    list<Coordinate*>& windowCoordinates()
+    list<Coordinate*>& clippingCoordinates()
   }
 
   class DrawingArea {

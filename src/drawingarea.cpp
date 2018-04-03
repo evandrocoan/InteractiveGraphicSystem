@@ -45,8 +45,8 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
       continue;
     }
 
-    // auto coordinates = object->getWindowCoordinates();
-    auto coordinates = object->getClippingCoordinates();
+    // auto coordinates = object->windowCoordinates();
+    auto coordinates = object->clippingCoordinates();
     int coordinates_count = coordinates.size();
 
     if (coordinates_count == 0)

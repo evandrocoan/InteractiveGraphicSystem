@@ -1,7 +1,7 @@
 #include "polygon.h"
 
-Polygon::Polygon(std::string name, std::list<Coordinate*> worldCoordinates, Coordinate _borderColor, Coordinate _fillingColor) :
-      DrawableObject(name, worldCoordinates, _borderColor, _fillingColor)
+Polygon::Polygon(std::string name, std::list<Coordinate*> _worldCoordinates, Coordinate _borderColor, Coordinate _fillingColor) :
+      DrawableObject(name, _worldCoordinates, _borderColor, _fillingColor)
 {
 }
 
@@ -19,7 +19,7 @@ bool Polygon::_sutherlandHodgmanPolygonClip(const Axes& axes)
 {
   std::vector<Coordinate*> input;
 
-  for( auto coordinate : this->windowCoordinates ) {
+  for( auto coordinate : this->_windowCoordinates ) {
     input.push_back(new Coordinate(*coordinate));
   }
 
@@ -35,10 +35,10 @@ bool Polygon::_sutherlandHodgmanPolygonClip(const Axes& axes)
     return false;
   }
 
-  this->destroyList(this->clippingCoordinates);
+  this->destroyList(this->_clippingCoordinates);
 
   for( auto coordinate : clippingResult ) {
-    this->clippingCoordinates.push_back( new Coordinate(*coordinate) );
+    this->_clippingCoordinates.push_back( new Coordinate(*coordinate) );
   }
   return true;
 }

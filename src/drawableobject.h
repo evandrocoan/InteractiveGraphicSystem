@@ -26,9 +26,9 @@ public:
   virtual ~DrawableObject();
   std::string getName() const;
 
-  const std::list<Coordinate*>& getWorldCoordinates() const;
-  const std::list<Coordinate*>& getWindowCoordinates() const;
-  const std::list<Coordinate*>& getClippingCoordinates() const;
+  const std::list<Coordinate*>& worldCoordinates() const;
+  const std::list<Coordinate*>& windowCoordinates() const;
+  const std::list<Coordinate*>& clippingCoordinates() const;
 
   static Coordinate getGeometricCenter(const std::list<Coordinate*>&);
   static void destroyList(std::list<Coordinate*>& coordinates);
@@ -40,7 +40,7 @@ public:
   const Coordinate& fillingColor() const { return this->_fillingColor; }
 
   /**
-   * Apply the `Transformation` to the `this->worldCoordinates` creating the Window Coordinates and
+   * Apply the `Transformation` to the `this->_worldCoordinates` creating the Window Coordinates and
    * do the objects clipping accordingly to the `Axes` clipping limits on Window Coordinates.
    */
   virtual void updateWindowCoordinates(const Transformation&);
@@ -54,8 +54,8 @@ public:
   virtual void printMyself(std::ostream &output) const;
 
 protected:
-  DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates);
-  DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates,
+  DrawableObject(std::string name, std::list<Coordinate*> _worldCoordinates);
+  DrawableObject(std::string name, std::list<Coordinate*> _worldCoordinates,
       Coordinate _borderColor, Coordinate _fillingColor=_default_coordinate_value_parameter);
 
   std::string name;
@@ -64,8 +64,8 @@ protected:
   Coordinate _borderColor;
   Coordinate _fillingColor;
 
-  std::list<Coordinate*> worldCoordinates;
-  std::list<Coordinate*> windowCoordinates;
-  std::list<Coordinate*> clippingCoordinates;
+  std::list<Coordinate*> _worldCoordinates;
+  std::list<Coordinate*> _windowCoordinates;
+  std::list<Coordinate*> _clippingCoordinates;
 };
 #endif // GTKMM_APP_DRAWABLE_OBJECT
