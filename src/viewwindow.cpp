@@ -1,11 +1,10 @@
 #include "viewwindow.h"
 
 ViewWindow::ViewWindow() :
-      xMin(0),
-      yMin(0),
-      xMax(0),
-      yMax(0),
-      worldCenter(0, 0)
+      _axes(ViewWindow::xWiMin, ViewWindow::yWiMin, ViewWindow::xWiMax, ViewWindow::yWiMax),
+      _angles(0, 0),
+      _dimentions(100, 100),
+      _windowCenter(0, 0)
 {
 }
 
@@ -13,130 +12,156 @@ ViewWindow::~ViewWindow()
 {
 }
 
-std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
+ViewWindow::UpdateAllObjectCoordinates::Connection ViewWindow::addObserver(const ViewWindow::UpdateAllObjectCoordinates::Callback& callback)
 {
-  output
-      << "(" << std::setw(4) << object.xMin << ", " << std::setw(4) << object.yMin << ")"
-      << "(" << std::setw(4) << object.xMax << ", " << std::setw(4) << object.yMax << ")";
-  return output;
-}
-
-Signal<>::Connection ViewWindow::addObserver(const Signal<>::Callback &callback)
-{
-  auto connection = callObservers.connect(callback);
+  auto connection = this->_updateAllObjectCoordinates.connect(callback);
   this->callObservers();
   return connection;
 }
 
-void ViewWindow::zoom_in(float scale)
+std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
 {
-  if (scale < 1)
+  output << "ViewWindow[" << object._dimentions << "]"
+      << object._windowCenter << " " << object._transformation << " " << object._angle_rotation;
+  return output;
+}
+
+void ViewWindow::zoom(Coordinate steps)
+{
+  if( (this->_dimentions[0] + steps[0] <= MINIMUM_ZOOM_LIMIT
+      || this->_dimentions[1] + steps[0] <= MINIMUM_ZOOM_LIMIT)
+    && steps[0] < 0 )
   {
+    LOG(1, "");
+    LOG(1, "");
+    LOG(1, "ERROR: You reached the maximum zoom limit! %s", *this);
+    return;
+  }
+  else if( (this->_dimentions[0] + steps[0] >= MAXIMUM_ZOOM_LIMIT
+            || this->_dimentions[1] + steps[0] >= MAXIMUM_ZOOM_LIMIT)
+          && steps[0] > 0)
+  {
+    LOG(1, "");
+    LOG(1, "");
+    LOG(1, "ERROR: You reached the minimum zoom limit! %s", *this);
     return;
   }
   else
   {
-    float width = this->xMax - this->xMin;
-    float height = this->yMax - this->yMin;
-
-    float xMinNew = this->xMin + (width - (width / scale)) / 2;
-    float xMaxNew = this->xMax - (width - (width / scale)) / 2;
-    float yMinNew = this->yMin + (height - (height / scale)) / 2;
-    float yMaxNew = this->yMax - (height - (height/ scale)) / 2;
-
-    if ((xMaxNew - xMinNew) < MIN_WIDTH || (yMaxNew - yMinNew) < MIN_HEIGHT)
-    {
-      return;
-    }
-    else
-    {
-      this->xMin = xMinNew;
-      this->xMax = xMaxNew;
-      this->yMin = yMinNew;
-      this->yMax = yMaxNew;
-    }
+    this->_dimentions += steps;
+    this->callObservers();
   }
+}
 
+void ViewWindow::move(Coordinate moves)
+{
+  this->_angle_rotation.clear();
+  this->_angle_rotation.add_rotation("Transformation on the ViewWindow by Rotation", this->_angles);
+  this->_angle_rotation.apply(moves);
+
+  this->_windowCenter += moves;
   this->callObservers();
 }
 
-void ViewWindow::zoom_out(float scale)
+void ViewWindow::rotate(Coordinate angles)
 {
-  if (scale < 1)
+  this->_angles += -angles;
+  this->callObservers();
+}
+
+void ViewWindow::callObservers()
+{
+  this->_transformation.clear();
+  this->_transformation.add_translation("Translation to wold center", -this->_windowCenter);
+  this->_transformation.add_rotation("Rotation on given coordinate", this->_angles);
+  this->_transformation.add_scaling("Scaling for window coordinates", this->_dimentions.inverse());
+  this->_transformation.set_geometric_center();
+  LOG(4, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
+  LOG(4, "_transformation: %s", _transformation);
+  this->_updateAllObjectCoordinates(this->_transformation, this->_axes);
+}
+
+/**
+ * TODO: Keep viewPort and viewWindow portions while resizing the viewPort.
+ */
+void ViewWindow::updateViewPortSize(big_double width, big_double height)
+{
+  LOG(4, "Current drawing area widget size %sx%s - %s", width, height, *this);
+
+  // This is true only when you resize the you ViewWindow widget window
+  if (this->xVpMax != width || this->yVpMax != height)
   {
-    return;
+    big_double widthDiff  = width  - (this->xVpMax - this->xVpMin);
+    big_double heightDiff = height - (this->yVpMax - this->yVpMin);
+
+    // Keep the window zoom size while resizing the window
+    // // On the first time we run this algorithm, the xVpMax is set to zero. Therefore, we must
+    // // to initialize this within the current size of the ViewWindow
+    // if (this->xVpMax != 0)
+    // {
+    //   this->viewWindow.xMax = this->viewWindow.xMax + (this->viewWindow.xMax - this->viewWindow.xMin)
+    //       * widthDiff / (this->xVpMax - this->xVpMin);
+    // }
+    // else
+    // {
+    //   this->viewWindow.xMax = widthDiff;
+    // }
+
+    // if (this->yVpMax != 0)
+    // {
+    //   this->viewWindow.yMin = this->viewWindow.yMin - (this->viewWindow.yMax - this->viewWindow.yMin)
+    //       * (heightDiff / (this->yVpMax - this->yVpMin));
+    // }
+    // else
+    // {
+    //   // LOG(8, "If we exchange this `viewWindow.yMax` to `viewWindow.yMin` our world becomes up-side-down");
+    //   this->viewWindow.yMax = heightDiff;
+    // }
+
+    this->xVpMax += widthDiff;
+    this->yVpMax += heightDiff;
+
+    this->callObservers();
+    LOG(8, "Leaving:  %s", *this);
   }
-  else
-  {
-    float width = this->xMax - this->xMin;
-    float height = this->yMax - this->yMin;
-
-    float xMinNew = this->xMin - ((width * scale) - width) / 2;
-    float xMaxNew = this->xMax + ((width * scale) - width) / 2;
-    float yMinNew = this->yMin - ((height * scale) - height) / 2;
-    float yMaxNew = this->yMax + ((height * scale) - height) / 2;
-
-    if ((xMaxNew - xMinNew) > MAX_WIDTH || (yMaxNew - yMinNew) > MAX_HEIGHT)
-    {
-      return;
-    }
-    else
-    {
-      this->xMin = xMinNew;
-      this->xMax = xMaxNew;
-      this->yMin = yMinNew;
-      this->yMax = yMaxNew;
-    }
-  }
-
-  this->callObservers();
 }
 
-void ViewWindow::move_up(int length)
+/**
+ * Transformada de viewport - Slide 2 de "02 - Conceitos Básicos"
+ *
+ * Resize `viewwindow` when `viewport` is resized:
+ * http://www.di.ubi.pt/~agomes/cg/teoricas/04e-windows.pdf
+ *
+ * A strategy of keeping proportions automatically between window and viewport.
+ *
+ * Window-Viewport Mapping, important conclusion: As the world window increases in size the image in
+ * viewport decreases in size and vice-versa.
+ *
+ * The user may enlarge or reduce the size of a viewport with w pixels wide and h pixels high by
+ * pulling away the right-bottom of its interface window.
+ *
+ * To avoid distortion, we must change the size of the world window accordingly.
+ *
+ * For that, we assume that the initial world window is a square with side length L.
+ *
+ * A possible solution is to change the world window whenever the viewport of
+ * the interface window were changed.
+ *
+ * @param  coordinate a normalized coordinate as from -1 to 1
+ * @return            the viewport coordinate as from 0 to 500
+ */
+Coordinate ViewWindow::convertCoordinateToViewPort(const Coordinate &c) const
 {
-  this->yMin += length;
-  this->yMax += length;
-  this->callObservers();
-}
+  // double     x=((c.x -wmin.x) / (wmax.x-wmin.x)) *_width;
+  big_double xVp =((c.x - xWiMin) / (xWiMax - xWiMin)) * (xVpMax - xVpMin);
 
-void ViewWindow::move_down(int length)
-{
-  this->yMin -= length;
-  this->yMax -= length;
-  this->callObservers();
-}
+  // double    y = (1.0 - ((c.y -wmin.y) /(wmax.y -wmin.y))) *_height;
+  big_double yVp = (1.0 - ((c.y - yWiMin) / (yWiMax - yWiMin))) * (yVpMax - yVpMin);
 
-void ViewWindow::move_left(int length)
-{
-  this->xMin -= length;
-  this->xMax -= length;
-  this->callObservers();
-}
-
-void ViewWindow::move_right(int length)
-{
-  this->xMin += length;
-  this->xMax += length;
-  this->callObservers();
-}
-
-void ViewWindow::rotate_left(GTKMM_APP_MATRICES_DATATYPE angle)
-{
-  this->transformation.add_rotation("Window Rotation", Array<3, GTKMM_APP_MATRICES_DATATYPE>{angle, 0.0, 0.0});
-  this->transformation.set_geometric_center(this->worldCenter);
-
-  this->callObservers();
-}
-
-void ViewWindow::rotate_right(GTKMM_APP_MATRICES_DATATYPE angle)
-{
-  this->transformation.add_rotation("Window Rotation", Array<3, GTKMM_APP_MATRICES_DATATYPE>{-angle, 0.0, 0.0});
-  this->transformation.set_geometric_center(this->worldCenter);
-
-  this->callObservers();
-}
-
-void ViewWindow::apply(Coordinate& coordinate)
-{
-  transformation.apply(coordinate);
+  // std::cout << "transformCoordinate: " << Coordinate(xVp, yVp);
+  // std::cout << ", Original: " << coordinate << std::endl;
+  // std::cout << ", wiMin x: " << xWiMin << ", y: " << yWiMin;
+  // std::cout << ", wiMax x: " << xWiMax << ", y: " << yWiMax;
+  // std::cout << ", _width x: " << xVpMax - xVpMin << ", _height: " << yVpMax - yVpMin << std::endl;
+  return Coordinate(xVp, yVp);
 }

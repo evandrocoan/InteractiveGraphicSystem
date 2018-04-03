@@ -6,9 +6,9 @@
  * https://www.utf8icons.com/character/9993/envelope
  */
 MainWindow::MainWindow() :
-      addObject(this->drawingArea),
-      addTransformation(this->drawingArea),
-      rw_object_service(this->drawingArea),
+      addObject(this->facade),
+      addTransformation(this->facade),
+      rw_object_service(this->facade),
       button_move_up("↑"),
       button_move_down("↓"),
       button_move_left("←"),
@@ -37,10 +37,11 @@ MainWindow::MainWindow() :
   this->setDefaultTooltips();
 
   LOG(4, "DrawingArea");
+  DrawingArea& drawingArea = this->facade.drawingArea();
   this->main_box.pack_start(this->right_frame, Gtk::PACK_EXPAND_WIDGET, 10);
-  this->right_frame.add(this->drawingArea);
-  this->drawingArea.show();
-  this->drawingArea.addObserver(std::bind(&MainWindow::updateDropdownList, this));
+  this->right_frame.add(drawingArea);
+  drawingArea.show();
+  this->facade.addObserver(std::bind(&MainWindow::updateDropdownList, this));
 
   LOG(4, "Show all components");
   this->window.set_title("CG - Trabalho01 - Karla Ap. Justen, Evandro S. Coan, Hugo Vincent");
@@ -84,17 +85,17 @@ void MainWindow::setupButtons()
 {
   LOG(4, "Inicializando dado da entrada do tamanho de movimentação");
   entry_move_length.set_width_chars(3);
-  entry_move_length.set_text(default_move_length);
+  entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
 
   LOG(4, "Inicializando dado da entrada do tamanho da rotaçao");
   entry_rotate_angle.set_width_chars(1);
-  entry_rotate_angle.set_text(default_rotate_angle);
+  entry_rotate_angle.set_text(DEFAULT_ROTATE_ANGLE);
 
   LOG(4, "Inicializando dado da entrada do tamanho do zoom");
   entry_zoom_scale.set_width_chars(3);
   char array[4];
 
-  sprintf(array, "%f", default_zoom_scale);
+  sprintf(array, "%d", DEFAULT_ZOOM_SCALE);
   array[3] = '\0';
   entry_zoom_scale.set_text(array);
 
@@ -165,7 +166,7 @@ void MainWindow::connectButtons()
 void MainWindow::updateDropdownList()
 {
   LOG(2, "Entering...");
-  auto names = this->drawingArea.getNamesList();
+  auto names = this->facade.displayFile().objectNames();
 
   LOG(4, "limpa a lista de objetos para reimprimi-la");
   this->objects_list.remove_all();
@@ -196,11 +197,11 @@ void MainWindow::on_button_move_up()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(default_move_length);
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
   }
   else
   {
-    this->drawingArea.move_up(move_length);
+    this->facade.move(Coordinate(0, move_length));
   }
 }
 
@@ -210,11 +211,11 @@ void MainWindow::on_button_move_down()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(default_move_length);
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
   }
   else
   {
-    this->drawingArea.move_down(move_length);
+    this->facade.move(Coordinate(0, -move_length));
   }
 }
 
@@ -224,11 +225,11 @@ void MainWindow::on_button_move_left()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(default_move_length);
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
   }
   else
   {
-    this->drawingArea.move_left(move_length);
+    this->facade.move(Coordinate(-move_length, 0));
   }
 }
 
@@ -238,29 +239,29 @@ void MainWindow::on_button_move_right()
 
   if (move_length == 0)
   {
-    entry_move_length.set_text(default_move_length);
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
   }
   else
   {
-    this->drawingArea.move_right(move_length);
+    this->facade.move(Coordinate(move_length, 0));
   }
 }
 
 void MainWindow::on_button_zoom_in()
 {
-  float zoom_scale = atof(entry_zoom_scale.get_text().raw().c_str());
+  big_double zoom_scale = atof(entry_zoom_scale.get_text().raw().c_str());
 
   if (zoom_scale <=1)
   {
     char array[4];
-    sprintf(array, "%f", default_zoom_scale);
+    sprintf(array, "%d", DEFAULT_ZOOM_SCALE);
 
     array[3] = '\0';
     entry_zoom_scale.set_text(array);
   }
   else
   {
-    this->drawingArea.zoom_in(zoom_scale);
+    this->facade.zoom(Coordinate(-zoom_scale, -zoom_scale));
   }
 }
 
@@ -271,42 +272,42 @@ void MainWindow::on_button_zoom_out()
   if (zoom_scale <=1)
   {
     char array[4];
-    sprintf(array, "%f", default_zoom_scale);
+    sprintf(array, "%d", DEFAULT_ZOOM_SCALE);
 
     array[3] = '\0';
     entry_zoom_scale.set_text(array);
   }
   else
   {
-    this->drawingArea.zoom_out(zoom_scale);
+    this->facade.zoom(Coordinate(zoom_scale, zoom_scale));
   }
 }
 
 void MainWindow::on_button_rotate_left()
 {
-  GTKMM_APP_MATRICES_DATATYPE rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+  big_double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
 
   if (rotate_angle == 0)
   {
-    entry_move_length.set_text(default_rotate_angle);
+    entry_move_length.set_text(DEFAULT_ROTATE_ANGLE);
   }
   else
   {
-    this->drawingArea.rotate_left(rotate_angle);
+    this->facade.rotate(Coordinate(rotate_angle, 0, 0));
   }
 }
 
 void MainWindow::on_button_rotate_right()
 {
-  GTKMM_APP_MATRICES_DATATYPE rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+  big_double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
 
   if (rotate_angle == 0)
   {
-    entry_move_length.set_text(default_rotate_angle);
+    entry_move_length.set_text(DEFAULT_ROTATE_ANGLE);
   }
   else
   {
-    this->drawingArea.rotate_right(rotate_angle);
+    this->facade.rotate(Coordinate(-rotate_angle, 0, 0));
   }
 }
 
@@ -322,8 +323,8 @@ void MainWindow::on_button_delete_object()
 
   if(!(name.empty()))
   {
-    this->drawingArea.removeObject(name);
-    this->drawingArea.queue_draw();
+    this->facade.removeObject(name);
+    this->facade.queue_draw();
   }
 }
 
@@ -335,7 +336,7 @@ void MainWindow::on_button_open_file()
   std::string file_path = choose_file_window->get_file_path();
 	this->rw_object_service.read(file_path);
 
-	this->drawingArea.queue_draw();
+	this->facade.queue_draw();
   LOG(2, "Successfully opened the objects from file\n");
 }
 
@@ -345,7 +346,7 @@ void MainWindow::on_button_save_file()
 	choose_file_window->show();
 
 	std::string file_path = choose_file_window->get_file_path();
-	this->rw_object_service.write(this->drawingArea.getObjectsList(), file_path);
+	this->rw_object_service.write(this->facade.displayFile().getObjects(), file_path);
 
 	LOG(2, "Sucessfull saved the objects on file\n");
 }

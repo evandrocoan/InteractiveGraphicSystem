@@ -16,8 +16,7 @@
 
 #include "debugger.h"
 
-#include "viewport.h"
-#include "viewwindow.h"
+#include "axes.h"
 #include "coordinate.h"
 #include "transformation.h"
 
@@ -25,21 +24,18 @@ class DrawableObject
 {
 public:
   virtual ~DrawableObject();
-  std::string getName();
+  std::string getName() const;
 
-  void addWorldCoordinate(Coordinate* coordinate);
-  void clearWorldCoordinates();
-
-  std::list<Coordinate*>& getWorldCoordinates();
-  std::list<Coordinate*>& getViewWindowCoordinates();
-  std::list<Coordinate*>& getClippingCoordinates();
+  const std::list<Coordinate*>& getWorldCoordinates() const;
+  const std::list<Coordinate*>& getViewWindowCoordinates() const;
+  const std::list<Coordinate*>& getClippingCoordinates() const;
 
   static Coordinate getGeometricCenter(const std::list<Coordinate*>&);
   static void destroyList(std::list<Coordinate*>& coordinates);
 
   void apply(Transformation&);
-  virtual void updateWindowCoordinates(ViewWindow&);
-  virtual void updateClippingCoordinates(ViewPort&);
+  virtual void updateWindowCoordinates(const Transformation&);
+  virtual void updateClippingCoordinates(const Axes&);
 
   /**
    * Making operator<< virtual?

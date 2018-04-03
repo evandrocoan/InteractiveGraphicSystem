@@ -7,6 +7,10 @@
 
 #include "stacktrace.h"
 
+/**
+ * C++ static polymorphism (CRTP) and using typedefs from derived classes
+ * https://stackoverflow.com/questions/6006614/c-static-polymorphism-crtp-and-using-typedefs-from-derived-classes
+ */
 template <unsigned int array_width, typename array_datatype=long int>
 struct Array
 {
@@ -15,14 +19,6 @@ struct Array
    * https://stackoverflow.com/questions/2034916/is-it-okay-to-inherit-implementation-from-stl-containers-rather-than-delegate
    */
   std::array<array_datatype, array_width> _data;
-
-  // Array(const Array& object)
-  // {
-  //   for( unsigned int index = 0; index < array_width; index++ )
-  //   {
-  //     this->_data[index] = new array_datatype(*object._data[index]);
-  //   }
-  // }
 
   /**
    * std::array constructor inheritance
@@ -74,28 +70,72 @@ struct Array
    * @param  line the current line you want to access
    * @return      a pointer to the current line
    */
-  array_datatype operator[](unsigned int line)&&
+  array_datatype operator[](unsigned int line) &&
   {
     assert(line < array_width);
-    assert(line >= 0);
     return this->_data[line];
   }
 
-  array_datatype const& operator[](unsigned int line)const&
+  array_datatype const& operator[](unsigned int line) const&
   {
     assert(line < array_width);
-    assert(line >= 0);
     return this->_data[line];
   }
 
-  array_datatype& operator[](unsigned int line)&
+  array_datatype& operator[](unsigned int line) &
   {
     assert(line < array_width);
-    assert(line >= 0);
     return this->_data[line];
   }
 
-  void clear(array_datatype initial = 0)
+  /**
+   * Generic Data to Object operators.
+   */
+  bool operator<=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] > data ) { return false; } } return true; }
+
+  bool operator<(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] >= data ) { return false; } } return true; }
+
+  bool operator>=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] < data ) { return false; } } return true; }
+
+  bool operator>(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] <= data ) { return false; } } return true; }
+
+  bool operator==(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] != data ) { return false; } } return true; }
+
+  bool operator!=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] == data ) { return false; } } return true; }
+
+  /**
+   * Generic Object to Object operators.
+   */
+  bool operator<=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
+
+  bool operator<(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] >= object._data[index] ) { return false; } } return true; }
+
+  bool operator>=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] < object._data[index] ) { return false; } } return true; }
+
+  bool operator>(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] <= object._data[index] ) { return false; } } return true; }
+
+  bool operator==(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] != object._data[index] ) { return false; } } return true; }
+
+  bool operator!=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+      { if( this->_data[index] == object._data[index] ) { return false; } } return true; }
+
+  /**
+   * Set all the values on the array to the specified single data parameter.
+   *
+   * @param `initial` the value to the used
+   */
+  void clear(const array_datatype initial = 0)
   {
     unsigned int column_index = 0;
 
@@ -109,7 +149,7 @@ struct Array
    * The Array<> type includes the Matrix<> type, because you can multiply a `Array` by an `Matrix`,
    * but not a vice-versa.
    */
-  void multiply(Array< array_width, Array< array_width, array_datatype > > &matrix)
+  void multiply(const Array< array_width, Array< array_width, array_datatype > > &matrix)
   {
     unsigned int column;
     unsigned int step;
