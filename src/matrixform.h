@@ -11,11 +11,11 @@
 #include "matrix.h"
 #include "traits.h"
 
-struct MatrixForm : public Matrix< GTKMM_APP_MATRICES_DIMENSION, GTKMM_APP_MATRICES_DIMENSION, GTKMM_APP_MATRICES_DATATYPE >
+struct MatrixForm : public Matrix<MATRICES_DIMENSION, MATRICES_DIMENSION, big_double>
 {
   // Inheriting constructors
   // https://stackoverflow.com/questions/347358/inheriting-constructors
-  using Matrix< GTKMM_APP_MATRICES_DIMENSION, GTKMM_APP_MATRICES_DIMENSION, GTKMM_APP_MATRICES_DATATYPE >::Matrix;
+  using Matrix< MATRICES_DIMENSION, MATRICES_DIMENSION, big_double >::Matrix;
 };
 
 // How to set default parameter as class object in c++?

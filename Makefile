@@ -118,6 +118,7 @@ all:
 	@${MAKE} start_timer -s
 	@${MAKE} resources -s
 	${MAKE} $(FULL_TARGET) -j$(NPROCS)
+	# ${MAKE} $(FULL_TARGET)
 	@${MAKE} print_elapsed_time -s
 
 # GNU Make silent by default

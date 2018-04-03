@@ -15,7 +15,7 @@
 #include <sstream>
 #include <vector>
 
-#include "drawingarea.h"
+#include "facade.h"
 #include "drawableobject.h"
 
 using namespace std;
@@ -23,14 +23,14 @@ using namespace std;
 class RwObjectService
 {
 public:
-  RwObjectService(DrawingArea&);
+  RwObjectService(Facade&);
   ~RwObjectService();
 
   void read(string file_path);
   void write(list<DrawableObject*> objects_list, string file_path);
 
 protected:
-  DrawingArea& drawingArea;
+  Facade& facade;
   vector<string> split(string str, char delimiter);
 };
 

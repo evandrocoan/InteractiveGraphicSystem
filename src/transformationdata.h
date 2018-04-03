@@ -7,7 +7,7 @@
 #include "coordinate.h"
 #include "matrixform.h"
 
-enum RotationType
+enum TransformationPoint
 {
   ON_WORLD_CENTER,
   ON_ITS_OWN_CENTER,
@@ -21,7 +21,7 @@ enum TransformationType
   TRANSLATION
 };
 
-std::ostream& operator<<(std::ostream &output, const RotationType object);
+std::ostream& operator<<(std::ostream &output, const TransformationPoint object);
 std::ostream& operator<<(std::ostream &output, const TransformationType object);
 
 /**
@@ -34,17 +34,17 @@ struct TransformationData
   MatrixForm matrix;
   TransformationType type;
 
-  Coordinate rotation_center;
-  RotationType rotation_type;
+  Coordinate center;
+  TransformationPoint point;
 
   /**
-   * This `rotation_center` default value is null, because it is only used when the object is a
+   * This `center` default value is null, because it is only used when the object is a
    * rotation which should be performed around some specific coordinate as the world center, instead
    * of the object geometric center.
    */
   TransformationData(std::string name, MatrixForm matrix, TransformationType type,
-      RotationType rotation_type = RotationType::ON_WORLD_CENTER,
-      Coordinate rotation_center = _default_coordinate_value_parameter);
+      TransformationPoint point = TransformationPoint::ON_WORLD_CENTER,
+      Coordinate center = _default_coordinate_value_parameter);
 
   friend std::ostream& operator<<(std::ostream &output, const TransformationData &object);
 };

@@ -25,4 +25,4 @@ protected:
   std::string selected_path;
 };
 
-#endif /* CHOOSEFILEWINDOW_H_ */
+#endif // CHOOSEFILEWINDOW_H_
