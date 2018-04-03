@@ -83,7 +83,7 @@ void World::updateObjectCoordinates(DrawableObject* object, const Transformation
     return;
   }
 
-  if( object->getWorldCoordinates().size() == 0 )
+  if( object->worldCoordinates().size() == 0 )
   {
     LOG(1, "");
     LOG(1, "");

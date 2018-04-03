@@ -81,7 +81,7 @@ void RwObjectService::write(std::list<DrawableObject*> objects_list, std::string
   for (auto it_obj = objects_list.begin(); it_obj != objects_list.end(); ++it_obj)
   {
     myfile << "o " + (*it_obj)->getName() + "\n\n";
-    std::list<Coordinate*> objectCoordinates = (*it_obj)->getWorldCoordinates();
+    std::list<Coordinate*> objectCoordinates = (*it_obj)->worldCoordinates();
 
     for (std::list<Coordinate*>::iterator it_cord = objectCoordinates.begin(); it_cord != objectCoordinates.end(); ++it_cord)
     {
