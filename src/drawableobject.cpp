@@ -13,7 +13,7 @@ DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> worldCoo
 
   for( auto coordinate : worldCoordinates )
   {
-    this->viewWindowCoordinates.push_back(new Coordinate(*coordinate));
+    this->windowCoordinates.push_back(new Coordinate(*coordinate));
     this->clippingCoordinates.push_back(new Coordinate(*coordinate));
   }
 }
@@ -46,9 +46,9 @@ const std::list<Coordinate*>& DrawableObject::getWorldCoordinates() const
   return this->worldCoordinates;
 }
 
-const std::list<Coordinate*>& DrawableObject::getViewWindowCoordinates() const
+const std::list<Coordinate*>& DrawableObject::getWindowCoordinates() const
 {
-  return this->viewWindowCoordinates;
+  return this->windowCoordinates;
 }
 
 const std::list<Coordinate*>& DrawableObject::getClippingCoordinates() const
@@ -91,7 +91,7 @@ void DrawableObject::printMyself(std::ostream& output) const
   std::list< std::list<Coordinate*> > coordinates_lists;
 
   coordinates_lists.push_back(this->worldCoordinates);
-  coordinates_lists.push_back(this->viewWindowCoordinates);
+  coordinates_lists.push_back(this->windowCoordinates);
   coordinates_lists.push_back(this->clippingCoordinates);
 
   output << this->name;
@@ -140,18 +140,18 @@ void DrawableObject::updateWindowCoordinates(const Transformation& transformatio
   Coordinate* new_coordinate;
 
   auto coordinates = this->getWorldCoordinates();
-  DrawableObject::destroyList(this->viewWindowCoordinates);
+  DrawableObject::destroyList(this->windowCoordinates);
 
   for(auto coordinate : coordinates)
   {
     new_coordinate = new Coordinate(*coordinate);
     transformation.apply(*new_coordinate);
-    this->viewWindowCoordinates.push_back(new_coordinate);
+    this->windowCoordinates.push_back(new_coordinate);
   }
 }
 
 void DrawableObject::updateClippingCoordinates(const Axes& axes)
 {
   LOG(4, "Generic clipping update... %s", axes);
-  this->clippingCoordinates = this->worldCoordinates;
+  this->clippingCoordinates = this->windowCoordinates;
 }
