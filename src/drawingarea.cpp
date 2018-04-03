@@ -47,9 +47,10 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
     auto coordinates = object->getViewWindowCoordinates();
     int coordinates_count = coordinates.size();
 
+    // LOG(8, "Skip objects which were completely clipped out of the Window");
     if (coordinates_count == 0)
     {
-      LOG(1, "ERROR: The object `%s` has no coordinates.", *object);
+      // LOG(1, "ERROR: The object `%s` has no coordinates.", *object);
       continue;
     }
 

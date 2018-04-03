@@ -64,6 +64,7 @@ public:
 
   /**
    * The Drawing Area Widget `ViewPort` Real Screen Coordinates:
+   *
    *   (xMin, yMin) usually (0, 0)
    *         +-------------------+
    *         |                   |
@@ -80,7 +81,7 @@ public:
   int yVpMax;
 
   /**
-   * Fixed Normalized `ViewWindow` Coordinates:
+   * Fixed Normalized `Window` Coordinates:
    *
    *                        (xMax, yMax) something like (1, 1)
    *         +-------------------+
