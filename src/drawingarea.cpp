@@ -43,14 +43,19 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 
   for (auto object : objects)
   {
+    if( !object->isDrawable() )
+    {
+      LOG(8, "Skip objects which were completely clipped out of the Window");
+      continue;
+    }
+
     // auto coordinates = object->getWindowCoordinates();
     auto coordinates = object->getClippingCoordinates();
     int coordinates_count = coordinates.size();
 
-    // LOG(8, "Skip objects which were completely clipped out of the Window");
     if (coordinates_count == 0)
     {
-      // LOG(1, "ERROR: The object `%s` has no coordinates.", *object);
+      LOG(1, "ERROR: The object `%s` has no coordinates.", *object);
       continue;
     }
 

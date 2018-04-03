@@ -34,6 +34,12 @@ public:
   static void destroyList(std::list<Coordinate*>& coordinates);
 
   void apply(Transformation&);
+  bool isDrawable() { return this->_isDrawable; }
+
+  /**
+   * Apply the `Transformation` to the `this->worldCoordinates` creating the Window Coordinates and
+   * do the objects clipping accordingly to the `Axes` clipping limits on Window Coordinates.
+   */
   virtual void updateWindowCoordinates(const Transformation&);
   virtual void updateClippingCoordinates(const Axes&);
 
@@ -48,6 +54,7 @@ protected:
   DrawableObject(std::string name);
   DrawableObject(std::string name, std::list<Coordinate*> worldCoordinates);
 
+  bool _isDrawable;
   std::string name;
 
   std::list<Coordinate*> worldCoordinates;
