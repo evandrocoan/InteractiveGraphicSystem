@@ -48,11 +48,13 @@ public:
   void move(Coordinate steps);
   void rotate(Coordinate steps);
 
-  const Axes& axes() const                   { return this->_axes; };
-  // const Axe&  axes(unsigned int index) const { return this->_axes[index]; };
+  const Axes& axes() const                     { return this->_axes; };
+  const Transformation& transformation() const { return this->_transformation; }
 
-  const Transformation& transformation() const      { return this->_transformation; }
-  const Coordinate& point(unsigned int index) const { return *(this->_axes._clippingWindowCoordinates[index]); };
+  const Coordinate& point(unsigned int index) const { return *(this->_axes._clippingWindowCoordinates[index]); }
+  const Coordinate  viewPort(unsigned int index) const {
+    return this->convertCoordinateToViewPort( *(this->_axes._clippingWindowCoordinates[index]) );
+  }
 
   Coordinate convertCoordinateToViewPort(const Coordinate&) const;
   void updateViewPortSize(big_double width, big_double height);
