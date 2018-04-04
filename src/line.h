@@ -11,7 +11,17 @@ enum LineClippingType
   COHEN_SUTHELAND
 };
 
+enum CohenSuthelandRegionCode
+{
+  INSIDE=0,
+  LEFT=1,
+  RIGHT=2,
+  BOTTOM=4,
+  TOP=8
+};
+
 std::ostream& operator<<(std::ostream &output, const LineClippingType object);
+std::ostream& operator<<(std::ostream &output, const CohenSuthelandRegionCode object);
 
 class Line : public DrawableObject
 {
@@ -30,6 +40,12 @@ protected:
    * @return true if the line should be drawn, false if the line should be skipped drawing
    */
   bool _liangBaskyLineClip(const Axes&);
+
+  /**
+   * https://en.wikipedia.org/wiki/Cohen%E2%80%93Sutherland_algorithm
+   */
+  bool _cohenSuthelandLineClip(const Axes&);
+  int _getCoordianteRegionCode(const Axes&, const Coordinate&);
 };
 
 #endif // GTKMM_APP_LINE
