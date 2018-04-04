@@ -34,17 +34,19 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 
   this->_draw_clipping_axes(cairo_context);
 
-  // LOG(8, "Set color's objects as black:");
-  cairo_context->stroke();
-  cairo_context->set_source_rgb(0, 0, 0);
-
   // LOG(8, "Draw displayFile objects");
   auto objects = this->_world.displayFile().getObjects();
 
   for (auto object : objects)
   {
-    // auto coordinates = object->getViewWindowCoordinates();
-    auto coordinates = object->getViewWindowCoordinates();
+    if( !object->isDrawable() )
+    {
+      LOG(8, "Skip objects which were completely clipped out of the Window");
+      continue;
+    }
+
+    // auto coordinates = object->windowCoordinates();
+    auto coordinates = object->clippingCoordinates();
     int coordinates_count = coordinates.size();
 
     if (coordinates_count == 0)
@@ -53,29 +55,40 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
       continue;
     }
 
-    auto firstCoordinate = this->_viewWindow.convertCoordinateToViewPort(**(coordinates.begin()));
+    auto border = object->borderColor();
+    auto filling = object->fillingColor();
+
+    LOG(8, "Set object border and filing colors: %s %s", border, filling);
+    cairo_context->set_source_rgb(border.x, border.y, border.z);
 
     LOG(8, "object coordinates: %s", *object);
+    auto firstCoordinate = this->_viewWindow.convertCoordinateToViewPort(**(coordinates.begin()));
     cairo_context->move_to(firstCoordinate.x, firstCoordinate.y);
 
-    if (coordinates_count == 1)
+    if( coordinates_count == 1 )
     {
       cairo_context->line_to(firstCoordinate.x+1, firstCoordinate.y+1);
     }
     else
     {
-      for (auto coordinate : coordinates)
+      for( auto coordinate : coordinates )
       {
         Coordinate coordinateConverted = this->_viewWindow.convertCoordinateToViewPort(*coordinate);
         cairo_context->line_to(coordinateConverted.x, coordinateConverted.y);
       }
 
-      // LOG(8, "Draw a line until the first coordinate, closing the polygon")
-      cairo_context->line_to(firstCoordinate.x, firstCoordinate.y);
+      // https://developer.gnome.org/gtkmm-tutorial/stable/sec-cairo-drawing-arcs.html.en
+      // LOG(8, "Line back to start point, closing the polygon")
+      cairo_context->save();
+      cairo_context->close_path();
+      cairo_context->set_source_rgb(filling.x, filling.y, filling.z);
+      cairo_context->fill_preserve();
+      cairo_context->restore();  // back to opaque black
     }
+
+    cairo_context->stroke(); // outline it
   }
 
-  cairo_context->stroke();
   return true;
 }
 
@@ -119,4 +132,5 @@ void DrawingArea::_draw_clipping_axes(const Cairo::RefPtr<Cairo::Context>& cairo
   cairo_context->line_to(this->_viewWindow.viewPort(2).x, this->_viewWindow.viewPort(2).y);
   cairo_context->line_to(this->_viewWindow.viewPort(3).x, this->_viewWindow.viewPort(3).y);
   cairo_context->line_to(this->_viewWindow.viewPort(0).x, this->_viewWindow.viewPort(0).y);
+  cairo_context->stroke();
 }

@@ -84,9 +84,9 @@
     void         addPoint()
     void         addPolygon()
     void         apply(Transformation&)
-    list<Coordinate*>& getWorldCoordinates()
-    list<Coordinate*>& getClippingCoordinates()
-    list<Coordinate*>& getViewWindowCoordinates()
+    list<Coordinate*>& worldCoordinates()
+    list<Coordinate*>& windowCoordinates()
+    list<Coordinate*>& clippingCoordinates()
   }
 
   class DrawingArea {
@@ -100,6 +100,7 @@
   }
 
   class Facade {
+    UpdateDropdownList _updateDropdownList
   }
 
   class Line {

@@ -25,7 +25,7 @@ std::ostream& operator<<( std::ostream &output, const TransformationData &data )
 
 inline std::ostream& operator<<(std::ostream &output, const TransformationType object)
 {
-  switch (object)
+  switch( object )
   {
     case TransformationType::SCALING:     output << "SCALING"; break;
     case TransformationType::ROTATION:    output << "ROTATION"; break;
@@ -38,7 +38,7 @@ inline std::ostream& operator<<(std::ostream &output, const TransformationType o
 
 inline std::ostream& operator<<(std::ostream &output, const TransformationPoint object)
 {
-  switch (object)
+  switch( object )
   {
     case TransformationPoint::ON_WORLD_CENTER:     output << "ON_WORLD_CENTER"; break;
     case TransformationPoint::ON_ITS_OWN_CENTER:   output << "ON_ITS_OWN_CENTER"; break;

@@ -51,9 +51,9 @@ public:
   const Axes& axes() const                     { return this->_axes; };
   const Transformation& transformation() const { return this->_transformation; }
 
-  const Coordinate& point(unsigned int index) const { return *(this->_axes._clippingWindowCoordinates[index]); }
+  const Coordinate& point(unsigned int index) const { return this->_axes[index]; }
   const Coordinate  viewPort(unsigned int index) const {
-    return this->convertCoordinateToViewPort( *(this->_axes._clippingWindowCoordinates[index]) );
+    return this->convertCoordinateToViewPort( this->_axes[index] );
   }
 
   Coordinate convertCoordinateToViewPort(const Coordinate&) const;
@@ -64,6 +64,7 @@ public:
 
   /**
    * The Drawing Area Widget `ViewPort` Real Screen Coordinates:
+   *
    *   (xMin, yMin) usually (0, 0)
    *         +-------------------+
    *         |                   |
@@ -80,7 +81,7 @@ public:
   int yVpMax;
 
   /**
-   * Fixed Normalized `ViewWindow` Coordinates:
+   * Fixed Normalized `Window` Coordinates:
    *
    *                        (xMax, yMax) something like (1, 1)
    *         +-------------------+
