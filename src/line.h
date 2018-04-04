@@ -5,15 +5,24 @@
 #include "coordinate.h"
 #include "drawableobject.h"
 
+enum LineClippingType
+{
+  LIANG_BARSKY,
+  COHEN_SUTHELAND
+};
+
+std::ostream& operator<<(std::ostream &output, const LineClippingType object);
+
 class Line : public DrawableObject
 {
 public:
-  Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2, Coordinate _borderColor);
+  Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2, Coordinate _borderColor, LineClippingType);
   ~Line();
 
   virtual void updateClippingCoordinates(const Axes&);
 
 protected:
+  LineClippingType line_clipping_type;
 
   /**
    * http://www.skytopia.com/project/articles/compsci/clipping.html
