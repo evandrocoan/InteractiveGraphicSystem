@@ -1,17 +1,30 @@
 #include "line.h"
 
-Line::Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2, Coordinate _borderColor) :
+Line::Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2, Coordinate _borderColor, LineClippingType type) :
       DrawableObject(name, std::list<Coordinate*>{line_cord1, line_cord2}, _borderColor)
 {
+  this->line_clipping_type = type;
 }
 
 Line::~Line()
 {
 }
 
+inline std::ostream& operator<<(std::ostream &output, const LineClippingType object)
+{
+  switch( object )
+  {
+    case LineClippingType::LIANG_BARSKY:    output << "LIANG_BARSKY"; break;
+    case LineClippingType::COHEN_SUTHELAND: output << "COHEN_SUTHELAND"; break;
+    default:
+      output << (int) object; break;
+  }
+  return output;
+}
+
 void Line::updateClippingCoordinates(const Axes& axes)
 {
-  LOG(4, "Line clipping update... %s", axes);
+  LOG(4, "Line clipping update... %s %s", this->line_clipping_type, axes);
   this->_isDrawable = this->_liangBaskyLineClip(axes);
 }
 
