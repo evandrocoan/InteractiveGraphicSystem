@@ -12,12 +12,12 @@ World::~World()
 {
 }
 
-void World::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int y2_cord, Coordinate _borderColor)
+void World::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int y2_cord, Coordinate _borderColor, LineClippingType type)
 {
   Coordinate* point_cord1 = new Coordinate(x1_cord, y1_cord);
   Coordinate* point_cord2 = new Coordinate(x2_cord, y2_cord);
 
-  Line* line = new Line(name, point_cord1, point_cord2, _borderColor);
+  Line* line = new Line(name, point_cord1, point_cord2, _borderColor, type);
 
   this->_displayFile.addObject(line);
   this->_updateObjectCoordinates(line);

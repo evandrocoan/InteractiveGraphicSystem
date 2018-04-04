@@ -11,6 +11,7 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/label.h>
 #include <gtkmm/notebook.h>
+#include <gtkmm/radiobutton.h>
 #include <gtkmm/box.h>
 
 #include "facade.h"
@@ -77,6 +78,14 @@ private:
 
   Gtk::Label polygon_x_label;
   Gtk::Label polygon_y_label;
+
+  Gtk::RadioButton liang_barsky_radiobutton;
+  Gtk::RadioButton cohen_sutheland_radiobutton;
+
+  LineClippingType line_clipping_type;
+
+  void on_liang_radiobutton();
+  void on_cohen_radiobutton();
 
   void on_button_close();
   void on_button_save_point();

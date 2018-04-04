@@ -18,9 +18,13 @@ AddObject::AddObject(Facade &facade) :
       line_x2_label("Coordinate X2 : "),
       line_y2_label("Coordinate Y2 : "),
       polygon_x_label("Coordinate X : "),
-      polygon_y_label("Coordinate Y : ")
+      polygon_y_label("Coordinate Y : "),
+      liang_barsky_radiobutton("Liang-Barsky"),
+      cohen_sutheland_radiobutton("Cohen-Sutheland")
 {
   LOG(2, "Entering...");
+  this->on_liang_radiobutton();
+
   insert_border_color_field_r.set_text("0");
   insert_border_color_field_g.set_text("0");
   insert_border_color_field_b.set_text("0");
@@ -49,6 +53,9 @@ AddObject::AddObject(Facade &facade) :
   point_grid.attach(point_y_field    , 2, 3, 1, 1);
   point_grid.attach(button_save_point, 1, 4, 2, 1);
 
+  liang_barsky_radiobutton.set_active();
+  cohen_sutheland_radiobutton.join_group(liang_barsky_radiobutton);
+
   line_name_field.set_placeholder_text("Name");
   line_name_field.set_text("line1");
   line_x1_field.set_text("0");
@@ -57,16 +64,18 @@ AddObject::AddObject(Facade &facade) :
   line_y2_field.set_text("50");
   line_grid.set_column_homogeneous(true);
   line_grid.set_row_spacing(10);
-  line_grid.attach(line_name_field , 1, 1, 4, 1);
-  line_grid.attach(line_x1_label   , 1, 2, 1, 1);
-  line_grid.attach(line_x1_field   , 2, 2, 1, 1);
-  line_grid.attach(line_x2_label   , 1, 3, 1, 1);
-  line_grid.attach(line_x2_field   , 2, 3, 1, 1);
-  line_grid.attach(line_y1_label   , 3, 2, 1, 1);
-  line_grid.attach(line_y1_field   , 4, 2, 1, 1);
-  line_grid.attach(line_y2_label   , 3, 3, 1, 1);
-  line_grid.attach(line_y2_field   , 4, 3, 1, 1);
-  line_grid.attach(button_save_line, 1, 4, 4, 1);
+  line_grid.attach(line_name_field            , 1, 1, 2, 1);
+  line_grid.attach(liang_barsky_radiobutton   , 3, 1, 1, 1);
+  line_grid.attach(cohen_sutheland_radiobutton, 4, 1, 1, 1);
+  line_grid.attach(line_x1_label              , 1, 2, 1, 1);
+  line_grid.attach(line_x1_field              , 2, 2, 1, 1);
+  line_grid.attach(line_x2_label              , 1, 3, 1, 1);
+  line_grid.attach(line_x2_field              , 2, 3, 1, 1);
+  line_grid.attach(line_y1_label              , 3, 2, 1, 1);
+  line_grid.attach(line_y1_field              , 4, 2, 1, 1);
+  line_grid.attach(line_y2_label              , 3, 3, 1, 1);
+  line_grid.attach(line_y2_field              , 4, 3, 1, 1);
+  line_grid.attach(button_save_line           , 1, 4, 4, 1);
 
   polygon_name_field.set_placeholder_text("Name");
   polygon_name_field.set_text("polygon1");
@@ -88,6 +97,8 @@ AddObject::AddObject(Facade &facade) :
   button_save_line.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_line) );
   button_add_coordenate.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_add_coordinate) );
   button_save_wire.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_polygon) );
+  liang_barsky_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_liang_radiobutton) );
+  cohen_sutheland_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_cohen_radiobutton) );
 
   m_notebook.set_border_width(0);
   m_vbox.pack_start(m_notebook);
@@ -161,7 +172,7 @@ void AddObject::on_button_save_line()
 
   Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
 
-  this->facade.addLine(name, x1_cord, y1_cord, x2_cord, y2_cord, border);
+  this->facade.addLine(name, x1_cord, y1_cord, x2_cord, y2_cord, border, this->line_clipping_type);
   this->facade.queue_draw();
 
   this->window.close();
@@ -244,4 +255,14 @@ Coordinate AddObject::_get_rgb_color(Gtk::Entry& field_r, Gtk::Entry& field_g, G
   }
 
   return border;
+}
+
+void AddObject::on_liang_radiobutton()
+{
+  this->line_clipping_type = LineClippingType::LIANG_BARSKY;
+}
+
+void AddObject::on_cohen_radiobutton()
+{
+  this->line_clipping_type = LineClippingType::COHEN_SUTHELAND;
 }
