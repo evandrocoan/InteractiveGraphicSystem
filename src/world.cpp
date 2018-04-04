@@ -12,27 +12,27 @@ World::~World()
 {
 }
 
-void World::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int y2_cord)
+void World::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int y2_cord, Coordinate _borderColor, LineClippingType type)
 {
   Coordinate* point_cord1 = new Coordinate(x1_cord, y1_cord);
   Coordinate* point_cord2 = new Coordinate(x2_cord, y2_cord);
 
-  Line* line = new Line(name, point_cord1, point_cord2);
+  Line* line = new Line(name, point_cord1, point_cord2, _borderColor, type);
 
   this->_displayFile.addObject(line);
   this->_updateObjectCoordinates(line);
 }
 
-void World::addPoint(std::string name, int x_coord, int y_coord)
+void World::addPoint(std::string name, int x_coord, int y_coord, Coordinate _borderColor)
 {
   Coordinate* point_cord = new Coordinate(x_coord, y_coord);
-  Point* point = new Point(name, point_cord);
+  Point* point = new Point(name, point_cord, _borderColor);
 
   this->_displayFile.addObject(point);
   this->_updateObjectCoordinates(point);
 }
 
-void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_list)
+void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_list, Coordinate _borderColor, Coordinate  _fillingColor)
 {
   int unsigned coordinates_size = polygon_coord_list.size();
   std::list<Coordinate*> coordinates;
@@ -43,7 +43,7 @@ void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_l
     coordinates.push_back( new Coordinate( polygon_coord_list.at(index-2), polygon_coord_list.at(index-1), 1 ) );
   }
 
-  Polygon* polygon = new Polygon(name, coordinates);
+  Polygon* polygon = new Polygon(name, coordinates, _borderColor, _fillingColor);
 
   this->_displayFile.addObject(polygon);
   this->_updateObjectCoordinates(polygon);
@@ -83,7 +83,7 @@ void World::updateObjectCoordinates(DrawableObject* object, const Transformation
     return;
   }
 
-  if( object->getWorldCoordinates().size() == 0 )
+  if( object->worldCoordinates().size() == 0 )
   {
     LOG(1, "");
     LOG(1, "");
@@ -121,6 +121,6 @@ void World::apply(const std::string object_name, Transformation &transformation)
 void World::draw_xy_axes()
 {
   LOG(4, "Drawing the X T axes as world objects.");
-  this->addLine("Y Axe", 0, -WORLD_AXES_SIZE, 0, WORLD_AXES_SIZE);
-  this->addLine("X Axe", -WORLD_AXES_SIZE, 0, WORLD_AXES_SIZE, 0);
+  this->addLine("Y Axe", 0, -WORLD_AXES_SIZE, 0, WORLD_AXES_SIZE, Coordinate(0.741176, 0.717647, 0.419608));
+  this->addLine("X Axe", -WORLD_AXES_SIZE, 0, WORLD_AXES_SIZE, 0, Coordinate(0.741176, 0.717647, 0.419608));
 }
