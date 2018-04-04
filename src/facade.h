@@ -25,8 +25,10 @@ public:
   void addPoint(std::string name, int x, int y, Coordinate _borderColor=_default_coordinate_value_parameter)
   { this->_world.addPoint(name, x, y, _borderColor); }
 
-  void addLine(std::string name, int x1, int y1, int x2, int y2, Coordinate _borderColor=_default_coordinate_value_parameter)
-  { this->_world.addLine(name, x1, y1, x2, y2, _borderColor); }
+  void addLine(std::string name, int x1, int y1, int x2, int y2,
+      Coordinate _borderColor=_default_coordinate_value_parameter,
+      LineClippingType type=LineClippingType::LIANG_BARSKY)
+  { this->_world.addLine(name, x1, y1, x2, y2, _borderColor, type); }
 
   void addPolygon(std::string name, std::vector<big_double> points,
       Coordinate _borderColor=_default_coordinate_value_parameter,
