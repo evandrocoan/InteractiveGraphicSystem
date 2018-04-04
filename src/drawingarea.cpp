@@ -65,23 +65,28 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
     auto firstCoordinate = this->_viewWindow.convertCoordinateToViewPort(**(coordinates.begin()));
     cairo_context->move_to(firstCoordinate.x, firstCoordinate.y);
 
-    if (coordinates_count == 1)
+    if( coordinates_count == 1 )
     {
       cairo_context->line_to(firstCoordinate.x+1, firstCoordinate.y+1);
     }
     else
     {
-      for (auto coordinate : coordinates)
+      for( auto coordinate : coordinates )
       {
         Coordinate coordinateConverted = this->_viewWindow.convertCoordinateToViewPort(*coordinate);
         cairo_context->line_to(coordinateConverted.x, coordinateConverted.y);
       }
 
-      // LOG(8, "Draw a line until the first coordinate, closing the polygon")
-      cairo_context->line_to(firstCoordinate.x, firstCoordinate.y);
+      // https://developer.gnome.org/gtkmm-tutorial/stable/sec-cairo-drawing-arcs.html.en
+      // LOG(8, "Line back to start point, closing the polygon")
+      cairo_context->save();
+      cairo_context->close_path();
+      cairo_context->set_source_rgb(filling.x, filling.y, filling.z);
+      cairo_context->fill_preserve();
+      cairo_context->restore();  // back to opaque black
     }
 
-    cairo_context->stroke();
+    cairo_context->stroke(); // outline it
   }
 
   return true;

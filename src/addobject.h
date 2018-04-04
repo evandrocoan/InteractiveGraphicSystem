@@ -32,6 +32,7 @@ private:
   std::string new_object_name;
   std::vector<big_double> polygon_coord_list;
 
+  Gtk::Grid color_grid;
   Gtk::Grid line_grid;
   Gtk::Grid point_grid;
   Gtk::Grid polygn_grid;
@@ -41,6 +42,13 @@ private:
   Gtk::Button button_save_wire;
   Gtk::Button button_save_point;
   Gtk::Button button_add_coordenate;
+
+  Gtk::Entry insert_border_color_field_r;
+  Gtk::Entry insert_border_color_field_g;
+  Gtk::Entry insert_border_color_field_b;
+  Gtk::Entry insert_filling_color_field_r;
+  Gtk::Entry insert_filling_color_field_g;
+  Gtk::Entry insert_filling_color_field_b;
 
   Gtk::Entry point_name_field;
   Gtk::Entry point_x_field;
@@ -56,7 +64,9 @@ private:
   Gtk::Entry wire_y_field;
   Gtk::Entry wire_x_field;
 
-  Gtk::Label info_label;
+  Gtk::Label insert_border_color_label;
+  Gtk::Label insert_filling_color_label;
+  Gtk::Label insert_a_coordinate_label;
   Gtk::Label point_x_label;
   Gtk::Label point_y_label;
 
@@ -75,5 +85,7 @@ private:
 
   void on_button_add_coordinate();
   void _close_updating_list();
+
+  Coordinate _get_rgb_color(Gtk::Entry& field_r, Gtk::Entry& field_g, Gtk::Entry& field_b);
 };
 #endif // GTKMM_APP_ADD_OBJECT_WINDOW
