@@ -61,7 +61,8 @@ static inline void print_stacktrace(FILE *out = stderr, unsigned int max_frames 
     fprintf(out, "stack trace:\n");
 
     // storage array for stack trace address data
-    void* addrlist[max_frames+1];
+    // void** addrlist = new (void *)[max_frames+1];
+    void* addrlist[63+1];
 
     // retrieve current stack addresses
     int addrlen = backtrace(addrlist, sizeof(addrlist) / sizeof(void*));
