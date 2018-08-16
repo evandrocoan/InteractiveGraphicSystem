@@ -2,11 +2,7 @@
 	"build_systems":
 	[
 		{
-			"cmd":
-			[
-				"make",
-				"run"
-			],
+			"shell_cmd": "make run",
 			"env":
 			{
 				"PKG_CONFIG_PATH": "/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig"
