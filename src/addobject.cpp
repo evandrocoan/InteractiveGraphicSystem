@@ -40,7 +40,7 @@ AddObject::AddObject(Facade &facade) :
   color_grid.attach(insert_filling_color_field_g, 3, 2, 1, 1);
   color_grid.attach(insert_filling_color_field_b, 4, 2, 1, 1);
 
-  point_name_field.set_text("point1");
+  point_name_field.set_text("point");
   point_name_field.set_placeholder_text("Name");
   point_x_field.set_text("50");
   point_y_field.set_text("50");
@@ -57,7 +57,7 @@ AddObject::AddObject(Facade &facade) :
   cohen_sutheland_radiobutton.join_group(liang_barsky_radiobutton);
 
   line_name_field.set_placeholder_text("Name");
-  line_name_field.set_text("line1");
+  line_name_field.set_text("line");
   line_x1_field.set_text("0");
   line_y1_field.set_text("0");
   line_x2_field.set_text("50");
@@ -78,7 +78,7 @@ AddObject::AddObject(Facade &facade) :
   line_grid.attach(button_save_line           , 1, 4, 4, 1);
 
   polygon_name_field.set_placeholder_text("Name");
-  polygon_name_field.set_text("polygon1");
+  polygon_name_field.set_text("polygon");
   wire_x_field.set_text("0");
   wire_y_field.set_text("0");
   polygn_grid.set_column_homogeneous(true);
@@ -126,7 +126,7 @@ Gtk::Window& AddObject::getWindow()
 
 void AddObject::on_button_save_point()
 {
-  std::string name = point_name_field.get_text().raw();
+  std::string name = this->_get_field_name(point_name_field);
   LOG(4, "Name: %s", name);
 
   if (name.empty())
@@ -149,9 +149,18 @@ void AddObject::on_button_save_point()
   this->window.close();
 }
 
+std::string AddObject::_get_field_name(Gtk::Entry &name_field)
+{
+  static int linha_count = 1;
+  std::string name = name_field.get_text().raw();
+  name = name + std::to_string(linha_count);
+  linha_count++;
+  return name;
+}
+
 void AddObject::on_button_save_line()
 {
-  std::string name = line_name_field.get_text().raw();
+  std::string name = this->_get_field_name(line_name_field);
   LOG(4, "Name: %s", name);
 
   if (name.empty())
@@ -182,7 +191,7 @@ void AddObject::on_button_save_polygon()
 {
   if (!polygon_coord_list.empty())
   {
-    std::string name = polygon_name_field.get_text().raw();
+    std::string name = this->_get_field_name(polygon_name_field);
     LOG(4, "Name: %s", name);
 
     if (name.empty())
