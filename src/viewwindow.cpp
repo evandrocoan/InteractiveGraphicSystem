@@ -55,11 +55,31 @@ void ViewWindow::zoom(Coordinate steps)
 
 void ViewWindow::move(Coordinate moves)
 {
+  // Matrix de rotação feita manualmente
+  //moves = (Cx+Mx,Cy+My)
+  // moves = this->_windowCenter;
+  //moves = moves * matrix de transformação
+  // double x_move = moves._data[0];
+  // auto radians = convert_degrees_to_radians(-_angles._data[0]);
+  // auto sine    = std::sin(radians);
+  // auto cosine  = std::cos(radians);
+  // moves._data[0] = moves._data[0]*cosine+ moves._data[1]*sine;
+  // moves._data[1] = x_move*(-1*sine)+ moves._data[1]*cosine;
+  //_windowCenter = moves*T
+  this->_transformation.clear();
+  this->_transformation.add_rotation("Rotation on given coordinate", -this->_angles);
+  this->_transformation.set_geometric_center();
+  this->_transformation.apply(moves);
+  LOG(4, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
+  LOG(4, "_transformation: %s", _transformation);
+
   this->_angle_rotation.clear();
   this->_angle_rotation.add_rotation("Transformation on the ViewWindow by Rotation", this->_angles);
   this->_angle_rotation.apply(moves);
-
   this->_windowCenter += moves;
+
+  LOG(4, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
+  LOG(4, "_transformation: %s", _transformation);
   this->callObservers();
 }
 
