@@ -66,6 +66,7 @@
    * 2  - Function entrances by `Entering...`
    * 4  - Comment messages inside functions calls
    * 8  - High called functions, i.e., create very big massive text output
+   * 16  - c++ fuckery on bool Line::_cohenSuthelandLineClip(const Axes& axes)
    */
   extern int _debugger_int_debug_level;
 
