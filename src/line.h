@@ -45,7 +45,7 @@ protected:
    * https://en.wikipedia.org/wiki/Cohen%E2%80%93Sutherland_algorithm
    */
   bool _cohenSuthelandLineClip(const Axes&);
-  int _getCoordianteRegionCode(const Axes&, const Coordinate&);
+  unsigned int _getCoordianteRegionCode(const Axes&, const Coordinate&);
 };
 
 #endif // GTKMM_APP_LINE
