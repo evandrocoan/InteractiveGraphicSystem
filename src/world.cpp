@@ -32,7 +32,8 @@ void World::addPoint(std::string name, int x_coord, int y_coord, Coordinate _bor
   this->_updateObjectCoordinates(point);
 }
 
-void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_list, Coordinate _borderColor, Coordinate  _fillingColor)
+void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_list,
+      Coordinate _borderColor, Coordinate  _fillingColor, int type)
 {
   int unsigned coordinates_size = polygon_coord_list.size();
   std::list<Coordinate*> coordinates;
@@ -43,10 +44,24 @@ void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_l
     coordinates.push_back( new Coordinate( polygon_coord_list.at(index-2), polygon_coord_list.at(index-1), 1 ) );
   }
 
-  Polygon* polygon = new Polygon(name, coordinates, _borderColor, _fillingColor);
+  DrawableObject* object;
 
-  this->_displayFile.addObject(polygon);
-  this->_updateObjectCoordinates(polygon);
+  switch(type) {
+    case 0:
+    {
+      object = new Polygon(name, coordinates, _borderColor, _fillingColor);
+      break;
+    }
+    case 1:
+      object = new Bezier(name, coordinates, _borderColor, _fillingColor);
+      break;
+    case 2:
+      object = new BSpline(name, coordinates, _borderColor, _fillingColor);
+      break;
+  }
+
+  this->_displayFile.addObject(object);
+  this->_updateObjectCoordinates(object);
 }
 
 void World::removeObject(std::string name)
