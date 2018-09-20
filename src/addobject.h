@@ -40,7 +40,7 @@ private:
 
   Gtk::Button button_close;
   Gtk::Button button_save_line;
-  Gtk::Button button_save_wire;
+  Gtk::Button button_save_polygon;
   Gtk::Button button_save_point;
   Gtk::Button button_add_coordenate;
 
