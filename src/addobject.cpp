@@ -6,6 +6,8 @@ AddObject::AddObject(Facade &facade) :
       button_close("Close"),
       button_save_line("Save Line"),
       button_save_polygon("Save Polygon"),
+      button_save_bezier("Save Bezier Curve"),
+      button_save_bspline("Save B-Spline Curve"),
       button_save_point("Save Point"),
       button_add_coordenate("Add Coordenate"),
       insert_border_color_label("Insert a RGB border color : "),
@@ -91,12 +93,16 @@ AddObject::AddObject(Facade &facade) :
   polygn_grid.attach(wire_y_field             , 2, 3, 1, 1);
   polygn_grid.attach(button_add_coordenate    , 1, 5, 1, 1);
   polygn_grid.attach(button_save_polygon      , 2, 5, 1, 1);
+  polygn_grid.attach(button_save_bezier       , 1, 6, 1, 1);
+  polygn_grid.attach(button_save_bspline      , 2, 6, 1, 1);
 
   button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_close) );
   button_save_point.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_point) );
   button_save_line.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_line) );
   button_add_coordenate.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_add_coordinate) );
   button_save_polygon.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_polygon) );
+  button_save_bezier.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_bezier) );
+  button_save_bspline.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_bspline) );
   liang_barsky_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_liang_radiobutton) );
   cohen_sutheland_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_cohen_radiobutton) );
 
@@ -218,6 +224,73 @@ void AddObject::on_button_save_polygon()
     return ;
   }
 }
+
+
+void AddObject::on_button_save_bezier()
+{
+  if (!polygon_coord_list.empty())
+  {
+    std::string name = this->_get_field_name(polygon_name_field);
+    LOG(4, "Name: %s", name);
+
+    if (name.empty())
+    {
+      polygon_name_field.grab_focus();
+      return;
+    }
+
+    Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
+    Coordinate filling = this->_get_rgb_color(insert_filling_color_field_r, insert_filling_color_field_g, insert_filling_color_field_b);
+
+    this->facade.addPolygon(name, polygon_coord_list, border, filling);
+    this->facade.queue_draw();
+
+    while(!polygon_coord_list.empty())
+    {
+      polygon_coord_list.pop_back();
+    }
+
+    this->window.close();
+  }
+  else
+  {
+    return ;
+  }
+}
+
+
+void AddObject::on_button_save_bspline()
+{
+  if (!polygon_coord_list.empty())
+  {
+    std::string name = this->_get_field_name(polygon_name_field);
+    LOG(4, "Name: %s", name);
+
+    if (name.empty())
+    {
+      polygon_name_field.grab_focus();
+      return;
+    }
+
+    Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
+    Coordinate filling = this->_get_rgb_color(insert_filling_color_field_r, insert_filling_color_field_g, insert_filling_color_field_b);
+
+    this->facade.addPolygon(name, polygon_coord_list, border, filling);
+    this->facade.queue_draw();
+
+    while(!polygon_coord_list.empty())
+    {
+      polygon_coord_list.pop_back();
+    }
+
+    this->window.close();
+  }
+  else
+  {
+    return ;
+  }
+}
+
 
 void AddObject::on_button_add_coordinate()
 {

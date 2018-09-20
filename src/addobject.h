@@ -41,6 +41,8 @@ private:
   Gtk::Button button_close;
   Gtk::Button button_save_line;
   Gtk::Button button_save_polygon;
+  Gtk::Button button_save_bezier;
+  Gtk::Button button_save_bspline;
   Gtk::Button button_save_point;
   Gtk::Button button_add_coordenate;
 
@@ -91,6 +93,8 @@ private:
   void on_button_save_point();
   void on_button_save_line();
   void on_button_save_polygon();
+  void on_button_save_bezier();
+  void on_button_save_bspline();
 
   void on_button_add_coordinate();
   void _close_updating_list();
