@@ -5,7 +5,7 @@ AddObject::AddObject(Facade &facade) :
       m_vbox(Gtk::ORIENTATION_VERTICAL),
       button_close("Close"),
       button_save_line("Save Line"),
-      button_save_wire("Save Polygon"),
+      button_save_polygon("Save Polygon"),
       button_save_point("Save Point"),
       button_add_coordenate("Add Coordenate"),
       insert_border_color_label("Insert a RGB border color : "),
@@ -90,13 +90,13 @@ AddObject::AddObject(Facade &facade) :
   polygn_grid.attach(polygon_y_label          , 1, 3, 1, 1);
   polygn_grid.attach(wire_y_field             , 2, 3, 1, 1);
   polygn_grid.attach(button_add_coordenate    , 1, 5, 1, 1);
-  polygn_grid.attach(button_save_wire         , 2, 5, 1, 1);
+  polygn_grid.attach(button_save_polygon      , 2, 5, 1, 1);
 
   button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_close) );
   button_save_point.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_point) );
   button_save_line.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_line) );
   button_add_coordenate.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_add_coordinate) );
-  button_save_wire.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_polygon) );
+  button_save_polygon.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_polygon) );
   liang_barsky_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_liang_radiobutton) );
   cohen_sutheland_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_cohen_radiobutton) );
 
