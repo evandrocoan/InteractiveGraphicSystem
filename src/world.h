@@ -20,7 +20,7 @@ public:
   void addLine(const std::string name, const int, const int, const int, const int,
       Coordinate _borderColor, LineClippingType type=LineClippingType::LIANG_BARSKY);
 
-  void addPolygon(const std::string name, const std::vector<big_double>, Coordinate _borderColor, Coordinate _fillingColor);
+  void addPolygon(const std::string name, const std::vector<big_double>, Coordinate _borderColor, Coordinate _fillingColor, int type=0);
   void removeObject(const std::string name);
 
   const DisplayFile& displayFile() const { return this->_displayFile; }
