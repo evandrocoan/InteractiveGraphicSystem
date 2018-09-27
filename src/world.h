@@ -19,7 +19,7 @@ public:
 
   void addPoint(const std::string name, const int, const int, Coordinate _borderColor);
   void addLine(const std::string name, const int, const int, const int, const int,
-      Coordinate _borderColor, LineClippingType type=LineClippingType::LIANG_BARSKY);
+      Coordinate _borderColor, LineClippingType type=LineClippingType::LIANG_BARSKY, bool visible_on_gui=true);
 
   void addPolygon(const std::string name, const std::vector<big_double>, Coordinate _borderColor, Coordinate _fillingColor, int type=0);
   void removeObject(const std::string name);

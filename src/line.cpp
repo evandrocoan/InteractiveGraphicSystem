@@ -1,9 +1,11 @@
 #include "line.h"
 
-Line::Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2, Coordinate _borderColor, LineClippingType type) :
-      DrawableObject(name, std::list<Coordinate*>{line_cord1, line_cord2}, _borderColor), visible_on_gui(true)
+Line::Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2,
+            Coordinate _borderColor, LineClippingType type, bool visible_on_gui) :
+      DrawableObject(name, std::list<Coordinate*>{line_cord1, line_cord2}, _borderColor),
+      line_clipping_type(type),
+      visible_on_gui(visible_on_gui)
 {
-  this->line_clipping_type = type;
 }
 
 Line::~Line()
