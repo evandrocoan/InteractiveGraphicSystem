@@ -29,6 +29,8 @@ public:
   Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2, Coordinate _borderColor, LineClippingType);
   ~Line();
 
+  bool visible_on_gui;
+
   virtual void updateClippingCoordinates(const Axes&);
 
 protected:

@@ -53,10 +53,10 @@ void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_l
       break;
     }
     case 1:
-      object = new Bezier(name, coordinates, _borderColor, _fillingColor);
+      // object = new Bezier(name, coordinates, _borderColor, _fillingColor);
       break;
     case 2:
-      object = new BSpline(name, coordinates, _borderColor, _fillingColor);
+      // object = new BSpline(name, coordinates, _borderColor, _fillingColor);
       break;
   }
 
