@@ -26,15 +26,16 @@ std::ostream& operator<<(std::ostream &output, const CohenSuthelandRegionCode ob
 class Line : public DrawableObject
 {
 public:
-  Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2, Coordinate _borderColor, LineClippingType);
+  Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2,
+          Coordinate _borderColor, LineClippingType, bool visible_on_gui);
   ~Line();
 
+  LineClippingType line_clipping_type;
   bool visible_on_gui;
 
   virtual void updateClippingCoordinates(const Axes&);
 
 protected:
-  LineClippingType line_clipping_type;
 
   /**
    * http://www.skytopia.com/project/articles/compsci/clipping.html
