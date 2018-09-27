@@ -12,12 +12,13 @@ World::~World()
 {
 }
 
-void World::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int y2_cord, Coordinate _borderColor, LineClippingType type)
+void World::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int y2_cord,
+                    Coordinate _borderColor, LineClippingType type, bool visible_on_gui)
 {
   Coordinate* point_cord1 = new Coordinate(x1_cord, y1_cord);
   Coordinate* point_cord2 = new Coordinate(x2_cord, y2_cord);
 
-  Line* line = new Line(name, point_cord1, point_cord2, _borderColor, type);
+  Line* line = new Line(name, point_cord1, point_cord2, _borderColor, type, visible_on_gui);
 
   this->_displayFile.addObject(line);
   this->_updateObjectCoordinates(line);
@@ -140,6 +141,6 @@ void World::apply(const std::string object_name, Transformation &transformation)
 void World::draw_xy_axes()
 {
   LOG(4, "Drawing the X T axes as world objects.");
-  this->addLine("Y Axe", 0, -WORLD_AXES_SIZE, 0, WORLD_AXES_SIZE, Coordinate(0.741176, 0.717647, 0.419608));
-  this->addLine("X Axe", -WORLD_AXES_SIZE, 0, WORLD_AXES_SIZE, 0, Coordinate(0.741176, 0.717647, 0.419608));
+  this->addLine("Y Axe", 0, -WORLD_AXES_SIZE, 0, WORLD_AXES_SIZE, Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
+  this->addLine("X Axe", -WORLD_AXES_SIZE, 0, WORLD_AXES_SIZE, 0, Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
 }
