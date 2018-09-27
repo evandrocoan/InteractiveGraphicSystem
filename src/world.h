@@ -4,6 +4,7 @@
 #include "debugger.h"
 
 #include "line.h"
+#include "curve.h"
 #include "point.h"
 #include "polygon.h"
 
