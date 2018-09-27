@@ -1,5 +1,7 @@
-#ifndef GTKMM_APP_LINE
-#define GTKMM_APP_LINE
+#ifndef GTKMM_APP_CURVE
+#define GTKMM_APP_CURVE
+
+class Line;
 
 #include "axes.h"
 #include "coordinate.h"
@@ -17,10 +19,11 @@ std::ostream& operator<<(std::ostream &output, const CurveType object);
 class Curve : public DrawableObject
 {
 public:
-  Curve(std::string name, std::list<Coordinate*>, Coordinate _borderColor, CurveType);
+  Curve(std::string name, std::list<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType);
   ~Curve();
 
   bool visible_on_gui;
+  std::list<Line*> lines;
 
   virtual void updateClippingCoordinates(const Axes&);
 
@@ -40,4 +43,4 @@ protected:
   bool _bspline(const Axes&);
 };
 
-#endif // GTKMM_APP_LINE
+#endif // GTKMM_APP_CURVE

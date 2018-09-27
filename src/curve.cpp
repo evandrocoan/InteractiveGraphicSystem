@@ -1,8 +1,10 @@
 #include "curve.h"
+#include "line.h"
 
-Curve::Curve(std::string name, std::list<Coordinate*> _worldCoordinates, Coordinate _borderColor, CurveType type) :
-      DrawableObject(name, _worldCoordinates, _borderColor),
-      visible_on_gui(true),
+Curve::Curve(std::string name, std::list<Coordinate*> _worldCoordinates,
+              Coordinate _borderColor, Coordinate _fillingColor, CurveType type) :
+      DrawableObject(name, _worldCoordinates, _borderColor, _fillingColor),
+      visible_on_gui(false),
       curve_type(type)
 {
 }
