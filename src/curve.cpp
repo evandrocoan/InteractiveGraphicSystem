@@ -1,5 +1,6 @@
 #include "curve.h"
 #include "line.h"
+#include "math.h"
 
 Curve::Curve(std::string name, std::vector<Coordinate*> _worldCoordinates,
               Coordinate _borderColor, Coordinate _fillingColor, CurveType type) :
@@ -7,6 +8,13 @@ Curve::Curve(std::string name, std::vector<Coordinate*> _worldCoordinates,
       visible_on_gui(false),
       curve_type(type)
 {
+  if( curve_type == BEZIER )
+  {
+    if(_worldCoordinates.size() < 4 || (_worldCoordinates.size()-4)%3 != 0)
+    {
+      throw std::runtime_error("A Bezier curve should have 4, 7, 10, 13... coordinates.");
+    }
+  }
 }
 
 Curve::~Curve()
@@ -49,17 +57,43 @@ bool Curve::_bezier(const Axes& axes)
   {
     this->_clippingCoordinates.push_back(new Coordinate(*coordinate));
   }
-  auto front = this->_clippingCoordinates.begin();
 
-  auto& c1 = **front; ++front;
-  auto& c2 = **front;
+  int npts = (_clippingCoordinates.size()) / 2;
+  int control_points_count = _clippingCoordinates.size();
+  int line_count, column_count;
+  double temporary;
+  const double step = 0.01;
 
-  if( c1 == c2 )
+  // Calculate points on curve
+  line_count = 0;
+  temporary = 0;
+  for (int index = 0; index != control_points_count; index++)
   {
-    // Point clipping?!
+    if ((1.0 - temporary) < 5e-6)
+        temporary = 1.0;
+
+    column_count = 0;
+    double x,y;
+
+    double basis = bernstein(npts - 1, 0, temporary);
+    x = basis * _clippingCoordinates[column_count];
+    y = basis * _clippingCoordinates[column_count + 1];
+    last_point = new Coordinate(x, y);
+
+    for (int i = 1; i != npts; i++)
+    {
+      basis = bernstein(npts - 1, i, temporary);
+      x = basis * _clippingCoordinates[column_count];
+      y = basis * _clippingCoordinates[column_count + 1];
+      new_point = new Coordinate(x,y)
+      this->lines.push_back(new Line("name", last_point, new_point));
+      last_point = new_point;
+      column_count = column_count +2;
+    }
+    line_count += 2;
+    temporary += step;
   }
 
-  LOG(16, "c1: %s, c2: %s", c1, c2);
   return true;
 }
 
