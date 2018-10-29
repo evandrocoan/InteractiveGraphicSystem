@@ -44,7 +44,7 @@ These are the commands you need to run,
 to install everything on Windows MSYS2 Unit-Shell terminal:
 ```
 pacman -Syu   # After complete, it will ask you to kill the terminal window with your task manager
-pacman -Su    # Now run it again without y
+pacman -Su    # Now, after opening a new terminal, run it again without y
 pacman -S gcc
 pacman -S base-devel
 pacman -S pkg-config
@@ -54,6 +54,10 @@ pacman -S mingw-w64-x86_64-gcc
 pacman -S mingw-w64-x86_64-gtkmm3
 pacman -S mingw-w64-x86_64-toolchain
 ```
+One liner:
+`
+pacman -S gcc base-devel pkg-config mingw-w64-x86_64-gtk3 mingw-w64-x86_64-boost mingw-w64-x86_64-gcc mingw-w64-x86_64-gtkmm3 mingw-w64-x86_64-toolchain
+`
 
 And fully install the https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases and add these value to path:
 ```
