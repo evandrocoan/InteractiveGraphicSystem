@@ -1,43 +1,43 @@
 {
-	"settings":
-	{
-		"tab_size": 2,
+  "settings":
+  {
+    "tab_size": 2,
     "restore_output_view_scroll": true,
-		"is_output_build_word_wrap_enabled": false,
-		"result_file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$"
-	},
-	"build_systems":
-	[
-		{
-			"shell_cmd": "make run",
-			"env":
-			{
-			},
-			"file_regex": "^(?:[\\d.+:e-]+ ){0,3}([^|:]+)(?:\\|[^:]+)?:(\\d+)(?::(\\d+):)? (.*)$",
-			"name": "Make and Run",
-			"shell": true,
-			"syntax": "Packages/Text/Plain text.tmLanguage",
-			"target": "exec",
-			"working_dir": "$project_path/"
-		}
-	],
-	"folders":
-	[
-		{
-			"folder_exclude_patterns":
-			[
-				"Debug",
-				"objects",
-				"binaries",
-				".settings"
-			],
-			"path": "."
-		},
-		{
-			"path": "F:\\msys64\\mingw64\\include"
-		},
-		{
-			"path": "F:\\Forks"
-		}
-	],
+    "is_output_build_word_wrap_enabled": false,
+    "result_file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$"
+  },
+  "build_systems":
+  [
+    {
+      "shell_cmd": "make run",
+      "env":
+      {
+      },
+      "file_regex": "^(?:[\\d.+:e-]+ ){0,3}([^|:]+)(?:\\|[^:]+)?:(\\d+)(?::(\\d+):)? (.*)$",
+      "name": "Make and Run",
+      "shell": true,
+      "syntax": "Packages/Text/Plain text.tmLanguage",
+      "target": "exec",
+      "working_dir": "$project_path/"
+    }
+  ],
+  "folders":
+  [
+    {
+      "folder_exclude_patterns":
+      [
+        "Debug",
+        "objects",
+        "binaries",
+        ".settings"
+      ],
+      "path": "."
+    },
+    {
+      "path": "F:\\msys64\\mingw64\\include"
+    },
+    {
+      "path": "F:\\Forks"
+    }
+  ],
 }
