@@ -72,7 +72,7 @@ void RwObjectService::read(std::string file_path)
   }
 }
 
-void RwObjectService::write(std::list<DrawableObject*> objects_list, std::string file_path)
+void RwObjectService::write(std::vector<DrawableObject*> objects_list, std::string file_path)
 {
   std::ofstream myfile;
   myfile.open(file_path);
@@ -81,9 +81,9 @@ void RwObjectService::write(std::list<DrawableObject*> objects_list, std::string
   for (auto it_obj = objects_list.begin(); it_obj != objects_list.end(); ++it_obj)
   {
     myfile << "o " + (*it_obj)->getName() + "\n\n";
-    std::list<Coordinate*> objectCoordinates = (*it_obj)->worldCoordinates();
+    std::vector<Coordinate*> objectCoordinates = (*it_obj)->worldCoordinates();
 
-    for (std::list<Coordinate*>::iterator it_cord = objectCoordinates.begin(); it_cord != objectCoordinates.end(); ++it_cord)
+    for (std::vector<Coordinate*>::iterator it_cord = objectCoordinates.begin(); it_cord != objectCoordinates.end(); ++it_cord)
     {
       std::string line_cord = "v " + std::to_string((*it_cord)->x) + " " + std::to_string((*it_cord)->y)
           + " " + std::to_string((*it_cord)->z) + "\n";

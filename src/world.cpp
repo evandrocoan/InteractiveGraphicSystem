@@ -37,7 +37,7 @@ void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_l
       Coordinate _borderColor, Coordinate  _fillingColor, int type)
 {
   int unsigned coordinates_size = polygon_coord_list.size();
-  std::list<Coordinate*> coordinates;
+  std::vector<Coordinate*> coordinates;
 
   for( unsigned int index = 2; index < coordinates_size; index++, index++, index++ )
   {
