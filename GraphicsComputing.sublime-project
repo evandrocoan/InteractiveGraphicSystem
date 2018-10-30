@@ -1,4 +1,11 @@
 {
+	"settings":
+	{
+		"tab_size": 2,
+    "restore_output_view_scroll": true,
+		"is_output_build_word_wrap_enabled": false,
+		"result_file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$"
+	},
 	"build_systems":
 	[
 		{
@@ -33,11 +40,4 @@
 			"path": "F:\\Forks"
 		}
 	],
-	"settings":
-	{
-		"tab_size": 2,
-    "restore_output_view_scroll": true,
-		"is_output_build_word_wrap_enabled": false,
-		"result_file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$"
-	}
 }
