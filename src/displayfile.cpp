@@ -57,9 +57,9 @@ void DisplayFile::removeObjectByName(std::string name)
   this->objectsMap.erase(name);
 }
 
-std::list<std::string> DisplayFile::objectNames() const
+std::vector<std::string> DisplayFile::objectNames() const
 {
-  std::list<std::string> list;
+  std::vector<std::string> list;
 
   for(auto it = objectsMap.begin(); it != objectsMap.end(); it++)
   {
@@ -69,9 +69,9 @@ std::list<std::string> DisplayFile::objectNames() const
   return list;
 }
 
-std::list<DrawableObject*> DisplayFile::getObjects() const
+std::vector<DrawableObject*> DisplayFile::getObjects() const
 {
-  std::list<DrawableObject*> list;
+  std::vector<DrawableObject*> list;
 
   for(auto it = objectsMap.begin(); it != objectsMap.end(); it++)
   {

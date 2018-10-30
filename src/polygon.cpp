@@ -1,6 +1,6 @@
 #include "polygon.h"
 
-Polygon::Polygon(std::string name, std::list<Coordinate*> _worldCoordinates, Coordinate _borderColor, Coordinate _fillingColor) :
+Polygon::Polygon(std::string name, std::vector<Coordinate*> _worldCoordinates, Coordinate _borderColor, Coordinate _fillingColor) :
       DrawableObject(name, _worldCoordinates, _borderColor, _fillingColor)
 {
 }

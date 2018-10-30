@@ -26,12 +26,12 @@ public:
   virtual ~DrawableObject();
   std::string getName() const;
 
-  const std::list<Coordinate*>& worldCoordinates() const;
-  const std::list<Coordinate*>& windowCoordinates() const;
-  const std::list<Coordinate*>& clippingCoordinates() const;
+  const std::vector<Coordinate*>& worldCoordinates() const;
+  const std::vector<Coordinate*>& windowCoordinates() const;
+  const std::vector<Coordinate*>& clippingCoordinates() const;
 
-  static Coordinate getGeometricCenter(const std::list<Coordinate*>&);
-  static void destroyList(std::list<Coordinate*>& coordinates);
+  static Coordinate getGeometricCenter(const std::vector<Coordinate*>&);
+  static void destroyList(std::vector<Coordinate*>& coordinates);
 
   void apply(Transformation&);
   bool isDrawable() const { return this->_isDrawable;   }
@@ -54,8 +54,8 @@ public:
   virtual void printMyself(std::ostream &output) const;
 
 protected:
-  DrawableObject(std::string name, std::list<Coordinate*> _worldCoordinates);
-  DrawableObject(std::string name, std::list<Coordinate*> _worldCoordinates,
+  DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates);
+  DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates,
       Coordinate _borderColor, Coordinate _fillingColor=_default_coordinate_value_parameter);
 
   std::string name;
@@ -64,8 +64,8 @@ protected:
   Coordinate _borderColor;
   Coordinate _fillingColor;
 
-  std::list<Coordinate*> _worldCoordinates;
-  std::list<Coordinate*> _windowCoordinates;
-  std::list<Coordinate*> _clippingCoordinates;
+  std::vector<Coordinate*> _worldCoordinates;
+  std::vector<Coordinate*> _windowCoordinates;
+  std::vector<Coordinate*> _clippingCoordinates;
 };
 #endif // GTKMM_APP_DRAWABLE_OBJECT
