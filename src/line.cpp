@@ -2,7 +2,7 @@
 
 Line::Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2,
             Coordinate _borderColor, LineClippingType type, bool visible_on_gui) :
-      DrawableObject(name, std::list<Coordinate*>{line_cord1, line_cord2}, _borderColor),
+      DrawableObject(name, std::vector<Coordinate*>{line_cord1, line_cord2}, _borderColor),
       line_clipping_type(type),
       visible_on_gui(visible_on_gui)
 {

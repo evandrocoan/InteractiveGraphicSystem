@@ -129,7 +129,7 @@ public:
 
 private:
   typedef SignalConnectionItem<F...> ConnectionItem;
-  typedef std::list<std::shared_ptr<ConnectionItem>> ConnectionList;
+  typedef std::vector<std::shared_ptr<ConnectionItem>> ConnectionList;
 
   ConnectionList _list;
   unsigned _recurseCount;
@@ -157,7 +157,7 @@ public:
 
   void operator()(F... args)
   {
-    std::list<std::shared_ptr<ConnectionItem>> list;
+    std::vector<std::shared_ptr<ConnectionItem>> list;
 
     for(auto& item : _list)
     {

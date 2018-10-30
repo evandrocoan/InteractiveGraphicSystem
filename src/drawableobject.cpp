@@ -1,11 +1,11 @@
 #include "drawableobject.h"
 
-DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> _worldCoordinates) :
+DrawableObject::DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates) :
       DrawableObject(name, _worldCoordinates, Coordinate(0, 0))
 {
 }
 
-DrawableObject::DrawableObject(std::string name, std::list<Coordinate*> _worldCoordinates, Coordinate _borderColor, Coordinate _fillingColor) :
+DrawableObject::DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates, Coordinate _borderColor, Coordinate _fillingColor) :
       name(name),
       _isDrawable(false),
       _borderColor(_borderColor),
@@ -32,12 +32,12 @@ DrawableObject::~DrawableObject()
  * https://stackoverflow.com/questions/307082/cleaning-up-an-stl-list-vector-of-pointers
  * Cleaning up an STL list/vector of pointers
  */
-void DrawableObject::destroyList(std::list<Coordinate*>& _worldCoordinates)
+void DrawableObject::destroyList(std::vector<Coordinate*>& _worldCoordinates)
 {
   while(!_worldCoordinates.empty())
   {
     // delete _worldCoordinates.front();
-    _worldCoordinates.pop_front();
+    _worldCoordinates.pop_back();
   }
 }
 
@@ -46,22 +46,22 @@ std::string DrawableObject::getName() const
   return this->name;
 }
 
-const std::list<Coordinate*>& DrawableObject::worldCoordinates() const
+const std::vector<Coordinate*>& DrawableObject::worldCoordinates() const
 {
   return this->_worldCoordinates;
 }
 
-const std::list<Coordinate*>& DrawableObject::windowCoordinates() const
+const std::vector<Coordinate*>& DrawableObject::windowCoordinates() const
 {
   return this->_windowCoordinates;
 }
 
-const std::list<Coordinate*>& DrawableObject::clippingCoordinates() const
+const std::vector<Coordinate*>& DrawableObject::clippingCoordinates() const
 {
   return this->_clippingCoordinates;
 }
 
-Coordinate DrawableObject::getGeometricCenter(const std::list<Coordinate*>& coordinates)
+Coordinate DrawableObject::getGeometricCenter(const std::vector<Coordinate*>& coordinates)
 {
   int coordinatesCount = coordinates.size();
 
@@ -93,7 +93,7 @@ void DrawableObject::printMyself(std::ostream& output) const
   unsigned int size;
   unsigned int index;
   unsigned int index_external = 0;
-  std::list< std::list<Coordinate*> > coordinates_lists;
+  std::vector< std::vector<Coordinate*> > coordinates_lists;
 
   coordinates_lists.push_back(this->_worldCoordinates);
   coordinates_lists.push_back(this->_windowCoordinates);

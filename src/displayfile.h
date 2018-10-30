@@ -27,8 +27,8 @@ public:
   bool            isObjectOnByName(std::string name);
   DrawableObject* getObjectByName(std::string name);
 
-  std::list<std::string> objectNames() const;
-  std::list<DrawableObject*> getObjects() const;
+  std::vector<std::string> objectNames() const;
+  std::vector<DrawableObject*> getObjects() const;
 
 protected:
   std::map<std::string, DrawableObject*> objectsMap;

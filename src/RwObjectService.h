@@ -25,7 +25,7 @@ public:
   ~RwObjectService();
 
   void read(std::string file_path);
-  void write(std::list<DrawableObject*> objects_list, std::string file_path);
+  void write(std::vector<DrawableObject*> objects_list, std::string file_path);
 
 protected:
   Facade& facade;

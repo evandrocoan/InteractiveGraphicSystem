@@ -19,11 +19,11 @@ std::ostream& operator<<(std::ostream &output, const CurveType object);
 class Curve : public DrawableObject
 {
 public:
-  Curve(std::string name, std::list<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType);
+  Curve(std::string name, std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType);
   ~Curve();
 
   bool visible_on_gui;
-  std::list<Line*> lines;
+  std::vector<Line*> lines;
 
   virtual void updateClippingCoordinates(const Axes&);
 
