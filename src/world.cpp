@@ -34,7 +34,7 @@ void World::addPoint(std::string name, int x_coord, int y_coord, Coordinate _bor
 }
 
 void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_list,
-      Coordinate _borderColor, Coordinate  _fillingColor, int type)
+      Coordinate _borderColor, Coordinate  _fillingColor, CurveType type)
 {
   int unsigned coordinates_size = polygon_coord_list.size();
   std::vector<Coordinate*> coordinates;
@@ -48,17 +48,17 @@ void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_l
   DrawableObject* object;
 
   switch(type) {
-    case 0:
+    case CurveType::POLYGON:
     {
       object = new Polygon(name, coordinates, _borderColor, _fillingColor);
       break;
     }
-    case 1:
+    case CurveType::BEZIER:
     {
       object = new Curve(name, coordinates, _borderColor, _fillingColor, BEZIER);
       break;
     }
-    case 2:
+    case CurveType::BSPLINE:
     {
       object = new Curve(name, coordinates, _borderColor, _fillingColor, BSPLINE);
       break;
