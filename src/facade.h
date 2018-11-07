@@ -23,17 +23,21 @@ public:
   const DisplayFile& displayFile() { return this->_world.displayFile(); }
 
   void addPoint(std::string name, int x, int y, Coordinate _borderColor=_default_coordinate_value_parameter)
-  { this->_world.addPoint(name, x, y, _borderColor); }
+  {
+    this->_world.addPoint(name, x, y, _borderColor); }
 
   void addLine(std::string name, int x1, int y1, int x2, int y2,
       Coordinate _borderColor=_default_coordinate_value_parameter,
       LineClippingType type=LineClippingType::LIANG_BARSKY)
-  { this->_world.addLine(name, x1, y1, x2, y2, _borderColor, type); }
+  {
+    this->_world.addLine(name, x1, y1, x2, y2, _borderColor, type); }
 
   void addPolygon(std::string name, std::vector<big_double> points,
       Coordinate _borderColor=_default_coordinate_value_parameter,
-      Coordinate _fillingColor=_default_coordinate_value_parameter)
-  { this->_world.addPolygon(name, points, _borderColor, _fillingColor); }
+      Coordinate _fillingColor=_default_coordinate_value_parameter,
+      CurveType type=CurveType::POLYGON)
+  {
+    this->_world.addPolygon(name, points, _borderColor, _fillingColor, type); }
 
   void removeObject(std::string name) { this->_world.removeObject(name); }
 
@@ -56,6 +60,11 @@ public:
 
     // World observe ViewWindow coordinates update
     this->_updateAllObjectCoordinates = this->_viewWindow.addObserver(std::bind(&Facade::updateAllObjectCoordinates, this, _1, _2));
+
+    std::vector<big_double> polygon_coord_list;
+    polygon_coord_list.push_back(0); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
+
+    // this->addPolygon("Test", , _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::BEZIER);
   }
 
   /**

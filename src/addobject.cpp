@@ -242,7 +242,7 @@ void AddObject::on_button_save_bezier()
     Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
     Coordinate filling = this->_get_rgb_color(insert_filling_color_field_r, insert_filling_color_field_g, insert_filling_color_field_b);
 
-    this->facade.addPolygon(name, polygon_coord_list, border, filling);
+    this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BEZIER);
     this->facade.queue_draw();
 
     while(!polygon_coord_list.empty())
@@ -275,7 +275,7 @@ void AddObject::on_button_save_bspline()
     Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
     Coordinate filling = this->_get_rgb_color(insert_filling_color_field_r, insert_filling_color_field_g, insert_filling_color_field_b);
 
-    this->facade.addPolygon(name, polygon_coord_list, border, filling);
+    this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BSPLINE);
     this->facade.queue_draw();
 
     while(!polygon_coord_list.empty())
