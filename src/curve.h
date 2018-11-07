@@ -7,14 +7,6 @@ class Line;
 #include "coordinate.h"
 #include "drawableobject.h"
 
-enum CurveType
-{
-  POLYGON,
-  BEZIER,
-  BSPLINE
-};
-
-
 std::ostream& operator<<(std::ostream &output, const CurveType object);
 
 class Curve : public DrawableObject
@@ -23,13 +15,12 @@ public:
   Curve(std::string name, std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType);
   ~Curve();
 
-  bool visible_on_gui;
-  std::vector<Line*> lines;
+  const bool visible_on_gui;
 
+  std::vector<Line*> lines;
   virtual void updateClippingCoordinates(const Axes&);
 
 protected:
-  CurveType curve_type;
 
   /**
    * http://www.skytopia.com/project/articles/compsci/clipping.html

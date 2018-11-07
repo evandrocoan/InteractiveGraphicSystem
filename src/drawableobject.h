@@ -20,11 +20,20 @@
 #include "coordinate.h"
 #include "transformation.h"
 
+enum CurveType
+{
+  NOCURVE,
+  POLYGON,
+  BEZIER,
+  BSPLINE
+};
+
 class DrawableObject
 {
 public:
   virtual ~DrawableObject();
   std::string getName() const;
+  const CurveType curve_type;
 
   const std::vector<Coordinate*>& worldCoordinates() const;
   const std::vector<Coordinate*>& windowCoordinates() const;
@@ -56,7 +65,9 @@ public:
 protected:
   DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates);
   DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates,
-      Coordinate _borderColor, Coordinate _fillingColor=_default_coordinate_value_parameter);
+      Coordinate _borderColor,
+      Coordinate _fillingColor=_default_coordinate_value_parameter,
+      CurveType curve_type=CurveType::NOCURVE);
 
   std::string name;
   bool _isDrawable;

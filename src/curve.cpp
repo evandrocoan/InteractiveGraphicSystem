@@ -4,15 +4,15 @@
 
 Curve::Curve(std::string name, std::vector<Coordinate*> _worldCoordinates,
               Coordinate _borderColor, Coordinate _fillingColor, CurveType type) :
-      DrawableObject(name, _worldCoordinates, _borderColor, _fillingColor),
-      visible_on_gui(false),
-      curve_type(type)
+      DrawableObject(name, _worldCoordinates, _borderColor, _fillingColor, type),
+      visible_on_gui(false)
 {
   if( curve_type == BEZIER )
   {
     if(_worldCoordinates.size() < 4 || (_worldCoordinates.size()-4)%3 != 0)
     {
-      throw std::runtime_error("A Bezier curve should have 4, 7, 10, 13... coordinates.");
+      std::string error = tfm::format( "A Bezier curve should have 4, 7, 10, 13... coordinates, not %s.", _worldCoordinates.size() );
+      throw std::runtime_error( error );
     }
   }
 }
@@ -66,6 +66,7 @@ double Ni(int n, int index)
     return ni;
 }
 
+// https://en.wikipedia.org/wiki/Bernstein_polynomial
 double bernstein(int n, int index, double t)
 {
     double ti = (t == 0.0 && index == 0) ? 1.0 : pow(t, index); /* t^index */
@@ -86,6 +87,7 @@ bool Curve::_bezier(const Axes& axes)
   int npts = (_clippingCoordinates.size()) / 2;
   int control_points_count = _clippingCoordinates.size();
 
+  Line* line;
   Coordinate* new_point;
   Coordinate* last_point;
   double temporary;
@@ -112,8 +114,9 @@ bool Curve::_bezier(const Axes& axes)
       y = basis * _clippingCoordinates[index]->y;
       new_point = new Coordinate(x, y);
 
-      this->lines.push_back( new Line(
-          "name", last_point, new_point, _default_coordinate_value_parameter, LineClippingType::LIANG_BARSKY, false ) );
+      line = new Line( "name", last_point, new_point, _default_coordinate_value_parameter, LineClippingType::LIANG_BARSKY, false );
+      line->updateClippingCoordinates( axes );
+      this->lines.push_back( line );
 
       last_point = new_point;
     }

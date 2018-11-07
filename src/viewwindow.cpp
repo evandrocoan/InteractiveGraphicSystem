@@ -170,7 +170,7 @@ void ViewWindow::updateViewPortSize(big_double width, big_double height)
  * @param  coordinate a normalized coordinate as from -1 to 1
  * @return            the viewport coordinate as from 0 to 500
  */
-Coordinate ViewWindow::convertCoordinateToViewPort(const Coordinate &c) const
+Coordinate* ViewWindow::convertCoordinateToViewPort(const Coordinate &c) const
 {
   // double     x=((c.x -wmin.x) / (wmax.x-wmin.x)) *_width;
   big_double xVp =((c.x - xWiMin) / (xWiMax - xWiMin)) * (xVpMax - xVpMin);
@@ -183,5 +183,5 @@ Coordinate ViewWindow::convertCoordinateToViewPort(const Coordinate &c) const
   // std::cout << ", wiMin x: " << xWiMin << ", y: " << yWiMin;
   // std::cout << ", wiMax x: " << xWiMax << ", y: " << yWiMax;
   // std::cout << ", _width x: " << xVpMax - xVpMin << ", _height: " << yVpMax - yVpMin << std::endl;
-  return Coordinate(xVp, yVp);
+  return new Coordinate(xVp, yVp);
 }
