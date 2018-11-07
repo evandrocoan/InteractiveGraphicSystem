@@ -9,6 +9,7 @@ class Line;
 
 enum CurveType
 {
+  POLYGON,
   BEZIER,
   BSPLINE
 };
