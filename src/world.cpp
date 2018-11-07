@@ -41,7 +41,7 @@ void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_l
 
   for( unsigned int index = 2; index < coordinates_size; index++, index++, index++ )
   {
-    LOG(1, "Currently we do not support 3D, forcing z `%s` to be 1", polygon_coord_list.at(index-2));
+    LOG(1, "Currently we do not support 3D, forcing z `%s` to be 1", polygon_coord_list.at(index));
     coordinates.push_back( new Coordinate( polygon_coord_list.at(index-2), polygon_coord_list.at(index-1), 1 ) );
   }
 
@@ -62,6 +62,11 @@ void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_l
     {
       object = new Curve(name, coordinates, _borderColor, _fillingColor, BSPLINE);
       break;
+    }
+    case CurveType::NOCURVE:
+    {
+      std::string error = tfm::format( "You cannot create a Polygon with %s.", type );
+      throw std::runtime_error( error );
     }
   }
 

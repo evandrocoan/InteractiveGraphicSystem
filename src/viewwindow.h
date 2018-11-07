@@ -52,11 +52,11 @@ public:
   const Transformation& transformation() const { return this->_transformation; }
 
   const Coordinate& point(unsigned int index) const { return this->_axes[index]; }
-  const Coordinate  viewPort(unsigned int index) const {
+  const Coordinate* viewPort(unsigned int index) const {
     return this->convertCoordinateToViewPort( this->_axes[index] );
   }
 
-  Coordinate convertCoordinateToViewPort(const Coordinate&) const;
+  Coordinate* convertCoordinateToViewPort(const Coordinate&) const;
   void updateViewPortSize(big_double width, big_double height);
 
   big_double width()  { return this->_dimentions[0]; }
