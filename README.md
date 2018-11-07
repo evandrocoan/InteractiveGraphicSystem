@@ -168,4 +168,7 @@ pkg-config --modversion glibmm-2.4
 
 
 
+## License
+
+See the file [LICENSE.txt](LICENSE.txt)
 
