@@ -2,7 +2,7 @@
   "settings":
   {
     "tab_size": 2,
-    "word_wrap": false,
+    "output_build_word_wrap": false,
     "restore_output_view_scroll": true,
     "result_file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$"
   },
