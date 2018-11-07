@@ -28,6 +28,7 @@
       [
         "Debug",
         "objects",
+        "_gsdata_",
         "binaries",
         ".settings"
       ],
