@@ -59,6 +59,14 @@ One liner:
 pacman -S gcc base-devel pkg-config mingw-w64-x86_64-gtk3 mingw-w64-x86_64-boost mingw-w64-x86_64-gcc mingw-w64-x86_64-gtkmm3 mingw-w64-x86_64-toolchain
 `
 
+### IMPORTANT!
+
+For Msys2, add to your `~/.bashrc`:
+```
+PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/mingw64/lib/pkgconfig
+```
+1. https://stackoverflow.com/questions/47713297/gtkmm-3-0-program-build-failed-msys2-netbeans-using-pkg-config
+
 And fully install the https://github.com/tschoonj/GTK-for-Windows-Runtime-Environment-Installer/releases and add these value to path:
 ```
 C:\Program Files\GTK3-Runtime Win64\bin
