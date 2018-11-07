@@ -5,7 +5,10 @@ DrawableObject::DrawableObject(std::string name, std::vector<Coordinate*> _world
 {
 }
 
-DrawableObject::DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates, Coordinate _borderColor, Coordinate _fillingColor) :
+DrawableObject::DrawableObject(
+          std::string name, std::vector<Coordinate*> _worldCoordinates,
+          Coordinate _borderColor, Coordinate _fillingColor, CurveType curve_type) :
+      curve_type(curve_type),
       name(name),
       _isDrawable(false),
       _borderColor(_borderColor),

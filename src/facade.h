@@ -63,8 +63,11 @@ public:
 
     std::vector<big_double> polygon_coord_list;
     polygon_coord_list.push_back(0); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
+    polygon_coord_list.push_back(50); polygon_coord_list.push_back(50); polygon_coord_list.push_back(1);
+    polygon_coord_list.push_back(100); polygon_coord_list.push_back(50); polygon_coord_list.push_back(1);
+    polygon_coord_list.push_back(100); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
 
-    // this->addPolygon("Test", , _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::BEZIER);
+    this->addPolygon("Test", polygon_coord_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::BEZIER);
   }
 
   /**
