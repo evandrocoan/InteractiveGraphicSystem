@@ -60,14 +60,7 @@ public:
 
     // World observe ViewWindow coordinates update
     this->_updateAllObjectCoordinates = this->_viewWindow.addObserver(std::bind(&Facade::updateAllObjectCoordinates, this, _1, _2));
-
-    std::vector<big_double> polygon_coord_list;
-    polygon_coord_list.push_back(0); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
-    polygon_coord_list.push_back(50); polygon_coord_list.push_back(50); polygon_coord_list.push_back(1);
-    polygon_coord_list.push_back(100); polygon_coord_list.push_back(50); polygon_coord_list.push_back(1);
-    polygon_coord_list.push_back(100); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
-
-    this->addPolygon("Test", polygon_coord_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::BEZIER);
+    this->add_test_objects();
   }
 
   /**
@@ -127,6 +120,9 @@ protected:
   DrawingArea::UpdateViewPortSize::Connection        _updateViewPortSize;
   World::UpdateObjectCoordinates::Connection         _updateObjectCoordinates;
   ViewWindow::UpdateAllObjectCoordinates::Connection _updateAllObjectCoordinates;
+
+private:
+  void add_test_objects();
 };
 
 #endif // GTKMM_APP_FACADE
