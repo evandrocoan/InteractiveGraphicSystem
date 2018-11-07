@@ -63,7 +63,7 @@ pacman -S gcc base-devel pkg-config mingw-w64-x86_64-gtk3 mingw-w64-x86_64-boost
 
 For Msys2, add to your `~/.bashrc`:
 ```
-PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/mingw64/lib/pkgconfig
+PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/lib/pkgconfig:/usr/share/pkgconfig:/lib/pkgconfig:/mingw64/lib/pkgconfig"
 ```
 1. https://stackoverflow.com/questions/47713297/gtkmm-3-0-program-build-failed-msys2-netbeans-using-pkg-config
 
