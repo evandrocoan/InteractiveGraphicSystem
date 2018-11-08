@@ -89,7 +89,7 @@ double bernstein(int n, int index, double t)
     return basis;
 }
 
-//
+// https://www.codeproject.com/Articles/25237/Bezier-Curves-Made-Simple
 bool Curve::_bezier(const Transformation& transformation)
 {
   LOG(8, "Entering... %s", transformation);
@@ -97,45 +97,58 @@ bool Curve::_bezier(const Transformation& transformation)
   auto coordinates = this->worldCoordinates();
   DrawableObject::destroyList(this->lines);
 
-  int npts = (_worldCoordinates.size()) / 2;
-  int control_points_count = _worldCoordinates.size();
+  int npts = coordinates.size() / 2;
+  int points_to_draw = 10;
 
   Line* line;
   Coordinate* new_point;
-  Coordinate* last_point;
+  Coordinate* last_point = nullptr;
+  std::vector<Coordinate*> generated_coordinates;
 
   double x, y;
   double basis;
-  double temporary;
-  const double step = 0.01;
+  double current_step = 0;
+  double step = 1.0 / ( (double) ( points_to_draw - 1 ) );
+
+  LOG(1, "npts: %s", npts );
+  LOG(1, "step: %s", step );
+  LOG(1, "points_to_draw: %s", points_to_draw );
 
   // Calculate points on curve
-  temporary = 0;
-  for (int index = 0; index != control_points_count; index++)
+  for (int index = 0; index != points_to_draw; index++)
   {
-    if ((1.0 - temporary) < 5e-6) temporary = 1.0;
-    basis = bernstein(npts - 1, 0, temporary);
+    if ((1.0 - current_step) < 5e-6) current_step = 1.0;
 
-    x = basis * _worldCoordinates[0]->x;
-    y = basis * _worldCoordinates[0]->y;
-
-    last_point = new Coordinate(x, y);
-
-    for (int index = 1; index != npts; index++)
+    for (int index = 0; index < npts; index++)
     {
-      basis = bernstein(npts - 1, index, temporary);
-      x = basis * _clippingCoordinates[index]->x;
-      y = basis * _clippingCoordinates[index]->y;
+      basis = bernstein(npts - 1, index, current_step);
+      x = basis * coordinates[index]->x;
+      y = basis * coordinates[index]->y;
 
       new_point = new Coordinate(x, y);
-      line = new Line( "Bezier", last_point, new_point, _default_coordinate_value_parameter, LineClippingType::LIANG_BARSKY, false );
-      line->updateWindowCoordinates( transformation );
+      generated_coordinates.push_back( new_point );
 
-      this->lines.push_back( line );
-      last_point = new_point;
+      LOG( 1, "current_step: %s, coordinates[%s]: %s, new_point: %s", current_step, index, *coordinates[index], *new_point );
     }
 
-    temporary += step;
+    current_step += step;
+  }
+
+  for( auto coordinate : generated_coordinates )
+  {
+    if( last_point != nullptr )
+    {
+      LOG( 1, "last_point: %s", *last_point );
+      LOG( 1, "point:      %s", *coordinate );
+
+      line = new Line( "Bezier", last_point, coordinate, _default_coordinate_value_parameter, LineClippingType::LIANG_BARSKY, false );
+      line->updateWindowCoordinates( transformation );
+
+      LOG( 1, "line:       %s", *line );
+      this->lines.push_back( line );
+    }
+
+    last_point = coordinate;
   }
 
   return true;
