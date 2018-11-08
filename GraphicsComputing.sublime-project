@@ -2,6 +2,8 @@
   "settings":
   {
     "tab_size": 2,
+    "buildview.enabled": true,
+    "show_panel_on_build": true,
     "output_build_word_wrap": false,
     "restore_output_view_scroll": false,
     "result_file_regex": "^(..[^:]*):([0-9]+):?([0-9]+)?:? (.*)$"
