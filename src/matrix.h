@@ -109,7 +109,7 @@ struct Matrix : public Array< matrix_height, Array< matrix_width, matrix_datatyp
 
     for( line=0; line < matrix_height; line++ )
     {
-      output << "{";
+      output << "(";
 
       for( column=0; column < matrix_width; column++ )
       {
@@ -123,11 +123,11 @@ struct Matrix : public Array< matrix_height, Array< matrix_width, matrix_datatyp
 
       if( line != matrix_height-1 )
       {
-        output << "}, ";
+        output << "), ";
       }
       else
       {
-        output << "}";
+        output << ")";
       }
     }
 

@@ -21,8 +21,8 @@ ViewWindow::UpdateAllObjectCoordinates::Connection ViewWindow::addObserver(const
 
 std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
 {
-  output << "ViewWindow[" << object._dimentions << "]"
-      << object._windowCenter << " " << object._transformation << " " << object._angle_rotation;
+  output << "ViewWindow" << object._dimentions
+      << object._windowCenter << ", " << object._transformation << ", " << object._angle_rotation;
   return output;
 }
 
