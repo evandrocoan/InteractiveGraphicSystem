@@ -97,40 +97,38 @@ bool Curve::_bezier(const Transformation& transformation)
   auto coordinates = this->worldCoordinates();
   DrawableObject::destroyList(this->lines);
 
-  int npts = coordinates.size() / 2;
-  int points_to_draw = 10;
+  int points_count = coordinates.size();
+  int points_to_draw = 100;
 
   Line* line;
   Coordinate* new_point;
   Coordinate* last_point = nullptr;
   std::vector<Coordinate*> generated_coordinates;
 
-  double x, y;
   double basis;
   double current_step = 0;
   double step = 1.0 / ( (double) ( points_to_draw - 1 ) );
 
-  LOG(1, "npts: %s", npts );
+  LOG(1, "points_count: %s", points_count );
   LOG(1, "step: %s", step );
   LOG(1, "points_to_draw: %s", points_to_draw );
 
   // Calculate points on curve
-  for (int index = 0; index != points_to_draw; index++)
+  for (int index = 0; index < points_to_draw; index++)
   {
     if ((1.0 - current_step) < 5e-6) current_step = 1.0;
+    new_point = new Coordinate(0, 0);
 
-    for (int index = 0; index < npts; index++)
+    for (int index = 0; index < points_count; index++)
     {
-      basis = bernstein(npts - 1, index, current_step);
-      x = basis * coordinates[index]->x;
-      y = basis * coordinates[index]->y;
+      basis = bernstein(points_count - 1, index, current_step);
+      new_point->x += basis * coordinates[index]->x;
+      new_point->y += basis * coordinates[index]->y;
 
-      new_point = new Coordinate(x, y);
-      generated_coordinates.push_back( new_point );
-
-      LOG( 1, "current_step: %s, coordinates[%s]: %s, new_point: %s", current_step, index, *coordinates[index], *new_point );
+      // LOG( 8, "current_step: %s, coordinates[%s]: %s, new_point: %s", current_step, index, *coordinates[index], *new_point );
     }
 
+    generated_coordinates.push_back( new_point );
     current_step += step;
   }
 
@@ -138,13 +136,13 @@ bool Curve::_bezier(const Transformation& transformation)
   {
     if( last_point != nullptr )
     {
-      LOG( 1, "last_point: %s", *last_point );
-      LOG( 1, "point:      %s", *coordinate );
+      // LOG( 8, "last_point: %s", *last_point );
+      // LOG( 8, "point:      %s", *coordinate );
 
       line = new Line( "Bezier", last_point, coordinate, _default_coordinate_value_parameter, LineClippingType::LIANG_BARSKY, false );
       line->updateWindowCoordinates( transformation );
 
-      LOG( 1, "line:       %s", *line );
+      // LOG( 8, "line:       %s", *line );
       this->lines.push_back( line );
     }
 
