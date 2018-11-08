@@ -41,7 +41,6 @@ inline std::ostream& operator<<(std::ostream &output, const CohenSuthelandRegion
 
 void Line::updateClippingCoordinates(const Axes& axes)
 {
-  LOG(4, "Line clipping update... %s %s", this->line_clipping_type, axes);
   switch( this->line_clipping_type )
   {
     case LineClippingType::LIANG_BARSKY:    this->_isDrawable = this->_liangBaskyLineClip(axes); break;
@@ -53,6 +52,7 @@ void Line::updateClippingCoordinates(const Axes& axes)
       LOG(1, "ERROR! Invalid LineClippingType algorithm passed by: %s", this->line_clipping_type);
     }
   }
+  LOG(4, "Line clipping update... %s %s %s", this->line_clipping_type, *this, axes);
 }
 
 bool Line::_liangBaskyLineClip(const Axes& axes)
