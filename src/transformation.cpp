@@ -12,12 +12,12 @@ Transformation::~Transformation()
 
 void Transformation::apply(Coordinate &point) const
 {
-  LOG(4, "Apply transformation: %s", point);
+  LOG(8, "Apply transformation: %s", point);
 
   if( this->isInitialized )
   {
     point.multiply(this->_transformation);
-    LOG(4, "Transformation result %s", point);
+    LOG(8, "Transformation result %s", point);
   }
 }
 
@@ -83,7 +83,7 @@ void Transformation::add_translation(const std::string name, const Coordinate mo
 
 void Transformation::set_geometric_center(const Coordinate &center)
 {
-  LOG(4, "Center on %s - %s", center, *this);
+  LOG(16, "Center on %s - %s", center, *this);
   unsigned int index = 0;
 
   for( auto data : this->transformations )
@@ -131,12 +131,12 @@ void Transformation::_set_translation_data(const TransformationData &data, const
   {
     this->_transformation.multiply(data.matrix);
   }
-  LOG(4, "_transformation.multiply: %s", this->_transformation);
+  LOG(16, "_transformation.multiply: %s", this->_transformation);
 }
 
 void Transformation::_set_scaling_data(const TransformationData &data, const unsigned int &index, const Coordinate &center)
 {
-  LOG(2, "Entering...");
+  LOG(16, "Entering...");
 
   switch(data.point)
   {
@@ -169,7 +169,7 @@ void Transformation::_set_scaling_data(const TransformationData &data, const uns
 
 void Transformation::_scaling_on_world_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
 {
-  LOG(4, "Just rotate it, as all scalings are based on the world center");
+  LOG(16, "Just rotate it, as all scalings are based on the world center");
   if( index == 0 )
   {
     this->_transformation = data.matrix;
@@ -232,7 +232,7 @@ void Transformation::_scaling_on_coordinate(const TransformationData &data, cons
 
 void Transformation::_set_rotation_data(const TransformationData &data, const unsigned int &index, const Coordinate &center)
 {
-  LOG(2, "Entering...");
+  LOG(16, "Entering...");
 
   switch(data.point)
   {
@@ -265,7 +265,7 @@ void Transformation::_set_rotation_data(const TransformationData &data, const un
 
 void Transformation::_rotation_on_world_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
 {
-  LOG(4, "Just rotate it, as all rotations are based on the world center");
+  LOG(16, "Just rotate it, as all rotations are based on the world center");
   if( index == 0 )
   {
     this->_transformation = data.matrix;

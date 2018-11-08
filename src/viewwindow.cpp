@@ -70,16 +70,16 @@ void ViewWindow::move(Coordinate moves)
   this->_transformation.add_rotation("Rotation on given coordinate", -this->_angles);
   this->_transformation.set_geometric_center();
   this->_transformation.apply(moves);
-  LOG(4, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
-  LOG(4, "_transformation: %s", _transformation);
+  LOG(16, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
+  LOG(16, "_transformation: %s", _transformation);
 
   this->_angle_rotation.clear();
   this->_angle_rotation.add_rotation("Transformation on the ViewWindow by Rotation", this->_angles);
   this->_angle_rotation.apply(moves);
   this->_windowCenter += moves;
 
-  LOG(4, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
-  LOG(4, "_transformation: %s", _transformation);
+  LOG(16, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
+  LOG(16, "_transformation: %s", _transformation);
   this->callObservers();
 }
 
@@ -96,8 +96,8 @@ void ViewWindow::callObservers()
   this->_transformation.add_rotation("Rotation on given coordinate", this->_angles);
   this->_transformation.add_scaling("Scaling for window coordinates", this->_dimentions.inverse());
   this->_transformation.set_geometric_center();
-  LOG(4, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
-  LOG(4, "_transformation: %s", _transformation);
+  LOG(16, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
+  LOG(16, "_transformation: %s", _transformation);
   this->_updateAllObjectCoordinates(this->_transformation, this->_axes);
 }
 

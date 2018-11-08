@@ -88,6 +88,7 @@ World::UpdateObjectCoordinates::Connection World::addObserver(const World::Updat
 
 void World::updateAllObjectCoordinates(const Transformation& transformation, const Axes& axes)
 {
+  LOG(4, "\n");
   LOG(4, "Updating all objects clipping...");
   auto objects = this->_displayFile.getObjects();
 

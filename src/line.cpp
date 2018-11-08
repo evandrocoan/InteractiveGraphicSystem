@@ -46,7 +46,7 @@ void Line::updateClippingCoordinates(const Axes& axes)
     case LineClippingType::LIANG_BARSKY:    this->_isDrawable = this->_liangBaskyLineClip(axes); break;
     case LineClippingType::COHEN_SUTHELAND: this->_isDrawable = this->_cohenSuthelandLineClip(axes); break;
   }
-  LOG(4, "Line clipping update... %s %s %s", this->line_clipping_type, *this, axes);
+  LOG(8, "Line clipping update... %s %s %s", this->line_clipping_type, *this, axes);
 }
 
 bool Line::_liangBaskyLineClip(const Axes& axes)
@@ -136,22 +136,22 @@ bool Line::_cohenSuthelandLineClip(const Axes& axes)
   unsigned int rc1 = _getCoordianteRegionCode(axes, c1);
   unsigned int rc2 = _getCoordianteRegionCode(axes, c2);
 
-  LOG(16, "rc1: %s, rc2: %s", rc1,rc2);
-  LOG(16, "c1: %s, c2: %s", c1,c2);
+  // LOG(8, "rc1: %s, rc2: %s", rc1,rc2);
+  // LOG(8, "c1: %s, c2: %s", c1,c2);
 
   while( true )
   {
     // Inside - bitwise OR is 0: both points inside window; trivially accept and exit loop
     if( !(rc1 | rc2) )
     {
-      LOG(16, "return ||");
+      // LOG(8, "return ||");
       return true;
     }
     // Out - bitwise AND is not 0: both points share an outside zone (LEFT, RIGHT, TOP,
     // or BOTTOM), so both must be outside window; exit loop (accept is false)
     else if( rc1 & rc2 )
     {
-      LOG(16, "return &&");
+      // LOG(8, "return &&");
       return false;
     }
 
@@ -170,66 +170,66 @@ bool Line::_cohenSuthelandLineClip(const Axes& axes)
     // No need to worry about divide-by-zero because, in each case, the
     // outcode bit being tested guarantees the denominator is non-zero
     long double m = (c2.y - c1.y) / (c2.x - c1.x);
-    LOG(16, "m: %s", m);
-    LOG(16, "outcodeout: %s", outcodeout);
+    // LOG(8, "m: %s", m);
+    // LOG(8, "outcodeout: %s", outcodeout);
 
     // point is above the clip window
     if( outcodeout & CohenSuthelandRegionCode::TOP )
     {
       x = c1.x + 1/m * (axes.yWiMax - c1.y);
       y = axes.yWiMax;
-      LOG(16, "CohenSuthelandRegionCode::TOP: %d", CohenSuthelandRegionCode::TOP);
+      // LOG(8, "CohenSuthelandRegionCode::TOP: %d", CohenSuthelandRegionCode::TOP);
     }
     // point is below the clip window
     else if( outcodeout & CohenSuthelandRegionCode::BOTTOM )
     {
       x = c1.x + 1/m * (axes.yWiMin - c1.y);
       y = axes.yWiMin;
-      LOG(16, "CohenSuthelandRegionCode::BOTTOM: %d", CohenSuthelandRegionCode::BOTTOM);
+      // LOG(8, "CohenSuthelandRegionCode::BOTTOM: %d", CohenSuthelandRegionCode::BOTTOM);
     }
     // point is to the right of clip window
     else if( outcodeout & CohenSuthelandRegionCode::RIGHT )
     {
       y = m * (axes.xWiMax-c1.x) + c1.y;
       x = axes.xWiMax;
-      LOG(16, "CohenSuthelandRegionCode::RIGHT: %d", CohenSuthelandRegionCode::RIGHT);
+      // LOG(8, "CohenSuthelandRegionCode::RIGHT: %d", CohenSuthelandRegionCode::RIGHT);
     }
     // point is to the left of clip window
     else if( outcodeout & CohenSuthelandRegionCode::LEFT )
     {
       y = m * (axes.xWiMin-c1.x) + c1.y;
       x = axes.xWiMin;
-     LOG(16, "CohenSuthelandRegionCode::LEFT: %d", CohenSuthelandRegionCode::LEFT);
+     // LOG(8, "CohenSuthelandRegionCode::LEFT: %d", CohenSuthelandRegionCode::LEFT);
     }
 
-    LOG(16, "c1: %s, c2: %s", c1,c2);
+    // LOG(8, "c1: %s, c2: %s", c1,c2);
 
     // Now we move outside point to intersection point to clip
     // and get ready for next pass.
     if( outcodeout == rc1 )
     {
 
-      LOG(16, "rc1: %s, rc2: %s", rc1,rc2);
+      // LOG(8, "rc1: %s, rc2: %s", rc1,rc2);
       c1.x = x;
       c1.y = y;
       rc1 = _getCoordianteRegionCode(axes, c1);
-      LOG(16, "rc1: %s, rc2: %s", rc1,rc2);
+      // LOG(8, "rc1: %s, rc2: %s", rc1,rc2);
 
     }
     else
     {
 
-      LOG(16, "rc1: %s, rc2: %s", rc1,rc2);
+      // LOG(8, "rc1: %s, rc2: %s", rc1,rc2);
       c2.x = x;
       c2.y = y;
       rc2 = _getCoordianteRegionCode(axes, c2);
-      LOG(16, "rc1: %s, rc2: %s", rc1,rc2);
+      // LOG(8, "rc1: %s, rc2: %s", rc1,rc2);
 
     }
-    LOG(16, "c1: %s, c2: %s", c1,c2);
+    // LOG(8, "c1: %s, c2: %s", c1,c2);
   }
 
-  LOG(16, "return true");
+  // LOG(8, "return true");
   return true;
 }
 
@@ -239,27 +239,27 @@ unsigned int Line::_getCoordianteRegionCode(const Axes& axes, const Coordinate& 
 
   if(c.x < axes.xWiMin -0.0001) {
     region_code |= CohenSuthelandRegionCode::LEFT;
-    LOG(16, "1. Chanding region_code to: %s", region_code);
+    // LOG(8, "1. Chanding region_code to: %s", region_code);
   }
   else if(c.x > axes.xWiMax+0.0001) {
-    LOG(16, "2. Chanding region_code to: %s", region_code);
+    // LOG(8, "2. Chanding region_code to: %s", region_code);
     region_code |= CohenSuthelandRegionCode::RIGHT;
   }
 
   if(c.y < axes.yWiMin-0.0001) {
-    LOG(16, "3. Chanding region_code to: %s", region_code);
+    // LOG(8, "3. Chanding region_code to: %s", region_code);
     region_code |= CohenSuthelandRegionCode::BOTTOM;
   }
   else if(c.y > axes.yWiMax+0.0001) {
-    LOG(16, "4. Chanding region_code to: %s", region_code);
+    // LOG(8, "4. Chanding region_code to: %s", region_code);
     region_code |= CohenSuthelandRegionCode::TOP;
   }
 
-  // LOG(16, "axes: %s", axes);
-  LOG(16, "axes.xWiMin: %s", axes.xWiMin);
-  LOG(16, "axes.xWiMax: %s", axes.xWiMax);
-  LOG(16, "axes.yWiMin: %s", axes.yWiMin);
-  LOG(16, "axes.yWiMax: %s", axes.yWiMax);
-  LOG(16, "region_code: %s", region_code);
+  // LOG(8, "axes: %s", axes);
+  // LOG(8, "axes.xWiMin: %s", axes.xWiMin);
+  // LOG(8, "axes.xWiMax: %s", axes.xWiMax);
+  // LOG(8, "axes.yWiMin: %s", axes.yWiMin);
+  // LOG(8, "axes.yWiMax: %s", axes.yWiMax);
+  // LOG(8, "region_code: %s", region_code);
   return region_code;
 }

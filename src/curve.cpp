@@ -35,7 +35,7 @@ inline std::ostream& operator<<(std::ostream &output, const CurveType object)
 
 void Curve::updateWindowCoordinates(const Transformation& transformation)
 {
-  LOG(4, "Curve window update... %s %s", this->curve_type, transformation);
+  LOG(8, "Curve window update... %s %s", this->curve_type, transformation);
   switch( this->curve_type )
   {
     case CurveType::BEZIER:  this->_isDrawable = this->_bezier(transformation); break;
@@ -109,9 +109,9 @@ bool Curve::_bezier(const Transformation& transformation)
   double current_step = 0;
   double step = 1.0 / ( (double) ( points_to_draw - 1 ) );
 
-  LOG(1, "points_count: %s", points_count );
-  LOG(1, "step: %s", step );
-  LOG(1, "points_to_draw: %s", points_to_draw );
+  LOG(16, "points_count: %s", points_count );
+  LOG(16, "step: %s", step );
+  LOG(16, "points_to_draw: %s", points_to_draw );
 
   // Calculate points on curve
   for (int index = 0; index < points_to_draw; index++)
