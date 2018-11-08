@@ -31,19 +31,6 @@ DrawableObject::~DrawableObject()
 	this->destroyList(this->_clippingCoordinates);
 }
 
-/**
- * https://stackoverflow.com/questions/307082/cleaning-up-an-stl-list-vector-of-pointers
- * Cleaning up an STL list/vector of pointers
- */
-void DrawableObject::destroyList(std::vector<Coordinate*>& _worldCoordinates)
-{
-  while(!_worldCoordinates.empty())
-  {
-    // delete _worldCoordinates.front();
-    _worldCoordinates.pop_back();
-  }
-}
-
 std::string DrawableObject::getName() const
 {
   return this->name;
