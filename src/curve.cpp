@@ -33,6 +33,21 @@ inline std::ostream& operator<<(std::ostream &output, const CurveType object)
   return output;
 }
 
+void Curve::updateWindowCoordinates(const Transformation& transformation)
+{
+  LOG(4, "Curve window update... %s %s", this->curve_type, transformation);
+  switch( this->curve_type )
+  {
+    case CurveType::BEZIER:  this->_isDrawable = this->_bezier(transformation); break;
+    case CurveType::BSPLINE: this->_isDrawable = this->_bspline(transformation); break;
+    default:
+    {
+      std::string error = tfm::format( "ERROR! Invalid CurveType algorithm passed by: %s", this->curve_type );
+      throw std::runtime_error( error );
+    }
+  }
+}
+
 void Curve::updateClippingCoordinates(const Axes& axes)
 {
   LOG(4, "Curve clipping update... %s %s", this->curve_type, axes);
@@ -42,9 +57,8 @@ void Curve::updateClippingCoordinates(const Axes& axes)
     case CurveType::BSPLINE: this->_isDrawable = this->_bspline(axes); break;
     default:
     {
-      LOG(1, "");
-      LOG(1, "");
-      LOG(1, "ERROR! Invalid CurveType algorithm passed by: %s", this->curve_type);
+      std::string error = tfm::format( "ERROR! Invalid CurveType algorithm passed by: %s", this->curve_type );
+      throw std::runtime_error( error );
     }
   }
 }
@@ -75,21 +89,23 @@ double bernstein(int n, int index, double t)
     return basis;
 }
 
-bool Curve::_bezier(const Axes& axes)
+//
+bool Curve::_bezier(const Transformation& transformation)
 {
-  this->destroyList(this->_clippingCoordinates);
+  LOG(8, "Entering... %s", transformation);
 
-  for( auto coordinate : this->_windowCoordinates )
-  {
-    this->_clippingCoordinates.push_back(new Coordinate(*coordinate));
-  }
+  auto coordinates = this->worldCoordinates();
+  DrawableObject::destroyList(this->lines);
 
-  int npts = (_clippingCoordinates.size()) / 2;
-  int control_points_count = _clippingCoordinates.size();
+  int npts = (_worldCoordinates.size()) / 2;
+  int control_points_count = _worldCoordinates.size();
 
   Line* line;
   Coordinate* new_point;
   Coordinate* last_point;
+
+  double x, y;
+  double basis;
   double temporary;
   const double step = 0.01;
 
@@ -97,14 +113,12 @@ bool Curve::_bezier(const Axes& axes)
   temporary = 0;
   for (int index = 0; index != control_points_count; index++)
   {
-    if ((1.0 - temporary) < 5e-6)
-      temporary = 1.0;
+    if ((1.0 - temporary) < 5e-6) temporary = 1.0;
+    basis = bernstein(npts - 1, 0, temporary);
 
-    double x, y;
+    x = basis * _worldCoordinates[0]->x;
+    y = basis * _worldCoordinates[0]->y;
 
-    double basis = bernstein(npts - 1, 0, temporary);
-    x = basis * _clippingCoordinates[0]->x;
-    y = basis * _clippingCoordinates[0]->y;
     last_point = new Coordinate(x, y);
 
     for (int index = 1; index != npts; index++)
@@ -112,18 +126,35 @@ bool Curve::_bezier(const Axes& axes)
       basis = bernstein(npts - 1, index, temporary);
       x = basis * _clippingCoordinates[index]->x;
       y = basis * _clippingCoordinates[index]->y;
+
       new_point = new Coordinate(x, y);
+      line = new Line( "Bezier", last_point, new_point, _default_coordinate_value_parameter, LineClippingType::LIANG_BARSKY, false );
+      line->updateWindowCoordinates( transformation );
 
-      line = new Line( "name", last_point, new_point, _default_coordinate_value_parameter, LineClippingType::LIANG_BARSKY, false );
-      line->updateClippingCoordinates( axes );
       this->lines.push_back( line );
-
       last_point = new_point;
     }
 
     temporary += step;
   }
 
+  return true;
+}
+
+bool Curve::_bezier(const Axes& axes)
+{
+  for( auto line : this->lines )
+  {
+    line->updateClippingCoordinates(axes);
+  }
+
+  LOG(16, "return true");
+  return true;
+}
+
+bool Curve::_bspline(const Transformation& transformation)
+{
+  LOG(16, "return true");
   return true;
 }
 

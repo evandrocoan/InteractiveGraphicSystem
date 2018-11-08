@@ -45,12 +45,6 @@ void Line::updateClippingCoordinates(const Axes& axes)
   {
     case LineClippingType::LIANG_BARSKY:    this->_isDrawable = this->_liangBaskyLineClip(axes); break;
     case LineClippingType::COHEN_SUTHELAND: this->_isDrawable = this->_cohenSuthelandLineClip(axes); break;
-    default:
-    {
-      LOG(1, "");
-      LOG(1, "");
-      LOG(1, "ERROR! Invalid LineClippingType algorithm passed by: %s", this->line_clipping_type);
-    }
   }
   LOG(4, "Line clipping update... %s %s %s", this->line_clipping_type, *this, axes);
 }
@@ -70,7 +64,10 @@ bool Line::_liangBaskyLineClip(const Axes& axes)
 
   if( c1 == c2 )
   {
-    // Point clipping?!
+    LOG(1, "" );
+    LOG(1, "" );
+    LOG(1, "" );
+    LOG(1, "Point clipping?!" );
   }
 
   Coordinate delta = c2 - c1;

@@ -52,7 +52,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
     {
       if( object->curve_type == CurveType::BEZIER || object->curve_type == CurveType::BSPLINE )
       {
-
+        if( drawn_circle( cairo_context, object ) ) continue;
       }
       else
       {
@@ -100,6 +100,7 @@ void DrawingArea::drawn_point(const Cairo::RefPtr<Cairo::Context>& cairo_context
 
   cairo_context->move_to(firstCoordinate->x, firstCoordinate->y);
   cairo_context->line_to(firstCoordinate->x+1, firstCoordinate->y+1);
+  cairo_context->stroke(); // outline it
 }
 
 void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
@@ -110,8 +111,8 @@ void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_conte
   auto border = object->borderColor();
   auto filling = object->fillingColor();
 
-  LOG(8, "border: %s", border);
-  LOG(8, "filing: %s", filling);
+  // LOG(8, "border: %s", border);
+  // LOG(8, "filing: %s", filling);
   cairo_context->set_source_rgb(border.x, border.y, border.z);
 
   for( auto coordinate : coordinates )
@@ -126,9 +127,37 @@ void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_conte
   cairo_context->close_path();
   cairo_context->set_source_rgb(filling.x, filling.y, filling.z);
   cairo_context->fill_preserve();
-
   cairo_context->restore();  // back to opaque black
-  cairo_context->stroke(); // outline it
+  cairo_context->stroke();  // outline it
+}
+
+bool DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
+{
+  auto lines = object->lines;
+  Coordinate* coordinateConverted;
+
+  if( lines.size() == 0 )
+  {
+    LOG(1, "ERROR: The object `%s` has no coordinates.", *object);
+    return true;
+  }
+
+  for( auto line : object->lines )
+  {
+    // auto coordinates = line->windowCoordinates();
+    auto coordinates = line->clippingCoordinates();
+
+    coordinateConverted = this->_viewWindow.convertCoordinateToViewPort(*coordinates[0]);
+    LOG( 1, "coordinateConverted1: %s, from: %s", *coordinateConverted, *coordinates[0] );
+    cairo_context->move_to(coordinateConverted->x, coordinateConverted->y);
+
+    coordinateConverted = this->_viewWindow.convertCoordinateToViewPort(*coordinates[1]);
+    LOG( 1, "coordinateConverted2: %s, from: %s", *coordinateConverted, *coordinates[1] );
+    cairo_context->move_to(coordinateConverted->x, coordinateConverted->y);
+  }
+
+  cairo_context->stroke();  // outline it
+  return false;
 }
 
 /**
