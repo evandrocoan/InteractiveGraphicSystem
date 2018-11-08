@@ -12,12 +12,12 @@ Transformation::~Transformation()
 
 void Transformation::apply(Coordinate &point) const
 {
-  LOG(4, "Applying transformation on coordinate %s", point);
+  LOG(4, "Apply transformation: %s", point);
 
   if( this->isInitialized )
   {
     point.multiply(this->_transformation);
-    LOG(4, "Transformation result: %s", point);
+    LOG(4, "Transformation result %s", point);
   }
 }
 
