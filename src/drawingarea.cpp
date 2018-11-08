@@ -134,7 +134,6 @@ void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_conte
 bool DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
 {
   auto lines = object->lines;
-  Coordinate* coordinateConverted;
 
   if( lines.size() == 0 )
   {
@@ -144,19 +143,15 @@ bool DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_contex
 
   for( auto line : object->lines )
   {
-    // auto coordinates = line->windowCoordinates();
-    auto coordinates = line->clippingCoordinates();
+    if( !line->isDrawable() )
+    {
+      // LOG(8, "Skip objects which were completely clipped out of the Window");
+      continue;
+    }
 
-    coordinateConverted = this->_viewWindow.convertCoordinateToViewPort(*coordinates[0]);
-    LOG( 1, "coordinateConverted1: %s, from: %s", *coordinateConverted, *coordinates[0] );
-    cairo_context->move_to(coordinateConverted->x, coordinateConverted->y);
-
-    coordinateConverted = this->_viewWindow.convertCoordinateToViewPort(*coordinates[1]);
-    LOG( 1, "coordinateConverted2: %s, from: %s", *coordinateConverted, *coordinates[1] );
-    cairo_context->move_to(coordinateConverted->x, coordinateConverted->y);
+    drawn_polygon( cairo_context, line );
   }
 
-  cairo_context->stroke();  // outline it
   return false;
 }
 
