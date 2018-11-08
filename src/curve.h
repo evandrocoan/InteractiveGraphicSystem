@@ -16,23 +16,15 @@ public:
   ~Curve();
 
   const bool visible_on_gui;
-
-  std::vector<Line*> lines;
+  virtual void updateWindowCoordinates(const Transformation&);
   virtual void updateClippingCoordinates(const Axes&);
 
 protected:
-
-  /**
-   * http://www.skytopia.com/project/articles/compsci/clipping.html
-   *
-   * @return true if the line should be drawn, false if the line should be skipped drawing
-   */
   bool _bezier(const Axes&);
+  bool _bezier(const Transformation&);
 
-  /**
-   * https://en.wikipedia.org/wiki/Cohen%E2%80%93Sutherland_algorithm
-   */
   bool _bspline(const Axes&);
+  bool _bspline(const Transformation&);
 };
 
 #endif // GTKMM_APP_CURVE
