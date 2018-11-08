@@ -356,7 +356,7 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
   unsigned int index = 0;
   unsigned int size = object.transformations.size() - 1;
 
-  output << "(" << object._transformation << ") ";
+  output << "[" << object._transformation << "] ";
 
   for( auto data : object.transformations )
   {

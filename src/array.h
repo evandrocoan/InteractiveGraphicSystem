@@ -179,7 +179,7 @@ struct Array
   friend std::ostream& operator<<( std::ostream &output, const Array &array )
   {
     unsigned int column;
-    output << "{";
+    output << "(";
 
     for( column=0; column < array_width; column++ )
     {
@@ -191,7 +191,7 @@ struct Array
       }
     }
 
-    output << "}";
+    output << ")";
     return output;
   }
 };
