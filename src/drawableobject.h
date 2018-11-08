@@ -40,7 +40,20 @@ public:
   const std::vector<Coordinate*>& clippingCoordinates() const;
 
   static Coordinate getGeometricCenter(const std::vector<Coordinate*>&);
-  static void destroyList(std::vector<Coordinate*>& coordinates);
+
+  /**
+   * https://stackoverflow.com/questions/307082/cleaning-up-an-stl-list-vector-of-pointers
+   * Cleaning up an STL list/vector of pointers
+   */
+  template<typename VectorType>
+  static void destroyList(std::vector<VectorType>& elements)
+  {
+    while(!elements.empty())
+    {
+      // delete elements.front();
+      elements.pop_back();
+    }
+  }
 
   void apply(Transformation&);
   bool isDrawable() const { return this->_isDrawable;   }
