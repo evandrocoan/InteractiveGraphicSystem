@@ -7,7 +7,9 @@ DrawableObject::DrawableObject(std::string name, std::vector<Coordinate*> _world
 
 DrawableObject::DrawableObject(
           std::string name, std::vector<Coordinate*> _worldCoordinates,
-          Coordinate _borderColor, Coordinate _fillingColor, CurveType curve_type) :
+          Coordinate _borderColor, Coordinate _fillingColor, CurveType curve_type,
+          std::vector<Line*> lines ) :
+      lines(lines),
       curve_type(curve_type),
       name(name),
       _isDrawable(false),
@@ -15,7 +17,7 @@ DrawableObject::DrawableObject(
       _fillingColor(_fillingColor),
       _worldCoordinates(_worldCoordinates)
 {
-  LOG(4, "Deep coping initializing the coordinate attributes");
+  // LOG(4, "Deep coping initializing the coordinate attributes");
 
   for( auto coordinate : _worldCoordinates )
   {
@@ -96,7 +98,7 @@ void DrawableObject::printMyself(std::ostream& output) const
     index = 0;
     size = coordinates_list.size() - 1;
 
-    output << "_" << index_external << "(";
+    output << "_" << index_external << "[";
 
     for( auto coordinate : coordinates_list )
     {
@@ -111,7 +113,7 @@ void DrawableObject::printMyself(std::ostream& output) const
     }
 
     index_external++;
-    output << ")";
+    output << "]";
   }
 }
 
