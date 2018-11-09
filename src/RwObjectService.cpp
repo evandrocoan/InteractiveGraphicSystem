@@ -24,14 +24,24 @@ void RwObjectService::read(std::string file_path)
   bool is_there_new_lines;
   bool is_there_a_next_line;
 
-  std::ifstream myfile(file_path);
   std::vector<big_double> coordinates_points;
   std::string name;
 
-  // removes all comments and empty lines
+  std::ifstream in_file(file_path);
 
-  if( myfile.is_open() )
+  if( in_file.is_open() )
   {
+    std::stringstream myfile;
+
+    // removes all comments and empty lines
+    while( getline( in_file, line ) )
+    {
+        if( !line.empty() && line.front() != '#' )
+        {
+            myfile << line << '\n';
+        }
+    }
+
     while( true )
     {
       if( is_to_skip_new_line_fetch ) is_to_skip_new_line_fetch = false;
@@ -100,7 +110,7 @@ void RwObjectService::read(std::string file_path)
       }
     }
 
-    myfile.close();
+    in_file.close();
   }
   else
   {
