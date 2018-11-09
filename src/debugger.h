@@ -144,6 +144,27 @@
   /**
    * The same as LOG(...) just above, but do not put automatically a new line.
    */
+  #define LOGL( level, ... ) \
+  do \
+  { \
+    if( level & _debugger_int_debug_level ) \
+    { \
+      std::clock_t ctime_clock_now = std::clock(); \
+      auto chrono_clock_now = std::chrono::high_resolution_clock::now(); \
+      _DEBUGGER_TIME_STAMP_HEADER \
+      std::cout << tfm::format( "%s|%s:%s ", \
+          __FILE__, __FUNCTION__, __LINE__ \
+      ) \
+      << tfm::format( __VA_ARGS__ ); \
+      _debugger_current_saved_c_time = ctime_clock_now; \
+      _debugger_current_saved_chrono_time = chrono_clock_now; \
+    } \
+  } \
+  while( 0 )
+
+  /**
+   * The same as LOG(...) just above, but do not put automatically a new line, neither time stamp.
+   */
   #define LOGLN( level, ... ) \
   do \
   { \
