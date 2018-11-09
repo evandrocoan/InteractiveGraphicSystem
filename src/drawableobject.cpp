@@ -98,7 +98,7 @@ void DrawableObject::printMyself(std::ostream& output) const
     index = 0;
     size = coordinates_list.size() - 1;
 
-    output << "_" << index_external << "[";
+    output << ", " << index_external << "[";
 
     for( auto coordinate : coordinates_list )
     {

@@ -89,7 +89,7 @@ void RwObjectService::read(std::string file_path)
 
         std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates_points );
 
-        if( vertexes.size() < 7 )
+        if( vertexes.size() < 3 )
         {
           this->facade.addLine( name, vertexes[0]->x, vertexes[0]->y, vertexes[1]->x, vertexes[1]->y );
         }
