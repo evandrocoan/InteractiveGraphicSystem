@@ -33,18 +33,24 @@ void World::addPoint(std::string name, int x_coord, int y_coord, Coordinate _bor
   this->_updateObjectCoordinates(point);
 }
 
-void World::addPolygon(std::string name, std::vector<big_double> polygon_coord_list,
+void World::addPolygon(std::string name, std::vector<big_double> coordinates_points,
       Coordinate _borderColor, Coordinate  _fillingColor, CurveType type)
 {
-  int unsigned coordinates_size = polygon_coord_list.size();
+  int unsigned coordinates_size = coordinates_points.size();
   std::vector<Coordinate*> coordinates;
 
   for( unsigned int index = 2; index < coordinates_size; index++, index++, index++ )
   {
-    LOG(1, "Currently we do not support 3D, forcing z `%s` to be 1", polygon_coord_list.at(index));
-    coordinates.push_back( new Coordinate( polygon_coord_list.at(index-2), polygon_coord_list.at(index-1), 1 ) );
+    LOG(1, "Currently we do not support 3D, forcing z `%s` to be 1", coordinates_points.at(index));
+    coordinates.push_back( new Coordinate( coordinates_points.at(index-2), coordinates_points.at(index-1), 1 ) );
   }
 
+  this->addPolygon( name, coordinates, _borderColor, _fillingColor, type );
+}
+
+void World::addPolygon(std::string name, std::vector<Coordinate*> coordinates,
+      Coordinate _borderColor, Coordinate  _fillingColor, CurveType type)
+{
   DrawableObject* object;
 
   switch(type) {

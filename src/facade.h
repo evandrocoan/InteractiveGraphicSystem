@@ -39,6 +39,13 @@ public:
   {
     this->_world.addPolygon(name, points, _borderColor, _fillingColor, type); }
 
+  void addPolygon(std::string name, std::vector<Coordinate*> points,
+      Coordinate _borderColor=_default_coordinate_value_parameter,
+      Coordinate _fillingColor=_default_coordinate_value_parameter,
+      CurveType type=CurveType::POLYGON)
+  {
+    this->_world.addPolygon(name, points, _borderColor, _fillingColor, type); }
+
   void removeObject(std::string name) { this->_world.removeObject(name); }
 
   void move(Coordinate moves)        { this->_viewWindow.move(moves);        }
