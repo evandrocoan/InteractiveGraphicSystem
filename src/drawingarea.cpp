@@ -27,8 +27,8 @@ DrawingArea::UpdateViewPortSize::Connection DrawingArea::addObserver(const Drawi
  */
 bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 {
+  LOG(8, "...");
   // LOG(8, "Chama-mes 5 vezes seguidas para desenhar a mesma coisa por que?");
-  // LOG(8, "Paint white background");
   cairo_context->set_source_rgb(1, 1, 1);
   cairo_context->paint();
 
@@ -43,7 +43,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
 
     if( !object->isDrawable() )
     {
-      LOG(8, "Skip objects which were completely clipped out of the Window");
+      // LOG(8, "Skip objects which were completely clipped out of the Window");
       continue;
     }
 
