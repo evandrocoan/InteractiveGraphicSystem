@@ -356,7 +356,8 @@ void MainWindow::on_button_save_file()
 void MainWindow::add_test_objects()
 {
   std::vector<big_double> polygon_coord_list;
-  this->rw_object_service.read("./tests.obj");
+  this->rw_object_service.read("./simple_test.obj");
+  // this->rw_object_service.read("./bezier_cicle_polygon.obj");
 
   // polygon_coord_list.clear();
   // polygon_coord_list.push_back(-50); polygon_coord_list.push_back(-50); polygon_coord_list.push_back(1);
