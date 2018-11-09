@@ -170,7 +170,7 @@ void MainWindow::updateDropdownList()
   LOG(2, "Entering...");
   auto names = this->facade.displayFile().objectNames();
 
-  LOG(4, "limpa a lista de objetos para reimprimi-la");
+  // LOG(4, "limpa a lista de objetos para reimprimi-la");
   this->objects_list.remove_all();
 
   for(auto object : names)
@@ -181,7 +181,7 @@ void MainWindow::updateDropdownList()
 
   // Set Gtk.ComboBoxText default item?
   // https://stackoverflow.com/questions/14912210/set-gtk-comboboxtext-default-item
-  LOG(4, "Selecting the last item on the ComboBoxText");
+  // LOG(4, "Selecting the last item on the ComboBoxText");
   this->objects_list.set_active(names.size()-1);
   this->on_objects_list_change();
 }
@@ -357,7 +357,7 @@ void MainWindow::add_test_objects()
 {
   std::vector<big_double> polygon_coord_list;
   this->rw_object_service.read("./simple_test.obj");
-  // this->rw_object_service.read("./bezier_cicle_polygon.obj");
+  this->rw_object_service.read("./bezier_cicle_polygon.obj");
 
   // polygon_coord_list.clear();
   // polygon_coord_list.push_back(-50); polygon_coord_list.push_back(-50); polygon_coord_list.push_back(1);

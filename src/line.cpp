@@ -41,12 +41,13 @@ inline std::ostream& operator<<(std::ostream &output, const CohenSuthelandRegion
 
 void Line::updateClippingCoordinates(const Axes& axes)
 {
+  LOG (8, "..." );
   switch( this->line_clipping_type )
   {
     case LineClippingType::LIANG_BARSKY:    this->_isDrawable = this->_liangBaskyLineClip(axes); break;
     case LineClippingType::COHEN_SUTHELAND: this->_isDrawable = this->_cohenSuthelandLineClip(axes); break;
   }
-  LOG(8, "Line clipping update... %s %s %s", this->line_clipping_type, *this, axes);
+  // LOG(8, "Line clipping update... %s %s %s", this->line_clipping_type, *this, axes);
 }
 
 bool Line::_liangBaskyLineClip(const Axes& axes)

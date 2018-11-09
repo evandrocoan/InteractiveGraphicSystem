@@ -72,7 +72,7 @@ void ViewWindow::move(Coordinate moves)
   this->_transformation.apply(moves);
 
   LOG(16, "moves: %s", moves);
-  LOG(16, "moves transformation: %s", _transformation);
+  // LOG(16, "moves transformation: %s", _transformation);
 
   this->_windowCenter += moves;
   this->callObservers();
@@ -92,8 +92,8 @@ void ViewWindow::callObservers()
   this->_transformation.add_scaling("Window coordinate scaling", this->_dimentions.inverse());
   this->_transformation.set_geometric_center(_origin_coordinate_value);
 
-  LOG(16, "World transformation: %s", _transformation);
-  LOG(16, "Window dimensions: %s, inversed dimensions: %s", this->_dimentions, this->_dimentions.inverse());
+  // LOG(16, "World transformation: %s", _transformation);
+  // LOG(16, "Window dimensions: %s, inversed dimensions: %s", this->_dimentions, this->_dimentions.inverse());
   this->_updateAllObjectCoordinates(this->_transformation, this->_axes);
 }
 
@@ -102,7 +102,8 @@ void ViewWindow::callObservers()
  */
 void ViewWindow::updateViewPortSize(big_double width, big_double height)
 {
-  LOG(4, "Current drawing area widget size %sx%s - %s", width, height, *this);
+  LOG( 2, "..." );
+  // LOG(4, "Current drawing area widget size %sx%s - %s", width, height, *this);
 
   // This is true only when you resize the you ViewWindow widget window
   if (this->xVpMax != width || this->yVpMax != height)
@@ -138,7 +139,7 @@ void ViewWindow::updateViewPortSize(big_double width, big_double height)
     this->yVpMax += heightDiff;
 
     this->callObservers();
-    LOG(8, "Leaving:  %s", *this);
+    // LOG(8, "Leaving:  %s", *this);
   }
 }
 
