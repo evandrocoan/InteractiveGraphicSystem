@@ -22,6 +22,7 @@ public:
       Coordinate _borderColor, LineClippingType type=LineClippingType::LIANG_BARSKY, bool visible_on_gui=true);
 
   void addPolygon(const std::string name, const std::vector<big_double>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
+  void addPolygon(const std::string name, const std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
   void removeObject(const std::string name);
 
   const DisplayFile& displayFile() const { return this->_displayFile; }
