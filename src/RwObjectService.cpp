@@ -35,7 +35,7 @@ void RwObjectService::read(std::string file_path)
       {
         std::vector<std::string> sep = split(line, ' ');
 
-        if (sep.size() > 3)
+        if (sep.size() > 2)
         {
           coord_vector.push_back(atof(sep[1].c_str()));
           coord_vector.push_back(atof(sep[2].c_str()));
