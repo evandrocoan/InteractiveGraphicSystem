@@ -1,9 +1,16 @@
 # Starting the file objects
+# http://www.fileformat.info/format/wavefrontobj/egff.htm
 
-o line1
-
+o Line1
 v 0,000000 0,000000 1,000000
 v 50,000000 50,000000 1,000000
+f 1 2
 
-f 1 2 
+
+o Polygon1
+v -50 -50 1,000000
+v -50 -30 1,000000
+v -30 -30 1,000000
+v -30 -50 1,000000
+f 1 2 3 4
 
