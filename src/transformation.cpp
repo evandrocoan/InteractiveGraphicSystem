@@ -16,6 +16,7 @@ void Transformation::apply(Coordinate &point) const
 
   if( this->isInitialized )
   {
+    point.z = 1.0; // No 3D support yet
     point.multiply(this->_transformation);
     // LOG(8, "Transformation result %s", point);
   }
