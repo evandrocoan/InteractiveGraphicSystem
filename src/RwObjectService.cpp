@@ -19,52 +19,82 @@ RwObjectService::~RwObjectService()
 void RwObjectService::read(std::string file_path)
 {
   std::string line;
+  bool is_to_skip_new_line_fetch = false;
+
+  bool is_there_new_lines;
+  bool is_there_a_next_line;
+
   std::ifstream myfile(file_path);
-  std::vector<big_double> coord_vector;
+  std::vector<big_double> coordinates;
   std::string name;
 
-  if(myfile.is_open())
+  // removes all comments and empty lines
+
+  if( myfile.is_open() )
   {
-    while(getline(myfile, line))
+    while( true )
     {
-      if (line.front() == 'o')
+      if( is_to_skip_new_line_fetch ) is_to_skip_new_line_fetch = false;
+          else is_there_new_lines = static_cast<bool>( getline( myfile, line ) );
+
+      if( !is_there_new_lines ) break;
+
+      // https://www.fileformat.info/format/wavefrontobj/egff.htm
+      if( line.front() == 'o' )
       {
         name = line.substr(2, line.length());
       }
-      if (line.front() == 'v')
+      else if( line.front() == 'v' )
       {
-        std::vector<std::string> sep = split(line, ' ');
+        std::vector<std::string> indexes = split(line, ' ');
 
-        if (sep.size() > 2)
+        if( indexes.size() > 2 )
         {
-          coord_vector.push_back(atof(sep[1].c_str()));
-          coord_vector.push_back(atof(sep[2].c_str()));
-          coord_vector.push_back(atof(sep[3].c_str()));
+          coordinates.push_back( atof( indexes[1].c_str() ) );
+          coordinates.push_back( atof( indexes[2].c_str() ) );
+          coordinates.push_back( atof( indexes[3].c_str() ) );
         }
         else
         {
-          coord_vector.push_back(atof(sep[1].c_str()));
-          coord_vector.push_back(atof(sep[2].c_str()));
-          coord_vector.push_back(1.0);
+          coordinates.push_back( atof( indexes[1].c_str() ) );
+          coordinates.push_back( atof( indexes[2].c_str() ) );
+          coordinates.push_back( 1.0 );
         }
       }
-
-      if (line.front() == 'f')
+      else if( line.front() == 'p' )
       {
-        if (coord_vector.size() == 1)
+        std::vector<int> indexes;
+        this->getLineIndexes( indexes, line );
+
+        std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates );
+        this->facade.addPoint( name, vertexes[0]->x, vertexes[1]->y );
+      }
+      else if( line.front() == 'l' )
+      {
+        std::vector<int> indexes;
+
+        do
         {
-          this->facade.addPoint(name, coord_vector[0], coord_vector[1]);
+          this->getLineIndexes( indexes, line );
+
+          is_there_new_lines = static_cast<bool>( getline( myfile, line ) );
+          is_there_a_next_line = line.front() == 'l';
+
+          is_to_skip_new_line_fetch = true;
+          if( !is_there_new_lines ) break;
         }
-        else if (coord_vector.size() == 2)
+        while( is_there_a_next_line );
+
+        std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates );
+
+        if( vertexes.size() < 7 )
         {
-          this->facade.addLine(name, coord_vector[0], coord_vector[1], coord_vector[2], coord_vector[3]);
+          this->facade.addLine( name, vertexes[0]->x, vertexes[0]->y, vertexes[1]->x, vertexes[1]->y );
         }
         else
         {
-          this->facade.addPolygon(name, coord_vector);
+          this->facade.addPolygon( name, vertexes );
         }
-
-        coord_vector.clear();
       }
     }
 
@@ -72,16 +102,59 @@ void RwObjectService::read(std::string file_path)
   }
 }
 
-std::vector<std::string> RwObjectService::split(std::string str, char delimiter)
+std::vector<int> RwObjectService::getLineIndexes(std::vector<int>& internal, std::string& line)
+{
+  std::vector<std::string> indexes = this->split( line, ' ' );
+
+  std::reverse( indexes.begin(), indexes.end() );
+  indexes.pop_back();
+
+  while(!indexes.empty())
+  {
+    internal.push_back( atoi( indexes.back().c_str() ) );
+    indexes.pop_back();
+  }
+
+  LOG( 1, "internal: %s", internal[0] );
+  LOG( 1, "internal.size: %s", internal.size() );
+  return internal;
+}
+
+std::vector<Coordinate*> RwObjectService::getVertexes(std::vector<int>& indexes, std::vector<big_double>& coordinates)
+{
+  big_double x, y, z;
+  Coordinate* coordinate;
+
+  std::vector<Coordinate*> internal;
+  std::reverse( indexes.begin(), indexes.end() );
+
+  while(!indexes.empty())
+  {
+    x = coordinates[indexes.back()]; indexes.pop_back();
+    y = coordinates[indexes.back()]; indexes.pop_back();
+    z = coordinates[indexes.back()]; indexes.pop_back();
+
+    coordinate = new Coordinate( x, y, z );
+    internal.push_back( coordinate );
+  }
+
+  LOG( 1, "internal: %s", internal[0] );
+  LOG( 1, "internal.size: %s", internal.size() );
+  return internal;
+}
+
+std::vector<std::string> RwObjectService::split(std::string& line, char delimiter)
 {
   std::vector<std::string> internal;
-  std::stringstream ss(str); // Turn the std::string into a stream.
+  std::stringstream ss(line); // Turn the std::string into a stream.
   std::string tok;
 
   while(getline(ss, tok, delimiter)) {
     internal.push_back(tok);
   }
 
+  LOG( 1, "internal: %s", internal[0] );
+  LOG( 1, "internal.size: %s", internal.size() );
   return internal;
 }
 
