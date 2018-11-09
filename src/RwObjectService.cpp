@@ -25,7 +25,7 @@ void RwObjectService::read(std::string file_path)
   bool is_there_a_next_line;
 
   std::ifstream myfile(file_path);
-  std::vector<big_double> coordinates;
+  std::vector<big_double> coordinates_points;
   std::string name;
 
   // removes all comments and empty lines
@@ -50,15 +50,15 @@ void RwObjectService::read(std::string file_path)
 
         if( indexes.size() > 2 )
         {
-          coordinates.push_back( atof( indexes[1].c_str() ) );
-          coordinates.push_back( atof( indexes[2].c_str() ) );
-          coordinates.push_back( atof( indexes[3].c_str() ) );
+          coordinates_points.push_back( atof( indexes[1].c_str() ) );
+          coordinates_points.push_back( atof( indexes[2].c_str() ) );
+          coordinates_points.push_back( atof( indexes[3].c_str() ) );
         }
         else
         {
-          coordinates.push_back( atof( indexes[1].c_str() ) );
-          coordinates.push_back( atof( indexes[2].c_str() ) );
-          coordinates.push_back( 1.0 );
+          coordinates_points.push_back( atof( indexes[1].c_str() ) );
+          coordinates_points.push_back( atof( indexes[2].c_str() ) );
+          coordinates_points.push_back( 1.0 );
         }
       }
       else if( line.front() == 'p' )
@@ -66,26 +66,28 @@ void RwObjectService::read(std::string file_path)
         std::vector<int> indexes;
         this->getLineIndexes( indexes, line );
 
-        std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates );
+        std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates_points );
         this->facade.addPoint( name, vertexes[0]->x, vertexes[1]->y );
       }
       else if( line.front() == 'l' )
       {
         std::vector<int> indexes;
+        this->getLineIndexes( indexes, line );
 
         do
         {
-          this->getLineIndexes( indexes, line );
-
           is_there_new_lines = static_cast<bool>( getline( myfile, line ) );
           is_there_a_next_line = line.front() == 'l';
+
+          if( !is_there_a_next_line ) break;
+          this->getLineIndexes( indexes, line );
 
           is_to_skip_new_line_fetch = true;
           if( !is_there_new_lines ) break;
         }
-        while( is_there_a_next_line );
+        while( true );
 
-        std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates );
+        std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates_points );
 
         if( vertexes.size() < 7 )
         {
@@ -99,6 +101,11 @@ void RwObjectService::read(std::string file_path)
     }
 
     myfile.close();
+  }
+  else
+  {
+    std::string error = tfm::format( "ERROR! Could not open the file: %s", file_path );
+    throw std::runtime_error( error );
   }
 }
 
@@ -115,14 +122,16 @@ std::vector<int> RwObjectService::getLineIndexes(std::vector<int>& internal, std
     indexes.pop_back();
   }
 
-  LOG( 1, "internal: %s", internal[0] );
-  LOG( 1, "internal.size: %s", internal.size() );
+  LOGL( 1, "internal.size: %s, ", internal.size() );
+  for( auto value : internal ) LOGLN( 1, "%s, ", value );
+
+  LOGLN( 1, "\n" );
   return internal;
 }
 
-std::vector<Coordinate*> RwObjectService::getVertexes(std::vector<int>& indexes, std::vector<big_double>& coordinates)
+std::vector<Coordinate*> RwObjectService::getVertexes(std::vector<int>& indexes, std::vector<big_double>& coordinates_points)
 {
-  big_double x, y, z;
+  int index;
   Coordinate* coordinate;
 
   std::vector<Coordinate*> internal;
@@ -130,16 +139,22 @@ std::vector<Coordinate*> RwObjectService::getVertexes(std::vector<int>& indexes,
 
   while(!indexes.empty())
   {
-    x = coordinates[indexes.back()]; indexes.pop_back();
-    y = coordinates[indexes.back()]; indexes.pop_back();
-    z = coordinates[indexes.back()]; indexes.pop_back();
+    index = ( indexes.back() - 1 ) * 3;
+    indexes.pop_back();
 
-    coordinate = new Coordinate( x, y, z );
+    LOG( 1, "Reading index %s from %s", index, index / 3 );
+    LOG( 1, "Reading x value %s", coordinates_points[index] );
+    LOG( 1, "Reading y value %s", coordinates_points[index+1] );
+    LOG( 1, "Reading z value %s", coordinates_points[index+2] );
+
+    coordinate = new Coordinate( coordinates_points[index], coordinates_points[index+1], coordinates_points[index+2] );
     internal.push_back( coordinate );
   }
 
-  LOG( 1, "internal: %s", internal[0] );
-  LOG( 1, "internal.size: %s", internal.size() );
+  LOGL( 1, "internal.size: %s, ", internal.size() );
+  for( auto value : internal ) LOGLN( 1, "%s, ", *value );
+
+  LOGLN( 1, "\n" );
   return internal;
 }
 
@@ -153,8 +168,10 @@ std::vector<std::string> RwObjectService::split(std::string& line, char delimite
     internal.push_back(tok);
   }
 
-  LOG( 1, "internal: %s", internal[0] );
-  LOG( 1, "internal.size: %s", internal.size() );
+  LOGL( 1, "internal.size: %s, ", internal.size() );
+  for( auto value : internal ) LOGLN( 1, "%s, ", value );
+
+  LOGLN( 1, "\n" );
   return internal;
 }
 
