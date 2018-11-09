@@ -48,7 +48,7 @@ void RwObjectService::read(std::string file_path)
           else is_there_new_lines = static_cast<bool>( getline( myfile, line ) );
 
       if( !is_there_new_lines ) break;
-      LOG( 8, "line: %s", line );
+      // LOG( 8, "line: %s", line );
 
       // https://www.fileformat.info/format/wavefrontobj/egff.htm
       if( line.front() == 'o' )
@@ -77,6 +77,9 @@ void RwObjectService::read(std::string file_path)
         std::vector<int> indexes;
         this->getLineIndexes( indexes, line );
 
+        LOGL( 8, "indexes.size: %s, ", indexes.size() );
+        for( auto value : indexes ) LOGLN( 8, "%s, ", value ); LOGLN( 8, "\n" );
+
         std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates_points );
         this->facade.addPoint( name, vertexes[0]->x, vertexes[1]->y );
       }
@@ -97,6 +100,9 @@ void RwObjectService::read(std::string file_path)
           if( !is_there_new_lines ) break;
         }
         while( true );
+
+        LOGL( 8, "indexes.size: %s, ", indexes.size() );
+        for( auto value : indexes ) LOGLN( 8, "%s, ", value ); LOGLN( 8, "\n" );
 
         std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates_points );
 
@@ -133,10 +139,6 @@ std::vector<int> RwObjectService::getLineIndexes(std::vector<int>& internal, std
     indexes.pop_back();
   }
 
-  LOGL( 8, "internal.size: %s, ", internal.size() );
-  for( auto value : internal ) LOGLN( 8, "%s, ", value );
-
-  LOGLN( 8, "\n" );
   return internal;
 }
 

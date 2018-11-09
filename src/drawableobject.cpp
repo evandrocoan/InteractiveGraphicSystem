@@ -133,7 +133,8 @@ void DrawableObject::apply(Transformation &transformation)
 
 void DrawableObject::updateWindowCoordinates(const Transformation& transformation)
 {
-  LOG(8, "Entering... %s", transformation);
+  LOG(8, "...");
+  // LOG(8, "Entering... %s", transformation);
   Coordinate* new_coordinate;
 
   auto coordinates = this->worldCoordinates();
