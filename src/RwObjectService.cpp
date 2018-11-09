@@ -72,6 +72,19 @@ void RwObjectService::read(std::string file_path)
   }
 }
 
+std::vector<std::string> RwObjectService::split(std::string str, char delimiter)
+{
+  std::vector<std::string> internal;
+  std::stringstream ss(str); // Turn the std::string into a stream.
+  std::string tok;
+
+  while(getline(ss, tok, delimiter)) {
+    internal.push_back(tok);
+  }
+
+  return internal;
+}
+
 void RwObjectService::write(std::vector<DrawableObject*> objects_list, std::string file_path)
 {
   std::ofstream myfile;
@@ -102,17 +115,4 @@ void RwObjectService::write(std::vector<DrawableObject*> objects_list, std::stri
   }
 
   myfile.close();
-}
-
-std::vector<std::string> RwObjectService::split(std::string str, char delimiter)
-{
-  std::vector<std::string> internal;
-  std::stringstream ss(str); // Turn the std::string into a stream.
-  std::string tok;
-
-  while(getline(ss, tok, delimiter)) {
-    internal.push_back(tok);
-  }
-
-  return internal;
 }
