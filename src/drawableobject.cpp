@@ -88,8 +88,8 @@ void DrawableObject::printMyself(std::ostream& output) const
   std::vector< std::vector<Coordinate*> > coordinates_lists;
 
   coordinates_lists.push_back(this->_worldCoordinates);
-  coordinates_lists.push_back(this->_windowCoordinates);
-  coordinates_lists.push_back(this->_clippingCoordinates);
+  // coordinates_lists.push_back(this->_windowCoordinates);
+  // coordinates_lists.push_back(this->_clippingCoordinates);
 
   output << this->name;
 
