@@ -60,7 +60,6 @@ public:
 
     // World observe ViewWindow coordinates update
     this->_updateAllObjectCoordinates = this->_viewWindow.addObserver(std::bind(&Facade::updateAllObjectCoordinates, this, _1, _2));
-    this->add_test_objects();
   }
 
   /**
@@ -120,9 +119,6 @@ protected:
   DrawingArea::UpdateViewPortSize::Connection        _updateViewPortSize;
   World::UpdateObjectCoordinates::Connection         _updateObjectCoordinates;
   ViewWindow::UpdateAllObjectCoordinates::Connection _updateAllObjectCoordinates;
-
-private:
-  void add_test_objects();
 };
 
 #endif // GTKMM_APP_FACADE
