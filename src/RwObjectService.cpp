@@ -132,10 +132,10 @@ std::vector<int> RwObjectService::getLineIndexes(std::vector<int>& internal, std
     indexes.pop_back();
   }
 
-  LOGL( 1, "internal.size: %s, ", internal.size() );
-  for( auto value : internal ) LOGLN( 1, "%s, ", value );
+  LOGL( 8, "internal.size: %s, ", internal.size() );
+  for( auto value : internal ) LOGLN( 8, "%s, ", value );
 
-  LOGLN( 1, "\n" );
+  LOGLN( 8, "\n" );
   return internal;
 }
 
@@ -152,19 +152,19 @@ std::vector<Coordinate*> RwObjectService::getVertexes(std::vector<int>& indexes,
     index = ( indexes.back() - 1 ) * 3;
     indexes.pop_back();
 
-    LOG( 1, "Reading index %s from %s", index, index / 3 );
-    LOG( 1, "Reading x value %s", coordinates_points[index] );
-    LOG( 1, "Reading y value %s", coordinates_points[index+1] );
-    LOG( 1, "Reading z value %s", coordinates_points[index+2] );
+    LOG( 8, "Reading index %s from %s", index, index / 3 );
+    LOG( 8, "Reading x value %s", coordinates_points[index] );
+    LOG( 8, "Reading y value %s", coordinates_points[index+1] );
+    LOG( 8, "Reading z value %s", coordinates_points[index+2] );
 
     coordinate = new Coordinate( coordinates_points[index], coordinates_points[index+1], coordinates_points[index+2] );
     internal.push_back( coordinate );
   }
 
-  LOGL( 1, "internal.size: %s, ", internal.size() );
-  for( auto value : internal ) LOGLN( 1, "%s, ", *value );
+  LOGL( 8, "internal.size: %s, ", internal.size() );
+  for( auto value : internal ) LOGLN( 8, "%s, ", *value );
 
-  LOGLN( 1, "\n" );
+  LOGLN( 8, "\n" );
   return internal;
 }
 
@@ -178,10 +178,10 @@ std::vector<std::string> RwObjectService::split(std::string& line, char delimite
     internal.push_back(tok);
   }
 
-  LOGL( 1, "internal.size: %s, ", internal.size() );
-  for( auto value : internal ) LOGLN( 1, "%s, ", value );
+  LOGL( 8, "internal.size: %s, ", internal.size() );
+  for( auto value : internal ) LOGLN( 8, "%s, ", value );
 
-  LOGLN( 1, "\n" );
+  LOGLN( 8, "\n" );
   return internal;
 }
 
