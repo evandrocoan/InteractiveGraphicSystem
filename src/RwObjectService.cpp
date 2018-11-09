@@ -48,6 +48,7 @@ void RwObjectService::read(std::string file_path)
           else is_there_new_lines = static_cast<bool>( getline( myfile, line ) );
 
       if( !is_there_new_lines ) break;
+      LOG( 8, "line: %s", line );
 
       // https://www.fileformat.info/format/wavefrontobj/egff.htm
       if( line.front() == 'o' )
@@ -87,12 +88,12 @@ void RwObjectService::read(std::string file_path)
         do
         {
           is_there_new_lines = static_cast<bool>( getline( myfile, line ) );
-          is_there_a_next_line = line.front() == 'l';
-
-          if( !is_there_a_next_line ) break;
-          this->getLineIndexes( indexes, line );
-
           is_to_skip_new_line_fetch = true;
+
+          is_there_a_next_line = line.front() == 'l';
+          if( !is_there_a_next_line ) break;
+
+          this->getLineIndexes( indexes, line );
           if( !is_there_new_lines ) break;
         }
         while( true );
