@@ -328,7 +328,7 @@ Coordinate AddObject::_get_rgb_color(Gtk::Entry& field_r, Gtk::Entry& field_g, G
   big_double border_b{std::stold(field_b.get_text().raw().c_str())};
   Coordinate border = Coordinate(border_r, border_g, border_b);
 
-  if( border < 0.0 || border > 1.0 )
+  if( border + 0.0001 < 0.0 || border - 0.0001 > 1.0 )
   {
     LOG(1, "");
     LOG(1, "");
