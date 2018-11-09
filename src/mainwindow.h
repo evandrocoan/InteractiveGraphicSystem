@@ -94,6 +94,9 @@ protected:
 
   void on_button_open_file();
   void on_button_save_file();
+
+private:
+  void add_test_objects();
 };
 
 #endif // GTKMM_APP_MAIN_WINDOW

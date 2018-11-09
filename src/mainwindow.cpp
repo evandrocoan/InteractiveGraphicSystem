@@ -49,6 +49,8 @@ MainWindow::MainWindow() :
   this->window.set_default_size(800, 500);
   this->window.add(this->main_box);
   this->window.show_all_children();
+
+  this->add_test_objects();
 }
 
 MainWindow::~MainWindow()
@@ -351,5 +353,28 @@ void MainWindow::on_button_save_file()
 	LOG(2, "Sucessfull saved the objects on file\n");
 }
 
+void MainWindow::add_test_objects()
+{
+  std::vector<big_double> polygon_coord_list;
+  this->rw_object_service.read("./tests.obj");
 
+  // polygon_coord_list.clear();
+  // polygon_coord_list.push_back(-50); polygon_coord_list.push_back(-50); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(-50); polygon_coord_list.push_back(-30); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(-30); polygon_coord_list.push_back(-30); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(-30); polygon_coord_list.push_back(-50); polygon_coord_list.push_back(1);
+  // this->facade.addPolygon("Polygon", polygon_coord_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::POLYGON);
+
+  // polygon_coord_list.clear();
+  // polygon_coord_list.push_back(0); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(10); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(20); polygon_coord_list.push_back(5); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(30); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(40); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(50); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(60); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
+  // this->facade.addPolygon("Bezier", polygon_coord_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::BEZIER);
+
+  this->facade.queue_draw();
+}
 
