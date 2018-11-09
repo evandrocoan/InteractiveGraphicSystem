@@ -11,7 +11,7 @@ Polygon::~Polygon()
 
 void Polygon::updateClippingCoordinates(const Axes& axes)
 {
-  LOG(4, "Polygon clipping update... %s", axes);
+  LOG(4, "Polygon clipping update... %s", *this);
   this->_isDrawable = this->_sutherlandHodgmanPolygonClip(axes);
 }
 
