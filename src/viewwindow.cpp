@@ -3,8 +3,8 @@
 ViewWindow::ViewWindow() :
       _axes(ViewWindow::xWiMin, ViewWindow::yWiMin, ViewWindow::xWiMax, ViewWindow::yWiMax),
       _angles(0, 0),
-      _dimentions(100, 100),
-      _windowCenter(0, 0)
+      _dimentions(100, 100, 0),
+      _windowCenter(0, 0, 0)
 {
 }
 
@@ -22,7 +22,7 @@ ViewWindow::UpdateAllObjectCoordinates::Connection ViewWindow::addObserver(const
 std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
 {
   output << "ViewWindow" << object._dimentions
-      << object._windowCenter << ", " << object._transformation << ", " << object._angle_rotation;
+      << object._windowCenter << ", " << object._transformation;
   return output;
 }
 
@@ -67,19 +67,14 @@ void ViewWindow::move(Coordinate moves)
   // moves._data[1] = x_move*(-1*sine)+ moves._data[1]*cosine;
   //_windowCenter = moves*T
   this->_transformation.clear();
-  this->_transformation.add_rotation("Rotation on given coordinate", -this->_angles);
-  this->_transformation.set_geometric_center();
+  this->_transformation.add_rotation("Fix window rotation", -this->_angles);
+  this->_transformation.set_geometric_center(_origin_coordinate_value);
   this->_transformation.apply(moves);
-  LOG(16, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
-  LOG(16, "_transformation: %s", _transformation);
 
-  this->_angle_rotation.clear();
-  this->_angle_rotation.add_rotation("Transformation on the ViewWindow by Rotation", this->_angles);
-  this->_angle_rotation.apply(moves);
+  LOG(16, "moves: %s", moves);
+  LOG(16, "moves transformation: %s", _transformation);
+
   this->_windowCenter += moves;
-
-  LOG(16, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
-  LOG(16, "_transformation: %s", _transformation);
   this->callObservers();
 }
 
@@ -92,12 +87,13 @@ void ViewWindow::rotate(Coordinate angles)
 void ViewWindow::callObservers()
 {
   this->_transformation.clear();
-  this->_transformation.add_translation("Translation to wold center", -this->_windowCenter);
-  this->_transformation.add_rotation("Rotation on given coordinate", this->_angles);
-  this->_transformation.add_scaling("Scaling for window coordinates", this->_dimentions.inverse());
-  this->_transformation.set_geometric_center();
-  LOG(16, "_width: %s, 1/this->_width: %s", this->_dimentions, this->_dimentions.inverse());
-  LOG(16, "_transformation: %s", _transformation);
+  this->_transformation.add_translation("Window to center", -this->_windowCenter);
+  this->_transformation.add_rotation("Window rotation", this->_angles);
+  this->_transformation.add_scaling("Window coordinate scaling", this->_dimentions.inverse());
+  this->_transformation.set_geometric_center(_origin_coordinate_value);
+
+  LOG(16, "World transformation: %s", _transformation);
+  LOG(16, "Window dimensions: %s, inversed dimensions: %s", this->_dimentions, this->_dimentions.inverse());
   this->_updateAllObjectCoordinates(this->_transformation, this->_axes);
 }
 

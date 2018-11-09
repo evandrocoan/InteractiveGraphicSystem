@@ -59,7 +59,7 @@ public:
    * create new transformations, you must call `set_geometric_center()` before using it again.
    */
   void apply(Coordinate&) const;
-  void set_geometric_center(const Coordinate& center = _default_coordinate_value_parameter);
+  void set_geometric_center(const Coordinate& center);
 
 protected:
 
