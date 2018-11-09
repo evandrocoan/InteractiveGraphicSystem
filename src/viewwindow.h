@@ -119,7 +119,6 @@ protected:
   Coordinate _windowCenter;
 
   Transformation _transformation;
-  Transformation _angle_rotation;
 
   void callObservers();
 };
