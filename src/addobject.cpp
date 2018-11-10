@@ -137,9 +137,7 @@ Gtk::Window& AddObject::getWindow()
 }
 
 void AddObject::on_button_save_point()
-{
-  try
-  {
+{ try {
 
   std::string name = this->_get_field_name(point_name_field);
   LOG(4, "Name: %s", name);
@@ -163,12 +161,7 @@ void AddObject::on_button_save_point()
 
   this->window.close();
 
-  }
-  catch( const std::runtime_error& error )
-  {
-    errorMessage( error );
-    return ;
-  }
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
 std::string AddObject::_get_field_name(Gtk::Entry &name_field)
@@ -181,9 +174,7 @@ std::string AddObject::_get_field_name(Gtk::Entry &name_field)
 }
 
 void AddObject::on_button_save_line()
-{
-  try
-  {
+{ try {
 
   std::string name = this->_get_field_name(line_name_field);
   LOG(4, "Name: %s", name);
@@ -211,18 +202,11 @@ void AddObject::on_button_save_line()
 
   this->window.close();
 
-  }
-  catch( const std::runtime_error& error )
-  {
-    errorMessage( error );
-    return ;
-  }
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
 void AddObject::on_button_save_polygon()
-{
-  try
-  {
+{ try {
 
   if (!polygon_coord_list.empty())
   {
@@ -254,19 +238,12 @@ void AddObject::on_button_save_polygon()
     return ;
   }
 
-  }
-  catch( const std::runtime_error& error )
-  {
-    errorMessage( error );
-    return ;
-  }
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
 
 void AddObject::on_button_save_bezier()
-{
-  try
-  {
+{ try {
 
   if (!polygon_coord_list.empty())
   {
@@ -298,19 +275,12 @@ void AddObject::on_button_save_bezier()
     return ;
   }
 
-  }
-  catch( const std::runtime_error& error )
-  {
-    errorMessage( error );
-    return ;
-  }
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
 
 void AddObject::on_button_save_bspline()
-{
-  try
-  {
+{ try {
 
   if (!polygon_coord_list.empty())
   {
@@ -342,19 +312,12 @@ void AddObject::on_button_save_bspline()
     return ;
   }
 
-  }
-  catch( const std::runtime_error& error )
-  {
-    errorMessage( error );
-    return ;
-  }
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
 
 void AddObject::on_button_add_coordinate()
-{
-  try
-  {
+{ try {
 
   std::string x_string = wire_x_field.get_text().raw();
   std::string y_string = wire_y_field.get_text().raw();
@@ -382,27 +345,15 @@ void AddObject::on_button_add_coordinate()
       + std::to_string(y_coord) + ", "
       + std::to_string(z_coord) + "), " );
 
-  }
-  catch( const std::runtime_error& error )
-  {
-    errorMessage( error );
-    return ;
-  }
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
 void AddObject::on_button_close()
-{
-  try
-  {
+{ try {
 
   this->window.close();
 
-  }
-  catch( const std::runtime_error& error )
-  {
-    errorMessage( error );
-    return ;
-  }
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
 Coordinate AddObject::_get_rgb_color(Gtk::Entry& field_r, Gtk::Entry& field_g, Gtk::Entry& field_b)
@@ -424,31 +375,17 @@ Coordinate AddObject::_get_rgb_color(Gtk::Entry& field_r, Gtk::Entry& field_g, G
 }
 
 void AddObject::on_liang_radiobutton()
-{
-  try
-  {
+{ try {
 
   this->line_clipping_type = LineClippingType::LIANG_BARSKY;
 
-  }
-  catch( const std::runtime_error& error )
-  {
-    errorMessage( error );
-    return ;
-  }
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
 void AddObject::on_cohen_radiobutton()
-{
-  try
-  {
+{ try {
 
   this->line_clipping_type = LineClippingType::COHEN_SUTHELAND;
 
-  }
-  catch( const std::runtime_error& error )
-  {
-    errorMessage( error );
-    return ;
-  }
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
