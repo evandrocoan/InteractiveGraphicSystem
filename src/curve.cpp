@@ -2,7 +2,7 @@
 #include "line.h"
 #include "math.h"
 
-inline std::ostream& operator<<(std::ostream &output, const CurveType object)
+std::ostream& operator<<(std::ostream &output, const CurveType object)
 {
   switch( object )
   {
@@ -14,62 +14,25 @@ inline std::ostream& operator<<(std::ostream &output, const CurveType object)
   return output;
 }
 
-Curve::Curve(std::string name, std::vector<Coordinate*> _worldCoordinates,
-              Coordinate _borderColor, Coordinate _fillingColor, CurveType type) :
-      DrawableObject(name, _worldCoordinates, _borderColor, _fillingColor, type),
-      visible_on_gui(false)
+BezierCurve::BezierCurve(std::string name, std::vector<Coordinate*> _worldCoordinates,
+              Coordinate _borderColor, Coordinate _fillingColor) :
+      Curve(name, _worldCoordinates, _borderColor, _fillingColor)
 {
-  if( curve_type == BEZIER )
+  if(_worldCoordinates.size() < 4 || (_worldCoordinates.size()-4)%3 != 0)
   {
-    if(_worldCoordinates.size() < 4 || (_worldCoordinates.size()-4)%3 != 0)
-    {
-      std::ostringstream contents;
-      for( auto value : _worldCoordinates ) contents << *value << ", ";
+    std::ostringstream contents;
+    for( auto value : _worldCoordinates ) contents << *value << ", ";
 
-      std::string error = tfm::format(
-          "A Bezier curve should have 4, 7, 10, 13... coordinates, not %s.\n\n%s",
-          _worldCoordinates.size(), contents.str() );
+    std::string error = tfm::format(
+        "A Bezier curve should have 4, 7, 10, 13... coordinates, not %s.\n\n%s",
+        _worldCoordinates.size(), contents.str() );
 
-      throw std::runtime_error( error );
-    }
-  }
-  else if( curve_type == BEZIER )
-  {
+    throw std::runtime_error( error );
   }
 }
 
-Curve::~Curve()
+BezierCurve::~BezierCurve()
 {
-}
-
-void Curve::updateWindowCoordinates(const Transformation& transformation)
-{
-  LOG(8, "Curve window update... %s %s", this->curve_type, transformation);
-  switch( this->curve_type )
-  {
-    case CurveType::BEZIER:  this->_isDrawable = this->_bezier(transformation); break;
-    case CurveType::BSPLINE: this->_isDrawable = this->_bspline(transformation); break;
-    default:
-    {
-      std::string error = tfm::format( "ERROR! Invalid CurveType algorithm passed by: %s", this->curve_type );
-      throw std::runtime_error( error );
-    }
-  }
-}
-
-void Curve::updateClippingCoordinates(const Axes& axes)
-{
-  LOG(4, "Curve clipping update... %s %s", this->curve_type, axes);
-  switch( this->curve_type )
-  {
-    case CurveType::BEZIER:  this->_isDrawable = this->_bezier(axes); break;
-    case CurveType::BSPLINE: this->_isDrawable = this->_bspline(axes); break;
-    default:
-    {
-      std::string error = tfm::format( "ERROR! Invalid CurveType algorithm passed by: %s", this->curve_type );
-      throw std::runtime_error( error );
-    }
-  }
 }
 
 double factorial(int n)
@@ -99,7 +62,7 @@ double bernstein(int n, int index, double t)
 }
 
 // https://www.codeproject.com/Articles/25237/Bezier-Curves-Made-Simple
-bool Curve::_bezier(const Transformation& transformation)
+void BezierCurve::updateWindowCoordinates(const Transformation& transformation)
 {
   LOG(8, "Entering... %s", transformation);
 
@@ -157,42 +120,13 @@ bool Curve::_bezier(const Transformation& transformation)
 
     last_point = coordinate;
   }
-
-  return true;
 }
 
-bool Curve::_bezier(const Axes& axes)
+void BezierCurve::updateClippingCoordinates(const Axes& axes)
 {
   for( auto line : this->lines )
   {
     line->updateClippingCoordinates(axes);
   }
-
-  LOG(16, "return true");
-  return true;
 }
 
-bool Curve::_bspline(const Transformation& transformation)
-{
-  LOG(16, "return true");
-  return true;
-}
-
-bool Curve::_bspline(const Axes& axes)
-{
-  this->destroyList(this->_clippingCoordinates);
-
-  for( auto coordinate : this->_windowCoordinates )
-  {
-    this->_clippingCoordinates.push_back(new Coordinate(*coordinate));
-  }
-
-  auto front = this->_clippingCoordinates.begin();
-
-  auto& c1 = **front; ++front;
-  auto& c2 = **front;
-
-  LOG(16, "c1: %s, c2: %s", c1, c2);
-  LOG(16, "return true");
-  return true;
-}
