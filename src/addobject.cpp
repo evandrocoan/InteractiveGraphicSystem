@@ -27,6 +27,11 @@ AddObject::AddObject(Facade &facade) :
   LOG(2, "Entering...");
   this->on_liang_radiobutton();
 
+  entered_points_field.set_text("");
+  entered_points_field.set_line_wrap(true);
+  entered_points_field.set_size_request(250, -1);
+  entered_points_field.set_max_width_chars(50);
+
   insert_border_color_field_r.set_text("0");
   insert_border_color_field_g.set_text("0");
   insert_border_color_field_b.set_text("0");
@@ -110,6 +115,7 @@ AddObject::AddObject(Facade &facade) :
   m_vbox.pack_start(m_notebook);
   m_vbox.pack_start(color_grid, Gtk::PACK_SHRINK);
   m_vbox.pack_start(button_close, Gtk::PACK_EXPAND_WIDGET);
+  m_vbox.pack_start(entered_points_field, Gtk::PACK_SHRINK);
 
   m_notebook.append_page(point_grid, "Point");
   m_notebook.append_page(line_grid, "Line");
@@ -217,6 +223,7 @@ void AddObject::on_button_save_polygon()
       polygon_coord_list.pop_back();
     }
 
+    entered_points_field.set_text("");
     this->window.close();
   }
   else
@@ -266,6 +273,7 @@ void AddObject::on_button_save_bezier()
       polygon_coord_list.pop_back();
     }
 
+    entered_points_field.set_text("");
     this->window.close();
   }
   else
@@ -299,6 +307,7 @@ void AddObject::on_button_save_bspline()
       polygon_coord_list.pop_back();
     }
 
+    entered_points_field.set_text("");
     this->window.close();
   }
   else
@@ -316,12 +325,12 @@ void AddObject::on_button_add_coordinate()
 
   int x_coord = atoi(x_string.c_str());
   int y_coord = atoi(y_string.c_str());
+  int z_coord = 1;
   // int z_coord = atoi(z_string.c_str());
 
   polygon_coord_list.push_back(x_coord);
   polygon_coord_list.push_back(y_coord);
-  // polygon_coord_list.push_back(z_coord);
-  polygon_coord_list.push_back(1);
+  polygon_coord_list.push_back(z_coord);
 
   wire_x_field.set_text("");
   wire_y_field.set_text("");
@@ -330,6 +339,11 @@ void AddObject::on_button_add_coordinate()
 
   LOG(4, insert_a_coordinate_label_contents.c_str());
   insert_a_coordinate_label.set_text(insert_a_coordinate_label_contents);
+
+  entered_points_field.set_text( entered_points_field.get_text() + "("
+      + std::to_string(x_coord) + ", "
+      + std::to_string(y_coord) + ", "
+      + std::to_string(z_coord) + "), " );
 }
 
 void AddObject::on_button_close()

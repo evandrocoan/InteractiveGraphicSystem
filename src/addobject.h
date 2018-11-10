@@ -31,6 +31,9 @@ private:
   Gtk::Box      m_vbox;
   Gtk::Notebook m_notebook;
 
+  // https://stackoverflow.com/questions/12218970/gtk-label-wrapping-in-a-dialog
+  Gtk::Label entered_points_field;
+
   std::string new_object_name;
   std::vector<big_double> polygon_coord_list;
 
