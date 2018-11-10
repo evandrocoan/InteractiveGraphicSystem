@@ -242,7 +242,23 @@ void AddObject::on_button_save_bezier()
     Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
     Coordinate filling = this->_get_rgb_color(insert_filling_color_field_r, insert_filling_color_field_g, insert_filling_color_field_b);
 
-    this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BEZIER);
+    try
+    {
+      this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BEZIER);
+    }
+    catch( const std::runtime_error& error )
+    {
+      LOG( 1, "%s", error.what() );
+
+      // https://stackoverflow.com/questions/18554282/destroy-gtkmm-message-dialog
+      Gtk::MessageDialog dialog("Error message", false, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_OK);
+      dialog.set_secondary_text( error.what() );
+      dialog.set_default_response( Gtk::RESPONSE_OK );
+      dialog.run();
+
+      return ;
+    }
+
     this->facade.queue_draw();
 
     while(!polygon_coord_list.empty())

@@ -19,6 +19,12 @@ DrawableObject::DrawableObject(
 {
   // LOG(4, "Deep coping initializing the coordinate attributes");
 
+  if( _worldCoordinates.size() < 1 )
+  {
+    std::string error = tfm::format( "ERROR! An object must have at least 1 coordinate: %s", *this );
+    throw std::runtime_error( error );
+  }
+
   for( auto coordinate : _worldCoordinates )
   {
     this->_windowCoordinates.push_back(new Coordinate(*coordinate));
