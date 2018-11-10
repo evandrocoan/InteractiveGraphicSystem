@@ -14,6 +14,7 @@
 #include <gtkmm/radiobutton.h>
 
 #include "facade.h"
+#include "error_message_dialog.h"
 
 class AddTransformation
 {

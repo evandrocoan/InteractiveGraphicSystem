@@ -129,6 +129,9 @@ Gtk::Box& AddTransformation::getBox()
 
 void AddTransformation::on_button_save_transformation()
 {
+  try
+  {
+
   std::string name;
   std::string x_rotation_value = x_rotation_field.get_text().raw();
 
@@ -175,6 +178,13 @@ void AddTransformation::on_button_save_transformation()
 
   LOG(4, "%s", name);
   this->_update_transmations_list();
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 /**
@@ -193,6 +203,9 @@ void AddTransformation::_update_transmations_list()
 
 void AddTransformation::on_button_remove_transformation()
 {
+  try
+  {
+
   if( list_view_text.size() )
   {
     std::string current_name = (std::string)list_view_text.get_text(0);
@@ -200,41 +213,118 @@ void AddTransformation::on_button_remove_transformation()
     this->transformation.remove_transformation(current_name);
     this->_update_transmations_list();
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void AddTransformation::on_button_apply()
 {
+  try
+  {
+
   this->facade.apply(this->object_name, this->transformation);
   this->facade.queue_draw();
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void AddTransformation::on_translation_radiobutton()
 {
+  try
+  {
+
   this->transformation_type = TransformationType::TRANSLATION;
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void AddTransformation::on_scaling_radiobutton()
 {
+  try
+  {
+
   this->transformation_type = TransformationType::SCALING;
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void AddTransformation::on_rotation_radiobutton()
 {
+  try
+  {
+
   this->transformation_type = TransformationType::ROTATION;
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void AddTransformation::on_own_center_rotation_radiobutton()
 {
+  try
+  {
+
   this->transformation_point = TransformationPoint::ON_ITS_OWN_CENTER;
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void AddTransformation::on_world_center_rotation_radiobutton()
 {
+  try
+  {
+
   this->transformation_point = TransformationPoint::ON_WORLD_CENTER;
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void AddTransformation::on_given_coordinate_rotation_radiobutton()
 {
+  try
+  {
+
   this->transformation_point = TransformationPoint::ON_GIVEN_COORDINATE;
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
