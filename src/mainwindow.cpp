@@ -195,13 +195,26 @@ void MainWindow::updateDropdownList()
 
 void MainWindow::on_objects_list_change()
 {
+  try
+  {
+
   // Also update the name on the `addTransformation` window
   Glib::ustring name = (std::string)objects_list.get_active_text();
   this->addTransformation.object_name = name;
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_move_up()
 {
+  try
+  {
+
   int move_length = atoi(entry_move_length.get_text().raw().c_str());
 
   if (move_length == 0)
@@ -212,10 +225,20 @@ void MainWindow::on_button_move_up()
   {
     this->facade.move(Coordinate(0, move_length, 0));
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_move_down()
 {
+  try
+  {
+
   int move_length = atoi(entry_move_length.get_text().raw().c_str());
 
   if (move_length == 0)
@@ -226,10 +249,20 @@ void MainWindow::on_button_move_down()
   {
     this->facade.move(Coordinate(0, -move_length, 0));
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_move_left()
 {
+  try
+  {
+
   int move_length = atoi(entry_move_length.get_text().raw().c_str());
 
   if (move_length == 0)
@@ -240,10 +273,20 @@ void MainWindow::on_button_move_left()
   {
     this->facade.move(Coordinate(-move_length, 0, 0));
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_move_right()
 {
+  try
+  {
+
   int move_length = atoi(entry_move_length.get_text().raw().c_str());
 
   if (move_length == 0)
@@ -254,10 +297,20 @@ void MainWindow::on_button_move_right()
   {
     this->facade.move(Coordinate(move_length, 0, 0));
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_zoom_in()
 {
+  try
+  {
+
   big_double zoom_scale = atof(entry_zoom_scale.get_text().raw().c_str());
 
   if (zoom_scale <=1)
@@ -272,10 +325,20 @@ void MainWindow::on_button_zoom_in()
   {
     this->facade.zoom(Coordinate(-zoom_scale, -zoom_scale));
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_zoom_out()
 {
+  try
+  {
+
   float zoom_scale = atof(entry_zoom_scale.get_text().raw().c_str());
 
   if (zoom_scale <=1)
@@ -290,10 +353,20 @@ void MainWindow::on_button_zoom_out()
   {
     this->facade.zoom(Coordinate(zoom_scale, zoom_scale));
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_rotate_left()
 {
+  try
+  {
+
   big_double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
 
   if (rotate_angle == 0)
@@ -304,10 +377,20 @@ void MainWindow::on_button_rotate_left()
   {
     this->facade.rotate(Coordinate(rotate_angle, 0, 0));
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_rotate_right()
 {
+  try
+  {
+
   big_double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
 
   if (rotate_angle == 0)
@@ -318,16 +401,36 @@ void MainWindow::on_button_rotate_right()
   {
     this->facade.rotate(Coordinate(-rotate_angle, 0, 0));
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_add_object()
 {
+  try
+  {
+
   LOG(2, "Entering...");
   this->addObject.getWindow().show();
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_delete_object()
 {
+  try
+  {
+
   Glib::ustring name = (std::string)objects_list.get_active_text();
 
   if(!(name.empty()))
@@ -335,10 +438,20 @@ void MainWindow::on_button_delete_object()
     this->facade.removeObject(name);
     this->facade.queue_draw();
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_open_file()
 {
+  try
+  {
+
 	choose_file_window = new ChooseFileWindow(Gtk::FILE_CHOOSER_ACTION_OPEN);
 	choose_file_window->show();
 
@@ -347,10 +460,20 @@ void MainWindow::on_button_open_file()
 
 	this->facade.queue_draw();
   LOG(2, "Successfully opened the objects from file\n");
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::on_button_save_file()
 {
+  try
+  {
+
 	choose_file_window = new ChooseFileWindow(Gtk::FILE_CHOOSER_ACTION_SAVE);
 	choose_file_window->show();
 
@@ -358,6 +481,13 @@ void MainWindow::on_button_save_file()
 	this->rw_object_service.write(this->facade.displayFile().getObjects(), file_path);
 
 	LOG(2, "Sucessfull saved the objects on file\n");
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void MainWindow::add_test_objects()

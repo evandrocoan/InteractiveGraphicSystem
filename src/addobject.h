@@ -5,7 +5,6 @@
 #include <vector>
 #include <iostream>
 
-#include <gtkmm.h>
 #include <gtkmm/window.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/button.h>
@@ -16,6 +15,7 @@
 #include <gtkmm/box.h>
 
 #include "facade.h"
+#include "error_message_dialog.h"
 
 class AddObject
 {

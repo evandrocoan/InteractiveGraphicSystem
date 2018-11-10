@@ -138,6 +138,9 @@ Gtk::Window& AddObject::getWindow()
 
 void AddObject::on_button_save_point()
 {
+  try
+  {
+
   std::string name = this->_get_field_name(point_name_field);
   LOG(4, "Name: %s", name);
 
@@ -159,6 +162,13 @@ void AddObject::on_button_save_point()
   this->facade.queue_draw();
 
   this->window.close();
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 std::string AddObject::_get_field_name(Gtk::Entry &name_field)
@@ -172,6 +182,9 @@ std::string AddObject::_get_field_name(Gtk::Entry &name_field)
 
 void AddObject::on_button_save_line()
 {
+  try
+  {
+
   std::string name = this->_get_field_name(line_name_field);
   LOG(4, "Name: %s", name);
 
@@ -197,10 +210,20 @@ void AddObject::on_button_save_line()
   this->facade.queue_draw();
 
   this->window.close();
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void AddObject::on_button_save_polygon()
 {
+  try
+  {
+
   if (!polygon_coord_list.empty())
   {
     std::string name = this->_get_field_name(polygon_name_field);
@@ -230,11 +253,21 @@ void AddObject::on_button_save_polygon()
   {
     return ;
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 
 void AddObject::on_button_save_bezier()
 {
+  try
+  {
+
   if (!polygon_coord_list.empty())
   {
     std::string name = this->_get_field_name(polygon_name_field);
@@ -249,23 +282,7 @@ void AddObject::on_button_save_bezier()
     Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
     Coordinate filling = this->_get_rgb_color(insert_filling_color_field_r, insert_filling_color_field_g, insert_filling_color_field_b);
 
-    try
-    {
-      this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BEZIER);
-    }
-    catch( const std::runtime_error& error )
-    {
-      LOG( 1, "%s", error.what() );
-
-      // https://stackoverflow.com/questions/18554282/destroy-gtkmm-message-dialog
-      Gtk::MessageDialog dialog("Error message", false, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_OK);
-      dialog.set_secondary_text( error.what() );
-      dialog.set_default_response( Gtk::RESPONSE_OK );
-      dialog.run();
-
-      return ;
-    }
-
+    this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BEZIER);
     this->facade.queue_draw();
 
     while(!polygon_coord_list.empty())
@@ -280,11 +297,21 @@ void AddObject::on_button_save_bezier()
   {
     return ;
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 
 void AddObject::on_button_save_bspline()
 {
+  try
+  {
+
   if (!polygon_coord_list.empty())
   {
     std::string name = this->_get_field_name(polygon_name_field);
@@ -314,11 +341,21 @@ void AddObject::on_button_save_bspline()
   {
     return ;
   }
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 
 void AddObject::on_button_add_coordinate()
 {
+  try
+  {
+
   std::string x_string = wire_x_field.get_text().raw();
   std::string y_string = wire_y_field.get_text().raw();
   // std::string z_string = wire_z_field.get_text().raw();
@@ -344,11 +381,28 @@ void AddObject::on_button_add_coordinate()
       + std::to_string(x_coord) + ", "
       + std::to_string(y_coord) + ", "
       + std::to_string(z_coord) + "), " );
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void AddObject::on_button_close()
 {
+  try
+  {
+
   this->window.close();
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 Coordinate AddObject::_get_rgb_color(Gtk::Entry& field_r, Gtk::Entry& field_g, Gtk::Entry& field_b)
@@ -371,10 +425,30 @@ Coordinate AddObject::_get_rgb_color(Gtk::Entry& field_r, Gtk::Entry& field_g, G
 
 void AddObject::on_liang_radiobutton()
 {
+  try
+  {
+
   this->line_clipping_type = LineClippingType::LIANG_BARSKY;
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }
 
 void AddObject::on_cohen_radiobutton()
 {
+  try
+  {
+
   this->line_clipping_type = LineClippingType::COHEN_SUTHELAND;
+
+  }
+  catch( const std::runtime_error& error )
+  {
+    errorMessage( error );
+    return ;
+  }
 }

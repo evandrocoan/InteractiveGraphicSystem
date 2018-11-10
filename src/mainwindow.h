@@ -14,6 +14,8 @@
 #include <glibmm/refptr.h>
 
 #include "facade.h"
+#include "error_message_dialog.h"
+
 #include "addobject.h"
 #include "addtransformation.h"
 
