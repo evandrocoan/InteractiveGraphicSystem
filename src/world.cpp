@@ -3,9 +3,9 @@
 World::World()
 {
   draw_xy_axes();
-  // this->_displayFile.push_back(this->_points);
-  // this->_displayFile.push_back(this->_lines);
-  // this->_displayFile.push_back(this->_polygons);
+  // this->_polygons.push_back(this->_points);
+  // this->_polygons.push_back(this->_lines);
+  // this->_polygons.push_back(this->_polygons);
 }
 
 World::~World()
@@ -20,7 +20,7 @@ void World::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int
 
   Line* line = new Line(name, point_cord1, point_cord2, _borderColor, type, visible_on_gui);
 
-  this->_displayFile.addObject(line);
+  this->_polygons.addObject(line);
   this->_updateObjectCoordinates(line);
 }
 
@@ -29,7 +29,7 @@ void World::addPoint(std::string name, int x_coord, int y_coord, Coordinate _bor
   Coordinate* point_cord = new Coordinate(x_coord, y_coord);
   Point* point = new Point(name, point_cord, _borderColor);
 
-  this->_displayFile.addObject(point);
+  this->_polygons.addObject(point);
   this->_updateObjectCoordinates(point);
 }
 
@@ -76,14 +76,14 @@ void World::addPolygon(std::string name, std::vector<Coordinate*> coordinates,
     }
   }
 
-  this->_displayFile.addObject(object);
+  this->_polygons.addObject(object);
   this->_updateObjectCoordinates(object);
 }
 
 void World::removeObject(std::string name)
 {
   // LOG(4, "Removing an object by name is faster than by pointer because it internally calls `removeObjectByName()`");
-  this->_displayFile.removeObjectByName(name);
+  this->_polygons.removeObjectByName(name);
   this->_updateObjectCoordinates(nullptr);
 }
 
@@ -96,7 +96,7 @@ void World::updateAllObjectCoordinates(const Transformation& transformation, con
 {
   LOGLN(4, "\n");
   LOG(4, "...");
-  auto objects = this->_displayFile.getObjects();
+  auto objects = this->_polygons.getObjects();
 
   for (auto object : objects)
   {
@@ -132,11 +132,11 @@ void World::updateObjectCoordinates(DrawableObject* object, const Transformation
 
 void World::apply(const std::string object_name, Transformation &transformation)
 {
-  if( this->_displayFile.isObjectOnByName(object_name) )
+  if( this->_polygons.isObjectOnByName(object_name) )
   {
     if( transformation.size() )
     {
-      DrawableObject* object = this->_displayFile.apply(object_name, transformation);
+      DrawableObject* object = this->_polygons.apply(object_name, transformation);
       this->_updateObjectCoordinates(object);
     }
     else
