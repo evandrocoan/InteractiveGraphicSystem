@@ -139,9 +139,10 @@ start_timer:
 print_elapsed_time:
 	. ./shell_scripts/timer_calculator.sh; showTheElapsedSeconds
 
-
+# How do I write the 'cd' command in a makefile?
+# http://stackoverflow.com/questions/1789594/how-do-i-write-the-cd-command-in-a-makefile
 run: all
-	./$(FULL_TARGET)
+	cd $(SRCDIR); ../$(FULL_TARGET)
 
 # Remake
 remake: cleaner all
