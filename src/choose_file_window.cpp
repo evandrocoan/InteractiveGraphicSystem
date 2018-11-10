@@ -1,20 +1,18 @@
 /*
- * ChooseFileWindow.cpp
+ * choose_file_window.cpp
  *
  *  Created on: 23 de mar de 2018
  *      Author: karla
  */
 
-#include "ChooseFileWindow.h"
+#include "choose_file_window.h"
 
 ChooseFileWindow::ChooseFileWindow(Gtk::FileChooserAction file_chooser_action)
 : Gtk::FileChooserDialog("Choose a wavefront file", file_chooser_action),
   selected_path("No file selected")
 {
-
   add_button("_Cancel", Gtk::RESPONSE_CANCEL);
   add_button("Select", Gtk::RESPONSE_OK);
-
 
   auto filter_any = Gtk::FileFilter::create();
   filter_any->set_name("Any files");

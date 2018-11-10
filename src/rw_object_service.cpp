@@ -1,11 +1,11 @@
 /*
- * RwObjectService.cpp
+ * rw_object_service.cpp
  *
  *  Created on: 23 de mar de 2018
  *      Author: karla
  */
 
-#include "RwObjectService.h"
+#include "rw_object_service.h"
 
 RwObjectService::RwObjectService(Facade& facade) :
       facade(facade)

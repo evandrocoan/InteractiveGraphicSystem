@@ -1,5 +1,5 @@
 /*
- * RwObjectService.h
+ * rw_object_service.h
  *
  *  Created on: 23 de mar de 2018
  *      Author: karla
@@ -8,8 +8,8 @@
  *      Author: evandro
  */
 
-#ifndef RWOBJECTSERVICE_H_
-#define RWOBJECTSERVICE_H_
+#ifndef RW_OBJECT_SERVICE_H_
+#define RW_OBJECT_SERVICE_H_
 
 #include <list>
 #include <string>
@@ -39,4 +39,4 @@ protected:
   std::vector<std::string> split(std::string&, char delimiter);
 };
 
-#endif /* RWOBJECTSERVICE_H_ */
+#endif /* RW_OBJECT_SERVICE_H_ */
