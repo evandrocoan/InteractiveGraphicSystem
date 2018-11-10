@@ -25,7 +25,7 @@ public:
   void addPolygon(const std::string name, const std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
   void removeObject(const std::string name);
 
-  const DisplayFile& displayFile() const { return this->_displayFile; }
+  const DisplayFile& displayFile() const { return this->_polygons; }
 
   void draw_xy_axes();
   void apply(const std::string object_name, Transformation& matrices);
@@ -44,8 +44,8 @@ protected:
   // /**
   //  * List of references to display files lists.
   //  */
-  // std::vector< std::reference_wrapper< DisplayFile > > _displayFile;
-  DisplayFile _displayFile;
+  // std::vector< std::reference_wrapper< DisplayFile > > _polygons;
+  DisplayFile _polygons;
   UpdateObjectCoordinates _updateObjectCoordinates;
 
   // DisplayFile _lines;

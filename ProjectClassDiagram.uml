@@ -66,7 +66,7 @@
   }
 
   class DisplayFile {
-    ViewWindow& _displayFile
+    ViewWindow& _polygons
     std::map<string, DrawableObject*>
     std::list<std::string>     objectNames()
     std::list<DrawableObject*> getObjects()
@@ -92,7 +92,7 @@
   class DrawingArea {
     bool _isCentered
     const ViewWindow& _viewWindow
-    const DisplayFile& _displayFile
+    const DisplayFile& _polygons
     UpdateViewPortSize _updateViewPortSize
     void draw_xy_axes()
     bool on_draw(Cairo::Context>&) override
