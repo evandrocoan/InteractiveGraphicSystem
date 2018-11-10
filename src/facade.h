@@ -20,7 +20,7 @@ class Facade : public NonCopyable
 {
 public:
   DrawingArea& drawingArea()       { return this->_drawingArea; }
-  const DisplayFile& displayFile() { return this->_world.displayFile(); }
+  const DisplayFile<DrawableObject*>& displayFile() { return this->_world.displayFile(); }
 
   void addPoint(std::string name, int x, int y, Coordinate _borderColor=_default_coordinate_value_parameter)
   {

@@ -6,13 +6,14 @@ DrawableObject::DrawableObject(std::string name, std::vector<Coordinate*> _world
 }
 
 DrawableObject::DrawableObject(
-          std::string name, std::vector<Coordinate*> _worldCoordinates,
-          Coordinate _borderColor, Coordinate _fillingColor, CurveType curve_type,
-          std::vector<Line*> lines ) :
-      lines(lines),
-      curve_type(curve_type),
+          std::string name,
+          std::vector<Coordinate*> _worldCoordinates,
+          Coordinate _borderColor,
+          Coordinate _fillingColor,
+          bool _visibleOnGUI ) :
       name(name),
       _isDrawable(false),
+      _visibleOnGUI(_visibleOnGUI),
       _borderColor(_borderColor),
       _fillingColor(_fillingColor),
       _worldCoordinates(_worldCoordinates)
