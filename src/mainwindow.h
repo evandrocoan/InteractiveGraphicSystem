@@ -17,8 +17,8 @@
 #include "addobject.h"
 #include "addtransformation.h"
 
-#include "ChooseFileWindow.h"
-#include "RwObjectService.h"
+#include "choose_file_window.h"
+#include "rw_object_service.h"
 
 class MainWindow
 {
