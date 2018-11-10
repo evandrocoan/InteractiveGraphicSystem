@@ -2,7 +2,7 @@
   "settings":
   {
     "tab_size": 2,
-    "buildview.enabled": true,
+    "buildview.enabled": false,
     "show_panel_on_build": true,
     "output_build_word_wrap": false,
     "restore_output_view_scroll": true,
