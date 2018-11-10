@@ -76,7 +76,7 @@ void World::addPolygon(std::string name, std::vector<Coordinate*> coordinates,
       break;
     }
     case CurveType::NOCURVE: {
-      std::string error = tfm::format( "You cannot create a Polygon with %s.", type );
+      std::string error = tfm::format( "You cannot create a Polygon with type: %s.", type );
 
       LOG( 1, "%s", error );
       throw std::runtime_error( error );
