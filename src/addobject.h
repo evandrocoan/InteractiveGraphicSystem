@@ -5,6 +5,7 @@
 #include <vector>
 #include <iostream>
 
+#include <gtkmm.h>
 #include <gtkmm/window.h>
 #include <gtkmm/grid.h>
 #include <gtkmm/button.h>

@@ -174,7 +174,7 @@ struct Array
   }
 
   /**
-   * Prints a more beauty version of the array when called on `std::cout<< array << std::end;`
+   * Prints a more beauty version of the array when called on `std::cout << array << std::end;`
    */
   friend std::ostream& operator<<( std::ostream &output, const Array &array )
   {
