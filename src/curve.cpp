@@ -2,6 +2,18 @@
 #include "line.h"
 #include "math.h"
 
+inline std::ostream& operator<<(std::ostream &output, const CurveType object)
+{
+  switch( object )
+  {
+    case CurveType::BEZIER:  output << "BEZIER"; break;
+    case CurveType::BSPLINE: output << "BSPLINE"; break;
+    default:
+      output << (int) object; break;
+  }
+  return output;
+}
+
 Curve::Curve(std::string name, std::vector<Coordinate*> _worldCoordinates,
               Coordinate _borderColor, Coordinate _fillingColor, CurveType type) :
       DrawableObject(name, _worldCoordinates, _borderColor, _fillingColor, type),
@@ -28,18 +40,6 @@ Curve::Curve(std::string name, std::vector<Coordinate*> _worldCoordinates,
 
 Curve::~Curve()
 {
-}
-
-inline std::ostream& operator<<(std::ostream &output, const CurveType object)
-{
-  switch( object )
-  {
-    case CurveType::BEZIER:  output << "BEZIER"; break;
-    case CurveType::BSPLINE: output << "BSPLINE"; break;
-    default:
-      output << (int) object; break;
-  }
-  return output;
 }
 
 void Curve::updateWindowCoordinates(const Transformation& transformation)
