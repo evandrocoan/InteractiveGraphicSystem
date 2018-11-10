@@ -36,9 +36,6 @@ public:
   virtual ~DrawableObject();
   std::string getName() const;
 
-  std::vector<Line*> lines;
-  const CurveType curve_type;
-
   const std::vector<Coordinate*>& worldCoordinates() const;
   const std::vector<Coordinate*>& windowCoordinates() const;
   const std::vector<Coordinate*>& clippingCoordinates() const;
@@ -84,11 +81,16 @@ protected:
   DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates,
       Coordinate _borderColor,
       Coordinate _fillingColor=_default_coordinate_value_parameter,
-      CurveType curve_type=CurveType::NOCURVE,
-      std::vector<Line*> lines={} );
+      bool _visibleOnGUI=true );
 
+  /// The name of this object used to display it on the Graphics User Interface
   std::string name;
+
+  /// Whether the object is inside the Window or out-of-sight
   bool _isDrawable;
+
+  /// Whether the object should be displayed on the User Graphics Interface
+  bool _visibleOnGUI;
 
   Coordinate _borderColor;
   Coordinate _fillingColor;

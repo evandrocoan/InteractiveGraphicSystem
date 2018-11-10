@@ -35,8 +35,10 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   this->_draw_clipping_axes(cairo_context);
 
   // LOG(8, "Draw displayFile objects");
-  auto objects = this->_world.displayFile().getObjects();
+  auto curves = this->_world._curves.getObjects();
+  auto objects = this->_world._polygons.getObjects();
 
+  // LOG(8, "Draw General Polygons");
   for (auto object : objects)
   {
     LOG(8, "object: %s", *object);
@@ -48,22 +50,14 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
     }
 
     // https://stackoverflow.com/questions/351845/finding-the-type-of-an-object-in-c
-    if( object->curve_type )
-    {
-      if( object->curve_type == CurveType::BEZIER || object->curve_type == CurveType::BSPLINE )
-      {
-        if( drawn_circle( cairo_context, object ) ) continue;
-      }
-      else
-      {
-        std::string error = tfm::format( "Invalid curve type object: %s", object );
-        throw std::runtime_error( error );
-      }
-    }
-    else
-    {
-      if( drawn_general( cairo_context, object ) ) continue;
-    }
+    if( drawn_general( cairo_context, object ) ) continue;
+  }
+
+  // LOG(8, "Draw Curves Types");
+  for( auto curve : curves )
+  {
+    LOG(8, "curve: %s", *curve);
+    if( drawn_circle( cairo_context, curve ) ) continue;
   }
 
   return true;
@@ -131,7 +125,7 @@ void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_conte
   cairo_context->stroke();  // outline it
 }
 
-bool DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
+bool DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_context, const Curve* object)
 {
   auto lines = object->lines;
 

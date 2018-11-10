@@ -3,9 +3,6 @@
 World::World()
 {
   draw_xy_axes();
-  // this->_polygons.push_back(this->_points);
-  // this->_polygons.push_back(this->_lines);
-  // this->_polygons.push_back(this->_polygons);
 }
 
 World::~World()
@@ -13,14 +10,15 @@ World::~World()
 }
 
 void World::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int y2_cord,
-                    Coordinate _borderColor, LineClippingType type, bool visible_on_gui)
+                    Coordinate _borderColor, LineClippingType type, bool _visibleOnGUI)
 {
   Coordinate* point_cord1 = new Coordinate(x1_cord, y1_cord);
   Coordinate* point_cord2 = new Coordinate(x2_cord, y2_cord);
 
-  Line* line = new Line(name, point_cord1, point_cord2, _borderColor, type, visible_on_gui);
+  Line* line = new Line(name, point_cord1, point_cord2, _borderColor, type, _visibleOnGUI);
 
   this->_polygons.addObject(line);
+  this->_displayFile.addObject(line);
   this->_updateObjectCoordinates(line);
 }
 
@@ -30,6 +28,7 @@ void World::addPoint(std::string name, int x_coord, int y_coord, Coordinate _bor
   Point* point = new Point(name, point_cord, _borderColor);
 
   this->_polygons.addObject(point);
+  this->_displayFile.addObject(point);
   this->_updateObjectCoordinates(point);
 }
 
@@ -57,33 +56,66 @@ void World::addPolygon(std::string name, std::vector<Coordinate*> coordinates,
     case CurveType::POLYGON:
     {
       object = new Polygon(name, coordinates, _borderColor, _fillingColor);
+      this->_polygons.addObject(object);
       break;
     }
     case CurveType::BEZIER:
     {
-      object = new Curve(name, coordinates, _borderColor, _fillingColor, BEZIER);
+      Curve* curve = new BezierCurve(name, coordinates, _borderColor, _fillingColor);
+      object = curve;
+
+      this->_curves.addObject(curve);
       break;
     }
     case CurveType::BSPLINE:
     {
-      object = new Curve(name, coordinates, _borderColor, _fillingColor, BSPLINE);
+      // object = new BsplineCurve(name, coordinates, _borderColor, _fillingColor);
+      // object = curve;
+
+      // this->_curves.addObject(curve);
       break;
     }
-    case CurveType::NOCURVE:
-    {
+    case CurveType::NOCURVE: {
       std::string error = tfm::format( "You cannot create a Polygon with %s.", type );
+
+      LOG( 1, "%s", error );
       throw std::runtime_error( error );
     }
   }
 
-  this->_polygons.addObject(object);
+  this->_displayFile.addObject(object);
   this->_updateObjectCoordinates(object);
 }
 
 void World::removeObject(std::string name)
 {
   // LOG(4, "Removing an object by name is faster than by pointer because it internally calls `removeObjectByName()`");
-  this->_polygons.removeObjectByName(name);
+
+  if( this->_displayFile.isObjectOnByName(name) )
+  {
+    if( this->_polygons.isObjectOnByName(name) )
+    {
+      this->_polygons.removeObjectByName(name);
+    }
+    else if( this->_displayFile.isObjectOnByName(name) )
+    {
+      this->_curves.removeObjectByName(name);
+    }
+    else {
+      std::string error = tfm::format( "The object is not found: `%s`", name );
+
+      LOG( 1, "%s", error );
+      throw std::runtime_error( error );
+    }
+  }
+  else {
+    std::string error = tfm::format( "The object is not found: `%s`", name );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
+  }
+
+  this->_displayFile.removeObjectByName(name);
   this->_updateObjectCoordinates(nullptr);
 }
 
@@ -96,7 +128,7 @@ void World::updateAllObjectCoordinates(const Transformation& transformation, con
 {
   LOGLN(4, "\n");
   LOG(4, "...");
-  auto objects = this->_polygons.getObjects();
+  auto objects = this->_displayFile.getObjects();
 
   for (auto object : objects)
   {
@@ -107,19 +139,18 @@ void World::updateAllObjectCoordinates(const Transformation& transformation, con
 
 void World::updateObjectCoordinates(DrawableObject* object, const Transformation& transformation, const Axes& axes)
 {
-  if( object == nullptr )
-  {
-    LOG(1, "");
-    LOG(1, "");
-    LOG(1, "ERROR: Null pointer object passed by: %s", object);
-    return;
+  if( object == nullptr ) {
+    std::string error = tfm::format( "ERROR: Null pointer object passed by: %s", object );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
-  if( object->worldCoordinates().size() == 0 )
-  {
-    LOG(1, "");
-    LOG(1, "");
-    LOG(1, "ERROR: The object `%s` has no coordinates.", *object);
+  if( object->worldCoordinates().size() == 0 ) {
+    std::string error = tfm::format( "ERROR: The object `%s` has no coordinates.", *object );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
   else
   {
@@ -132,21 +163,45 @@ void World::updateObjectCoordinates(DrawableObject* object, const Transformation
 
 void World::apply(const std::string object_name, Transformation &transformation)
 {
-  if( this->_polygons.isObjectOnByName(object_name) )
+  if( this->_displayFile.isObjectOnByName(object_name) )
   {
     if( transformation.size() )
     {
-      DrawableObject* object = this->_polygons.apply(object_name, transformation);
+      DrawableObject* object;
+
+      if( this->_polygons.isObjectOnByName(object_name) )
+      {
+        object = this->_polygons.apply(object_name, transformation);
+      }
+      else if( this->_curves.isObjectOnByName(object_name) )
+      {
+        object = this->_curves.apply(object_name, transformation);
+      }
+      else
+      {
+        std::string error = tfm::format( "Inconsistency on the system. The object is not found internally: `%s`", object_name );
+
+        LOG( 1, "%s", error );
+        throw std::runtime_error( error );
+      }
+
       this->_updateObjectCoordinates(object);
     }
     else
     {
-      LOG(4, "There are no transformations available to be applied on your object: `%s` %s", object_name, transformation);
+      std::string error = tfm::format(
+          "There are no transformations available to be applied on your object: `%s` %s", object_name, transformation );
+
+      LOG( 1, "%s", error );
+      throw std::runtime_error( error );
     }
   }
   else
   {
-    LOG(4, "No object was found within the name: `%s`", object_name);
+    std::string error = tfm::format( "No object was found within the name: `%s`", object_name );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 }
 

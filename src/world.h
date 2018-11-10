@@ -13,19 +13,21 @@
 
 class World
 {
+  friend class DrawingArea;
+
 public:
   World();
   ~World();
 
   void addPoint(const std::string name, const int, const int, Coordinate _borderColor);
   void addLine(const std::string name, const int, const int, const int, const int,
-      Coordinate _borderColor, LineClippingType type=LineClippingType::LIANG_BARSKY, bool visible_on_gui=true);
+      Coordinate _borderColor, LineClippingType type=LineClippingType::LIANG_BARSKY, bool _visibleOnGUI=true);
 
   void addPolygon(const std::string name, const std::vector<big_double>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
   void addPolygon(const std::string name, const std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
   void removeObject(const std::string name);
 
-  const DisplayFile& displayFile() const { return this->_polygons; }
+  const DisplayFile<DrawableObject*>& displayFile() const { return this->_polygons; }
 
   void draw_xy_axes();
   void apply(const std::string object_name, Transformation& matrices);
@@ -41,16 +43,11 @@ public:
   UpdateObjectCoordinates::Connection addObserver(const UpdateObjectCoordinates::Callback&);
 
 protected:
-  // /**
-  //  * List of references to display files lists.
-  //  */
-  // std::vector< std::reference_wrapper< DisplayFile > > _polygons;
-  DisplayFile _polygons;
   UpdateObjectCoordinates _updateObjectCoordinates;
 
-  // DisplayFile _lines;
-  // DisplayFile _points;
-  // DisplayFile _polygons;
+  DisplayFile<Curve*> _curves;
+  DisplayFile<DrawableObject*> _polygons;
+  DisplayFile<DrawableObject*> _displayFile;
 };
 
 #endif // GTKMM_APP_WORLD
