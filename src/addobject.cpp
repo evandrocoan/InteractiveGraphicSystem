@@ -88,18 +88,18 @@ AddObject::AddObject(Facade &facade) :
   polygon_name_field.set_text("polygon");
   wire_x_field.set_text("0");
   wire_y_field.set_text("0");
-  polygn_grid.set_column_homogeneous(true);
-  polygn_grid.set_row_spacing(10);
-  polygn_grid.attach(polygon_name_field       , 1, 1, 1, 1);
-  polygn_grid.attach(insert_a_coordinate_label, 2, 1, 1, 1);
-  polygn_grid.attach(polygon_x_label          , 1, 2, 1, 1);
-  polygn_grid.attach(wire_x_field             , 2, 2, 1, 1);
-  polygn_grid.attach(polygon_y_label          , 1, 3, 1, 1);
-  polygn_grid.attach(wire_y_field             , 2, 3, 1, 1);
-  polygn_grid.attach(button_add_coordenate    , 1, 5, 1, 1);
-  polygn_grid.attach(button_save_polygon      , 2, 5, 1, 1);
-  polygn_grid.attach(button_save_bezier       , 1, 6, 1, 1);
-  polygn_grid.attach(button_save_bspline      , 2, 6, 1, 1);
+  polygon_grid.set_column_homogeneous(true);
+  polygon_grid.set_row_spacing(10);
+  polygon_grid.attach(polygon_name_field       , 1, 1, 1, 1);
+  polygon_grid.attach(insert_a_coordinate_label, 2, 1, 1, 1);
+  polygon_grid.attach(polygon_x_label          , 1, 2, 1, 1);
+  polygon_grid.attach(wire_x_field             , 2, 2, 1, 1);
+  polygon_grid.attach(polygon_y_label          , 1, 3, 1, 1);
+  polygon_grid.attach(wire_y_field             , 2, 3, 1, 1);
+  polygon_grid.attach(button_add_coordenate    , 1, 5, 1, 1);
+  polygon_grid.attach(button_save_polygon      , 2, 5, 1, 1);
+  polygon_grid.attach(button_save_bezier       , 1, 6, 1, 1);
+  polygon_grid.attach(button_save_bspline      , 2, 6, 1, 1);
 
   button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_close) );
   button_save_point.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_point) );
@@ -119,7 +119,7 @@ AddObject::AddObject(Facade &facade) :
 
   m_notebook.append_page(point_grid, "Point");
   m_notebook.append_page(line_grid, "Line");
-  m_notebook.append_page(polygn_grid, "Polygon");
+  m_notebook.append_page(polygon_grid, "Polygon");
 
   this->window.set_title("Add Object");
   this->window.set_border_width(12);

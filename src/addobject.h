@@ -40,7 +40,7 @@ private:
   Gtk::Grid color_grid;
   Gtk::Grid line_grid;
   Gtk::Grid point_grid;
-  Gtk::Grid polygn_grid;
+  Gtk::Grid polygon_grid;
 
   Gtk::Button button_close;
   Gtk::Button button_save_line;
