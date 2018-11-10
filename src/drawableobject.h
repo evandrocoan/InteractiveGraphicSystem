@@ -58,6 +58,7 @@ public:
 
   void apply(Transformation&);
   bool isDrawable() const { return this->_isDrawable;   }
+  bool isVisibleOnGui() const { return this->_isVisibleOnGui;   }
 
   const Coordinate& borderColor()  const { return this->_borderColor;  }
   const Coordinate& fillingColor() const { return this->_fillingColor; }
