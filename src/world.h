@@ -21,7 +21,7 @@ public:
 
   void addPoint(const std::string name, const int, const int, Coordinate _borderColor);
   void addLine(const std::string name, const int, const int, const int, const int,
-      Coordinate _borderColor, LineClippingType type=LineClippingType::LIANG_BARSKY, bool _visibleOnGUI=true);
+      Coordinate _borderColor, LineClippingType type=LineClippingType::LIANG_BARSKY, bool _isVisibleOnGui=true);
 
   void addPolygon(const std::string name, const std::vector<big_double>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
   void addPolygon(const std::string name, const std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);

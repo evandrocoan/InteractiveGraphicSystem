@@ -10,12 +10,12 @@ World::~World()
 }
 
 void World::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int y2_cord,
-                    Coordinate _borderColor, LineClippingType type, bool _visibleOnGUI)
+                    Coordinate _borderColor, LineClippingType type, bool _isVisibleOnGui)
 {
   Coordinate* point_cord1 = new Coordinate(x1_cord, y1_cord);
   Coordinate* point_cord2 = new Coordinate(x2_cord, y2_cord);
 
-  Line* line = new Line(name, point_cord1, point_cord2, _borderColor, type, _visibleOnGUI);
+  Line* line = new Line(name, point_cord1, point_cord2, _borderColor, type, _isVisibleOnGui);
 
   this->_polygons.addObject(line);
   this->_displayFile.addObject(line);
