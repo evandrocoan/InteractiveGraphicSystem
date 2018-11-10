@@ -1,12 +1,12 @@
 /*
- * ChooseFileWindow.h
+ * choose_file_window.h
  *
  *  Created on: 23 de mar de 2018
  *      Author: karla
  */
 
-#ifndef CHOOSEFILEWINDOW_H_
-#define CHOOSEFILEWINDOW_H_
+#ifndef CHOOSE_FILE_WINDOW_H_
+#define CHOOSE_FILE_WINDOW_H_
 
 #include <gtkmm/buttonbox.h>
 #include <gtkmm/filechooserdialog.h>
@@ -25,4 +25,4 @@ protected:
   std::string selected_path;
 };
 
-#endif // CHOOSEFILEWINDOW_H_
+#endif // CHOOSE_FILE_WINDOW_H_
