@@ -11,9 +11,18 @@ Curve::Curve(std::string name, std::vector<Coordinate*> _worldCoordinates,
   {
     if(_worldCoordinates.size() < 4 || (_worldCoordinates.size()-4)%3 != 0)
     {
-      std::string error = tfm::format( "A Bezier curve should have 4, 7, 10, 13... coordinates, not %s.", _worldCoordinates.size() );
+      std::ostringstream contents;
+      for( auto value : _worldCoordinates ) contents << *value << ", ";
+
+      std::string error = tfm::format(
+          "A Bezier curve should have 4, 7, 10, 13... coordinates, not %s.\n\n%s",
+          _worldCoordinates.size(), contents.str() );
+
       throw std::runtime_error( error );
     }
+  }
+  else if( curve_type == BEZIER )
+  {
   }
 }
 
