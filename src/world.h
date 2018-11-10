@@ -27,7 +27,7 @@ public:
   void addPolygon(const std::string name, const std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
   void removeObject(const std::string name);
 
-  const DisplayFile<DrawableObject*>& displayFile() const { return this->_polygons; }
+  const DisplayFile<DrawableObject*>& displayFile() const { return this->_displayFile; }
 
   void draw_xy_axes();
   void apply(const std::string object_name, Transformation& matrices);
