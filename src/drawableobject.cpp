@@ -10,10 +10,10 @@ DrawableObject::DrawableObject(
           std::vector<Coordinate*> _worldCoordinates,
           Coordinate _borderColor,
           Coordinate _fillingColor,
-          bool _visibleOnGUI ) :
+          bool _isVisibleOnGui ) :
       name(name),
       _isDrawable(false),
-      _visibleOnGUI(_visibleOnGUI),
+      _isVisibleOnGui(_isVisibleOnGui),
       _borderColor(_borderColor),
       _fillingColor(_fillingColor),
       _worldCoordinates(_worldCoordinates)

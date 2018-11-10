@@ -81,7 +81,7 @@ protected:
   DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates,
       Coordinate _borderColor,
       Coordinate _fillingColor=_default_coordinate_value_parameter,
-      bool _visibleOnGUI=true );
+      bool _isVisibleOnGui=true );
 
   /// The name of this object used to display it on the Graphics User Interface
   std::string name;
@@ -90,7 +90,7 @@ protected:
   bool _isDrawable;
 
   /// Whether the object should be displayed on the User Graphics Interface
-  bool _visibleOnGUI;
+  bool _isVisibleOnGui;
 
   Coordinate _borderColor;
   Coordinate _fillingColor;

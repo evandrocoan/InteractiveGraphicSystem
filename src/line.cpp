@@ -1,8 +1,8 @@
 #include "line.h"
 
 Line::Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2,
-            Coordinate _borderColor, LineClippingType type, bool _visibleOnGUI) :
-      DrawableObject(name, std::vector<Coordinate*>{line_cord1, line_cord2}, _borderColor, _visibleOnGUI),
+            Coordinate _borderColor, LineClippingType type, bool _isVisibleOnGui) :
+      DrawableObject(name, std::vector<Coordinate*>{line_cord1, line_cord2}, _borderColor, _isVisibleOnGui),
       line_clipping_type(type)
 {
 }
