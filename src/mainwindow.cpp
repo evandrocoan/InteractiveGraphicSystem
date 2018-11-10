@@ -168,21 +168,28 @@ void MainWindow::connectButtons()
 void MainWindow::updateDropdownList()
 {
   LOG(2, "Entering...");
-  auto names = this->facade.displayFile().objectNames();
+  int added_objects = 0;
+  auto objects = this->facade.displayFile().getObjects();
 
   // LOG(4, "limpa a lista de objetos para reimprimi-la");
   this->objects_list.remove_all();
 
-  for(auto object : names)
+  for(auto object : objects)
   {
-    this->objects_list.append(object);
-    LOG(4, object.c_str());
+    LOG( 8, "isVisibleOnGui: %s, object: %s", object->isVisibleOnGui(), *object );
+
+    if( object->isVisibleOnGui() )
+    {
+      added_objects += 1;
+      this->objects_list.append(object->getName());
+      LOG(4, object->getName().c_str());
+    }
   }
 
   // Set Gtk.ComboBoxText default item?
   // https://stackoverflow.com/questions/14912210/set-gtk-comboboxtext-default-item
   // LOG(4, "Selecting the last item on the ComboBoxText");
-  this->objects_list.set_active(names.size()-1);
+  this->objects_list.set_active(added_objects-1);
   this->on_objects_list_change();
 }
 
