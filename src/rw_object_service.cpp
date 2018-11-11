@@ -36,10 +36,14 @@ void RwObjectService::read(std::string file_path)
     // removes all comments and empty lines
     while( getline( in_file, line ) )
     {
-        if( !line.empty() && line.front() != '#' )
-        {
-            myfile << line << '\n';
-        }
+      line = std::regex_replace( line, std::regex( "#.+" ), "" );
+      line = std::regex_replace( line, std::regex( "( |\\t)+" ), " " );
+      line = std::regex_replace( line, std::regex( "^( |\\t)+|( |\\t)+$" ), "" );
+
+      if( !line.empty() )
+      {
+        myfile << line << '\n';
+      }
     }
 
     while( true )
@@ -83,8 +87,10 @@ void RwObjectService::read(std::string file_path)
         std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates_points );
         this->facade.addPoint( name, vertexes[0]->x, vertexes[0]->y, vertexes[0]->z );
       }
-      else if( line.front() == 'l' )
+      else if( line.front() == 'l' || line.front() == 'b' )
       {
+        char line_front = line.front();
+
         std::vector<int> indexes;
         this->getLineIndexes( indexes, line );
 
@@ -113,7 +119,16 @@ void RwObjectService::read(std::string file_path)
         }
         else
         {
-          this->facade.addPolygon( name, vertexes );
+          if( line_front == 'b' )
+          {
+            this->facade.addPolygon( name, vertexes,
+                _default_coordinate_value_parameter,
+                _default_coordinate_value_parameter, CurveType::BEZIER );
+          }
+          else
+          {
+            this->facade.addPolygon( name, vertexes );
+          }
         }
       }
     }

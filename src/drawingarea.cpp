@@ -191,7 +191,7 @@ void DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_contex
 
   for( auto line : object->lines )
   {
-    LOG(1, "Sub-curve line: %s", *line);
+    LOG(8, "Sub-curve line: %s", *line);
     drawn_line( cairo_context, line );
   }
 }

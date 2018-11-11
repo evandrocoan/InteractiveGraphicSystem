@@ -751,15 +751,15 @@ void MainWindow::add_test_objects()
   // polygon_coord_list.push_back(-30); polygon_coord_list.push_back(-50); polygon_coord_list.push_back(1);
   // this->facade.addPolygon("Polygon", polygon_coord_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::POLYGON);
 
-  polygon_coord_list.clear();
-  polygon_coord_list.push_back(0); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
-  polygon_coord_list.push_back(10); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
-  polygon_coord_list.push_back(20); polygon_coord_list.push_back(5); polygon_coord_list.push_back(1);
-  polygon_coord_list.push_back(30); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
-  polygon_coord_list.push_back(40); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
-  polygon_coord_list.push_back(50); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
-  polygon_coord_list.push_back(60); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
-  this->facade.addPolygon("Bezier", polygon_coord_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::BEZIER);
+  // polygon_coord_list.clear();
+  // polygon_coord_list.push_back(0); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(10); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(20); polygon_coord_list.push_back(5); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(30); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(40); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(50); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
+  // polygon_coord_list.push_back(60); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
+  // this->facade.addPolygon("Bezier", polygon_coord_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::BEZIER);
 
-  this->facade.queue_draw();
+  // this->facade.queue_draw();
 }
