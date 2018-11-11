@@ -1,22 +1,5 @@
 #include "line.h"
 
-Line::Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2,
-            Coordinate _borderColor, LineClippingType type, bool _isVisibleOnGui) :
-      DrawableObject(name, std::vector<Coordinate*>{line_cord1, line_cord2}, _borderColor, _borderColor, _isVisibleOnGui),
-      line_clipping_type(type)
-{
-}
-
-Line::~Line()
-{
-}
-
-void Line::setLineClipping(LineClippingType type)
-{
-  LOG( 8, "%s", type );
-  this->line_clipping_type = type;
-}
-
 inline std::ostream& operator<<(std::ostream &output, const LineClippingType object)
 {
   switch( object )
@@ -42,6 +25,23 @@ inline std::ostream& operator<<(std::ostream &output, const CohenSuthelandRegion
       output << (int) object; break;
   }
   return output;
+}
+
+Line::Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2,
+            Coordinate _borderColor, LineClippingType type, bool _isVisibleOnGui) :
+      DrawableObject(name, std::vector<Coordinate*>{line_cord1, line_cord2}, _borderColor, _borderColor, _isVisibleOnGui),
+      line_clipping_type(type)
+{
+}
+
+Line::~Line()
+{
+}
+
+void Line::setLineClipping(LineClippingType type)
+{
+  LOG( 8, "%s", type );
+  this->line_clipping_type = type;
 }
 
 void Line::updateClippingCoordinates(const Axes& axes)
