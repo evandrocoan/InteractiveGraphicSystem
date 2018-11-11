@@ -32,26 +32,20 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   cairo_context->set_source_rgb(1, 1, 1);
   cairo_context->paint();
 
+  // https://stackoverflow.com/questions/351845/finding-the-type-of-an-object-in-c
   this->_draw_clipping_axes(cairo_context);
 
   // LOG(8, "Draw displayFile objects");
   auto lines = this->_world._lines.getObjects();
+  auto points = this->_world._points.getObjects();
   auto curves = this->_world._curves.getObjects();
-  auto objects = this->_world._polygons.getObjects();
+  auto polygons = this->_world._polygons.getObjects();
 
   // LOG(8, "Draw General Polygons");
-  for (auto object : objects)
+  for (auto polygon : polygons)
   {
-    LOG(8, "object: %s", *object);
-
-    if( !object->isDrawable() )
-    {
-      // LOG(8, "Skip objects which were completely clipped out of the Window");
-      continue;
-    }
-
-    // https://stackoverflow.com/questions/351845/finding-the-type-of-an-object-in-c
-    drawn_general( cairo_context, object );
+    LOG(8, "polygon: %s", *polygon);
+    drawn_polygon( cairo_context, polygon );
   }
 
   // LOG(8, "Draw Curves Types");
@@ -61,42 +55,31 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
     drawn_circle( cairo_context, curve );
   }
 
-  // LOG(8, "Draw Curves Types");
+  // LOG(8, "Draw Lines Types");
   for( auto line : lines )
   {
     LOG(8, "line: %s", *line);
-    drawn_polygon( cairo_context, line );
+    drawn_line( cairo_context, line );
+  }
+
+  // LOG(8, "Draw Points Types");
+  for( auto point : points )
+  {
+    LOG(8, "point: %s", *point);
+    drawn_point( cairo_context, point );
   }
 
   return true;
 }
 
-void DrawingArea::drawn_general(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
-{
-  // auto coordinates = object->windowCoordinates();
-  auto coordinates = object->clippingCoordinates();
-  auto coordinates_count = coordinates.size();
-
-  if( coordinates_count == 0 )
-  {
-    std::string error = tfm::format( "ERROR: The object `%s` has no coordinates.", *object );
-
-    LOG( 1, "%s", error );
-    throw std::runtime_error( error );
-  }
-
-  if( coordinates_count == 1 )
-  {
-    drawn_point(cairo_context, object);
-  }
-  else
-  {
-    drawn_polygon(cairo_context, object);
-  }
-}
-
 void DrawingArea::drawn_point(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
 {
+  if( !object->isDrawable() )
+  {
+    // LOG(8, "Skip objects which were completely clipped out of the Window");
+    return ;
+  }
+
   auto coordinates = object->clippingCoordinates();
   auto firstCoordinate = this->_viewWindow.convertCoordinateToViewPort(**(coordinates.begin()));
 
@@ -105,10 +88,65 @@ void DrawingArea::drawn_point(const Cairo::RefPtr<Cairo::Context>& cairo_context
   cairo_context->stroke(); // outline it
 }
 
+
+void DrawingArea::drawn_line(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
+{
+  if( !object->isDrawable() )
+  {
+    // LOG(8, "Skip objects which were completely clipped out of the Window");
+    return ;
+  }
+
+  auto coordinates = object->clippingCoordinates();
+
+  if( coordinates.size() != 2 )
+  {
+    std::string error = tfm::format( "ERROR: The object `%s` does not has 2 coordinates: %s", *object, coordinates.size() );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
+  }
+
+  Coordinate* coordinateConverted;
+  auto border = object->borderColor();
+
+  // LOG(8, "border: %s", border);
+  cairo_context->set_source_rgb(border.x, border.y, border.z);
+
+  for( auto coordinate : coordinates )
+  {
+    coordinateConverted = this->_viewWindow.convertCoordinateToViewPort(*coordinate);
+    cairo_context->line_to(coordinateConverted->x, coordinateConverted->y);
+  }
+
+  // https://developer.gnome.org/gtkmm-tutorial/stable/sec-cairo-drawing-arcs.html.en
+  // LOG(8, "Line back to start point, closing the polygon")
+  cairo_context->save();
+  cairo_context->close_path();
+  cairo_context->fill_preserve();
+  cairo_context->restore();  // back to opaque black
+  cairo_context->stroke();  // outline it
+}
+
 void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
 {
-  Coordinate* coordinateConverted;
+  if( !object->isDrawable() )
+  {
+    // LOG(8, "Skip objects which were completely clipped out of the Window");
+    return ;
+  }
+
   auto coordinates = object->clippingCoordinates();
+
+  if( coordinates.size() < 3 )
+  {
+    std::string error = tfm::format( "ERROR: The object `%s` has not enough coordinates: %s", *object, coordinates.size() );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
+  }
+
+  Coordinate* coordinateConverted;
 
   auto border = object->borderColor();
   auto filling = object->fillingColor();
@@ -135,6 +173,12 @@ void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_conte
 
 void DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_context, const Curve* object)
 {
+  if( !object->isDrawable() )
+  {
+    // LOG(8, "Skip objects which were completely clipped out of the Window");
+    return ;
+  }
+
   auto lines = object->lines;
 
   if( lines.size() == 0 )
@@ -153,7 +197,7 @@ void DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_contex
       continue;
     }
 
-    drawn_polygon( cairo_context, line );
+    drawn_line( cairo_context, line );
   }
 }
 

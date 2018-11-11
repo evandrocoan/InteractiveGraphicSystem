@@ -49,8 +49,9 @@ protected:
 
   DisplayFile<Line*> _lines;
   DisplayFile<Curve*> _curves;
-  DisplayFile<DrawableObject*> _polygons;
+  DisplayFile<Point*> _points;
 
+  DisplayFile<DrawableObject*> _polygons;
   DisplayFile<DrawableObject*> _displayFile;
 };
 
