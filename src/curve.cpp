@@ -37,14 +37,6 @@ BezierCurve::~BezierCurve()
 {
 }
 
-double factorial(int n)
-{
-    double x = 1.0;
-    for (int index = 1; index <= n; index++)
-      x *= (double)index;
-    return x;
-}
-
 double Ni(int n, int index)
 {
     double a1 = factorial(n);
