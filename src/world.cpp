@@ -143,8 +143,8 @@ World::UpdateObjectCoordinates::Connection World::addObserver(const World::Updat
 
 void World::updateAllObjectCoordinates(const Transformation& transformation, const Axes& axes)
 {
-  LOGLN(4, "\n");
-  LOG(4, "...");
+  LOGLN( 8, "\n" );
+  LOG( 8, "..." );
   auto objects = this->_displayFile.getObjects();
 
   for (auto object : objects)
