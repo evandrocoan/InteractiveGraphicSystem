@@ -75,6 +75,12 @@ protected:
   Gtk::Entry entry_zoom_scale;
   Gtk::Entry entry_rotate_angle;
 
+  Gtk::RadioButton liang_barsky_radiobutton;
+  Gtk::RadioButton cohen_sutheland_radiobutton;
+
+  void on_liang_radiobutton();
+  void on_cohen_radiobutton();
+
   void setupButtons();
   void connectButtons();
   void setDefaultTooltips();
