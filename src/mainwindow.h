@@ -108,6 +108,9 @@ protected:
   TransformationPoint transformation_point;
 
   Gtk::Entry x_rotation_field;
+  Gtk::Entry y_rotation_field;
+  Gtk::Entry z_rotation_field;
+
   Gtk::Entry main_value_field_a;
   Gtk::Entry main_value_field_b;
   Gtk::Entry main_value_field_c;
