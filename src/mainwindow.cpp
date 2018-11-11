@@ -40,7 +40,7 @@ MainWindow::MainWindow() :
       button_save_transformation("S"),
       button_remove_transformation("R")
 {
-  LOG(2, "Entering...");
+  LOG(2, "...");
   this->on_liang_radiobutton();
 
   // Transformation
@@ -210,7 +210,7 @@ void MainWindow::connectButtons()
  */
 void MainWindow::updateDropdownList()
 {
-  LOG(2, "Entering...");
+  LOG(2, "...");
   int added_objects = 0;
   auto objects = this->facade.displayFile().getObjects();
 
@@ -403,7 +403,7 @@ void MainWindow::on_button_rotate_right()
 void MainWindow::on_button_add_object()
 { try {
 
-  LOG(2, "Entering...");
+  LOG(2, "...");
   this->addObject.getWindow().show();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
@@ -751,15 +751,15 @@ void MainWindow::add_test_objects()
   // polygon_coord_list.push_back(-30); polygon_coord_list.push_back(-50); polygon_coord_list.push_back(1);
   // this->facade.addPolygon("Polygon", polygon_coord_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::POLYGON);
 
-  // polygon_coord_list.clear();
-  // polygon_coord_list.push_back(0); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
-  // polygon_coord_list.push_back(10); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
-  // polygon_coord_list.push_back(20); polygon_coord_list.push_back(5); polygon_coord_list.push_back(1);
-  // polygon_coord_list.push_back(30); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
-  // polygon_coord_list.push_back(40); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
-  // polygon_coord_list.push_back(50); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
-  // polygon_coord_list.push_back(60); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
-  // this->facade.addPolygon("Bezier", polygon_coord_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::BEZIER);
+  polygon_coord_list.clear();
+  polygon_coord_list.push_back(0); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
+  polygon_coord_list.push_back(10); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
+  polygon_coord_list.push_back(20); polygon_coord_list.push_back(5); polygon_coord_list.push_back(1);
+  polygon_coord_list.push_back(30); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
+  polygon_coord_list.push_back(40); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
+  polygon_coord_list.push_back(50); polygon_coord_list.push_back(0); polygon_coord_list.push_back(1);
+  polygon_coord_list.push_back(60); polygon_coord_list.push_back(10); polygon_coord_list.push_back(1);
+  this->facade.addPolygon("Bezier", polygon_coord_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::BEZIER);
 
   this->facade.queue_draw();
 }

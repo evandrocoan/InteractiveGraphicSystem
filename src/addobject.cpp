@@ -17,7 +17,7 @@ AddObject::AddObject(Facade &facade) :
       polygon_y_label("Coordinate Y: "),
       polygon_z_label("Coordinate Z: ")
 {
-  LOG(2, "Entering...");
+  LOG(2, "...");
 
   entered_points_field.set_text("Added Coordinates: ");
   entered_points_field.set_line_wrap(true);

@@ -126,7 +126,7 @@ void DrawableObject::printMyself(std::ostream& output) const
 
 void DrawableObject::apply(Transformation &transformation)
 {
-  LOG(8, "Entering... %s", transformation);
+  LOG(8, "...");
   auto coordinates = this->worldCoordinates();
 
   auto geometricCenter = DrawableObject::getGeometricCenter(coordinates);
@@ -141,7 +141,6 @@ void DrawableObject::apply(Transformation &transformation)
 void DrawableObject::updateWindowCoordinates(const Transformation& transformation)
 {
   LOG(8, "...");
-  // LOG(8, "Entering... %s", transformation);
   Coordinate* new_coordinate;
 
   auto coordinates = this->worldCoordinates();
@@ -157,6 +156,6 @@ void DrawableObject::updateWindowCoordinates(const Transformation& transformatio
 
 void DrawableObject::updateClippingCoordinates(const Axes& axes)
 {
-  LOG(4, "Generic clipping update... %s", axes);
+  LOG( 8, "..." );
   this->_clippingCoordinates = this->_windowCoordinates;
 }
