@@ -63,7 +63,7 @@
    * A value like 127 binary(111111) enables all masked debugging levels.
    *
    * 1  - Error or very important messages.
-   * 2  - Function entrances by `Entering...`
+   * 2  - Function entrances by `...`
    * 4  - Comment messages inside functions calls
    * 8  - High called functions, i.e., create very big massive text output
    * 16 - Window movement, zoom, etc.

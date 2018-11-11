@@ -40,8 +40,7 @@ void World::addPolygon(std::string name, std::vector<big_double> coordinates_poi
 
   for( unsigned int index = 2; index < coordinates_size; index++, index++, index++ )
   {
-    LOG(1, "Currently we do not support 3D, forcing z `%s` to be 1", coordinates_points.at(index));
-    coordinates.push_back( new Coordinate( coordinates_points.at(index-2), coordinates_points.at(index-1), 1 ) );
+    coordinates.push_back( new Coordinate( coordinates_points.at(index-2), coordinates_points.at(index-1), coordinates_points.at(index) ) );
   }
 
   this->addPolygon( name, coordinates, _borderColor, _fillingColor, type );

@@ -46,7 +46,7 @@ void Line::setLineClipping(LineClippingType type)
 
 void Line::updateClippingCoordinates(const Axes& axes)
 {
-  LOG (8, "..." );
+  LOG( 8, "..." );
   switch( this->line_clipping_type )
   {
     case LineClippingType::LIANG_BARSKY:    this->_isDrawable = this->_liangBaskyLineClip(axes); break;

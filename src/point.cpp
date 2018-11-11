@@ -11,7 +11,7 @@ Point::~Point()
 
 void Point::updateClippingCoordinates(const Axes& axes)
 {
-  LOG(4, "Point clipping update... %s", axes);
+  LOG( 8, "..." );
   this->destroyList(this->_clippingCoordinates);
 
   for( auto coordinate : this->_windowCoordinates )

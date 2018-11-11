@@ -184,7 +184,7 @@ void Transformation::_scaling_on_world_center(const TransformationData &data, co
 
 void Transformation::_scaling_on_its_own_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
 {
-  LOG(2, "Entering...");
+  LOG(2, "...");
   MatrixForm move_to_center = this->_get_translation_matrix(-center);
 
   if( index == 0 )
@@ -209,7 +209,7 @@ void Transformation::_scaling_on_its_own_center(const TransformationData &data, 
 
 void Transformation::_scaling_on_coordinate(const TransformationData &data, const unsigned int &index, const Coordinate &center)
 {
-  LOG(2, "Entering...");
+  LOG(2, "...");
   MatrixForm move_to_center = this->_get_translation_matrix(-data.center);
 
   if( index == 0 )
@@ -280,7 +280,7 @@ void Transformation::_rotation_on_world_center(const TransformationData &data, c
 
 void Transformation::_rotation_on_its_own_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
 {
-  LOG(2, "Entering...");
+  LOG(2, "...");
   MatrixForm move_to_center = this->_get_translation_matrix(-center);
 
   if( index == 0 )
@@ -305,7 +305,7 @@ void Transformation::_rotation_on_its_own_center(const TransformationData &data,
 
 void Transformation::_rotation_on_coordinate(const TransformationData &data, const unsigned int &index, const Coordinate &center)
 {
-  LOG(2, "Entering...");
+  LOG(2, "...");
   MatrixForm move_to_center = this->_get_translation_matrix(-data.center);
 
   if( index == 0 )
