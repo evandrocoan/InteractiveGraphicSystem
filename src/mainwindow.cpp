@@ -526,6 +526,8 @@ void MainWindow::_addThingsToTheWindow()
   coodinate_input_grid.attach(geometric_center_radiobutton, 2, 1, 1, 1);
   coodinate_input_grid.attach(any_point_radiobutton,        3, 1, 1, 1);
   coodinate_input_grid.attach(x_rotation_field,             1, 2, 1, 1);
+  coodinate_input_grid.attach(y_rotation_field,             2, 2, 1, 1);
+  coodinate_input_grid.attach(z_rotation_field,             3, 2, 1, 1);
 
   coodinate_input_grid.attach(translation_radiobutton,      1, 3, 1, 1);
   coodinate_input_grid.attach(scaling_radiobutton,          2, 3, 1, 1);
@@ -558,7 +560,15 @@ void MainWindow::set_default_values_and_tooltips()
 
   x_rotation_field.set_text("15");
   x_rotation_field.set_width_chars(3);
-  x_rotation_field.set_tooltip_text("Rotation Degrees between 0 and 360");
+  x_rotation_field.set_tooltip_text("Rotation Degrees between 0 and 360 on axis X");
+
+  y_rotation_field.set_text("0");
+  y_rotation_field.set_width_chars(3);
+  y_rotation_field.set_tooltip_text("Rotation Degrees between 0 and 360 on axis Y");
+
+  z_rotation_field.set_text("0");
+  z_rotation_field.set_width_chars(3);
+  z_rotation_field.set_tooltip_text("Rotation Degrees between 0 and 360 on axis Z");
 
   main_value_field_a.set_text("10");
   main_value_field_a.set_width_chars(3);
@@ -579,12 +589,17 @@ void MainWindow::on_button_save_transformation()
 
   std::string name;
   std::string x_rotation_value = x_rotation_field.get_text().raw();
+  std::string y_rotation_value = y_rotation_field.get_text().raw();
+  std::string z_rotation_value = z_rotation_field.get_text().raw();
 
   std::string main_value_a = main_value_field_a.get_text().raw();
   std::string main_value_b = main_value_field_b.get_text().raw();
   std::string main_value_c = main_value_field_c.get_text().raw();
 
   big_double x_rotation{std::stold(x_rotation_value)};
+  big_double y_rotation{std::stold(y_rotation_value)};
+  big_double z_rotation{std::stold(z_rotation_value)};
+
   big_double x_coord{std::stold(main_value_a.c_str())};
   big_double y_coord{std::stold(main_value_b.c_str())};
   big_double z_coord{std::stold(main_value_c.c_str())};
@@ -596,16 +611,18 @@ void MainWindow::on_button_save_transformation()
   }
   else if(this->transformation_type == TransformationType::ROTATION)
   {
-    name = tfm::format("%s %s %s %s %s %s",
+    name = tfm::format("%s %s %s %s %s %s %s %s",
                        this->transformation_type,
                        x_rotation,
+                       y_rotation,
+                       z_rotation,
                        this->transformation_point,
                        main_value_a,
                        main_value_b,
                        main_value_c);
 
     this->transformation.add_rotation(name,
-        Coordinate(x_rotation, 0.0, 0.0),
+        Coordinate(x_rotation, y_rotation, z_rotation),
         this->transformation_point,
         Coordinate(x_coord, y_coord, z_coord));
   }
