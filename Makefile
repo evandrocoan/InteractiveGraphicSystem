@@ -7,6 +7,7 @@ CC := g++
 
 # The Target Binary Program
 TARGET := main
+TESTS_TARGET_ENABLER := doctest_enabled.h
 
 # The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR:= src
@@ -44,6 +45,7 @@ INCDEP := -I.
 ##   all               generate all assets
 ##   run               build and open the compiled program
 ##   clean             remove the objects and dependencies directory
+##   tests             run all unit tests from `main_test.cpp`
 ##   veryclean         same as `clean`, but also removes the `bin` folder
 ##
 ## Options:
@@ -117,10 +119,16 @@ OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT))
 help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
+tests:
+	printf "#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN\n" > $(SRCDIR)/$(TESTS_TARGET_ENABLER)
+	${MAKE} $(FULL_TARGET) -j$(NPROCS)
+	cd $(SRCDIR); ../$(FULL_TARGET)
+
 # Default make target rule
 # How to force a certain groups of targets to be always run sequentially?
 # https://stackoverflow.com/questions/21832023/how-to-force-a-certain-groups-of-targets-to-be-always-run-sequentially
 all:
+	printf "#define DOCTEST_CONFIG_DISABLE\n" > $(SRCDIR)/$(TESTS_TARGET_ENABLER)
 	@${MAKE} start_timer -s
 	@${MAKE} resources -s
 	${MAKE} $(FULL_TARGET) -j$(NPROCS)
