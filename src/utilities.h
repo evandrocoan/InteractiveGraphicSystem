@@ -53,6 +53,14 @@ inline big_double convert_degrees_to_radians(big_double degrees)
   return M_PI * (std::fmod(degrees, 360.0) / 180.0);
 }
 
+inline big_double factorial(int n)
+{
+    big_double x = 1.0;
+    for (int index = 1; index <= n; index++)
+      x *= (big_double)index;
+    return x;
+}
+
 /**
  *  Calculates a static array size.
  */
