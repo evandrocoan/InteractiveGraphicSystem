@@ -479,9 +479,9 @@ void MainWindow::on_button_save_file()
 	choose_file_window->show();
 
 	std::string file_path = choose_file_window->get_file_path();
-	this->rw_object_service.write(this->facade.displayFile().getObjects(), file_path);
+	this->rw_object_service.write(file_path);
 
-	LOG(2, "Sucessfull saved the objects on file\n");
+	LOG( 1, "Sucessfull saved the objects on file" );
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }

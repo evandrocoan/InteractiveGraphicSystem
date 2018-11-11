@@ -18,6 +18,8 @@
  */
 class Facade : public NonCopyable
 {
+  friend class RwObjectService;
+
 public:
   DrawingArea& drawingArea()       { return this->_drawingArea; }
   const DisplayFile<DrawableObject*>& displayFile() { return this->_world.displayFile(); }
