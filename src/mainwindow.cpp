@@ -225,7 +225,6 @@ void MainWindow::updateDropdownList()
     {
       added_objects += 1;
       this->objects_list.append(object->getName());
-      LOG(4, object->getName().c_str());
     }
   }
 
