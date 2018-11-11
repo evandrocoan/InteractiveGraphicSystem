@@ -33,7 +33,7 @@ public:
   ~RwObjectService();
 
   void read(std::string file_path);
-  void write(std::vector<DrawableObject*> objects_list, std::string file_path);
+  void write(std::string file_path);
 
 protected:
   Facade& facade;
