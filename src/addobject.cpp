@@ -13,9 +13,9 @@ AddObject::AddObject(Facade &facade) :
       button_remove_coordenate("Remove Coordenate"),
       insert_border_color_label("Insert a RGB border color: "),
       insert_filling_color_label("Insert a RGB filling color: "),
-      insert_a_coordinate_label("Insert a Coordinate: "),
       polygon_x_label("Coordinate X: "),
-      polygon_y_label("Coordinate Y: ")
+      polygon_y_label("Coordinate Y: "),
+      polygon_z_label("Coordinate Z: ")
 {
   LOG(2, "Entering...");
 
@@ -23,7 +23,7 @@ AddObject::AddObject(Facade &facade) :
   entered_points_field.set_line_wrap(true);
   entered_points_field.set_size_request(250, -1);
   entered_points_field.set_xalign(0);
-  entered_points_field.set_yalign(.5);
+  entered_points_field.set_yalign(0);
   entered_points_field.set_max_width_chars(50);
 
   insert_border_color_label.set_xalign(0);
@@ -50,22 +50,24 @@ AddObject::AddObject(Facade &facade) :
   polygon_name_field.set_text("polygon");
   wire_x_field.set_text("0");
   wire_y_field.set_text("0");
+  wire_z_field.set_text("0");
   polygon_grid.set_column_homogeneous(true);
   polygon_grid.set_row_spacing(10);
   polygon_grid.attach(polygon_name_field       , 1, 1, 1, 1);
-  polygon_grid.attach(insert_a_coordinate_label, 2, 1, 1, 1);
-  polygon_grid.attach(polygon_x_label          , 1, 2, 1, 1);
-  polygon_grid.attach(wire_x_field             , 2, 2, 1, 1);
-  polygon_grid.attach(polygon_y_label          , 1, 3, 1, 1);
-  polygon_grid.attach(wire_y_field             , 2, 3, 1, 1);
-  polygon_grid.attach(button_add_coordenate    , 1, 5, 1, 1);
-  polygon_grid.attach(button_remove_coordenate , 2, 5, 1, 1);
+  polygon_grid.attach(polygon_x_label          , 2, 1, 1, 1);
+  polygon_grid.attach(wire_x_field             , 3, 1, 1, 1);
+  polygon_grid.attach(polygon_y_label          , 2, 2, 1, 1);
+  polygon_grid.attach(wire_y_field             , 3, 2, 1, 1);
+  polygon_grid.attach(polygon_z_label          , 2, 3, 1, 1);
+  polygon_grid.attach(wire_z_field             , 3, 3, 1, 1);
+  polygon_grid.attach(button_add_coordenate    , 1, 4, 1, 1);
+  polygon_grid.attach(button_close             , 2, 4, 1, 1);
+  polygon_grid.attach(button_remove_coordenate , 3, 4, 1, 1);
   polygon_grid.attach(button_save_point        , 1, 6, 1, 1);
   polygon_grid.attach(button_save_line         , 2, 6, 1, 1);
   polygon_grid.attach(button_save_polygon      , 3, 6, 1, 1);
   polygon_grid.attach(button_save_bezier       , 1, 7, 1, 1);
   polygon_grid.attach(button_save_bspline      , 2, 7, 1, 1);
-  polygon_grid.attach(button_close             , 3, 7, 1, 1);
 
   button_close.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_close) );
   button_save_point.signal_clicked().connect( sigc::mem_fun(*this, &AddObject::on_button_save_point) );
@@ -228,36 +230,29 @@ void AddObject::on_button_save_polygon()
 void AddObject::on_button_save_bezier()
 { try {
 
-  if (!polygon_coord_list.empty())
+  std::string name = this->_get_field_name(polygon_name_field);
+  LOG(4, "Name: %s", name);
+
+  if (name.empty())
   {
-    std::string name = this->_get_field_name(polygon_name_field);
-    LOG(4, "Name: %s", name);
-
-    if (name.empty())
-    {
-      polygon_name_field.grab_focus();
-      return;
-    }
-
-    Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
-    Coordinate filling = this->_get_rgb_color(insert_filling_color_field_r, insert_filling_color_field_g, insert_filling_color_field_b);
-
-    this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BEZIER);
-    this->facade.queue_draw();
-
-    while(!polygon_coord_list.empty())
-    {
-      polygon_coord_list.pop_back();
-    }
-
-    entered_points_field.set_text("Added Coordinates: ");
-    entered_points_text.clear();
-    this->window.close();
+    polygon_name_field.grab_focus();
+    return;
   }
-  else
+
+  Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
+  Coordinate filling = this->_get_rgb_color(insert_filling_color_field_r, insert_filling_color_field_g, insert_filling_color_field_b);
+
+  this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BEZIER);
+  this->facade.queue_draw();
+
+  while(!polygon_coord_list.empty())
   {
-    return ;
+    polygon_coord_list.pop_back();
   }
+
+  entered_points_field.set_text("Added Coordinates: ");
+  entered_points_text.clear();
+  this->window.close();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -266,36 +261,29 @@ void AddObject::on_button_save_bezier()
 void AddObject::on_button_save_bspline()
 { try {
 
-  if (!polygon_coord_list.empty())
+  std::string name = this->_get_field_name(polygon_name_field);
+  LOG(4, "Name: %s", name);
+
+  if (name.empty())
   {
-    std::string name = this->_get_field_name(polygon_name_field);
-    LOG(4, "Name: %s", name);
-
-    if (name.empty())
-    {
-      polygon_name_field.grab_focus();
-      return;
-    }
-
-    Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
-    Coordinate filling = this->_get_rgb_color(insert_filling_color_field_r, insert_filling_color_field_g, insert_filling_color_field_b);
-
-    this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BSPLINE);
-    this->facade.queue_draw();
-
-    while(!polygon_coord_list.empty())
-    {
-      polygon_coord_list.pop_back();
-    }
-
-    entered_points_field.set_text("Added Coordinates: ");
-    entered_points_text.clear();
-    this->window.close();
+    polygon_name_field.grab_focus();
+    return;
   }
-  else
+
+  Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
+  Coordinate filling = this->_get_rgb_color(insert_filling_color_field_r, insert_filling_color_field_g, insert_filling_color_field_b);
+
+  this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BSPLINE);
+  this->facade.queue_draw();
+
+  while(!polygon_coord_list.empty())
   {
-    return ;
+    polygon_coord_list.pop_back();
   }
+
+  entered_points_field.set_text("Added Coordinates: ");
+  entered_points_text.clear();
+  this->window.close();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -306,12 +294,11 @@ void AddObject::on_button_add_coordinate()
 
   std::string x_string = wire_x_field.get_text().raw();
   std::string y_string = wire_y_field.get_text().raw();
-  // std::string z_string = wire_z_field.get_text().raw();
+  std::string z_string = wire_z_field.get_text().raw();
 
   int x_coord = atoi(x_string.c_str());
   int y_coord = atoi(y_string.c_str());
-  int z_coord = 1;
-  // int z_coord = atoi(z_string.c_str());
+  int z_coord = atoi(z_string.c_str());
 
   polygon_coord_list.push_back(x_coord);
   polygon_coord_list.push_back(y_coord);
@@ -319,13 +306,7 @@ void AddObject::on_button_add_coordinate()
 
   wire_x_field.set_text("");
   wire_y_field.set_text("");
-
-  std::string insert_a_coordinate_label_contents = "Added X: " + std::to_string(x_coord)
-      + ", Y: " + std::to_string(y_coord)
-      + ", Z: " + std::to_string(z_coord);
-
-  LOG( 4, insert_a_coordinate_label_contents.c_str() );
-  insert_a_coordinate_label.set_text( insert_a_coordinate_label_contents );
+  wire_z_field.set_text("");
 
   entered_points_text.push_back( "("
       + std::to_string(x_coord) + ", "
@@ -344,16 +325,9 @@ void AddObject::on_button_add_coordinate()
 void AddObject::on_button_remove_coordinate()
 { try {
 
-  big_double z = polygon_coord_list.back(); polygon_coord_list.pop_back();
-  big_double y = polygon_coord_list.back(); polygon_coord_list.pop_back();
-  big_double x = polygon_coord_list.back(); polygon_coord_list.pop_back();
-
-  std::string insert_a_coordinate_label_contents = "Removed X: " + std::to_string(x)
-      + ", Y: " + std::to_string(y)
-      + ", Z: " + std::to_string(z);
-
-  LOG( 4, insert_a_coordinate_label_contents.c_str() );
-  insert_a_coordinate_label.set_text( insert_a_coordinate_label_contents );
+  polygon_coord_list.pop_back();
+  polygon_coord_list.pop_back();
+  polygon_coord_list.pop_back();
 
   entered_points_text.pop_back();
   std::ostringstream contents;

@@ -60,13 +60,14 @@ private:
   Gtk::Entry polygon_name_field;
   Gtk::Entry wire_y_field;
   Gtk::Entry wire_x_field;
+  Gtk::Entry wire_z_field;
 
   Gtk::Label insert_border_color_label;
   Gtk::Label insert_filling_color_label;
-  Gtk::Label insert_a_coordinate_label;
 
   Gtk::Label polygon_x_label;
   Gtk::Label polygon_y_label;
+  Gtk::Label polygon_z_label;
 
   void on_button_close();
   void on_button_save_point();
