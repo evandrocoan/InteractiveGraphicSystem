@@ -27,6 +27,7 @@ BezierCurve::BezierCurve(std::string name, std::vector<Coordinate*> _worldCoordi
         "A Bezier curve should have 4, 7, 10, 13... coordinates, not %s.\n\n%s",
         _worldCoordinates.size(), contents.str() );
 
+    LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
 

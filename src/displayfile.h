@@ -54,16 +54,18 @@ public:
 
   Type getObjectByName(std::string name)
   {
-    LOG(4, "Entering: %s", name);
+    LOG(8, "Entering: %s", name);
     auto iterator = this->objectsMap.find(name);
 
     if( iterator == this->objectsMap.end() )
     {
-      auto message = tfm::format("There are not objects within the name: `%s`", name); LOG(1, message.c_str());
-      throw std::invalid_argument(message);
+      auto error = tfm::format("There are not objects within the name: `%s`", name);
+
+      LOG( 1, "%s", error );
+      throw std::runtime_error(error);
     }
 
-    LOG(4, "Object: %s", *iterator->second);
+    LOG(8, "Object: %s", *iterator->second);
     return iterator->second;
   }
 

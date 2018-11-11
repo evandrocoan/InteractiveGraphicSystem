@@ -142,6 +142,7 @@ void RwObjectService::read(std::string file_path)
   else
   {
     std::string error = tfm::format( "ERROR! Could not open the file: %s", file_path );
+    LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
 }
