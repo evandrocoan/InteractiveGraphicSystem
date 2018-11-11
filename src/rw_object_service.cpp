@@ -6,6 +6,11 @@
  */
 
 #include "rw_object_service.h"
+#include "doctest_include.h"
+
+TEST_CASE("Testing the factorial function") {
+    CHECK(1 == 1);
+}
 
 RwObjectService::RwObjectService(Facade& facade) :
       facade(facade)
