@@ -38,6 +38,9 @@ protected:
 
   std::vector<int> getLineIndexes(std::vector<int>&, std::string&);
   std::vector<std::string> split(std::string&, char delimiter);
+
+private:
+  int _last_index;
 };
 
 #endif /* RW_OBJECT_SERVICE_H_ */
