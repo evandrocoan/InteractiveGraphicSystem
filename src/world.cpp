@@ -27,7 +27,7 @@ void World::addPoint(std::string name, int x, int y, int z, Coordinate _borderCo
   Coordinate* point_coordinate = new Coordinate(x, y, z);
   Point* point = new Point(name, point_coordinate, _borderColor);
 
-  this->_polygons.addObject(point);
+  this->_points.addObject(point);
   this->_displayFile.addObject(point);
   this->_updateObjectCoordinates(point);
 }
@@ -115,6 +115,10 @@ void World::removeObject(std::string name)
     {
       this->_lines.removeObjectByName(name);
     }
+    else if( this->_points.isObjectOnByName(name) )
+    {
+      this->_points.removeObjectByName(name);
+    }
     else {
       std::string error = tfm::format( "The object is not found: `%s`", name );
 
@@ -194,6 +198,10 @@ void World::apply(const std::string object_name, Transformation &transformation)
       else if( this->_lines.isObjectOnByName(object_name) )
       {
         object = this->_lines.apply(object_name, transformation);
+      }
+      else if( this->_points.isObjectOnByName(object_name) )
+      {
+        object = this->_points.apply(object_name, transformation);
       }
       else
       {
