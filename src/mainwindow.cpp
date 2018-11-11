@@ -24,9 +24,13 @@ MainWindow::MainWindow() :
       main_box(Gtk::ORIENTATION_HORIZONTAL),
       left_box(Gtk::ORIENTATION_VERTICAL),
       left_frame("Controllers"),
-      right_frame("DrawingArea")
+      right_frame("DrawingArea"),
+      liang_barsky_radiobutton("L"),
+      cohen_sutheland_radiobutton("C")
 {
   LOG(2, "Entering...");
+  this->on_liang_radiobutton();
+
   this->main_box.pack_start(left_frame, Gtk::PACK_SHRINK, 10);
   this->left_box.set_border_width(10);
   this->left_frame.add(left_box);
@@ -53,17 +57,23 @@ MainWindow::MainWindow() :
   this->add_test_objects();
 }
 
+
 MainWindow::~MainWindow()
 {
 }
+
 
 Gtk::Window& MainWindow::getWindow()
 {
   return this->window;
 }
 
+
 void MainWindow::setDefaultTooltips()
 {
+  liang_barsky_radiobutton   .set_tooltip_text("Liang-Barsky");
+  cohen_sutheland_radiobutton.set_tooltip_text("Cohen-Sutheland");
+
   button_add_object   .set_tooltip_text("Add new object");
   button_delete_object.set_tooltip_text("Remove current selected object");
   objects_list        .set_tooltip_text("The list of all created objects on the DrawingArea");
@@ -83,11 +93,18 @@ void MainWindow::setDefaultTooltips()
   button_move_right   .set_tooltip_text("Move the ViewWindow on the drawing area to the right");
 }
 
+
 void MainWindow::setupButtons()
 {
   LOG(4, "Inicializando dado da entrada do tamanho de movimentação");
   entry_move_length.set_width_chars(3);
   entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+
+  liang_barsky_radiobutton.set_active();
+  liang_barsky_radiobutton.set_halign( Gtk::ALIGN_CENTER );
+
+  cohen_sutheland_radiobutton.join_group(liang_barsky_radiobutton);
+  cohen_sutheland_radiobutton.set_halign( Gtk::ALIGN_CENTER );
 
   LOG(4, "Inicializando dado da entrada do tamanho da rotaçao");
   entry_rotate_angle.set_width_chars(1);
@@ -111,11 +128,13 @@ void MainWindow::setupButtons()
 
   LOG(4, "Adicionando os botões de movimentações na grade de movimentação");
   // grid_move.set_column_homogeneous(true);
-  grid_move.attach(button_move_left,  1, 2, 1, 1);
-  grid_move.attach(button_move_up,    2, 1, 1, 1);
-  grid_move.attach(entry_move_length, 2, 2, 1, 1);
-  grid_move.attach(button_move_down,  2, 3, 1, 1);
-  grid_move.attach(button_move_right, 3, 2, 1, 1);
+  grid_move.attach(liang_barsky_radiobutton,    1, 1, 1, 1);
+  grid_move.attach(button_move_left,            1, 2, 1, 1);
+  grid_move.attach(button_move_up,              2, 1, 1, 1);
+  grid_move.attach(entry_move_length,           2, 2, 1, 1);
+  grid_move.attach(button_move_down,            2, 3, 1, 1);
+  grid_move.attach(button_move_right,           3, 2, 1, 1);
+  grid_move.attach(cohen_sutheland_radiobutton, 3, 1, 1, 1);
 
   LOG(4, "Adicionando os botões de movimentações na grade de zoom");
   grid_zoom.set_column_homogeneous(true);
@@ -139,10 +158,12 @@ void MainWindow::setupButtons()
   left_box.add(this->addTransformation.getBox());
 }
 
+
 void MainWindow::connectButtons()
 {
   LOG(4, "Determinando ações quando clicado cada botão;");
   this->objects_list.signal_changed().connect(sigc::mem_fun(*this, &MainWindow::on_objects_list_change));
+  this->liang_barsky_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_liang_radiobutton) );
 
   this->button_move_up.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_up));
   this->button_move_down.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_down));
@@ -161,6 +182,7 @@ void MainWindow::connectButtons()
   this->button_open_file.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_open_file));
   this->button_save_file.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_save_file));
 }
+
 
 /**
  * Called when the `DrawingArea` objects list is updated.
@@ -193,6 +215,7 @@ void MainWindow::updateDropdownList()
   this->on_objects_list_change();
 }
 
+
 void MainWindow::on_objects_list_change()
 { try {
 
@@ -202,6 +225,7 @@ void MainWindow::on_objects_list_change()
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
+
 
 void MainWindow::on_button_move_up()
 { try {
@@ -220,6 +244,7 @@ void MainWindow::on_button_move_up()
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
+
 void MainWindow::on_button_move_down()
 { try {
 
@@ -236,6 +261,7 @@ void MainWindow::on_button_move_down()
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
+
 
 void MainWindow::on_button_move_left()
 { try {
@@ -254,6 +280,7 @@ void MainWindow::on_button_move_left()
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
+
 void MainWindow::on_button_move_right()
 { try {
 
@@ -270,6 +297,7 @@ void MainWindow::on_button_move_right()
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
+
 
 void MainWindow::on_button_zoom_in()
 { try {
@@ -292,6 +320,7 @@ void MainWindow::on_button_zoom_in()
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
+
 void MainWindow::on_button_zoom_out()
 { try {
 
@@ -313,6 +342,7 @@ void MainWindow::on_button_zoom_out()
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
+
 void MainWindow::on_button_rotate_left()
 { try {
 
@@ -329,6 +359,7 @@ void MainWindow::on_button_rotate_left()
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
+
 
 void MainWindow::on_button_rotate_right()
 { try {
@@ -347,6 +378,7 @@ void MainWindow::on_button_rotate_right()
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
+
 void MainWindow::on_button_add_object()
 { try {
 
@@ -355,6 +387,7 @@ void MainWindow::on_button_add_object()
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
+
 
 void MainWindow::on_button_delete_object()
 { try {
@@ -369,6 +402,7 @@ void MainWindow::on_button_delete_object()
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
+
 
 void MainWindow::on_button_open_file()
 { try {
@@ -385,6 +419,7 @@ void MainWindow::on_button_open_file()
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
+
 void MainWindow::on_button_save_file()
 { try {
 
@@ -398,6 +433,27 @@ void MainWindow::on_button_save_file()
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
+
+
+void MainWindow::on_liang_radiobutton()
+{ try {
+
+  // LineClippingType line_clipping_type;
+  // this->line_clipping_type = LineClippingType::LIANG_BARSKY;
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
+}
+
+
+void MainWindow::on_cohen_radiobutton()
+{ try {
+
+  // LineClippingType line_clipping_type;
+  // this->line_clipping_type = LineClippingType::COHEN_SUTHELAND;
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
+}
+
 
 void MainWindow::add_test_objects()
 {

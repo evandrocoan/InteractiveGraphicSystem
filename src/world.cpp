@@ -9,23 +9,23 @@ World::~World()
 {
 }
 
-void World::addLine(std::string name, int x1_cord, int y1_cord, int x2_cord, int y2_cord,
+void World::addLine(std::string name, int x1, int y1, int z1, int x2, int y2, int z2,
                     Coordinate _borderColor, LineClippingType type, bool _isVisibleOnGui)
 {
-  Coordinate* point_cord1 = new Coordinate(x1_cord, y1_cord);
-  Coordinate* point_cord2 = new Coordinate(x2_cord, y2_cord);
+  Coordinate* point1 = new Coordinate(x1, y1, z1);
+  Coordinate* point2 = new Coordinate(x2, y2, z2);
 
-  Line* line = new Line(name, point_cord1, point_cord2, _borderColor, type, _isVisibleOnGui);
+  Line* line = new Line(name, point1, point2, _borderColor, type, _isVisibleOnGui);
 
   this->_polygons.addObject(line);
   this->_displayFile.addObject(line);
   this->_updateObjectCoordinates(line);
 }
 
-void World::addPoint(std::string name, int x_coord, int y_coord, Coordinate _borderColor)
+void World::addPoint(std::string name, int x, int y, int z, Coordinate _borderColor)
 {
-  Coordinate* point_cord = new Coordinate(x_coord, y_coord);
-  Point* point = new Point(name, point_cord, _borderColor);
+  Coordinate* point_coordinate = new Coordinate(x, y, z);
+  Point* point = new Point(name, point_coordinate, _borderColor);
 
   this->_polygons.addObject(point);
   this->_displayFile.addObject(point);
@@ -208,6 +208,15 @@ void World::apply(const std::string object_name, Transformation &transformation)
 void World::draw_xy_axes()
 {
   LOG(4, "Drawing the X T axes as world objects.");
-  this->addLine("Y Axe", 0, -WORLD_AXES_SIZE, 0, WORLD_AXES_SIZE, Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
-  this->addLine("X Axe", -WORLD_AXES_SIZE, 0, WORLD_AXES_SIZE, 0, Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
+  this->addLine("Y Axe", 0, -WORLD_AXES_SIZE, 0,
+      0, WORLD_AXES_SIZE, 0,
+      Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
+
+  this->addLine("X Axe", -WORLD_AXES_SIZE, 0, 0,
+      WORLD_AXES_SIZE, 0, 0,
+      Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
+
+  this->addLine("Z Axe", 0, 0, -WORLD_AXES_SIZE,
+      0, 0, WORLD_AXES_SIZE,
+      Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
 }
