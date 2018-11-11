@@ -15,6 +15,13 @@
       "env":
       {
       },
+      "variants":
+      [
+          {
+              "name": "Tests",
+              "shell_cmd": "make tests",
+          },
+      ],
       "file_regex": "^(?:[\\d.+:e-]+ ){0,3}([^|:]+)(?:\\|[^:]+)?:(\\d+)(?::(\\d+):)? (.*)$",
       "name": "Make and Run",
       "shell": true,
