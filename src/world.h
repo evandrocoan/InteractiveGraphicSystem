@@ -25,7 +25,9 @@ public:
 
   void addPolygon(const std::string name, const std::vector<big_double>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
   void addPolygon(const std::string name, const std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
+
   void removeObject(const std::string name);
+  void setLineClipping(LineClippingType);
 
   const DisplayFile<DrawableObject*>& displayFile() const { return this->_displayFile; }
 
@@ -45,8 +47,10 @@ public:
 protected:
   UpdateObjectCoordinates _updateObjectCoordinates;
 
+  DisplayFile<Line*> _lines;
   DisplayFile<Curve*> _curves;
   DisplayFile<DrawableObject*> _polygons;
+
   DisplayFile<DrawableObject*> _displayFile;
 };
 

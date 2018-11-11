@@ -17,7 +17,7 @@ void World::addLine(std::string name, int x1, int y1, int z1, int x2, int y2, in
 
   Line* line = new Line(name, point1, point2, _borderColor, type, _isVisibleOnGui);
 
-  this->_polygons.addObject(line);
+  this->_lines.addObject(line);
   this->_displayFile.addObject(line);
   this->_updateObjectCoordinates(line);
 }
@@ -87,6 +87,16 @@ void World::addPolygon(std::string name, std::vector<Coordinate*> coordinates,
   this->_updateObjectCoordinates(object);
 }
 
+void World::setLineClipping(LineClippingType type)
+{
+  auto objects = this->_lines.getObjects();
+
+  for( auto line : objects )
+  {
+    line->setLineClipping( type );
+  }
+}
+
 void World::removeObject(std::string name)
 {
   // LOG(4, "Removing an object by name is faster than by pointer because it internally calls `removeObjectByName()`");
@@ -97,9 +107,13 @@ void World::removeObject(std::string name)
     {
       this->_polygons.removeObjectByName(name);
     }
-    else if( this->_displayFile.isObjectOnByName(name) )
+    else if( this->_curves.isObjectOnByName(name) )
     {
       this->_curves.removeObjectByName(name);
+    }
+    else if( this->_lines.isObjectOnByName(name) )
+    {
+      this->_lines.removeObjectByName(name);
     }
     else {
       std::string error = tfm::format( "The object is not found: `%s`", name );
@@ -176,6 +190,10 @@ void World::apply(const std::string object_name, Transformation &transformation)
       else if( this->_curves.isObjectOnByName(object_name) )
       {
         object = this->_curves.apply(object_name, transformation);
+      }
+      else if( this->_lines.isObjectOnByName(object_name) )
+      {
+        object = this->_lines.apply(object_name, transformation);
       }
       else
       {

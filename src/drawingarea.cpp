@@ -35,6 +35,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   this->_draw_clipping_axes(cairo_context);
 
   // LOG(8, "Draw displayFile objects");
+  auto lines = this->_world._lines.getObjects();
   auto curves = this->_world._curves.getObjects();
   auto objects = this->_world._polygons.getObjects();
 
@@ -50,20 +51,27 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
     }
 
     // https://stackoverflow.com/questions/351845/finding-the-type-of-an-object-in-c
-    if( drawn_general( cairo_context, object ) ) continue;
+    drawn_general( cairo_context, object );
   }
 
   // LOG(8, "Draw Curves Types");
   for( auto curve : curves )
   {
     LOG(8, "curve: %s", *curve);
-    if( drawn_circle( cairo_context, curve ) ) continue;
+    drawn_circle( cairo_context, curve );
+  }
+
+  // LOG(8, "Draw Curves Types");
+  for( auto line : lines )
+  {
+    LOG(8, "line: %s", *line);
+    drawn_polygon( cairo_context, line );
   }
 
   return true;
 }
 
-bool DrawingArea::drawn_general(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
+void DrawingArea::drawn_general(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
 {
   // auto coordinates = object->windowCoordinates();
   auto coordinates = object->clippingCoordinates();
@@ -71,8 +79,10 @@ bool DrawingArea::drawn_general(const Cairo::RefPtr<Cairo::Context>& cairo_conte
 
   if( coordinates_count == 0 )
   {
-    LOG(1, "ERROR: The object `%s` has no coordinates.", *object);
-    return true;
+    std::string error = tfm::format( "ERROR: The object `%s` has no coordinates.", *object );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   if( coordinates_count == 1 )
@@ -83,8 +93,6 @@ bool DrawingArea::drawn_general(const Cairo::RefPtr<Cairo::Context>& cairo_conte
   {
     drawn_polygon(cairo_context, object);
   }
-
-  return false;
 }
 
 void DrawingArea::drawn_point(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
@@ -125,14 +133,16 @@ void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_conte
   cairo_context->stroke();  // outline it
 }
 
-bool DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_context, const Curve* object)
+void DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_context, const Curve* object)
 {
   auto lines = object->lines;
 
   if( lines.size() == 0 )
   {
-    LOG(1, "ERROR: The object `%s` has no coordinates.", *object);
-    return true;
+    std::string error = tfm::format( "ERROR: The object `%s` has no coordinates.", *object );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   for( auto line : object->lines )
@@ -145,8 +155,6 @@ bool DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_contex
 
     drawn_polygon( cairo_context, line );
   }
-
-  return false;
 }
 
 /**
