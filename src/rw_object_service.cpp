@@ -81,7 +81,7 @@ void RwObjectService::read(std::string file_path)
         for( auto value : indexes ) LOGLN( 8, "%s, ", value ); LOGLN( 8, "\n" );
 
         std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates_points );
-        this->facade.addPoint( name, vertexes[0]->x, vertexes[1]->y );
+        this->facade.addPoint( name, vertexes[0]->x, vertexes[0]->y, vertexes[0]->z );
       }
       else if( line.front() == 'l' )
       {
@@ -108,7 +108,8 @@ void RwObjectService::read(std::string file_path)
 
         if( vertexes.size() < 3 )
         {
-          this->facade.addLine( name, vertexes[0]->x, vertexes[0]->y, vertexes[1]->x, vertexes[1]->y );
+          this->facade.addLine( name, vertexes[0]->x, vertexes[0]->y, vertexes[0]->z,
+              vertexes[1]->x, vertexes[1]->y , vertexes[1]->z );
         }
         else
         {
