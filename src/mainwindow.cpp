@@ -149,12 +149,12 @@ void MainWindow::setupButtons()
   LOG(4, "Adicionando os botões de movimentações na grade de movimentação");
   // grid_move.set_column_homogeneous(true);
   grid_move.attach(liang_barsky_radiobutton,    1, 1, 1, 1);
-  grid_move.attach(button_move_left,            1, 2, 1, 1);
   grid_move.attach(button_move_up,              2, 1, 1, 1);
-  grid_move.attach(entry_move_length,           2, 2, 1, 1);
-  grid_move.attach(button_move_down,            2, 3, 1, 1);
-  grid_move.attach(button_move_right,           3, 2, 1, 1);
   grid_move.attach(cohen_sutheland_radiobutton, 3, 1, 1, 1);
+  grid_move.attach(button_move_left,            1, 2, 1, 1);
+  grid_move.attach(entry_move_length,           2, 2, 1, 1);
+  grid_move.attach(button_move_right,           3, 2, 1, 1);
+  grid_move.attach(button_move_down,            2, 3, 1, 1);
 
   LOG(4, "Adicionando os botões de movimentações na grade de zoom");
   grid_zoom.set_column_homogeneous(true);
@@ -164,8 +164,8 @@ void MainWindow::setupButtons()
 
   LOG(4, "Adicionando os botões de rotaçao na grade de rotaçao");
   grid_rotate.set_column_homogeneous(true);
-  grid_rotate.attach(button_rotate_left, 1, 1, 1, 1);
-  grid_rotate.attach(entry_rotate_angle, 2, 1, 1, 1);
+  grid_rotate.attach(button_rotate_left,  1, 1, 1, 1);
+  grid_rotate.attach(entry_rotate_angle,  2, 1, 1, 1);
   grid_rotate.attach(button_rotate_right, 3, 1, 1, 1);
 
   LOG(4, "Adding the draw options box to left frame");
