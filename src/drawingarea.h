@@ -56,8 +56,8 @@ protected:
   void _draw_clipping_axes(const Cairo::RefPtr<Cairo::Context>&);
 
 private:
-  bool drawn_circle(const Cairo::RefPtr<Cairo::Context>&, const Curve*);
-  bool drawn_general(const Cairo::RefPtr<Cairo::Context>&, const DrawableObject*);
+  void drawn_circle(const Cairo::RefPtr<Cairo::Context>&, const Curve*);
+  void drawn_general(const Cairo::RefPtr<Cairo::Context>&, const DrawableObject*);
 
   void drawn_point(const Cairo::RefPtr<Cairo::Context>&, const DrawableObject*);
   void drawn_polygon(const Cairo::RefPtr<Cairo::Context>&, const DrawableObject*);

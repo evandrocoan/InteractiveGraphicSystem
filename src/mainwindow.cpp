@@ -184,6 +184,7 @@ void MainWindow::connectButtons()
   LOG(4, "Determinando ações quando clicado cada botão;");
   this->objects_list.signal_changed().connect(sigc::mem_fun(*this, &MainWindow::on_objects_list_change));
   this->liang_barsky_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_liang_radiobutton) );
+  this->cohen_sutheland_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_cohen_radiobutton) );
 
   this->button_move_up.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_up));
   this->button_move_down.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_down));
@@ -458,8 +459,7 @@ void MainWindow::on_button_save_file()
 void MainWindow::on_liang_radiobutton()
 { try {
 
-  // LineClippingType line_clipping_type;
-  // this->line_clipping_type = LineClippingType::LIANG_BARSKY;
+  this->facade.setLineClipping( LineClippingType::LIANG_BARSKY );
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -468,8 +468,7 @@ void MainWindow::on_liang_radiobutton()
 void MainWindow::on_cohen_radiobutton()
 { try {
 
-  // LineClippingType line_clipping_type;
-  // this->line_clipping_type = LineClippingType::COHEN_SUTHELAND;
+  this->facade.setLineClipping( LineClippingType::COHEN_SUTHELAND );
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }

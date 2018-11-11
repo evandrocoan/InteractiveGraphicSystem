@@ -46,6 +46,10 @@ public:
   {
     this->_world.addPolygon(name, points, _borderColor, _fillingColor, type); }
 
+  void setLineClipping(LineClippingType type)
+  {
+    this->_world.setLineClipping(type); }
+
   void removeObject(std::string name) { this->_world.removeObject(name); }
 
   void move(Coordinate moves)        { this->_viewWindow.move(moves);        }

@@ -11,6 +11,12 @@ Line::~Line()
 {
 }
 
+void Line::setLineClipping(LineClippingType type)
+{
+  LOG( 8, "%s", type );
+  this->line_clipping_type = type;
+}
+
 inline std::ostream& operator<<(std::ostream &output, const LineClippingType object)
 {
   switch( object )

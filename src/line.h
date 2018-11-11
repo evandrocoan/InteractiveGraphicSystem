@@ -30,10 +30,11 @@ public:
           Coordinate _borderColor, LineClippingType, bool _isVisibleOnGui);
   ~Line();
 
-  LineClippingType line_clipping_type;
+  void setLineClipping(LineClippingType);
   virtual void updateClippingCoordinates(const Axes&);
 
 protected:
+  LineClippingType line_clipping_type;
 
   /**
    * http://www.skytopia.com/project/articles/compsci/clipping.html
