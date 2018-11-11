@@ -38,7 +38,9 @@ MainWindow::MainWindow() :
       any_point_radiobutton("AP"),
       button_apply("A"),
       button_save_transformation("S"),
-      button_remove_transformation("R")
+      button_remove_transformation("R"),
+      _object_list_active_index(-1),
+      _skip_object_list_signals(false)
 {
   LOG(2, "...");
   this->on_liang_radiobutton();
@@ -183,6 +185,7 @@ void MainWindow::connectButtons()
 {
   LOG(4, "Determinando ações quando clicado cada botão;");
   this->objects_list.signal_changed().connect(sigc::mem_fun(*this, &MainWindow::on_objects_list_change));
+
   this->liang_barsky_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_liang_radiobutton) );
   this->cohen_sutheland_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_cohen_radiobutton) );
 
@@ -210,11 +213,12 @@ void MainWindow::connectButtons()
  */
 void MainWindow::updateDropdownList()
 {
-  LOG(2, "...");
+  LOG( 8, "...");
   int added_objects = 0;
   auto objects = this->facade.displayFile().getObjects();
 
-  // LOG(4, "limpa a lista de objetos para reimprimi-la");
+  LOG( 8, "limpa a lista de objetos para reimprimi-la" );
+  this->_skip_object_list_signals = true;
   this->objects_list.remove_all();
 
   for(auto object : objects)
@@ -230,18 +234,46 @@ void MainWindow::updateDropdownList()
 
   // Set Gtk.ComboBoxText default item?
   // https://stackoverflow.com/questions/14912210/set-gtk-comboboxtext-default-item
-  // LOG(4, "Selecting the last item on the ComboBoxText");
-  this->objects_list.set_active(added_objects-1);
-  this->on_objects_list_change();
+  LOG( 8, "Selecting the last item on the ComboBoxText" );
+  this->objects_list.set_active(
+      this->_object_list_active_index < 0 || this->_object_list_active_index > added_objects-1
+      ? added_objects-1 : this->_object_list_active_index );
+
+  LOG( 8, "Old name: %s", this->object_name );
+  Glib::ustring name = static_cast<std::string>( objects_list.get_active_text() );
+
+  this->object_name = name;
+  LOG( 8, "New name: %s", name );
+
+  this->_skip_object_list_signals = false;
 }
 
 
 void MainWindow::on_objects_list_change()
 { try {
 
+  if( this->_skip_object_list_signals ) return;
+
   // Also update the name on the `addTransformation` window
-  Glib::ustring name = (std::string)objects_list.get_active_text();
+  Glib::ustring name = static_cast<std::string>( objects_list.get_active_text() );
   this->object_name = name;
+
+  int object_index = 0;
+  auto objects = this->facade.displayFile().getObjects();
+
+  for(auto object : objects)
+  {
+    LOG( 8, "isVisibleOnGui: %s, object: %s", object->isVisibleOnGui(), *object );
+
+    if( object->isVisibleOnGui() )
+    {
+      object_index += 1;
+      if( object->getName() == name ) break;
+    }
+  }
+
+  LOG( 8, "name: %s, active_index: %s, object_index: %s", name, _object_list_active_index, object_index );
+  this->_object_list_active_index = object_index - 1;
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }

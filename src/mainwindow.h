@@ -154,6 +154,8 @@ protected:
   void _update_transmations_list();
 
 private:
+  int _object_list_active_index;
+  bool _skip_object_list_signals;
   void add_test_objects();
 };
 
