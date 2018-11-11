@@ -7,7 +7,8 @@ CC := g++
 
 # The Target Binary Program
 TARGET := main
-TESTS_TARGET_ENABLER := doctest_enabled.h
+TESTS_TARGET_MAIN := doctest_main.h
+TESTS_TARGET_INCLUDE := doctest_include.h
 
 # The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR:= src
@@ -120,7 +121,8 @@ help:
 	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
 
 tests:
-	printf "#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN\n" > $(SRCDIR)/$(TESTS_TARGET_ENABLER)
+	printf '#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN\n#include "doctest.h"\n' > $(SRCDIR)/$(TESTS_TARGET_MAIN)
+	printf '#include "doctest.h"\n' > $(SRCDIR)/$(TESTS_TARGET_INCLUDE)
 	${MAKE} $(FULL_TARGET) -j$(NPROCS)
 	cd $(SRCDIR); ../$(FULL_TARGET)
 
@@ -128,7 +130,8 @@ tests:
 # How to force a certain groups of targets to be always run sequentially?
 # https://stackoverflow.com/questions/21832023/how-to-force-a-certain-groups-of-targets-to-be-always-run-sequentially
 all:
-	printf "#define DOCTEST_CONFIG_DISABLE\n" > $(SRCDIR)/$(TESTS_TARGET_ENABLER)
+	printf '#define DOCTEST_CONFIG_DISABLE\n#include "doctest.h"\n' > $(SRCDIR)/$(TESTS_TARGET_MAIN)
+	printf '#define DOCTEST_CONFIG_DISABLE\n#include "doctest.h"\n' > $(SRCDIR)/$(TESTS_TARGET_INCLUDE)
 	@${MAKE} start_timer -s
 	@${MAKE} resources -s
 	${MAKE} $(FULL_TARGET) -j$(NPROCS)

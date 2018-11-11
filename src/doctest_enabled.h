@@ -1,1 +1,0 @@
-#define DOCTEST_CONFIG_DISABLE
