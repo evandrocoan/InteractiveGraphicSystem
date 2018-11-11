@@ -5,36 +5,53 @@
 #include "mainwindow.h"
 #include "debugger.h"
 
-/**
- * You can enable or disable the debugging statements from `LOG()` by going to the file
- * `src/debugger.h` and looking for the variable `DEBUG_LEVEL`.
- *
- * You can control the debug level used by the function `LOG()` by going to the file
- * `src/debugger.h` and looking for the variable `_debugger_int_debug_level`.
- */
-int main (int argc, char* argv[])
-{
-  LOG(2, "Starting the main application...");
+#include "doctest_enabled.h"
+#include "doctest.h"
 
-  // C++ catching all exceptions
-  // https://stackoverflow.com/questions/315948/c-catching-all-exceptions
-  try
+#ifndef DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+  /**
+   * You can enable or disable the debugging statements from `LOG()` by going to the file
+   * `src/debugger.h` and looking for the variable `DEBUG_LEVEL`.
+   *
+   * You can control the debug level used by the function `LOG()` by going to the file
+   * `src/debugger.h` and looking for the variable `_debugger_int_debug_level`.
+   */
+  int main (int argc, char* argv[])
   {
-    Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv);
-    MainWindow mainWindow;
+    LOG(2, "Starting the main application...");
 
-    LOG(4, "Shows the main window and returns when it is closed.");
-    int exit_code = app->run(mainWindow.getWindow());
+    // C++ catching all exceptions
+    // https://stackoverflow.com/questions/315948/c-catching-all-exceptions
+    try
+    {
+      Glib::RefPtr<Gtk::Application> app = Gtk::Application::create(argc, argv);
+      MainWindow mainWindow;
 
-    LOG(2, "exit_code: %d", exit_code);
-    return exit_code;
+      LOG(4, "Shows the main window and returns when it is closed.");
+      int exit_code = app->run(mainWindow.getWindow());
+
+      LOG(2, "exit_code: %d", exit_code);
+      return exit_code;
+    }
+    catch( const std::exception &e)
+    {
+      LOG(1, "");
+      LOG(1, "");
+      LOG(1, "A uncaught `std::exception` was throw with the message: %s", e.what());
+    }
+
+    return 1;
   }
-  catch( const std::exception &e)
-  {
-    LOG(1, "");
-    LOG(1, "");
-    LOG(1, "A uncaught `std::exception` was throw with the message: %s", e.what());
+
+#else
+  inline int factorial2(int number) { return number <= 1 ? number : factorial2(number - 1) * number; }
+
+  TEST_CASE("testing the factorial function") {
+      CHECK(factorial2(1) == 1);
+      CHECK(factorial2(2) == 2);
+      CHECK(factorial2(3) == 6);
+      CHECK(factorial2(10) == 3628800);
   }
 
-  return 1;
-}
+#endif
+
