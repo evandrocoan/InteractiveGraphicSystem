@@ -171,7 +171,7 @@ void World::updateObjectCoordinates(DrawableObject* object, const Transformation
   }
   else
   {
-    LOG(4, "Updating the object `%s`", *object);
+    LOG(4, "Updating the object %s with %s", *object, transformation);
   }
 
   object->updateWindowCoordinates(transformation);
