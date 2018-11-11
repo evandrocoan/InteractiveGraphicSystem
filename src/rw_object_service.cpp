@@ -257,10 +257,55 @@ TEST_CASE("Testing basic getVertexes case load")
 
   std::vector<int> indexes{1, 2};
   std::vector<big_double> coordinates_points{1, 2, 3, 4, 5, 6};
-
   std::vector<Coordinate*> results = rw_object_service.getVertexes(indexes, coordinates_points);
-  std::ostringstream contents;
 
+  std::ostringstream contents;
   for( auto value : results ) contents << *value << ", ";
   CHECK( "(1, 2, 3), (4, 5, 6), " == contents.str() );
+}
+
+
+TEST_CASE("Testing basic getVertexes case load re-indexing")
+{
+  // _debugger_int_debug_level = 127-16;
+  // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
+  Facade& nullface( *static_cast<Facade*>( nullptr ) );
+  RwObjectService rw_object_service( nullface );
+
+  std::vector<int> indexes{1, 2};
+  std::vector<big_double> coordinates_points{1, 2, 3, 4, 5, 6};
+  std::vector<Coordinate*> results = rw_object_service.getVertexes(indexes, coordinates_points);
+
+  std::vector<int> indexes2{1, 2};
+  std::vector<big_double> coordinates_points2{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  std::vector<Coordinate*> results2 = rw_object_service.getVertexes(indexes2, coordinates_points2);
+
+  std::ostringstream contents;
+  for( auto value : results2 ) contents << *value << ", ";
+  CHECK( "(7, 8, 9), (10, 11, 12), " == contents.str() );
+}
+
+
+TEST_CASE("Testing basic getVertexes case load after re-indexing")
+{
+  // _debugger_int_debug_level = 127-16;
+  // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
+  Facade& nullface( *static_cast<Facade*>( nullptr ) );
+  RwObjectService rw_object_service( nullface );
+
+  std::vector<int> indexes{1, 2};
+  std::vector<big_double> coordinates_points{1, 2, 3, 4, 5, 6};
+  std::vector<Coordinate*> results = rw_object_service.getVertexes(indexes, coordinates_points);
+
+  std::vector<int> indexes2{1, 2};
+  std::vector<big_double> coordinates_points2{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12};
+  std::vector<Coordinate*> results2 = rw_object_service.getVertexes(indexes2, coordinates_points2);
+
+  std::vector<int> indexes3{5, 6};
+  std::vector<big_double> coordinates_points3{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18};
+  std::vector<Coordinate*> results3 = rw_object_service.getVertexes(indexes3, coordinates_points3);
+
+  std::ostringstream contents;
+  for( auto value : results3 ) contents << *value << ", ";
+  CHECK( "(13, 14, 15), (16, 17, 18), " == contents.str() );
 }
