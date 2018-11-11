@@ -118,6 +118,7 @@ void AddObject::on_button_save_point()
         "A line curve should have 1 coordinate, not %s.\n\n%s",
         polygon_coord_list.size() / 3, contents.str() );
 
+    LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
 
@@ -164,6 +165,7 @@ void AddObject::on_button_save_line()
         "A line curve should have 2 coordinates, not %s.\n\n%s",
         polygon_coord_list.size() / 3, contents.str() );
 
+    LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
 
@@ -205,6 +207,7 @@ void AddObject::on_button_save_polygon()
         "A line curve should have at least 3 coordinates, not %s.\n\n%s",
         polygon_coord_list.size() / 3, contents.str() );
 
+    LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
 

@@ -23,6 +23,7 @@ DrawableObject::DrawableObject(
   if( _worldCoordinates.size() < 1 )
   {
     std::string error = tfm::format( "ERROR! An object must have at least 1 coordinate: %s", *this );
+    LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
 
