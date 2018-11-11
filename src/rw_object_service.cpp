@@ -8,10 +8,6 @@
 #include "rw_object_service.h"
 #include "doctest_include.h"
 
-TEST_CASE("Testing the factorial function") {
-    CHECK(1 == 1);
-}
-
 RwObjectService::RwObjectService(Facade& facade) :
       facade(facade)
 {
@@ -248,4 +244,11 @@ void RwObjectService::write(std::vector<DrawableObject*> objects_list, std::stri
   }
 
   myfile.close();
+}
+
+TEST_CASE("Testing basic getVertexes case load")
+{
+  Facade& nullface( *static_cast<Facade*>( nullptr ) );
+  RwObjectService rw_object_service( nullface );
+  CHECK(1 == 1);
 }
