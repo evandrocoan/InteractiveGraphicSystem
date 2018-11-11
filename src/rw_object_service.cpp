@@ -27,6 +27,7 @@ void RwObjectService::read(std::string file_path)
   std::vector<big_double> coordinates_points;
   std::string name;
 
+  _last_index = 0;
   std::ifstream in_file(file_path);
 
   if( in_file.is_open() )
@@ -58,6 +59,7 @@ void RwObjectService::read(std::string file_path)
       if( line.front() == 'o' )
       {
         name = line.substr(2, line.length());
+        LOG( 8, "name: %s, ", name );
       }
       else if( line.front() == 'v' )
       {
@@ -161,14 +163,21 @@ std::vector<int> RwObjectService::getLineIndexes(std::vector<int>& internal, std
 std::vector<Coordinate*> RwObjectService::getVertexes(std::vector<int>& indexes, std::vector<big_double>& coordinates_points)
 {
   int index;
+  int offset = 0;
   Coordinate* coordinate;
+
+  LOG( 8, "_last_index: %s", _last_index );
+  if( _last_index && indexes.front() == 1 ) offset = _last_index;
+
+  _last_index = coordinates_points.size() / 3;
+  LOG( 8, "_last_index: %s, offset: %s", _last_index, offset );
 
   std::vector<Coordinate*> internal;
   std::reverse( indexes.begin(), indexes.end() );
 
   while(!indexes.empty())
   {
-    index = ( indexes.back() - 1 ) * 3;
+    index = ( indexes.back() - 1 + offset ) * 3;
     indexes.pop_back();
 
     LOG( 8, "Reading index %s from %s", index, index / 3 );
