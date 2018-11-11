@@ -23,6 +23,9 @@
 #include "facade.h"
 #include "drawableobject.h"
 
+// https://stackoverflow.com/questions/3676664/unit-testing-of-private-methods
+#include "doctest_hack.h"
+
 class RwObjectService
 {
 public:
