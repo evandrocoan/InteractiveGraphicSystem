@@ -76,7 +76,7 @@ void DrawingArea::drawn_point(const Cairo::RefPtr<Cairo::Context>& cairo_context
 {
   if( !object->isDrawable() )
   {
-    // LOG(8, "Skip objects which were completely clipped out of the Window");
+    LOG(8, "Skip objects which were completely clipped out of the Window");
     return ;
   }
 
@@ -93,7 +93,7 @@ void DrawingArea::drawn_line(const Cairo::RefPtr<Cairo::Context>& cairo_context,
 {
   if( !object->isDrawable() )
   {
-    // LOG(8, "Skip objects which were completely clipped out of the Window");
+    LOG(8, "Skip objects which were completely clipped out of the Window");
     return ;
   }
 
@@ -132,7 +132,7 @@ void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_conte
 {
   if( !object->isDrawable() )
   {
-    // LOG(8, "Skip objects which were completely clipped out of the Window");
+    LOG(8, "Skip objects which were completely clipped out of the Window");
     return ;
   }
 
@@ -175,7 +175,7 @@ void DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_contex
 {
   if( !object->isDrawable() )
   {
-    // LOG(8, "Skip objects which were completely clipped out of the Window");
+    LOG(8, "Skip objects which were completely clipped out of the Window");
     return ;
   }
 
@@ -191,12 +191,7 @@ void DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_contex
 
   for( auto line : object->lines )
   {
-    if( !line->isDrawable() )
-    {
-      // LOG(8, "Skip objects which were completely clipped out of the Window");
-      continue;
-    }
-
+    LOG(1, "Sub-curve line: %s", *line);
     drawn_line( cairo_context, line );
   }
 }

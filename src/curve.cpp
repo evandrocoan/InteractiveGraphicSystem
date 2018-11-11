@@ -29,6 +29,8 @@ BezierCurve::BezierCurve(std::string name, std::vector<Coordinate*> _worldCoordi
 
     throw std::runtime_error( error );
   }
+
+  this->_isDrawable = true;
 }
 
 BezierCurve::~BezierCurve()
@@ -64,7 +66,7 @@ double bernstein(int n, int index, double t)
 // https://www.codeproject.com/Articles/25237/Bezier-Curves-Made-Simple
 void BezierCurve::updateWindowCoordinates(const Transformation& transformation)
 {
-  LOG(8, "Entering... %s", transformation);
+  LOG( 8, "..." );
 
   auto coordinates = this->worldCoordinates();
   DrawableObject::destroyList(this->lines);
@@ -124,6 +126,7 @@ void BezierCurve::updateWindowCoordinates(const Transformation& transformation)
 
 void BezierCurve::updateClippingCoordinates(const Axes& axes)
 {
+  LOG( 8, "..." );
   for( auto line : this->lines )
   {
     line->updateClippingCoordinates(axes);
