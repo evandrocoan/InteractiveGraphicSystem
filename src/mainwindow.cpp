@@ -118,7 +118,7 @@ void MainWindow::setDefaultTooltips()
 
 void MainWindow::setupButtons()
 {
-  LOG(4, "Inicializando dado da entrada do tamanho de movimentação");
+  LOG(4, "Initializing input size of drive size");
   entry_move_length.set_width_chars(3);
   entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
 
@@ -128,11 +128,11 @@ void MainWindow::setupButtons()
   cohen_sutheland_radiobutton.join_group(liang_barsky_radiobutton);
   cohen_sutheland_radiobutton.set_halign( Gtk::ALIGN_CENTER );
 
-  LOG(4, "Inicializando dado da entrada do tamanho da rotaçao");
+  LOG(4, "Initializing input data of rotation size");
   entry_rotate_angle.set_width_chars(1);
   entry_rotate_angle.set_text(DEFAULT_ROTATE_ANGLE);
 
-  LOG(4, "Inicializando dado da entrada do tamanho do zoom");
+  LOG(4, "Initializing zoom in input data");
   entry_zoom_scale.set_width_chars(3);
   char array[4];
 
@@ -140,7 +140,7 @@ void MainWindow::setupButtons()
   array[3] = '\0';
   entry_zoom_scale.set_text(array);
 
-  LOG(4, "Montando a estrutura da grade de lista de objetos");
+  LOG(4, "Mounting the object list grid structure");
   grid_list_obj.set_column_homogeneous(true);
   grid_list_obj.attach(button_add_object,    1, 1, 1, 1);
   grid_list_obj.attach(button_delete_object, 2, 1, 1, 1);
@@ -148,7 +148,7 @@ void MainWindow::setupButtons()
   grid_list_obj.attach(button_save_file,     2, 2, 1, 1);
   grid_list_obj.attach(objects_list,         1, 3, 2, 1);
 
-  LOG(4, "Adicionando os botões de movimentações na grade de movimentação");
+  LOG(4, "Adding the move buttons to the movement drid");
   // grid_move.set_column_homogeneous(true);
   grid_move.attach(liang_barsky_radiobutton,    1, 1, 1, 1);
   grid_move.attach(button_move_up,              2, 1, 1, 1);
@@ -158,13 +158,13 @@ void MainWindow::setupButtons()
   grid_move.attach(button_move_right,           3, 2, 1, 1);
   grid_move.attach(button_move_down,            2, 3, 1, 1);
 
-  LOG(4, "Adicionando os botões de movimentações na grade de zoom");
+  LOG(4, "Adding the movement buttons in the zoom grid");
   grid_zoom.set_column_homogeneous(true);
   grid_zoom.attach(button_zoom_out,  1, 1, 1, 1);
   grid_zoom.attach(entry_zoom_scale, 2, 1, 1, 1);
   grid_zoom.attach(button_zoom_in,   3, 1, 1, 1);
 
-  LOG(4, "Adicionando os botões de rotaçao na grade de rotaçao");
+  LOG(4, "Adding the rotation buttons to the rotation grid");
   grid_rotate.set_column_homogeneous(true);
   grid_rotate.attach(button_rotate_left,  1, 1, 1, 1);
   grid_rotate.attach(entry_rotate_angle,  2, 1, 1, 1);
@@ -183,7 +183,7 @@ void MainWindow::setupButtons()
 
 void MainWindow::connectButtons()
 {
-  LOG(4, "Determinando ações quando clicado cada botão;");
+  LOG(4, "Determining actions when each button is clicked");
   this->objects_list.signal_changed().connect(sigc::mem_fun(*this, &MainWindow::on_objects_list_change));
 
   this->liang_barsky_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_liang_radiobutton) );
@@ -217,7 +217,7 @@ void MainWindow::updateDropdownList()
   int added_objects = 0;
   auto objects = this->facade.displayFile().getObjects();
 
-  LOG( 8, "limpa a lista de objetos para reimprimi-la" );
+  LOG( 8, "clear the list of objects to print it" );
   this->_skip_object_list_signals = true;
   this->objects_list.remove_all();
 
