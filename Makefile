@@ -7,8 +7,6 @@ CC := g++
 
 # The Target Binary Program
 TARGET := main
-TESTS_TARGET_MAIN := doctest_main.h
-TESTS_TARGET_INCLUDE := doctest_include.h
 
 # The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR:= src
@@ -18,6 +16,12 @@ OBJEXT:= o
 DEPEXT:= d
 BUILDDIR:= objects
 TARGETDIR:= binaries
+
+TESTS_TARGET_MAIN := $(SRCDIR)/doctest_main.h
+TESTS_TARGET_INCLUDE := $(SRCDIR)/doctest_include.h
+
+# https://stackoverflow.com/questions/3676664/unit-testing-of-private-methods
+TESTS_TARGET_HACK := $(SRCDIR)/doctest_hack.h
 
 # Stack smashing detected
 # https://stackoverflow.com/questions/1345670/stack-smashing-detected
@@ -122,13 +126,14 @@ help:
 
 tests:
 	@${MAKE} start_timer -s
-	@if grep -q 'define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN' '$(SRCDIR)/$(TESTS_TARGET_MAIN)' ; \
+	@if grep -q 'define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN' '$(TESTS_TARGET_MAIN)' ; \
 	then \
 		echo "They do match"; \
 	else \
 		echo "They don't match"; \
-		printf '#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN\n#include "doctest.h"\n' > $(SRCDIR)/$(TESTS_TARGET_MAIN); \
-		printf '#include "doctest.h"\n' > $(SRCDIR)/$(TESTS_TARGET_INCLUDE); \
+		printf '#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN\n#include "doctest.h"\n' > $(TESTS_TARGET_MAIN); \
+		printf '#include "doctest.h"\n' > $(TESTS_TARGET_INCLUDE); \
+		printf '#define private public\n#define protected public\n' > $(TESTS_TARGET_HACK); \
 	fi;
 	${MAKE} $(FULL_TARGET) -j$(NPROCS)
 	cd $(SRCDIR); ../$(FULL_TARGET)
@@ -140,13 +145,14 @@ tests:
 # https://stackoverflow.com/questions/21832023/how-to-force-a-certain-groups-of-targets-to-be-always-run-sequentially
 all:
 	@${MAKE} start_timer -s
-	@if grep -q 'define DOCTEST_CONFIG_DISABLE' '$(SRCDIR)/$(TESTS_TARGET_MAIN)' ; \
+	@if grep -q 'define DOCTEST_CONFIG_DISABLE' '$(TESTS_TARGET_MAIN)' ; \
 	then \
 		echo "They do match"; \
 	else \
 		echo "They don't match"; \
-		printf '#define DOCTEST_CONFIG_DISABLE\n#include "doctest.h"\n' > $(SRCDIR)/$(TESTS_TARGET_MAIN); \
-		printf '#define DOCTEST_CONFIG_DISABLE\n#include "doctest.h"\n' > $(SRCDIR)/$(TESTS_TARGET_INCLUDE); \
+		printf '#define DOCTEST_CONFIG_DISABLE\n#include "doctest.h"\n' > $(TESTS_TARGET_MAIN); \
+		printf '#define DOCTEST_CONFIG_DISABLE\n#include "doctest.h"\n' > $(TESTS_TARGET_INCLUDE); \
+		printf '\n' > $(TESTS_TARGET_HACK); \
 	fi;
 	@${MAKE} resources -s
 	${MAKE} $(FULL_TARGET) -j$(NPROCS)

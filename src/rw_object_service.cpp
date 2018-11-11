@@ -9,7 +9,8 @@
 #include "doctest_include.h"
 
 RwObjectService::RwObjectService(Facade& facade) :
-      facade(facade)
+      facade(facade),
+      _last_index(0)
 {
 }
 
@@ -246,9 +247,20 @@ void RwObjectService::write(std::vector<DrawableObject*> objects_list, std::stri
   myfile.close();
 }
 
+
 TEST_CASE("Testing basic getVertexes case load")
 {
+  // _debugger_int_debug_level = 127-16;
+  // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
   Facade& nullface( *static_cast<Facade*>( nullptr ) );
   RwObjectService rw_object_service( nullface );
-  CHECK(1 == 1);
+
+  std::vector<int> indexes{1, 2};
+  std::vector<big_double> coordinates_points{1, 2, 3, 4, 5, 6};
+
+  std::vector<Coordinate*> results = rw_object_service.getVertexes(indexes, coordinates_points);
+  std::ostringstream contents;
+
+  for( auto value : results ) contents << *value << ", ";
+  CHECK( "(1, 2, 3), (4, 5, 6), " == contents.str() );
 }
