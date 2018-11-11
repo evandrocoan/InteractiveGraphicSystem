@@ -12,6 +12,7 @@
 #define RW_OBJECT_SERVICE_H_
 
 #include <list>
+#include <regex>
 #include <string>
 #include <fstream>
 #include <iostream>
