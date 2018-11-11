@@ -35,34 +35,34 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   // https://stackoverflow.com/questions/351845/finding-the-type-of-an-object-in-c
   this->_draw_clipping_axes(cairo_context);
 
-  // LOG(8, "Draw displayFile objects");
+  LOG(8, "Draw displayFile objects");
   auto lines = this->_world._lines.getObjects();
   auto points = this->_world._points.getObjects();
   auto curves = this->_world._curves.getObjects();
   auto polygons = this->_world._polygons.getObjects();
 
-  // LOG(8, "Draw General Polygons");
+  LOG(8, "Draw General Polygons");
   for (auto polygon : polygons)
   {
     LOG(8, "polygon: %s", *polygon);
     drawn_polygon( cairo_context, polygon );
   }
 
-  // LOG(8, "Draw Curves Types");
+  LOG(8, "Draw Curves Types");
   for( auto curve : curves )
   {
     LOG(8, "curve: %s", *curve);
     drawn_circle( cairo_context, curve );
   }
 
-  // LOG(8, "Draw Lines Types");
+  LOG(8, "Draw Lines Types");
   for( auto line : lines )
   {
     LOG(8, "line: %s", *line);
     drawn_line( cairo_context, line );
   }
 
-  // LOG(8, "Draw Points Types");
+  LOG(8, "Draw Points Types");
   for( auto point : points )
   {
     LOG(8, "point: %s", *point);

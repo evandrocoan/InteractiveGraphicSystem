@@ -216,30 +216,125 @@ std::vector<std::string> RwObjectService::split(std::string& line, char delimite
   return internal;
 }
 
-void RwObjectService::write(std::vector<DrawableObject*> objects_list, std::string file_path)
+void RwObjectService::write(std::string file_path)
 {
+  LOG( 1, "Writing the displayFile objects..." );
   std::ofstream myfile;
+
   myfile.open(file_path);
   myfile << "# Starting the file objects\n\n";
 
-  for (auto it_obj = objects_list.begin(); it_obj != objects_list.end(); ++it_obj)
+  auto lines = this->facade._world._lines.getObjects();
+  auto points = this->facade._world._points.getObjects();
+  auto curves = this->facade._world._curves.getObjects();
+  auto polygons = this->facade._world._polygons.getObjects();
+
+  unsigned int index = 1;
+  unsigned int last_index;
+
+  LOG(8, "Draw General Polygons");
+  for (auto object : polygons)
   {
-    myfile << "o " + (*it_obj)->getName() + "\n\n";
-    std::vector<Coordinate*> objectCoordinates = (*it_obj)->worldCoordinates();
+    LOG(8, "object: %s", *object);
+    if( !object->isVisibleOnGui() ) continue;
 
-    for (std::vector<Coordinate*>::iterator it_cord = objectCoordinates.begin(); it_cord != objectCoordinates.end(); ++it_cord)
+    myfile << "o " + object->getName() + "\n";
+    auto objectCoordinates = object->worldCoordinates();
+
+    for( auto coordinate : objectCoordinates )
     {
-      std::string line_cord = "v " + std::to_string((*it_cord)->x) + " " + std::to_string((*it_cord)->y)
-          + " " + std::to_string((*it_cord)->z) + "\n";
-
-      myfile << line_cord;
+      myfile << "v "
+          << std::to_string( coordinate->x ) << " "
+          << std::to_string( coordinate->y ) << " "
+          << std::to_string( coordinate->z ) << "\n";
     }
 
-    myfile << "\nf ";
+    myfile << "l ";
+    last_index = index + objectCoordinates.size();
 
-    for (unsigned int i = 1; i < objectCoordinates.size()+1; i++)
+    for( ; index < last_index ; index++ ) {
+      myfile << std::to_string(index) + " ";
+    }
+
+    myfile << "\n\n";
+  }
+
+  LOG(8, "Draw Curves Types");
+  for( auto object : curves )
+  {
+    LOG(8, "curve: %s", *object);
+    if( !object->isVisibleOnGui() ) continue;
+
+    myfile << "o " + object->getName() + "\n";
+    auto objectCoordinates = object->worldCoordinates();
+
+    for( auto coordinate : objectCoordinates )
     {
-      myfile << std::to_string(i) + " ";
+      myfile << "v "
+          << std::to_string( coordinate->x ) << " "
+          << std::to_string( coordinate->y ) << " "
+          << std::to_string( coordinate->z ) << "\n";
+    }
+
+    myfile << "b ";
+    last_index = index + objectCoordinates.size();
+
+    for( ; index < last_index ; index++ ) {
+      myfile << std::to_string(index) + " ";
+    }
+
+    myfile << "\n\n";
+  }
+
+  LOG(8, "Draw Lines Types");
+  for( auto object : lines )
+  {
+    LOG(8, "line: %s", *object);
+    if( !object->isVisibleOnGui() ) continue;
+
+    myfile << "o " + object->getName() + "\n";
+    auto objectCoordinates = object->worldCoordinates();
+
+    for( auto coordinate : objectCoordinates )
+    {
+      myfile << "v "
+          << std::to_string( coordinate->x ) << " "
+          << std::to_string( coordinate->y ) << " "
+          << std::to_string( coordinate->z ) << "\n";
+    }
+
+    myfile << "l ";
+    last_index = index + objectCoordinates.size();
+
+    for( ; index < last_index ; index++ ) {
+      myfile << std::to_string(index) + " ";
+    }
+
+    myfile << "\n\n";
+  }
+
+  LOG(8, "Draw Points Types");
+  for( auto object : points )
+  {
+    LOG(8, "point: %s", *object);
+    if( !object->isVisibleOnGui() ) continue;
+
+    myfile << "o " + object->getName() + "\n";
+    auto objectCoordinates = object->worldCoordinates();
+
+    for( auto coordinate : objectCoordinates )
+    {
+      myfile << "v "
+          << std::to_string( coordinate->x ) << " "
+          << std::to_string( coordinate->y ) << " "
+          << std::to_string( coordinate->z ) << "\n";
+    }
+
+    myfile << "p ";
+    last_index = index + objectCoordinates.size();
+
+    for( ; index < last_index ; index++ ) {
+      myfile << std::to_string(index) + " ";
     }
 
     myfile << "\n\n";

@@ -14,6 +14,7 @@
 class World
 {
   friend class DrawingArea;
+  friend class RwObjectService;
 
 public:
   World();
