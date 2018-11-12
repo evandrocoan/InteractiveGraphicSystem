@@ -237,8 +237,13 @@ void RwObjectService::write(std::string file_path)
   LOG( 1, "Writing the displayFile objects..." );
   std::ofstream myfile;
 
-  myfile.open(file_path);
-  myfile << "# Starting the file objects\n\n";
+  // https://stackoverflow.com/questions/1535922/c-change-newline-from-crlf-to-lf
+  myfile.open(file_path, std::ios_base::binary | std::ios_base::out);
+
+  myfile << "# Starting the file objects\n# "
+      << PROGRAM_AUTHORS
+      << "\n# https://github.com/evandrocoan/GraphicComputing"
+      << "\n\n";
 
   auto lines = this->facade._world._lines.getObjects();
   auto points = this->facade._world._points.getObjects();

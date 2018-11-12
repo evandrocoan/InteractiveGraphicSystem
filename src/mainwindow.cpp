@@ -70,7 +70,7 @@ MainWindow::MainWindow() :
   this->facade.addObserver(std::bind(&MainWindow::updateDropdownList, this));
 
   LOG(4, "Show all components");
-  this->window.set_title("CG - Trabalho01 - Evandro S. Coan, Marcello da Silva Klingelfus Junior");
+  this->window.set_title(PROGRAM_AUTHORS);
   this->window.set_border_width(15);
   this->window.set_default_size(800, 500);
   this->window.add(this->main_box);
