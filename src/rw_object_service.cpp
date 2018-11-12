@@ -147,25 +147,38 @@ void RwObjectService::read(std::string file_path)
   }
 }
 
-std::vector<int> RwObjectService::getLineIndexes(std::vector<int>& internal, std::string& line)
+void RwObjectService::getLineIndexes(std::vector<int>& result, std::string& line)
 {
-  std::vector<std::string> indexes = this->split( line, ' ' );
+  LOG( 8, "..." );
+  bool is_first = true;
 
+  std::vector<std::string> indexes = this->split( line, ' ' );
   std::reverse( indexes.begin(), indexes.end() );
+
   indexes.pop_back();
+  std::string front = indexes.back();
 
   while(!indexes.empty())
   {
-    internal.push_back( atoi( indexes.back().c_str() ) );
-    indexes.pop_back();
-  }
+    big_double last = atoi( indexes.back().c_str() );
+    LOG( 8, "last: %s, result.size: %s", last, result.size() );
 
-  return internal;
+    if( !is_first || !result.size() || ( is_first && result.size() && result.back() != last ) )
+    {
+      result.push_back( last );
+      LOG( 8, "pushing back: %s, result.size: %s", last, result.size() );
+    }
+
+    indexes.pop_back();
+    is_first = false;
+  }
 }
 
 std::vector<Coordinate*> RwObjectService::getVertexes(std::vector<int>& indexes, std::vector<big_double>& coordinates_points)
 {
+  LOG( 8, "..." );
   int index;
+
   int offset = 0;
   Coordinate* coordinate;
 
@@ -201,11 +214,14 @@ std::vector<Coordinate*> RwObjectService::getVertexes(std::vector<int>& indexes,
 
 std::vector<std::string> RwObjectService::split(std::string& line, char delimiter)
 {
-  std::vector<std::string> internal;
-  std::stringstream ss(line); // Turn the std::string into a stream.
+  LOG( 8, "..." );
   std::string tok;
 
-  while(getline(ss, tok, delimiter)) {
+  // Turn the std::string into a stream.
+  std::stringstream ss(line);
+  std::vector<std::string> internal;
+
+  while( getline( ss, tok, delimiter ) ) {
     internal.push_back(tok);
   }
 
@@ -405,3 +421,38 @@ TEST_CASE("Testing basic getVertexes case load after re-indexing")
   for( auto value : results3 ) contents << *value << ", ";
   CHECK( "(13, 14, 15), (16, 17, 18), " == contents.str() );
 }
+
+
+TEST_CASE("Testing basic getLineIndexes loading duplicated vertexes")
+{
+  // _debugger_int_debug_level = 127-16;
+  // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
+  Facade& nullface( *static_cast<Facade*>( nullptr ) );
+  RwObjectService rw_object_service( nullface );
+
+  std::vector<int> indexes{1, 2};
+  std::string line = "l 2 3";
+  rw_object_service.getLineIndexes(indexes, line);
+
+  std::ostringstream contents;
+  for( auto value : indexes ) contents << value << ", ";
+  CHECK( "1, 2, 3, " == contents.str() );
+}
+
+
+TEST_CASE("Testing basic getLineIndexes loading duplicated vertexes on middle of line")
+{
+  // _debugger_int_debug_level = 127-16;
+  // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
+  Facade& nullface( *static_cast<Facade*>( nullptr ) );
+  RwObjectService rw_object_service( nullface );
+
+  std::vector<int> indexes{1, 2};
+  std::string line = "l 2 3 3 3 4";
+  rw_object_service.getLineIndexes(indexes, line);
+
+  std::ostringstream contents;
+  for( auto value : indexes ) contents << value << ", ";
+  CHECK( "1, 2, 3, 3, 3, 4, " == contents.str() );
+}
+
