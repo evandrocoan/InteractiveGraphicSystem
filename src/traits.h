@@ -15,4 +15,6 @@ constexpr const big_double CLIPPING_WINDOW_MARGIN_DISTANCE = 0.1;
 constexpr const char* const DEFAULT_MOVE_LENGTH = "20";
 constexpr const char* const DEFAULT_ROTATE_ANGLE = "15";
 
+constexpr const char* const PROGRAM_AUTHORS = "Graphics Computing - Interactive Graphic System - Evandro Coan, Marcello da Silva Klingelfus Junior";
+
 #endif // GTKMM_APP_TRAITS_H
