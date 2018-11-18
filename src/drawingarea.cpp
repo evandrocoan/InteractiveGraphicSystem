@@ -179,7 +179,7 @@ void DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_contex
     return ;
   }
 
-  auto lines = object->lines;
+  auto lines = object->getLines();
 
   if( lines.size() == 0 )
   {
@@ -189,7 +189,7 @@ void DrawingArea::drawn_circle(const Cairo::RefPtr<Cairo::Context>& cairo_contex
     throw std::runtime_error( error );
   }
 
-  for( auto line : object->lines )
+  for( auto line : lines )
   {
     LOG(8, "Sub-curve line: %s", *line);
     drawn_line( cairo_context, line );
