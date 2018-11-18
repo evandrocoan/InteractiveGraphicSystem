@@ -68,10 +68,10 @@ void World::addPolygon(std::string name, std::vector<Coordinate*> coordinates,
     }
     case CurveType::BSPLINE:
     {
-      // object = new BsplineCurve(name, coordinates, _borderColor, _fillingColor);
-      // object = curve;
+      Curve* curve = new BsplineCurve(name, coordinates, _borderColor, _fillingColor);
+      object = curve;
 
-      // this->_curves.addObject(curve);
+      this->_curves.addObject(curve);
       break;
     }
     case CurveType::NOCURVE: {
