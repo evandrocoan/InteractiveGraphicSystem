@@ -38,21 +38,21 @@ BezierCurve::~BezierCurve()
 {
 }
 
-double Ni(int n, int index)
+big_double Ni(int n, int index)
 {
-    double a1 = factorial(n);
-    double a2 = factorial(index);
-    double a3 = factorial(n - index);
-    double ni =  a1/ (a2 * a3);
+    big_double a1 = factorial(n);
+    big_double a2 = factorial(index);
+    big_double a3 = factorial(n - index);
+    big_double ni =  a1/ (a2 * a3);
     return ni;
 }
 
 // https://en.wikipedia.org/wiki/Bernstein_polynomial
-double bernstein(int n, int index, double t)
+big_double bernstein(int n, int index, big_double t)
 {
-    double ti = (t == 0.0 && index == 0) ? 1.0 : pow(t, index); /* t^index */
-    double tni = (n == index && t == 1.0) ? 1.0 : pow((1 - t), (n - index)); /* (1 - t)^index */
-    double basis = Ni(n, index) * ti * tni; //Bernstein basis
+    big_double ti = (t == 0.0 && index == 0) ? 1.0 : pow(t, index); /* t^index */
+    big_double tni = (n == index && t == 1.0) ? 1.0 : pow((1 - t), (n - index)); /* (1 - t)^index */
+    big_double basis = Ni(n, index) * ti * tni; //Bernstein basis
     return basis;
 }
 
@@ -72,9 +72,9 @@ void BezierCurve::updateWindowCoordinates(const Transformation& transformation)
   Coordinate* last_point = nullptr;
   std::vector<Coordinate*> generated_coordinates;
 
-  double basis;
-  double current_step = 0;
-  double step = 1.0 / ( (double) ( points_to_draw - 1 ) );
+  big_double basis;
+  big_double current_step = 0;
+  big_double step = 1.0 / ( (big_double) ( points_to_draw - 1 ) );
 
   LOG(16, "points_count: %s", points_count );
   LOG(16, "step: %s", step );
