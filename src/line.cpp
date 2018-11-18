@@ -163,10 +163,10 @@ bool Line::_cohenSuthelandLineClip(const Axes& axes)
 
     // failed both tests, so calculate the line segment to clip
     // from an outside point to an intersection with clip edge
-    double x, y;
+    big_double x, y;
 
     // (rc1 == 0) => Inside - At least one endpoint is outside the clip rectangle; pick it.
-     unsigned int outcodeout = rc1 ? rc1 : rc2;
+    unsigned int outcodeout = rc1 ? rc1 : rc2;
 
     // Now find the intersection point;
     // use formulas:
@@ -175,7 +175,7 @@ bool Line::_cohenSuthelandLineClip(const Axes& axes)
     //   y = y0 + slope * (xm - x0), where xm is xmin or xmax
     // No need to worry about divide-by-zero because, in each case, the
     // outcode bit being tested guarantees the denominator is non-zero
-    long double m = (c2.y - c1.y) / (c2.x - c1.x);
+    big_double m = (c2.y - c1.y) / (c2.x - c1.x);
     // LOG(8, "m: %s", m);
     // LOG(8, "outcodeout: %s", outcodeout);
 
