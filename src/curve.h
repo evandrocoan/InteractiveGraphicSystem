@@ -13,18 +13,31 @@ class Curve : public DrawableObject
 {
   using DrawableObject::DrawableObject;
 
-public:
+protected:
+  virtual ~Curve();
+
+  void create_lines(const Transformation&, std::vector<Coordinate*>);
   std::vector<Line*> lines;
+
+public:
+  const std::vector<Line*> getLines() const;
+  void updateClippingCoordinates(const Axes&);
 };
 
 class BezierCurve : public Curve
 {
 public:
   BezierCurve(std::string name, std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor);
-  ~BezierCurve();
 
   virtual void updateWindowCoordinates(const Transformation&);
-  virtual void updateClippingCoordinates(const Axes&);
+};
+
+class BsplineCurve : public Curve
+{
+public:
+  BsplineCurve(std::string name, std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor);
+
+  virtual void updateWindowCoordinates(const Transformation&);
 };
 
 #endif // GTKMM_APP_CURVE
