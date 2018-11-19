@@ -43,7 +43,7 @@ void RwObjectService::read(std::string file_path)
       line = std::regex_replace( line, std::regex( "( |\\t)+" ), " " );
       line = std::regex_replace( line, std::regex( "^( |\\t)+|( |\\t)+$" ), "" );
 
-      if( !line.empty() )
+      if( line.size() > 1 )
       {
         myfile << line << '\n';
       }
@@ -91,9 +91,10 @@ void RwObjectService::read(std::string file_path)
         std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates_points );
         this->facade.addPoint( name, vertexes[0]->x, vertexes[0]->y, vertexes[0]->z );
       }
-      else if( line.front() == 'l' || line.front() == 'b' )
+      else if( line.front() == 'l' || ( line.front() == 'b' && ( line[1] == 'z' || line[1] == 's' ) ) )
       {
         char line_front = line.front();
+        char line_second = line[1];
 
         std::vector<int> indexes;
         this->getLineIndexes( indexes, line );
@@ -127,7 +128,7 @@ void RwObjectService::read(std::string file_path)
           {
             this->facade.addPolygon( name, vertexes,
                 _default_coordinate_value_parameter,
-                _default_coordinate_value_parameter, CurveType::BEZIER );
+                _default_coordinate_value_parameter, line_second == 'z' ? CurveType::BEZIER : CurveType::BSPLINE );
           }
           else
           {
@@ -297,7 +298,8 @@ void RwObjectService::write(std::string file_path)
           << std::to_string( coordinate->z ) << "\n";
     }
 
-    myfile << "b ";
+    // https://stackoverflow.com/questions/351845/finding-the-type-of-an-object-in-c
+    myfile << ( dynamic_cast<BezierCurve*> (object) ? "bz " : "bs " );
     last_index = index + objectCoordinates.size();
 
     for( ; index < last_index ; index++ ) {
