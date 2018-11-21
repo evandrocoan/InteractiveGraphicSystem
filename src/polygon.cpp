@@ -79,13 +79,13 @@ void Polygon::_sutherlandHodgmanClipLeft(const Axes& axes, std::vector<Coordinat
     // Case 3: in -> out
     if( c0.x >= clipX && c1.x < clipX )
     {
-      clippingResult.emplace_back(x,y);
+      clippingResult.emplace_back(x,y,0);
     }
 
     // Case 4: out -> in
     if( c0.x < clipX && c1.x >= clipX )
     {
-      clippingResult.emplace_back(x,y);
+      clippingResult.emplace_back(x,y,0);
       clippingResult.push_back(c1);
     }
   }
@@ -126,13 +126,13 @@ void Polygon::_sutherlandHodgmanClipRight(const Axes& axes, std::vector<Coordina
     // Case 3: in -> out
     if( c0.x < clipX && c1.x >= clipX )
     {
-      clippingResult.emplace_back(x,y);
+      clippingResult.emplace_back(x,y,0);
     }
 
     // Case 4: out -> in
     if( c0.x >= clipX && c1.x < clipX )
     {
-      clippingResult.emplace_back(x,y);
+      clippingResult.emplace_back(x,y,0);
       clippingResult.push_back(c1);
     }
   }
@@ -173,13 +173,13 @@ void Polygon::_sutherlandHodgmanClipTop(const Axes& axes, std::vector<Coordinate
     // Case 3: in -> out
     if( c0.y <= clipY && c1.y > clipY )
     {
-      clippingResult.emplace_back(x,y);
+      clippingResult.emplace_back(x,y,0);
     }
 
     // Case 4: out -> in
     if( c0.y > clipY && c1.y <= clipY )
     {
-      clippingResult.emplace_back(x,y);
+      clippingResult.emplace_back(x,y,0);
       clippingResult.push_back(c1);
     }
   }
@@ -219,13 +219,13 @@ void Polygon::_sutherlandHodgmanClipBottom(const Axes& axes, std::vector<Coordin
     // Case 3: in -> out
     if( c0.y >= clipY && c1.y < clipY )
     {
-      clippingResult.emplace_back(x,y);
+      clippingResult.emplace_back(x,y,0);
     }
 
     // Case 4: out -> in
     if( c0.y < clipY && c1.y >= clipY )
     {
-      clippingResult.emplace_back(x,y);
+      clippingResult.emplace_back(x,y,0);
       clippingResult.push_back(c1);
     }
   }
