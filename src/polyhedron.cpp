@@ -112,7 +112,7 @@ void Polyhedron::updateWindowCoordinates(const Transformation& transformation)
     LOG( 8, "sides: %s", contents2.str() );
 
     polygon = new Polygon( this->getName() + "[" + std::to_string(slice) + "]", sides,
-        _default_coordinate_value_parameter, _default_coordinate_value_parameter, false );
+        _origin_coordinate_value, _origin_coordinate_value, false );
 
     LOG( 8, "polygon: %s", *polygon );
     polygon->updateWindowCoordinates( transformation );

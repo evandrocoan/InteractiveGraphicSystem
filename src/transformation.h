@@ -37,9 +37,7 @@ public:
   void add_rotation(const std::string name,
                     const Coordinate degrees,
                     const TransformationPoint type=TransformationPoint::ON_WORLD_CENTER,
-                    const Coordinate point=_default_coordinate_value_parameter);
-
-  void add_axis_rotation(const std::string name, const big_double degrees);
+                    const Coordinate point=_origin_coordinate_value);
 
   /**
    * Remove all transformations from this container and set it as uninitialized. So, calling it
@@ -87,9 +85,9 @@ protected:
    */
   const MatrixForm _get_translation_matrix(const Coordinate& moves) const;
   const MatrixForm _get_scaling_matrix(const Coordinate& factors) const;
-  const MatrixForm _get_x_rotation_matrix(const big_double& degrees) const;
-  const MatrixForm _get_y_rotation_matrix(const big_double& degrees) const;
-  const MatrixForm _get_z_rotation_matrix(const big_double& degrees) const;
+  const MatrixForm _get_x_rotation_matrix(const big_double& degrees, const bool& is_radians=false) const;
+  const MatrixForm _get_y_rotation_matrix(const big_double& degrees, const bool& is_radians=false) const;
+  const MatrixForm _get_z_rotation_matrix(const big_double& degrees, const bool& is_radians=false) const;
 
   void _set_translation_data(const TransformationData&, const unsigned int &index, const Coordinate &center);
   void _set_scaling_data    (const TransformationData&, const unsigned int &index, const Coordinate &center);
@@ -101,7 +99,6 @@ protected:
 
   void _rotation_on_coordinate    (const TransformationData&, const unsigned int &index, const Coordinate &center);
   void _rotation_on_world_center  (const TransformationData&, const unsigned int &index, const Coordinate &center);
-  void _rotation_on_its_own_axis  (const TransformationData&, const unsigned int &index, const Coordinate &center);
   void _rotation_on_its_own_center(const TransformationData&, const unsigned int &index, const Coordinate &center);
 };
 

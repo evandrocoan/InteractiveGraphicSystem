@@ -11,8 +11,7 @@ enum TransformationPoint
 {
   ON_WORLD_CENTER,
   ON_ITS_OWN_CENTER,
-  ON_GIVEN_COORDINATE,
-  ON_ITS_OWN_AXIS
+  ON_GIVEN_COORDINATE
 };
 
 enum TransformationType
@@ -45,7 +44,7 @@ struct TransformationData
    */
   TransformationData(std::string name, MatrixForm matrix, TransformationType type,
       TransformationPoint point = TransformationPoint::ON_WORLD_CENTER,
-      Coordinate center = _default_coordinate_value_parameter);
+      Coordinate center = _origin_coordinate_value);
 
   friend std::ostream& operator<<(std::ostream &output, const TransformationData &object);
 };
