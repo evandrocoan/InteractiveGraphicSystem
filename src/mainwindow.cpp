@@ -413,7 +413,7 @@ void MainWindow::on_button_zoom_in()
   }
   else
   {
-    this->facade.zoom(Coordinate(-zoom_scale, -zoom_scale));
+    this->facade.zoom(Coordinate(-zoom_scale, -zoom_scale, -zoom_scale));
   }
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
@@ -435,7 +435,7 @@ void MainWindow::on_button_zoom_out()
   }
   else
   {
-    this->facade.zoom(Coordinate(zoom_scale, zoom_scale));
+    this->facade.zoom(Coordinate(zoom_scale, zoom_scale, zoom_scale));
   }
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
