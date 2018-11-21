@@ -32,19 +32,17 @@ void ViewWindow::zoom(Coordinate steps)
       || this->_dimentions[1] + steps[0] <= MINIMUM_ZOOM_LIMIT)
     && steps[0] < 0 )
   {
-    LOG(1, "");
-    LOG(1, "");
-    LOG(1, "ERROR: You reached the maximum zoom limit! %s", *this);
-    return;
+    std::string error = tfm::format( "You reached the minimum zoom limit! %s", MINIMUM_ZOOM_LIMIT );
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
   else if( (this->_dimentions[0] + steps[0] >= MAXIMUM_ZOOM_LIMIT
             || this->_dimentions[1] + steps[0] >= MAXIMUM_ZOOM_LIMIT)
           && steps[0] > 0)
   {
-    LOG(1, "");
-    LOG(1, "");
-    LOG(1, "ERROR: You reached the minimum zoom limit! %s", *this);
-    return;
+    std::string error = tfm::format( "You reached the maximum zoom limit! %s", MAXIMUM_ZOOM_LIMIT );
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
   else
   {
