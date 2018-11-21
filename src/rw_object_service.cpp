@@ -140,12 +140,6 @@ void RwObjectService::read(std::string file_path)
 
     in_file.close();
   }
-  else
-  {
-    std::string error = tfm::format( "ERROR! Could not open the file: %s", file_path );
-    LOG( 1, "%s", error );
-    throw std::runtime_error( error );
-  }
 }
 
 void RwObjectService::getLineIndexes(std::vector<int>& result, std::string& line)
