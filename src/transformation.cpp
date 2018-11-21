@@ -110,9 +110,9 @@ void Transformation::add_rotation(const std::string name, const Coordinate degre
   }
 }
 
-void Transformation::add_scaling(const std::string name, const Coordinate factors)
+void Transformation::add_scaling(const std::string name, const Coordinate factors,  const TransformationPoint point, const Coordinate center)
 {
-  TransformationData transformation{name, this->_get_scaling_matrix(factors), TransformationType::SCALING};
+  TransformationData transformation{name, this->_get_scaling_matrix(factors), TransformationType::SCALING, point, center};
   this->transformations.push_back(transformation);
 }
 
@@ -222,10 +222,19 @@ void Transformation::_scaling_on_world_center(const TransformationData &data, co
   }
 }
 
+void Transformation::_scaling_on_coordinate(const TransformationData &data, const unsigned int &index, const Coordinate &center)
+{
+  LOG(2, "...");
+  _scaling_on_its_own_center( data, index, data.center);
+}
+
 void Transformation::_scaling_on_its_own_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
 {
   LOG(2, "...");
   MatrixForm move_to_center = this->_get_translation_matrix(-center);
+  LOG(4, "center: %s", center);
+  LOG(4, "data: %s", data);
+  LOG(4, "move_to_center: %s", move_to_center);
 
   if( index == 0 )
   {
@@ -240,36 +249,11 @@ void Transformation::_scaling_on_its_own_center(const TransformationData &data, 
   this->_transformation.multiply(data.matrix);
 
   LOG(4, "Move back to its origin");
-  move_to_center[2][0] = center.x;
-  move_to_center[2][1] = center.y;
-  move_to_center[2][2] = center.z;
+  move_to_center = this->_get_translation_matrix(center);
+  LOG(4, "move_to_center: %s", move_to_center);
 
   this->_transformation.multiply(move_to_center);
-}
-
-void Transformation::_scaling_on_coordinate(const TransformationData &data, const unsigned int &index, const Coordinate &center)
-{
-  LOG(2, "...");
-  MatrixForm move_to_center = this->_get_translation_matrix(-data.center);
-
-  if( index == 0 )
-  {
-    this->_transformation = move_to_center;
-  }
-  else
-  {
-    this->_transformation.multiply(move_to_center);
-  }
-
-  LOG(4, "Do the scaling on the origin");
-  this->_transformation.multiply(data.matrix);
-
-  LOG(4, "Move back to its origin");
-  move_to_center[2][0] = center.x;
-  move_to_center[2][1] = center.y;
-  move_to_center[2][2] = center.z;
-
-  this->_transformation.multiply(move_to_center);
+  LOG(4, "Final _transformation: %s", _transformation);
 }
 
 void Transformation::_set_rotation_data(const TransformationData &data, const unsigned int &index, const Coordinate &center)
@@ -320,7 +304,7 @@ void Transformation::_rotation_on_world_center(const TransformationData &data, c
 
 void Transformation::_rotation_on_coordinate(const TransformationData &data, const unsigned int &index, const Coordinate &center) {
   LOG(2, "...");
-  _rotation_on_its_own_center( data, index, -data.center );
+  _rotation_on_its_own_center( data, index, data.center );
 }
 
 void Transformation::_rotation_on_its_own_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
