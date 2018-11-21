@@ -50,6 +50,7 @@ struct Array
     else
     {
       // std::cerr << "Array(new_values), " << "data_size: " << data_size << ", " << "array_width: " << array_width << std::endl;
+      // if(data_size != array_width) std::runtime_error( "" );
       assert(data_size == array_width);
 
       for( auto column : new_values )

@@ -1,7 +1,7 @@
 #include "drawableobject.h"
 
 DrawableObject::DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates) :
-      DrawableObject(name, _worldCoordinates, Coordinate(0, 0))
+      DrawableObject(name, _worldCoordinates, Coordinate(0, 0, 0))
 {
 }
 
@@ -61,15 +61,15 @@ const std::vector<Coordinate*>& DrawableObject::clippingCoordinates() const
   return this->_clippingCoordinates;
 }
 
-Coordinate DrawableObject::getGeometricCenter(const std::vector<Coordinate*>& coordinates)
+const Coordinate DrawableObject::getGeometricCenter()
 {
-  int coordinatesCount = coordinates.size();
+  int coordinatesCount = _worldCoordinates.size();
 
   big_double x_axes = 0;
   big_double y_axes = 0;
   big_double z_axes = 0;
 
-  for(auto coordinate : coordinates)
+  for(auto coordinate : _worldCoordinates)
   {
     x_axes += coordinate->x;
     y_axes += coordinate->y;
@@ -130,7 +130,7 @@ void DrawableObject::apply(Transformation &transformation)
   LOG(8, "...");
   auto coordinates = this->worldCoordinates();
 
-  auto geometricCenter = DrawableObject::getGeometricCenter(coordinates);
+  auto geometricCenter = getGeometricCenter();
   transformation.set_geometric_center(geometricCenter);
 
   for(auto coordinate : coordinates)

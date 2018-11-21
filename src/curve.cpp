@@ -123,13 +123,14 @@ void BezierCurve::updateWindowCoordinates(const Transformation& transformation)
   for (int index = 0; index < points_to_draw; index++)
   {
     if ((1.0 - current_step) < 5e-6) current_step = 1.0;
-    new_point = new Coordinate(0, 0);
+    new_point = new Coordinate(0, 0, 0);
 
     for (int index = 0; index < points_count; index++)
     {
       basis = bernstein(points_count - 1, index, current_step);
       new_point->x += basis * coordinates[index]->x;
       new_point->y += basis * coordinates[index]->y;
+      new_point->z += basis * coordinates[index]->z;
 
       // LOG( 8, "current_step: %s, coordinates[%s]: %s, new_point: %s", current_step, index, *coordinates[index], *new_point );
     }
@@ -189,7 +190,7 @@ void BsplineCurve::updateWindowCoordinates(const Transformation& transformation)
 
     big_double ax = -1.0/6.0 * c1->x  + 0.5 * c2->x     - 0.5     * c3->x + 1.0/6.0 * c4->x;
     big_double bx =  0.5     * c1->x  -       c2->x     + 0.5     * c3->x;
-    big_double cx = -0.5     * c1->x                   + 0.5     * c3->x;
+    big_double cx = -0.5     * c1->x                    + 0.5     * c3->x;
     big_double dx =  1.0/6.0 * c1->x  + 2.0/3.0 * c2->x + 1.0/6.0 * c3->x;
 
     big_double delta_x1 = ax * t3 + bx * t2 + cx * t;
@@ -198,7 +199,7 @@ void BsplineCurve::updateWindowCoordinates(const Transformation& transformation)
 
     big_double ay = -1.0/6.0 * c1->y  + 0.5 * c2->y     - 0.5     * c3->y + 1.0/6.0 * c4->y;
     big_double by =  0.5     * c1->y  -       c2->y     + 0.5     * c3->y;
-    big_double cy = -0.5     * c1->y                   + 0.5     * c3->y;
+    big_double cy = -0.5     * c1->y                    + 0.5     * c3->y;
     big_double dy =  1.0/6.0 * c1->y  + 2.0/3.0 * c2->y + 1.0/6.0 * c3->y;
 
     big_double delta_y1 = ay * t3 + by * t2 + cy * t;
@@ -207,12 +208,12 @@ void BsplineCurve::updateWindowCoordinates(const Transformation& transformation)
 
     big_double az = -1.0/6.0 * c1->z  + 0.5 * c2->z     - 0.5     * c3->z + 1.0/6.0 * c4->z;
     big_double bz =  0.5     * c1->z  -       c2->z     + 0.5     * c3->z;
-    big_double cz = -0.5     * c1->z                   + 0.5     * c3->z;
+    big_double cz = -0.5     * c1->z                    + 0.5     * c3->z;
     big_double dz =  1.0/6.0 * c1->z  + 2.0/3.0 * c2->z + 1.0/6.0 * c3->z;
 
-    big_double derivada1 = az * t3 + bz * t2 + cz * t;
-    big_double derivada3 = az * ( 6 * t3 );
-    big_double derivada2 = derivada3 + bz * ( 2 * t2 );
+    big_double delta_z1 = az * t3 + bz * t2 + cz * t;
+    big_double delta_z3 = az * ( 6 * t3 );
+    big_double delta_z2 = delta_z3 + bz * ( 2 * t2 );
 
     big_double vx = dx, vy = dy, vz = dz;
     generated_coordinates.push_back( new Coordinate( vx, vy, dz ) );
@@ -231,9 +232,9 @@ void BsplineCurve::updateWindowCoordinates(const Transformation& transformation)
       delta_y1 += delta_y2;
       delta_y2 += delta_y3;
 
-      z += derivada1;
-      derivada1 += derivada2;
-      derivada2 += derivada3;
+      z += delta_z1;
+      delta_z1 += delta_z2;
+      delta_z2 += delta_z3;
 
       generated_coordinates.push_back( new Coordinate( x, y, z ) );
 

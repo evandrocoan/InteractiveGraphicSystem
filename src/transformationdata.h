@@ -11,7 +11,8 @@ enum TransformationPoint
 {
   ON_WORLD_CENTER,
   ON_ITS_OWN_CENTER,
-  ON_GIVEN_COORDINATE
+  ON_GIVEN_COORDINATE,
+  ON_ITS_OWN_AXIS
 };
 
 enum TransformationType
