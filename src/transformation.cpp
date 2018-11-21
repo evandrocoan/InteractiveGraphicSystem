@@ -52,7 +52,7 @@ const MatrixForm Transformation::_get_scaling_matrix(const Coordinate& factors) 
 
 const MatrixForm Transformation::_get_x_rotation_matrix(const big_double& degrees, const bool& is_radians) const
 {
-  LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
+  // LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
   auto radians = is_radians ? degrees : convert_degrees_to_radians(degrees);
   auto sine    = std::sin(radians);
   auto cosine  = std::cos(radians);
@@ -67,7 +67,7 @@ const MatrixForm Transformation::_get_x_rotation_matrix(const big_double& degree
 
 const MatrixForm Transformation::_get_y_rotation_matrix(const big_double& degrees, const bool& is_radians) const
 {
-  LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
+  // LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
   auto radians = is_radians ? degrees : convert_degrees_to_radians(degrees);
   auto sine    = std::sin(radians);
   auto cosine  = std::cos(radians);
@@ -82,7 +82,7 @@ const MatrixForm Transformation::_get_y_rotation_matrix(const big_double& degree
 
 const MatrixForm Transformation::_get_z_rotation_matrix(const big_double& degrees, const bool& is_radians) const
 {
-  LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
+  // LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
   auto radians = is_radians ? degrees : convert_degrees_to_radians(degrees);
   auto sine    = std::sin(radians);
   auto cosine  = std::cos(radians);
@@ -328,6 +328,7 @@ void Transformation::_rotation_on_its_own_center(const TransformationData &data,
   LOG(2, "...");
   MatrixForm move_to_center = this->_get_translation_matrix(-center);
   LOG(4, "center: %s", center);
+  LOG(4, "data: %s", data);
   LOG(4, "move_to_center: %s", move_to_center);
 
   if( index == 0 )
@@ -340,9 +341,24 @@ void Transformation::_rotation_on_its_own_center(const TransformationData &data,
   }
 
   // https://www.youtube.com/watch?v=gRVxv8kWl0Q
+  big_double angle_beta;
+  big_double angle_alfa;
   big_double distance = sqrt( center.y * center.y + center.z * center.z );
-  big_double angle_beta = atan( center.x / center.z );
-  big_double angle_alfa = atan( center.y / distance );
+
+  if( center.z - 0.001 < 0 && center.z + 0.001 > 0 ) {
+    angle_beta = 0;
+  }
+  else {
+    angle_beta = atan( center.x / center.z );
+  }
+
+  if( distance - 0.001 < 0 && distance + 0.001 > 0 ) {
+    angle_alfa = 0;
+  }
+  else {
+    angle_alfa = atan( center.y / distance );
+  }
+
   LOG(4, "distance: %s, angle_beta: %s, angle_alfa: %s", distance, angle_beta, angle_alfa);
   LOG(4, "data.matrix: %s", data.matrix);
 
