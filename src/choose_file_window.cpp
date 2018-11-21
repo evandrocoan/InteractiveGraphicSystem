@@ -9,7 +9,7 @@
 
 ChooseFileWindow::ChooseFileWindow(Gtk::FileChooserAction file_chooser_action)
 : Gtk::FileChooserDialog("Choose a wavefront file", file_chooser_action),
-  selected_path("No file selected")
+  selected_path("")
 {
   add_button("_Cancel", Gtk::RESPONSE_CANCEL);
   add_button("Select", Gtk::RESPONSE_OK);
@@ -38,7 +38,8 @@ ChooseFileWindow::ChooseFileWindow(Gtk::FileChooserAction file_chooser_action)
     }
     default:
     {
-    	//LOG(2, "Unexpected button clicked.\n");
+      //LOG(2, "Unexpected button clicked.\n");
+      close();
       break;
     }
   }
