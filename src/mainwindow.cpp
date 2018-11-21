@@ -14,8 +14,12 @@ MainWindow::MainWindow() :
       button_move_down("↓"),
       button_move_left("←"),
       button_move_right("→"),
-      button_rotate_left("↺"),
-      button_rotate_right("↻"),
+      button_rotate_left_x("↺"),
+      button_rotate_right_x("↻"),
+      button_rotate_left_y("↺"),
+      button_rotate_right_y("↻"),
+      button_rotate_left_z("↺"),
+      button_rotate_right_z("↻"),
       button_zoom_in("+"),
       button_zoom_out("-"),
       button_add_object("Add"),
@@ -103,8 +107,13 @@ void MainWindow::setDefaultTooltips()
   button_add_object   .set_tooltip_text("Add new object");
   button_delete_object.set_tooltip_text("Remove current selected object");
   objects_list        .set_tooltip_text("The list of all created objects on the DrawingArea");
-  button_rotate_right .set_tooltip_text("Rotate the window to the right");
-  button_rotate_left  .set_tooltip_text("Rotate the window to the left");
+
+  button_rotate_right_x.set_tooltip_text("Rotate the window to the right on the X axis");
+  button_rotate_left_x .set_tooltip_text("Rotate the window to the left on the X axis");
+  button_rotate_right_y.set_tooltip_text("Rotate the window to the right on the Y axis");
+  button_rotate_left_y .set_tooltip_text("Rotate the window to the left on the Y axis");
+  button_rotate_right_z.set_tooltip_text("Rotate the window to the right on the Z axis");
+  button_rotate_left_z .set_tooltip_text("Rotate the window to the left on the Z axis");
 
   button_zoom_in      .set_tooltip_text("Apply the scaling factor to the ViewWindow over the Drawing World");
   button_zoom_out     .set_tooltip_text("Apply inverted the scaling factor to the ViewWindow over the Drawing World");
@@ -142,25 +151,29 @@ void MainWindow::setupButtons()
 
   LOG(4, "Adding the move buttons to the movement drid");
   // grid_move.set_column_homogeneous(true);
-  grid_move.attach(button_move_inside,          1, 1, 1, 1);
-  grid_move.attach(button_move_up,              2, 1, 1, 1);
-  grid_move.attach(button_move_outside,         3, 1, 1, 1);
-  grid_move.attach(button_move_left,            1, 2, 1, 1);
-  grid_move.attach(entry_move_length,           2, 2, 1, 1);
-  grid_move.attach(button_move_right,           3, 2, 1, 1);
-  grid_move.attach(liang_barsky_radiobutton,    1, 3, 1, 1);
-  grid_move.attach(button_move_down,            2, 3, 1, 1);
-  grid_move.attach(cohen_sutheland_radiobutton, 3, 3, 1, 1);
+  grid_move.attach(button_move_inside,  1, 1, 1, 1);
+  grid_move.attach(button_move_up,      2, 1, 1, 1);
+  grid_move.attach(button_move_outside, 3, 1, 1, 1);
+  grid_move.attach(button_move_left,    1, 2, 1, 1);
+  grid_move.attach(entry_move_length,   2, 2, 1, 1);
+  grid_move.attach(button_move_right,   3, 2, 1, 1);
+  grid_move.attach(button_zoom_out,     1, 3, 1, 1);
+  grid_move.attach(button_move_down,    2, 3, 1, 1);
+  grid_move.attach(button_zoom_in,      3, 3, 1, 1);
 
   LOG(4, "Adding the movement buttons in the zoom grid");
   grid_zoom.set_column_homogeneous(true);
-  grid_zoom.attach(button_zoom_out,  1, 1, 1, 1);
-  grid_zoom.attach(button_zoom_in,   1, 2, 1, 1);
+  grid_zoom.attach(liang_barsky_radiobutton,    1, 1, 1, 1);
+  grid_zoom.attach(cohen_sutheland_radiobutton, 2, 1, 1, 1);
 
   LOG(4, "Adding the rotation buttons to the rotation grid");
   grid_rotate.set_column_homogeneous(true);
-  grid_rotate.attach(button_rotate_left,  1, 1, 1, 1);
-  grid_rotate.attach(button_rotate_right, 1, 2, 1, 1);
+  grid_rotate.attach(button_rotate_left_x,  1, 1, 1, 1);
+  grid_rotate.attach(button_rotate_right_x, 1, 2, 1, 1);
+  grid_rotate.attach(button_rotate_left_y,  2, 1, 1, 1);
+  grid_rotate.attach(button_rotate_right_y, 2, 2, 1, 1);
+  grid_rotate.attach(button_rotate_left_z,  3, 1, 1, 1);
+  grid_rotate.attach(button_rotate_right_z, 3, 2, 1, 1);
 
   LOG(4, "Adding the draw options box to left frame");
   left_box.set_border_width(10);
@@ -191,8 +204,12 @@ void MainWindow::connectButtons()
   this->button_zoom_in.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_zoom_in));
   this->button_zoom_out.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_zoom_out));
 
-  this->button_rotate_left.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_left));
-  this->button_rotate_right.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_right));
+  this->button_rotate_left_x.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_left_x));
+  this->button_rotate_right_x.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_right_x));
+  this->button_rotate_left_y.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_left_y));
+  this->button_rotate_right_y.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_right_y));
+  this->button_rotate_left_z.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_left_z));
+  this->button_rotate_right_z.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_right_z));
 
   this->button_add_object.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_add_object));
   this->button_delete_object.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_delete_object));
@@ -425,17 +442,15 @@ void MainWindow::on_button_zoom_out()
 }
 
 
-void MainWindow::on_button_rotate_left()
+void MainWindow::on_button_rotate_left_x()
 { try {
 
   big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
 
-  if (rotate_angle == 0)
-  {
+  if (rotate_angle == 0) {
     entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
   }
-  else
-  {
+  else {
     this->facade.rotate(Coordinate(rotate_angle, 0, 0));
   }
 
@@ -443,18 +458,80 @@ void MainWindow::on_button_rotate_left()
 }
 
 
-void MainWindow::on_button_rotate_right()
+void MainWindow::on_button_rotate_right_x()
 { try {
 
   big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
 
-  if (rotate_angle == 0)
-  {
+  if (rotate_angle == 0) {
     entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
   }
-  else
-  {
+  else {
     this->facade.rotate(Coordinate(-rotate_angle, 0, 0));
+  }
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
+}
+
+
+void MainWindow::on_button_rotate_left_y()
+{ try {
+
+  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
+
+  if (rotate_angle == 0) {
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+  }
+  else {
+    this->facade.rotate(Coordinate(0, rotate_angle, 0));
+  }
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
+}
+
+
+void MainWindow::on_button_rotate_right_y()
+{ try {
+
+  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
+
+  if (rotate_angle == 0) {
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+  }
+  else {
+    this->facade.rotate(Coordinate(0, -rotate_angle, 0));
+  }
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
+}
+
+
+void MainWindow::on_button_rotate_left_z()
+{ try {
+
+  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
+
+  if (rotate_angle == 0) {
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+  }
+  else {
+    this->facade.rotate(Coordinate(0, 0, rotate_angle));
+  }
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
+}
+
+
+void MainWindow::on_button_rotate_right_z()
+{ try {
+
+  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
+
+  if (rotate_angle == 0) {
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+  }
+  else {
+    this->facade.rotate(Coordinate(0, 0, -rotate_angle));
   }
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
