@@ -8,6 +8,8 @@
 MainWindow::MainWindow() :
       addObject(this->facade),
       rw_object_service(this->facade),
+      button_move_inside("▲"),
+      button_move_outside("▼"),
       button_move_up("↑"),
       button_move_down("↓"),
       button_move_left("←"),
@@ -109,10 +111,12 @@ void MainWindow::setDefaultTooltips()
   button_open_file    .set_tooltip_text("Select a file to load the OBJ file");
   button_save_file    .set_tooltip_text("Select a file to save the current drawing to the OBJ");
 
-  button_move_up      .set_tooltip_text("Move the ViewWindow on the drawing area upwards");
-  button_move_down    .set_tooltip_text("Move the ViewWindow on the drawing area downwards");
-  button_move_left    .set_tooltip_text("Move the ViewWindow on the drawing area to the left");
-  button_move_right   .set_tooltip_text("Move the ViewWindow on the drawing area to the right");
+  button_move_inside .set_tooltip_text("Move the ViewWindow on the drawing area inside");
+  button_move_outside.set_tooltip_text("Move the ViewWindow on the drawing area outside");
+  button_move_up        .set_tooltip_text("Move the ViewWindow on the drawing area upwards");
+  button_move_down      .set_tooltip_text("Move the ViewWindow on the drawing area downwards");
+  button_move_left      .set_tooltip_text("Move the ViewWindow on the drawing area to the left");
+  button_move_right     .set_tooltip_text("Move the ViewWindow on the drawing area to the right");
 }
 
 
@@ -150,13 +154,15 @@ void MainWindow::setupButtons()
 
   LOG(4, "Adding the move buttons to the movement drid");
   // grid_move.set_column_homogeneous(true);
-  grid_move.attach(liang_barsky_radiobutton,    1, 1, 1, 1);
+  grid_move.attach(button_move_inside,          1, 1, 1, 1);
   grid_move.attach(button_move_up,              2, 1, 1, 1);
-  grid_move.attach(cohen_sutheland_radiobutton, 3, 1, 1, 1);
+  grid_move.attach(button_move_outside,         3, 1, 1, 1);
   grid_move.attach(button_move_left,            1, 2, 1, 1);
   grid_move.attach(entry_move_length,           2, 2, 1, 1);
   grid_move.attach(button_move_right,           3, 2, 1, 1);
+  grid_move.attach(liang_barsky_radiobutton,    1, 3, 1, 1);
   grid_move.attach(button_move_down,            2, 3, 1, 1);
+  grid_move.attach(cohen_sutheland_radiobutton, 3, 3, 1, 1);
 
   LOG(4, "Adding the movement buttons in the zoom grid");
   grid_zoom.set_column_homogeneous(true);
@@ -189,6 +195,8 @@ void MainWindow::connectButtons()
   this->liang_barsky_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_liang_radiobutton) );
   this->cohen_sutheland_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_cohen_radiobutton) );
 
+  this->button_move_inside.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_inside));
+  this->button_move_outside.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_outside));
   this->button_move_up.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_up));
   this->button_move_down.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_down));
   this->button_move_left.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_left));
@@ -274,6 +282,42 @@ void MainWindow::on_objects_list_change()
 
   LOG( 8, "name: %s, active_index: %s, object_index: %s", name, _object_list_active_index, object_index );
   this->_object_list_active_index = object_index - 1;
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
+}
+
+
+void MainWindow::on_button_move_inside()
+{ try {
+
+  int move_length = atoi(entry_move_length.get_text().raw().c_str());
+
+  if (move_length == 0)
+  {
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+  }
+  else
+  {
+    this->facade.move(Coordinate(0, 0, -move_length));
+  }
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
+}
+
+
+void MainWindow::on_button_move_outside()
+{ try {
+
+  int move_length = atoi(entry_move_length.get_text().raw().c_str());
+
+  if (move_length == 0)
+  {
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+  }
+  else
+  {
+    this->facade.move(Coordinate(0, 0, move_length));
+  }
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
