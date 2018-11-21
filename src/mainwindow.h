@@ -49,8 +49,12 @@ protected:
 
   Gtk::Entry entry_move_length;
 
-  Gtk::Button button_rotate_left;
-  Gtk::Button button_rotate_right;
+  Gtk::Button button_rotate_left_x;
+  Gtk::Button button_rotate_right_x;
+  Gtk::Button button_rotate_left_y;
+  Gtk::Button button_rotate_right_y;
+  Gtk::Button button_rotate_left_z;
+  Gtk::Button button_rotate_right_z;
 
   Gtk::Button button_zoom_in;
   Gtk::Button button_zoom_out;
@@ -89,8 +93,12 @@ protected:
   void on_button_move_left();
   void on_button_move_right();
 
-  void on_button_rotate_left();
-  void on_button_rotate_right();
+  void on_button_rotate_left_x();
+  void on_button_rotate_right_x();
+  void on_button_rotate_left_y();
+  void on_button_rotate_right_y();
+  void on_button_rotate_left_z();
+  void on_button_rotate_right_z();
 
   void on_button_zoom_in();
   void on_button_zoom_out();
