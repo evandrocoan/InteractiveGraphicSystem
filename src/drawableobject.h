@@ -40,7 +40,7 @@ public:
   const std::vector<Coordinate*>& windowCoordinates() const;
   const std::vector<Coordinate*>& clippingCoordinates() const;
 
-  static Coordinate getGeometricCenter(const std::vector<Coordinate*>&);
+  const Coordinate getGeometricCenter();
 
   /**
    * https://stackoverflow.com/questions/307082/cleaning-up-an-stl-list-vector-of-pointers

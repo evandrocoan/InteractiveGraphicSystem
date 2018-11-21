@@ -39,6 +39,8 @@ public:
                     const TransformationPoint type=TransformationPoint::ON_WORLD_CENTER,
                     const Coordinate point=_default_coordinate_value_parameter);
 
+  void add_axis_rotation(const std::string name, const big_double degrees);
+
   /**
    * Remove all transformations from this container and set it as uninitialized. So, calling it
    * to convert some point will take no effect, i.e., destroy your data.
@@ -85,7 +87,9 @@ protected:
    */
   const MatrixForm _get_translation_matrix(const Coordinate& moves) const;
   const MatrixForm _get_scaling_matrix(const Coordinate& factors) const;
-  const MatrixForm _get_rotation_matrix(const Coordinate& degrees) const;
+  const MatrixForm _get_x_rotation_matrix(const big_double& degrees) const;
+  const MatrixForm _get_y_rotation_matrix(const big_double& degrees) const;
+  const MatrixForm _get_z_rotation_matrix(const big_double& degrees) const;
 
   void _set_translation_data(const TransformationData&, const unsigned int &index, const Coordinate &center);
   void _set_scaling_data    (const TransformationData&, const unsigned int &index, const Coordinate &center);
@@ -97,6 +101,7 @@ protected:
 
   void _rotation_on_coordinate    (const TransformationData&, const unsigned int &index, const Coordinate &center);
   void _rotation_on_world_center  (const TransformationData&, const unsigned int &index, const Coordinate &center);
+  void _rotation_on_its_own_axis  (const TransformationData&, const unsigned int &index, const Coordinate &center);
   void _rotation_on_its_own_center(const TransformationData&, const unsigned int &index, const Coordinate &center);
 };
 
