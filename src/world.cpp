@@ -119,6 +119,10 @@ void World::removeObject(std::string name)
     {
       this->_polygons.removeObjectByName(name);
     }
+    else if( this->_polyhedrons.isObjectOnByName(name) )
+    {
+      this->_polyhedrons.removeObjectByName(name);
+    }
     else if( this->_curves.isObjectOnByName(name) )
     {
       this->_curves.removeObjectByName(name);
@@ -197,36 +201,10 @@ void World::apply(const std::string object_name, Transformation &transformation)
   {
     if( transformation.size() )
     {
-      DrawableObject* object;
-
-      if( this->_polygons.isObjectOnByName(object_name) )
-      {
-        object = this->_polygons.apply(object_name, transformation);
-      }
-      else if( this->_curves.isObjectOnByName(object_name) )
-      {
-        object = this->_curves.apply(object_name, transformation);
-      }
-      else if( this->_lines.isObjectOnByName(object_name) )
-      {
-        object = this->_lines.apply(object_name, transformation);
-      }
-      else if( this->_points.isObjectOnByName(object_name) )
-      {
-        object = this->_points.apply(object_name, transformation);
-      }
-      else
-      {
-        std::string error = tfm::format( "Inconsistency on the system. The object is not found internally: `%s`", object_name );
-
-        LOG( 1, "%s", error );
-        throw std::runtime_error( error );
-      }
-
+      DrawableObject* object = this->_displayFile.apply(object_name, transformation);
       this->_updateObjectCoordinates(object);
     }
-    else
-    {
+    else {
       std::string error = tfm::format(
           "There are no transformations available to be applied on your object: `%s` %s", object_name, transformation );
 
@@ -234,8 +212,7 @@ void World::apply(const std::string object_name, Transformation &transformation)
       throw std::runtime_error( error );
     }
   }
-  else
-  {
+  else {
     std::string error = tfm::format( "No object was found within the name: `%s`", object_name );
 
     LOG( 1, "%s", error );

@@ -711,11 +711,11 @@ void MainWindow::set_default_values_and_tooltips()
   main_value_field_a.set_width_chars(3);
   main_value_field_a.set_tooltip_text("The X coordinate");
 
-  main_value_field_b.set_text("1");
+  main_value_field_b.set_text("0");
   main_value_field_b.set_width_chars(3);
   main_value_field_b.set_tooltip_text("The Y coordinate");
 
-  main_value_field_c.set_text("1");
+  main_value_field_c.set_text("0");
   main_value_field_c.set_width_chars(3);
   main_value_field_c.set_tooltip_text("The Z coordinate");
 }
