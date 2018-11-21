@@ -7,8 +7,11 @@
 class Polygon : public DrawableObject
 {
 public:
-  Polygon(std::string name, std::vector<Coordinate*> _worldCoordinates, Coordinate _borderColor, Coordinate _fillingColor);
+  Polygon(std::string name, std::vector<Coordinate*> _worldCoordinates,
+      Coordinate _borderColor, Coordinate _fillingColor, bool _isVisibleOnGui=true);
+
   ~Polygon();
+  bool hasFilling() const { return this->_isVisibleOnGui; }
 
   virtual void updateClippingCoordinates(const Axes&);
 

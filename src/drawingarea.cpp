@@ -40,9 +40,22 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   auto points = this->_world._points.getObjects();
   auto curves = this->_world._curves.getObjects();
   auto polygons = this->_world._polygons.getObjects();
+  auto polyhedrons = this->_world._polyhedrons.getObjects();
+
+  LOG(8, "Draw General Polyhedrons");
+  for( auto polyhedron : polyhedrons )
+  {
+    LOG(8, "polyhedron: %s", *polyhedron);
+
+    for( auto polygon : polyhedron->getPolygons() )
+    {
+      LOG(8, "polygon: %s", *polygon);
+      drawn_polygon( cairo_context, polygon );
+    }
+  }
 
   LOG(8, "Draw General Polygons");
-  for (auto polygon : polygons)
+  for( auto polygon : polygons )
   {
     LOG(8, "polygon: %s", *polygon);
     drawn_polygon( cairo_context, polygon );
@@ -72,7 +85,7 @@ bool DrawingArea::on_draw(const Cairo::RefPtr<Cairo::Context>& cairo_context)
   return true;
 }
 
-void DrawingArea::drawn_point(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
+void DrawingArea::drawn_point(const Cairo::RefPtr<Cairo::Context>& cairo_context, const Point* object)
 {
   if( !object->isDrawable() )
   {
@@ -89,7 +102,7 @@ void DrawingArea::drawn_point(const Cairo::RefPtr<Cairo::Context>& cairo_context
 }
 
 
-void DrawingArea::drawn_line(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
+void DrawingArea::drawn_line(const Cairo::RefPtr<Cairo::Context>& cairo_context, const Line* object)
 {
   if( !object->isDrawable() )
   {
@@ -128,7 +141,7 @@ void DrawingArea::drawn_line(const Cairo::RefPtr<Cairo::Context>& cairo_context,
   cairo_context->stroke();  // outline it
 }
 
-void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_context, const DrawableObject* object)
+void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_context, const Polygon* object)
 {
   if( !object->isDrawable() )
   {
@@ -165,8 +178,11 @@ void DrawingArea::drawn_polygon(const Cairo::RefPtr<Cairo::Context>& cairo_conte
   // LOG(8, "Line back to start point, closing the polygon")
   cairo_context->save();
   cairo_context->close_path();
-  cairo_context->set_source_rgb(filling.x, filling.y, filling.z);
-  cairo_context->fill_preserve();
+
+  if( object->hasFilling() ) {
+    cairo_context->set_source_rgb(filling.x, filling.y, filling.z);
+    cairo_context->fill_preserve();
+  }
   cairo_context->restore();  // back to opaque black
   cairo_context->stroke();  // outline it
 }

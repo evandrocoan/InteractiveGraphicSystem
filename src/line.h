@@ -27,7 +27,8 @@ class Line : public DrawableObject
 {
 public:
   Line(std::string name, Coordinate* line_cord1, Coordinate* line_cord2,
-          Coordinate _borderColor, LineClippingType, bool _isVisibleOnGui);
+          Coordinate _borderColor, LineClippingType, bool _isVisibleOnGui=true);
+
   ~Line();
 
   void setLineClipping(LineClippingType);

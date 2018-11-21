@@ -56,11 +56,11 @@ protected:
   void _draw_clipping_axes(const Cairo::RefPtr<Cairo::Context>&);
 
 private:
-  void drawn_line(const Cairo::RefPtr<Cairo::Context>&, const DrawableObject*);
-  void drawn_point(const Cairo::RefPtr<Cairo::Context>&, const DrawableObject*);
+  void drawn_line(const Cairo::RefPtr<Cairo::Context>&, const Line*);
+  void drawn_point(const Cairo::RefPtr<Cairo::Context>&, const Point*);
 
   void drawn_circle(const Cairo::RefPtr<Cairo::Context>&, const Curve*);
-  void drawn_polygon(const Cairo::RefPtr<Cairo::Context>&, const DrawableObject*);
+  void drawn_polygon(const Cairo::RefPtr<Cairo::Context>&, const Polygon*);
 };
 
 #endif // GTKMM_APP_DRAWINGAREA
