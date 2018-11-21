@@ -70,7 +70,8 @@ void ViewWindow::move(Coordinate moves)
   this->_transformation.apply(moves);
 
   LOG(16, "moves: %s", moves);
-  // LOG(16, "moves transformation: %s", _transformation);
+  // LOG(4, "_angles: %s", this->_angles);
+  // LOG(4, "moves transformation: %s", _transformation);
 
   this->_windowCenter += moves;
   this->callObservers();
