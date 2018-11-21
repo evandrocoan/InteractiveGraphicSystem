@@ -33,7 +33,12 @@ public:
    * @param point   this is a optional value, only required when using TransformationPoint::ON_GIVEN_COORDINATE
    */
   void add_translation(const std::string name, const Coordinate movement);
-  void add_scaling(const std::string name, const Coordinate scale);
+
+  void add_scaling(const std::string name,
+                   const Coordinate scale,
+                   const TransformationPoint point=TransformationPoint::ON_WORLD_CENTER,
+                   const Coordinate center=_origin_coordinate_value);
+
   void add_rotation(const std::string name,
                     const Coordinate degrees,
                     const TransformationPoint type=TransformationPoint::ON_WORLD_CENTER,

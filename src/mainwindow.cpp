@@ -151,14 +151,14 @@ void MainWindow::setupButtons()
 
   LOG(4, "Adding the move buttons to the movement drid");
   // grid_move.set_column_homogeneous(true);
-  grid_move.attach(button_move_inside,  1, 1, 1, 1);
+  grid_move.attach(button_move_left,    1, 1, 1, 1);
+  grid_move.attach(button_move_right,   1, 2, 1, 1);
   grid_move.attach(button_move_up,      2, 1, 1, 1);
-  grid_move.attach(button_move_outside, 3, 1, 1, 1);
-  grid_move.attach(button_move_left,    1, 2, 1, 1);
-  grid_move.attach(entry_move_length,   2, 2, 1, 1);
-  grid_move.attach(button_move_right,   3, 2, 1, 1);
+  grid_move.attach(button_move_down,    2, 2, 1, 1);
+  grid_move.attach(button_move_inside,  3, 1, 1, 1);
+  grid_move.attach(button_move_outside, 3, 2, 1, 1);
   grid_move.attach(button_zoom_out,     1, 3, 1, 1);
-  grid_move.attach(button_move_down,    2, 3, 1, 1);
+  grid_move.attach(entry_move_length,   2, 3, 1, 1);
   grid_move.attach(button_zoom_in,      3, 3, 1, 1);
 
   LOG(4, "Adding the movement buttons in the zoom grid");
@@ -697,27 +697,27 @@ void MainWindow::set_default_values_and_tooltips()
 
   x_rotation_field.set_text(DEFAULT_MOVE_LENGTH);
   x_rotation_field.set_width_chars(3);
-  x_rotation_field.set_tooltip_text("Rotation Degrees between 0 and 360 on axis X");
+  x_rotation_field.set_tooltip_text("On axis X: 1. A Scaling factor or 2. Point for Translation or 3. Rotation Degrees between 0 and 360");
 
   y_rotation_field.set_text("0");
   y_rotation_field.set_width_chars(3);
-  y_rotation_field.set_tooltip_text("Rotation Degrees between 0 and 360 on axis Y");
+  y_rotation_field.set_tooltip_text("On axis Y: 1. A Scaling factor or 2. Point for Translation or 3. Rotation Degrees between 0 and 360");
 
   z_rotation_field.set_text("0");
   z_rotation_field.set_width_chars(3);
-  z_rotation_field.set_tooltip_text("Rotation Degrees between 0 and 360 on axis Z");
+  z_rotation_field.set_tooltip_text("On axis Z: 1. A Scaling factor or 2. Point for Translation or 3. Rotation Degrees between 0 and 360");
 
   main_value_field_a.set_text(DEFAULT_MOVE_LENGTH);
   main_value_field_a.set_width_chars(3);
-  main_value_field_a.set_tooltip_text("The X coordinate");
+  main_value_field_a.set_tooltip_text("Arbitrary Point for Scaling or Rotation, the X coordinate");
 
   main_value_field_b.set_text("0");
   main_value_field_b.set_width_chars(3);
-  main_value_field_b.set_tooltip_text("The Y coordinate");
+  main_value_field_b.set_tooltip_text("Arbitrary Point for Scaling or Rotation, the Y coordinate");
 
   main_value_field_c.set_text("0");
   main_value_field_c.set_width_chars(3);
-  main_value_field_c.set_tooltip_text("The Z coordinate");
+  main_value_field_c.set_tooltip_text("Arbitrary Point for Scaling or Rotation, the Z coordinate");
 }
 
 
@@ -743,10 +743,27 @@ void MainWindow::on_button_save_transformation()
 
   if(this->transformation_type == TransformationType::TRANSLATION)
   {
-    name = tfm::format("%s %s %s %s", this->transformation_type, main_value_a, main_value_b, main_value_c);
-    this->transformation.add_translation(name, Coordinate(x_coord, y_coord, z_coord));
+    name = tfm::format("%s %s %s %s", this->transformation_type, x_rotation, y_rotation, z_rotation);
+    this->transformation.add_translation(name, Coordinate(x_rotation, y_rotation, z_rotation));
   }
   else if(this->transformation_type == TransformationType::ROTATION)
+  {
+    name = tfm::format("%s %s %s %s %s %s %s %s",
+                       this->transformation_type,
+                       x_rotation,
+                       y_rotation,
+                       z_rotation,
+                       this->transformation_point,
+                       x_coord,
+                       y_coord,
+                       z_coord);
+
+    this->transformation.add_rotation(name,
+        Coordinate(x_rotation, y_rotation, z_rotation),
+        this->transformation_point,
+        Coordinate(x_coord, y_coord, z_coord));
+  }
+  else if(this->transformation_type == TransformationType::SCALING)
   {
     name = tfm::format("%s %s %s %s %s %s %s %s",
                        this->transformation_type,
@@ -758,15 +775,10 @@ void MainWindow::on_button_save_transformation()
                        main_value_b,
                        main_value_c);
 
-    this->transformation.add_rotation(name,
+    this->transformation.add_scaling(name,
         Coordinate(x_rotation, y_rotation, z_rotation),
         this->transformation_point,
         Coordinate(x_coord, y_coord, z_coord));
-  }
-  else if(this->transformation_type == TransformationType::SCALING)
-  {
-    name = tfm::format("%s %s %s %s", this->transformation_type, main_value_a, main_value_b, main_value_c);
-    this->transformation.add_scaling(name, Coordinate(x_coord, y_coord, z_coord));
   }
   else
   {
