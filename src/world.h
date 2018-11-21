@@ -7,6 +7,7 @@
 #include "curve.h"
 #include "point.h"
 #include "polygon.h"
+#include "polyhedron.h"
 
 #include "displayfile.h"
 #include "subject_controller.h"
@@ -26,6 +27,9 @@ public:
 
   void addPolygon(const std::string name, const std::vector<big_double>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
   void addPolygon(const std::string name, const std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
+
+  void addPolyhedron(std::string name, std::vector<Coordinate*> points, std::vector<unsigned int> _line_segments,
+      int _facet_size, Coordinate _borderColor, Coordinate _fillingColor);
 
   void removeObject(const std::string name);
   void setLineClipping(LineClippingType);
@@ -51,8 +55,9 @@ protected:
   DisplayFile<Line*> _lines;
   DisplayFile<Curve*> _curves;
   DisplayFile<Point*> _points;
+  DisplayFile<Polygon*> _polygons;
 
-  DisplayFile<DrawableObject*> _polygons;
+  DisplayFile<Polyhedron*> _polyhedrons;
   DisplayFile<DrawableObject*> _displayFile;
 };
 

@@ -54,8 +54,10 @@ void World::addPolygon(std::string name, std::vector<Coordinate*> coordinates,
   switch(type) {
     case CurveType::POLYGON:
     {
-      object = new Polygon(name, coordinates, _borderColor, _fillingColor);
-      this->_polygons.addObject(object);
+      Polygon* polygon = new Polygon(name, coordinates, _borderColor, _fillingColor);
+      object = polygon;
+
+      this->_polygons.addObject(polygon);
       break;
     }
     case CurveType::BEZIER:
@@ -84,6 +86,17 @@ void World::addPolygon(std::string name, std::vector<Coordinate*> coordinates,
 
   this->_displayFile.addObject(object);
   this->_updateObjectCoordinates(object);
+}
+
+void World::addPolyhedron(std::string name, std::vector<Coordinate*> points,
+      std::vector<unsigned int> _line_segments, int _facet_size,
+      Coordinate _borderColor, Coordinate _fillingColor)
+{
+  Polyhedron* polyhedron = new Polyhedron(name, points, _line_segments, _facet_size, _borderColor, _fillingColor);
+  this->_polyhedrons.addObject(polyhedron);
+
+  this->_displayFile.addObject(polyhedron);
+  this->_updateObjectCoordinates(polyhedron);
 }
 
 void World::setLineClipping(LineClippingType type)
