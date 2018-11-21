@@ -40,6 +40,8 @@ protected:
   RwObjectService   rw_object_service;
   ChooseFileWindow* choose_file_window;
 
+  Gtk::Button button_move_inside;
+  Gtk::Button button_move_outside;
   Gtk::Button button_move_up;
   Gtk::Button button_move_down;
   Gtk::Button button_move_left;
@@ -82,6 +84,8 @@ protected:
   void connectButtons();
   void setDefaultTooltips();
 
+  void on_button_move_inside();
+  void on_button_move_outside();
   void on_button_move_up();
   void on_button_move_down();
   void on_button_move_left();
