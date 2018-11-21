@@ -81,7 +81,7 @@ protected:
   DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates);
   DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates,
       Coordinate _borderColor,
-      Coordinate _fillingColor=_default_coordinate_value_parameter,
+      Coordinate _fillingColor=_origin_coordinate_value,
       bool _isVisibleOnGui=true );
 
   /// The name of this object used to display it on the Graphics User Interface

@@ -88,7 +88,9 @@ void ViewWindow::callObservers()
   this->_transformation.clear();
   this->_transformation.add_translation("Window to center", -this->_windowCenter);
   this->_transformation.add_rotation("Window rotation", this->_angles);
-  this->_transformation.add_scaling("Window coordinate scaling", this->_dimentions.inverse());
+
+  Coordinate inverse{ 1.0 / _dimentions[0], 1.0 / _dimentions[1], 2.0 / ( _dimentions[0] + _dimentions[1] ) };
+  this->_transformation.add_scaling("Window coordinate scaling", inverse);
   this->_transformation.set_geometric_center(_origin_coordinate_value);
 
   // LOG(16, "World transformation: %s", _transformation);
