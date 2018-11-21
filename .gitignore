@@ -12,9 +12,4 @@ Release
 *.png
 *.exe
 
-helloworld_gtk*
-helloworld_gtkmm*
-test_template_initicialization*
-test_array_initicialization*
-
 .DS_Store
