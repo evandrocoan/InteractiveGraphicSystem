@@ -50,9 +50,10 @@ const MatrixForm Transformation::_get_scaling_matrix(const Coordinate& factors) 
   };
 }
 
-const MatrixForm Transformation::_get_x_rotation_matrix(const big_double& degrees) const
+const MatrixForm Transformation::_get_x_rotation_matrix(const big_double& degrees, const bool& is_radians) const
 {
-  auto radians = convert_degrees_to_radians(degrees);
+  LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
+  auto radians = is_radians ? degrees : convert_degrees_to_radians(degrees);
   auto sine    = std::sin(radians);
   auto cosine  = std::cos(radians);
   return
@@ -64,9 +65,10 @@ const MatrixForm Transformation::_get_x_rotation_matrix(const big_double& degree
     };
 }
 
-const MatrixForm Transformation::_get_y_rotation_matrix(const big_double& degrees) const
+const MatrixForm Transformation::_get_y_rotation_matrix(const big_double& degrees, const bool& is_radians) const
 {
-  auto radians = convert_degrees_to_radians(degrees);
+  LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
+  auto radians = is_radians ? degrees : convert_degrees_to_radians(degrees);
   auto sine    = std::sin(radians);
   auto cosine  = std::cos(radians);
   return
@@ -78,9 +80,10 @@ const MatrixForm Transformation::_get_y_rotation_matrix(const big_double& degree
     };
 }
 
-const MatrixForm Transformation::_get_z_rotation_matrix(const big_double& degrees) const
+const MatrixForm Transformation::_get_z_rotation_matrix(const big_double& degrees, const bool& is_radians) const
 {
-  auto radians = convert_degrees_to_radians(degrees);
+  LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
+  auto radians = is_radians ? degrees : convert_degrees_to_radians(degrees);
   auto sine    = std::sin(radians);
   auto cosine  = std::cos(radians);
   return
@@ -94,17 +97,17 @@ const MatrixForm Transformation::_get_z_rotation_matrix(const big_double& degree
 
 void Transformation::add_rotation(const std::string name, const Coordinate degrees, const TransformationPoint point, const Coordinate center)
 {
-  transformations.push_back( TransformationData{name, _get_x_rotation_matrix(degrees.x), TransformationType::ROTATION, point, center} );
-  transformations.push_back( TransformationData{name, _get_y_rotation_matrix(degrees.y), TransformationType::ROTATION, point, center} );
-  transformations.push_back( TransformationData{name, _get_z_rotation_matrix(degrees.z), TransformationType::ROTATION, point, center} );
-}
-
-void Transformation::add_axis_rotation(const std::string name, const big_double degrees)
-{
-  TransformationData transformation{name, _get_z_rotation_matrix(degrees),
-      TransformationType::ROTATION, TransformationPoint::ON_ITS_OWN_AXIS, _default_coordinate_value_parameter};
-
-  this->transformations.push_back(transformation);
+  if( point == TransformationPoint::ON_WORLD_CENTER )
+  {
+    MatrixForm matrix = _get_x_rotation_matrix(degrees.x);
+    matrix.multiply( _get_y_rotation_matrix(degrees.y) );
+    matrix.multiply( _get_z_rotation_matrix(degrees.z) );
+    transformations.push_back( TransformationData{name, matrix, TransformationType::ROTATION, point, center} );
+  }
+  else {
+    TransformationData transformation{name, _get_z_rotation_matrix(degrees.x), TransformationType::ROTATION, point, center};
+    this->transformations.push_back(transformation);
+  }
 }
 
 void Transformation::add_scaling(const std::string name, const Coordinate factors)
@@ -287,12 +290,6 @@ void Transformation::_set_rotation_data(const TransformationData &data, const un
       break;
     }
 
-    case TransformationPoint::ON_ITS_OWN_AXIS:
-    {
-      this->_rotation_on_its_own_axis(data, index, center);
-      break;
-    }
-
     case TransformationPoint::ON_GIVEN_COORDINATE:
     {
       this->_rotation_on_coordinate(data, index, center);
@@ -321,10 +318,17 @@ void Transformation::_rotation_on_world_center(const TransformationData &data, c
   }
 }
 
-void Transformation::_rotation_on_its_own_axis(const TransformationData &data, const unsigned int &index, const Coordinate &center)
+void Transformation::_rotation_on_coordinate(const TransformationData &data, const unsigned int &index, const Coordinate &center) {
+  LOG(2, "...");
+  _rotation_on_its_own_center( data, index, -data.center );
+}
+
+void Transformation::_rotation_on_its_own_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
 {
   LOG(2, "...");
   MatrixForm move_to_center = this->_get_translation_matrix(-center);
+  LOG(4, "center: %s", center);
+  LOG(4, "move_to_center: %s", move_to_center);
 
   if( index == 0 )
   {
@@ -339,70 +343,20 @@ void Transformation::_rotation_on_its_own_axis(const TransformationData &data, c
   big_double distance = sqrt( center.y * center.y + center.z * center.z );
   big_double angle_beta = atan( center.x / center.z );
   big_double angle_alfa = atan( center.y / distance );
+  LOG(4, "distance: %s, angle_beta: %s, angle_alfa: %s", distance, angle_beta, angle_alfa);
+  LOG(4, "data.matrix: %s", data.matrix);
 
-  LOG(4, "Do the rotation on the object own center");
-  this->_transformation.multiply( _get_y_rotation_matrix(-angle_beta) );
-  this->_transformation.multiply( _get_x_rotation_matrix(angle_alfa) );
+  this->_transformation.multiply( _get_y_rotation_matrix(-angle_beta, true) );
+  this->_transformation.multiply( _get_x_rotation_matrix(angle_alfa, true) );
   this->_transformation.multiply( data.matrix );
-  this->_transformation.multiply( _get_x_rotation_matrix(-angle_alfa) );
-  this->_transformation.multiply( _get_y_rotation_matrix(angle_beta) );
+  this->_transformation.multiply( _get_x_rotation_matrix(-angle_alfa, true) );
+  this->_transformation.multiply( _get_y_rotation_matrix(angle_beta, true) );
 
-  LOG(4, "Move back to its origin");
-  move_to_center[2][0] = center.x;
-  move_to_center[2][1] = center.y;
-  move_to_center[2][2] = center.z;
+  move_to_center = this->_get_translation_matrix(center);
+  LOG(4, "Move back to its origin, move_to_center: %s", move_to_center);
 
   this->_transformation.multiply(move_to_center);
-}
-
-void Transformation::_rotation_on_its_own_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
-{
-  LOG(2, "...");
-  MatrixForm move_to_center = this->_get_translation_matrix(-center);
-
-  if( index == 0 )
-  {
-    this->_transformation = move_to_center;
-  }
-  else
-  {
-    this->_transformation.multiply(move_to_center);
-  }
-
-  LOG(4, "Do the rotation on the origin");
-  this->_transformation.multiply(data.matrix);
-
-  LOG(4, "Move back to its origin");
-  move_to_center[2][0] = center.x;
-  move_to_center[2][1] = center.y;
-  move_to_center[2][2] = center.z;
-
-  this->_transformation.multiply(move_to_center);
-}
-
-void Transformation::_rotation_on_coordinate(const TransformationData &data, const unsigned int &index, const Coordinate &center)
-{
-  LOG(2, "...");
-  MatrixForm move_to_center = this->_get_translation_matrix(-data.center);
-
-  if( index == 0 )
-  {
-    this->_transformation = move_to_center;
-  }
-  else
-  {
-    this->_transformation.multiply(move_to_center);
-  }
-
-  LOG(4, "Do the rotation on the origin");
-  this->_transformation.multiply(data.matrix);
-
-  LOG(4, "Move back to its origin");
-  move_to_center[2][0] = center.x;
-  move_to_center[2][1] = center.y;
-  move_to_center[2][2] = center.z;
-
-  this->_transformation.multiply(move_to_center);
+  LOG(4, "Final _transformation: %s", _transformation);
 }
 
 void Transformation::remove_transformation(const std::string name)

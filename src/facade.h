@@ -24,34 +24,34 @@ public:
   DrawingArea& drawingArea()       { return this->_drawingArea; }
   const DisplayFile<DrawableObject*>& displayFile() { return this->_world.displayFile(); }
 
-  void addPoint(std::string name, int x, int y, int z, Coordinate _borderColor=_default_coordinate_value_parameter)
+  void addPoint(std::string name, int x, int y, int z, Coordinate _borderColor=_origin_coordinate_value)
   {
     this->_world.addPoint(name, x, y, z, _borderColor); }
 
   void addLine(std::string name, int x1, int y1, int z1, int x2, int y2, int z2,
-      Coordinate _borderColor=_default_coordinate_value_parameter,
+      Coordinate _borderColor=_origin_coordinate_value,
       LineClippingType type=LineClippingType::LIANG_BARSKY)
   {
     this->_world.addLine(name, x1, y1, z1, x2, y2, z2, _borderColor, type); }
 
   void addPolygon(std::string name, std::vector<big_double> points,
-      Coordinate _borderColor=_default_coordinate_value_parameter,
-      Coordinate _fillingColor=_default_coordinate_value_parameter,
+      Coordinate _borderColor=_origin_coordinate_value,
+      Coordinate _fillingColor=_origin_coordinate_value,
       CurveType type=CurveType::POLYGON)
   {
     this->_world.addPolygon(name, points, _borderColor, _fillingColor, type); }
 
   void addPolygon(std::string name, std::vector<Coordinate*> points,
-      Coordinate _borderColor=_default_coordinate_value_parameter,
-      Coordinate _fillingColor=_default_coordinate_value_parameter,
+      Coordinate _borderColor=_origin_coordinate_value,
+      Coordinate _fillingColor=_origin_coordinate_value,
       CurveType type=CurveType::POLYGON)
   {
     this->_world.addPolygon(name, points, _borderColor, _fillingColor, type); }
 
   void addPolyhedron(std::string name, std::vector<Coordinate*> points,
               std::vector<unsigned int> _line_segments, int _facet_size,
-              Coordinate _borderColor=_default_coordinate_value_parameter,
-              Coordinate _fillingColor=_default_coordinate_value_parameter)
+              Coordinate _borderColor=_origin_coordinate_value,
+              Coordinate _fillingColor=_origin_coordinate_value)
   {
     this->_world.addPolyhedron(name, points, _line_segments, _facet_size, _borderColor, _fillingColor); }
 

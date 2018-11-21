@@ -127,8 +127,8 @@ void RwObjectService::read(std::string file_path)
           if( line_front == 'b' )
           {
             this->facade.addPolygon( name, vertexes,
-                _default_coordinate_value_parameter,
-                _default_coordinate_value_parameter, line_second == 'z' ? CurveType::BEZIER : CurveType::BSPLINE );
+                _origin_coordinate_value,
+                _origin_coordinate_value, line_second == 'z' ? CurveType::BEZIER : CurveType::BSPLINE );
           }
           else
           {

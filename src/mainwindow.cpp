@@ -695,7 +695,7 @@ void MainWindow::set_default_values_and_tooltips()
   scaling_radiobutton          .set_tooltip_text("Select this to add Scaling");
   rotation_radiobutton         .set_tooltip_text("Select this to add Rotation");
 
-  x_rotation_field.set_text("15");
+  x_rotation_field.set_text(DEFAULT_MOVE_LENGTH);
   x_rotation_field.set_width_chars(3);
   x_rotation_field.set_tooltip_text("Rotation Degrees between 0 and 360 on axis X");
 
@@ -707,7 +707,7 @@ void MainWindow::set_default_values_and_tooltips()
   z_rotation_field.set_width_chars(3);
   z_rotation_field.set_tooltip_text("Rotation Degrees between 0 and 360 on axis Z");
 
-  main_value_field_a.set_text("10");
+  main_value_field_a.set_text(DEFAULT_MOVE_LENGTH);
   main_value_field_a.set_width_chars(3);
   main_value_field_a.set_tooltip_text("The X coordinate");
 
@@ -887,7 +887,7 @@ void MainWindow::add_test_objects()
   // point_list.push_back(-50); point_list.push_back(-30); point_list.push_back(1);
   // point_list.push_back(-30); point_list.push_back(-30); point_list.push_back(1);
   // point_list.push_back(-30); point_list.push_back(-50); point_list.push_back(1);
-  // this->facade.addPolygon("Polygon", point_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::POLYGON);
+  // this->facade.addPolygon("Polygon", point_list, _origin_coordinate_value, _origin_coordinate_value, CurveType::POLYGON);
 
   // point_list.clear();
   // point_list.push_back(0); point_list.push_back(0); point_list.push_back(1);
@@ -897,7 +897,7 @@ void MainWindow::add_test_objects()
   // point_list.push_back(40); point_list.push_back(10); point_list.push_back(1);
   // point_list.push_back(50); point_list.push_back(0); point_list.push_back(1);
   // point_list.push_back(60); point_list.push_back(10); point_list.push_back(1);
-  // this->facade.addPolygon("Bezier", point_list, _default_coordinate_value_parameter, _default_coordinate_value_parameter, CurveType::BEZIER);
+  // this->facade.addPolygon("Bezier", point_list, _origin_coordinate_value, _origin_coordinate_value, CurveType::BEZIER);
 
   std::vector<Coordinate*> coord_list;
   std::vector<unsigned int> segment_list;
@@ -918,7 +918,7 @@ void MainWindow::add_test_objects()
   coord_list.push_back( new Coordinate(75.112259 , 7.1202320, 16.854351 ) );
   coord_list.push_back( new Coordinate(75.112259 , 67.120232, 16.854351 ) );
   this->facade.addPolyhedron("Polyhedron", coord_list, segment_list, 4,
-      _default_coordinate_value_parameter, _default_coordinate_value_parameter);
+      _origin_coordinate_value, _origin_coordinate_value);
 
   this->facade.queue_draw();
 }

@@ -34,7 +34,7 @@ void Curve::create_lines(const Transformation& transformation, std::vector<Coord
       // LOG( 8, "last_point: %s", *last_point );
       // LOG( 8, "point:      %s", *coordinate );
 
-      line = new Line( "Bezier", last_point, coordinate, _default_coordinate_value_parameter, LineClippingType::LIANG_BARSKY, false );
+      line = new Line( "Bezier", last_point, coordinate, _origin_coordinate_value, LineClippingType::LIANG_BARSKY, false );
       line->updateWindowCoordinates( transformation );
 
       // LOG( 8, "line:       %s", *line );
