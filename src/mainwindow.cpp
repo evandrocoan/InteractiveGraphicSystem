@@ -95,6 +95,8 @@ Gtk::Window& MainWindow::getWindow()
 
 void MainWindow::setDefaultTooltips()
 {
+  entry_move_length.set_tooltip_text("A general stop value to use on zoom, scaling and moving step.");
+
   liang_barsky_radiobutton   .set_tooltip_text("Liang-Barsky");
   cohen_sutheland_radiobutton.set_tooltip_text("Cohen-Sutheland");
 
@@ -104,8 +106,6 @@ void MainWindow::setDefaultTooltips()
   button_rotate_right .set_tooltip_text("Rotate the window to the right");
   button_rotate_left  .set_tooltip_text("Rotate the window to the left");
 
-  entry_move_length   .set_tooltip_text("How many pixels to move the ViewWindow");
-  entry_zoom_scale    .set_tooltip_text("A scaling factor as `1.1` or `0.9` to `zoom in` or `zoom out` the ViewWindow");
   button_zoom_in      .set_tooltip_text("Apply the scaling factor to the ViewWindow over the Drawing World");
   button_zoom_out     .set_tooltip_text("Apply inverted the scaling factor to the ViewWindow over the Drawing World");
   button_open_file    .set_tooltip_text("Select a file to load the OBJ file");
@@ -113,10 +113,10 @@ void MainWindow::setDefaultTooltips()
 
   button_move_inside .set_tooltip_text("Move the ViewWindow on the drawing area inside");
   button_move_outside.set_tooltip_text("Move the ViewWindow on the drawing area outside");
-  button_move_up        .set_tooltip_text("Move the ViewWindow on the drawing area upwards");
-  button_move_down      .set_tooltip_text("Move the ViewWindow on the drawing area downwards");
-  button_move_left      .set_tooltip_text("Move the ViewWindow on the drawing area to the left");
-  button_move_right     .set_tooltip_text("Move the ViewWindow on the drawing area to the right");
+  button_move_up     .set_tooltip_text("Move the ViewWindow on the drawing area upwards");
+  button_move_down   .set_tooltip_text("Move the ViewWindow on the drawing area downwards");
+  button_move_left   .set_tooltip_text("Move the ViewWindow on the drawing area to the left");
+  button_move_right  .set_tooltip_text("Move the ViewWindow on the drawing area to the right");
 }
 
 
@@ -131,18 +131,6 @@ void MainWindow::setupButtons()
 
   cohen_sutheland_radiobutton.join_group(liang_barsky_radiobutton);
   cohen_sutheland_radiobutton.set_halign( Gtk::ALIGN_CENTER );
-
-  LOG(4, "Initializing input data of rotation size");
-  entry_rotate_angle.set_width_chars(1);
-  entry_rotate_angle.set_text(DEFAULT_ROTATE_ANGLE);
-
-  LOG(4, "Initializing zoom in input data");
-  entry_zoom_scale.set_width_chars(3);
-  char array[4];
-
-  sprintf(array, "%d", DEFAULT_ZOOM_SCALE);
-  array[3] = '\0';
-  entry_zoom_scale.set_text(array);
 
   LOG(4, "Mounting the object list grid structure");
   grid_list_obj.set_column_homogeneous(true);
@@ -167,14 +155,12 @@ void MainWindow::setupButtons()
   LOG(4, "Adding the movement buttons in the zoom grid");
   grid_zoom.set_column_homogeneous(true);
   grid_zoom.attach(button_zoom_out,  1, 1, 1, 1);
-  grid_zoom.attach(entry_zoom_scale, 2, 1, 1, 1);
-  grid_zoom.attach(button_zoom_in,   3, 1, 1, 1);
+  grid_zoom.attach(button_zoom_in,   1, 2, 1, 1);
 
   LOG(4, "Adding the rotation buttons to the rotation grid");
   grid_rotate.set_column_homogeneous(true);
   grid_rotate.attach(button_rotate_left,  1, 1, 1, 1);
-  grid_rotate.attach(entry_rotate_angle,  2, 1, 1, 1);
-  grid_rotate.attach(button_rotate_right, 3, 1, 1, 1);
+  grid_rotate.attach(button_rotate_right, 1, 2, 1, 1);
 
   LOG(4, "Adding the draw options box to left frame");
   left_box.set_border_width(10);
@@ -221,7 +207,7 @@ void MainWindow::connectButtons()
  */
 void MainWindow::updateDropdownList()
 {
-  LOG( 8, "...");
+  LOG( 8, "..." );
   int added_objects = 0;
   auto objects = this->facade.displayFile().getObjects();
 
@@ -398,15 +384,15 @@ void MainWindow::on_button_move_right()
 void MainWindow::on_button_zoom_in()
 { try {
 
-  big_double zoom_scale = atof(entry_zoom_scale.get_text().raw().c_str());
+  big_double zoom_scale = atof(entry_move_length.get_text().raw().c_str());
 
   if (zoom_scale <=1)
   {
     char array[4];
-    sprintf(array, "%d", DEFAULT_ZOOM_SCALE);
+    sprintf(array, "%s", DEFAULT_MOVE_LENGTH);
 
     array[3] = '\0';
-    entry_zoom_scale.set_text(array);
+    entry_move_length.set_text(array);
   }
   else
   {
@@ -420,15 +406,15 @@ void MainWindow::on_button_zoom_in()
 void MainWindow::on_button_zoom_out()
 { try {
 
-  float zoom_scale = atof(entry_zoom_scale.get_text().raw().c_str());
+  float zoom_scale = atof(entry_move_length.get_text().raw().c_str());
 
   if (zoom_scale <=1)
   {
     char array[4];
-    sprintf(array, "%d", DEFAULT_ZOOM_SCALE);
+    sprintf(array, "%s", DEFAULT_MOVE_LENGTH);
 
     array[3] = '\0';
-    entry_zoom_scale.set_text(array);
+    entry_move_length.set_text(array);
   }
   else
   {
@@ -442,11 +428,11 @@ void MainWindow::on_button_zoom_out()
 void MainWindow::on_button_rotate_left()
 { try {
 
-  big_double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
 
   if (rotate_angle == 0)
   {
-    entry_move_length.set_text(DEFAULT_ROTATE_ANGLE);
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
   }
   else
   {
@@ -460,11 +446,11 @@ void MainWindow::on_button_rotate_left()
 void MainWindow::on_button_rotate_right()
 { try {
 
-  big_double rotate_angle = atoi(entry_rotate_angle.get_text().raw().c_str());
+  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
 
   if (rotate_angle == 0)
   {
-    entry_move_length.set_text(DEFAULT_ROTATE_ANGLE);
+    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
   }
   else
   {
