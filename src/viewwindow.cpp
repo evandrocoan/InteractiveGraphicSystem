@@ -94,7 +94,7 @@ void ViewWindow::callObservers()
   this->_transformation.set_geometric_center(_origin_coordinate_value);
 
   // LOG(16, "World transformation: %s", _transformation);
-  // LOG(16, "Window dimensions: %s, inversed dimensions: %s", this->_dimentions, this->_dimentions.inverse());
+  // LOG(16, "Window dimensions: %s, inversed dimensions: %s", this->_dimentions, inverse);
   this->_updateAllObjectCoordinates(this->_transformation, this->_axes);
 }
 
