@@ -59,7 +59,7 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
     this->w = 1.0;
   }
 
-  Coordinate(big_double x, big_double y, big_double z = 1.0) :
+  Coordinate(big_double x, big_double y, big_double z) :
       Array{x, y, z, 1.0},
       x{this->_data[0]},
       y{this->_data[1]},

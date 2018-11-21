@@ -76,13 +76,13 @@ void Polygon::_sutherlandHodgmanClipLeft(const Axes& axes, std::vector<Coordinat
 
     // Case 3: in -> out
     if( first_coordinate->x >= axes.xWiMin && second_coordinate->x < axes.xWiMin ) {
-      clippingResult.push_back( new Coordinate(new_x_value, new_y_value) );
+      clippingResult.push_back( new Coordinate(new_x_value, new_y_value, 0) );
     }
 
     // Case 4: out -> in
     if( first_coordinate->x < axes.xWiMin && second_coordinate->x >= axes.xWiMin )
     {
-      clippingResult.push_back( new Coordinate(new_x_value, new_y_value) );
+      clippingResult.push_back( new Coordinate(new_x_value, new_y_value, 0) );
       clippingResult.push_back( second_coordinate );
     }
   }
@@ -120,13 +120,13 @@ void Polygon::_sutherlandHodgmanClipRight(const Axes& axes, std::vector<Coordina
 
     // Case 3: in -> out
     if( first_coordinate->x < axes.xWiMax && second_coordinate->x >= axes.xWiMax ) {
-      clippingResult.push_back( new Coordinate(new_x_value, new_y_value) );
+      clippingResult.push_back( new Coordinate(new_x_value, new_y_value, 0) );
     }
 
     // Case 4: out -> in
     if( first_coordinate->x >= axes.xWiMax && second_coordinate->x < axes.xWiMax )
     {
-      clippingResult.push_back( new Coordinate(new_x_value, new_y_value) );
+      clippingResult.push_back( new Coordinate(new_x_value, new_y_value, 0) );
       clippingResult.push_back( second_coordinate );
     }
   }
@@ -164,13 +164,13 @@ void Polygon::_sutherlandHodgmanClipTop(const Axes& axes, std::vector<Coordinate
 
     // Case 3: in -> out
     if( first_coordinate->y <= axes.yWiMax && second_coordinate->y > axes.yWiMax ) {
-      clippingResult.push_back( new Coordinate(new_x_value, new_y_value) );
+      clippingResult.push_back( new Coordinate(new_x_value, new_y_value, 0) );
     }
 
     // Case 4: out -> in
     if( first_coordinate->y > axes.yWiMax && second_coordinate->y <= axes.yWiMax )
     {
-      clippingResult.push_back( new Coordinate(new_x_value, new_y_value) );
+      clippingResult.push_back( new Coordinate(new_x_value, new_y_value, 0) );
       clippingResult.push_back( second_coordinate );
     }
   }
@@ -208,13 +208,13 @@ void Polygon::_sutherlandHodgmanClipBottom(const Axes& axes, std::vector<Coordin
 
     // Case 3: in -> out
     if( first_coordinate->y >= axes.yWiMin && second_coordinate->y < axes.yWiMin ) {
-      clippingResult.push_back( new Coordinate(new_x_value, new_y_value) );
+      clippingResult.push_back( new Coordinate(new_x_value, new_y_value, 0) );
     }
 
     // Case 4: out -> in
     if( first_coordinate->y < axes.yWiMin && second_coordinate->y >= axes.yWiMin )
     {
-      clippingResult.push_back( new Coordinate(new_x_value, new_y_value) );
+      clippingResult.push_back( new Coordinate(new_x_value, new_y_value, 0) );
       clippingResult.push_back( second_coordinate );
     }
   }

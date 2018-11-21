@@ -2,7 +2,7 @@
 
 ViewWindow::ViewWindow() :
       _axes(ViewWindow::xWiMin, ViewWindow::yWiMin, ViewWindow::xWiMax, ViewWindow::yWiMax),
-      _angles(0, 0),
+      _angles(0, 0, 0),
       _dimentions(100, 100, 0),
       _windowCenter(0, 0, 0)
 {
@@ -178,5 +178,5 @@ Coordinate* ViewWindow::convertCoordinateToViewPort(const Coordinate &c) const
   // std::cout << ", wiMin x: " << xWiMin << ", y: " << yWiMin;
   // std::cout << ", wiMax x: " << xWiMax << ", y: " << yWiMax;
   // std::cout << ", _width x: " << xVpMax - xVpMin << ", _height: " << yVpMax - yVpMin << std::endl;
-  return new Coordinate(xVp, yVp);
+  return new Coordinate(xVp, yVp, 0);
 }
