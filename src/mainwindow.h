@@ -47,6 +47,7 @@ protected:
   Gtk::Button button_move_left;
   Gtk::Button button_move_right;
 
+  Gtk::Entry projection_depth;
   Gtk::Entry entry_move_length;
 
   Gtk::Button button_rotate_left_x;
@@ -79,8 +80,14 @@ protected:
   Gtk::RadioButton liang_barsky_radiobutton;
   Gtk::RadioButton cohen_sutheland_radiobutton;
 
+  Gtk::RadioButton parallel_radiobutton;
+  Gtk::RadioButton perspective_radiobutton;
+
   void on_liang_radiobutton();
   void on_cohen_radiobutton();
+
+  void on_parallel_radiobutton();
+  void on_perspective_radiobutton();
 
   void setupButtons();
   void connectButtons();

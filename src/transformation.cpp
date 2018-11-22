@@ -1,6 +1,8 @@
 #include "transformation.h"
 
 Transformation::Transformation() :
+    isPreProjection{false},
+    isPostProjection{false},
     _transformation{}
 {
   this->clear();
@@ -25,6 +27,8 @@ void Transformation::apply(Coordinate &point) const
 void Transformation::clear()
 {
   this->isInitialized = false;
+  this->isPreProjection = false;
+  this->isPostProjection = false;
   this->transformations.clear();
 }
 

@@ -32,8 +32,10 @@ MainWindow::MainWindow() :
       right_frame("DrawingArea"),
 
       // Transformation
-      liang_barsky_radiobutton("L"),
-      cohen_sutheland_radiobutton("C"),
+      liang_barsky_radiobutton("Li"),
+      cohen_sutheland_radiobutton("Co"),
+      parallel_radiobutton("Pa"),
+      perspective_radiobutton("Pe"),
       main_vertical_box(Gtk::ORIENTATION_VERTICAL),
       list_view_text(1),
       translation_radiobutton("T"),
@@ -99,10 +101,14 @@ Gtk::Window& MainWindow::getWindow()
 
 void MainWindow::setDefaultTooltips()
 {
+  projection_depth.set_tooltip_text("A value between 0 and 200 for the Perspective Projection Algorithm");
   entry_move_length.set_tooltip_text("A general stop value to use on zoom, scaling and moving step.");
 
   liang_barsky_radiobutton   .set_tooltip_text("Liang-Barsky");
   cohen_sutheland_radiobutton.set_tooltip_text("Cohen-Sutheland");
+
+  parallel_radiobutton   .set_tooltip_text("Parallel Projection");
+  perspective_radiobutton.set_tooltip_text("Perspective Projection");
 
   button_add_object   .set_tooltip_text("Add new object");
   button_delete_object.set_tooltip_text("Remove current selected object");
@@ -134,12 +140,18 @@ void MainWindow::setupButtons()
   LOG(4, "Initializing input size of drive size");
   entry_move_length.set_width_chars(3);
   entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
+  projection_depth.set_width_chars(3);
+  projection_depth.set_text("2");
 
   liang_barsky_radiobutton.set_active();
   liang_barsky_radiobutton.set_halign( Gtk::ALIGN_CENTER );
-
   cohen_sutheland_radiobutton.join_group(liang_barsky_radiobutton);
   cohen_sutheland_radiobutton.set_halign( Gtk::ALIGN_CENTER );
+
+  parallel_radiobutton.set_active();
+  parallel_radiobutton.set_halign( Gtk::ALIGN_CENTER );
+  perspective_radiobutton.join_group(parallel_radiobutton);
+  perspective_radiobutton.set_halign( Gtk::ALIGN_CENTER );
 
   LOG(4, "Mounting the object list grid structure");
   grid_list_obj.set_column_homogeneous(true);
@@ -164,7 +176,10 @@ void MainWindow::setupButtons()
   LOG(4, "Adding the movement buttons in the zoom grid");
   grid_zoom.set_column_homogeneous(true);
   grid_zoom.attach(liang_barsky_radiobutton,    1, 1, 1, 1);
-  grid_zoom.attach(cohen_sutheland_radiobutton, 2, 1, 1, 1);
+  grid_zoom.attach(cohen_sutheland_radiobutton, 3, 1, 1, 1);
+  grid_zoom.attach(parallel_radiobutton,        1, 2, 1, 1);
+  grid_zoom.attach(projection_depth,            2, 2, 1, 1);
+  grid_zoom.attach(perspective_radiobutton,     3, 2, 1, 1);
 
   LOG(4, "Adding the rotation buttons to the rotation grid");
   grid_rotate.set_column_homogeneous(true);
@@ -193,6 +208,9 @@ void MainWindow::connectButtons()
 
   this->liang_barsky_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_liang_radiobutton) );
   this->cohen_sutheland_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_cohen_radiobutton) );
+
+  this->parallel_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_parallel_radiobutton) );
+  this->perspective_radiobutton.signal_clicked().connect( sigc::mem_fun(*this, &MainWindow::on_perspective_radiobutton) );
 
   this->button_move_inside.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_inside));
   this->button_move_outside.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_move_outside));
@@ -607,6 +625,25 @@ void MainWindow::on_cohen_radiobutton()
 { try {
 
   this->facade.setLineClipping( LineClippingType::COHEN_SUTHELAND );
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
+}
+
+
+void MainWindow::on_parallel_radiobutton()
+{ try {
+
+  this->facade.setProjection( Projection::PARALLEL, 0 );
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
+}
+
+
+void MainWindow::on_perspective_radiobutton()
+{ try {
+
+  big_double projection = atoi(entry_move_length.get_text().raw().c_str());
+  this->facade.setProjection( Projection::PERSPECTIVE, projection );
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
