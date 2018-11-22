@@ -338,6 +338,7 @@ void RwObjectService::write(std::string file_path)
   auto points = this->facade._world._points.getObjects();
   auto curves = this->facade._world._curves.getObjects();
   auto polygons = this->facade._world._polygons.getObjects();
+  auto polyhedrons = this->facade._world._polyhedrons.getObjects();
 
   unsigned int index = 1;
   unsigned int last_index;
@@ -366,6 +367,41 @@ void RwObjectService::write(std::string file_path)
       myfile << std::to_string(index) + " ";
     }
 
+    myfile << "\n\n";
+  }
+
+  LOG(8, "Draw General Polyhedrons");
+  for (auto object : polyhedrons)
+  {
+    LOG(8, "object: %s", *object);
+    if( !object->isVisibleOnGui() ) continue;
+
+    myfile << "o " + object->getName() + "\n";
+    auto objectCoordinates = object->worldCoordinates();
+
+    for( auto coordinate : objectCoordinates )
+    {
+      myfile << "v "
+          << std::to_string( coordinate->x ) << " "
+          << std::to_string( coordinate->y ) << " "
+          << std::to_string( coordinate->z ) << "\n";
+    }
+
+    myfile << "vn 0.0 0.0 1.0";
+    int count = 0;
+    auto line_segments = object->lineSegments();
+
+    for( auto segment : line_segments )
+    {
+      if( count % object->facetSize() == 0 ) {
+        myfile << "\nf ";
+      }
+
+      myfile << std::to_string(index + segment - 1) + "//1 ";
+      ++count;
+    }
+
+    index = index + objectCoordinates.size();
     myfile << "\n\n";
   }
 

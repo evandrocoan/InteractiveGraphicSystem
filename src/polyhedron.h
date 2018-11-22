@@ -21,6 +21,9 @@ public:
   void updateWindowCoordinates(const Transformation&);
   void updateClippingCoordinates(const Axes&);
 
+  int facetSize() { return _facet_size; }
+  const std::vector<int>& lineSegments() { return _line_segments; }
+
 private:
   int _facet_size;
 
