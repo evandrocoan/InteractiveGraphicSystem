@@ -80,6 +80,7 @@ private:
   void on_button_remove_coordinate();
 
   void _close_updating_list();
+  void _update_footnote_coordinate_list();
 
   std::string _get_field_name(Gtk::Entry&);
   Coordinate _get_rgb_color(Gtk::Entry& field_r, Gtk::Entry& field_g, Gtk::Entry& field_b);
