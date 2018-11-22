@@ -4,7 +4,9 @@ ViewWindow::ViewWindow() :
       _axes(ViewWindow::xWiMin, ViewWindow::yWiMin, ViewWindow::xWiMax, ViewWindow::yWiMax),
       _angles(0, 0, 0),
       _dimentions(100, 100, 0),
-      _windowCenter(0, 0, 0)
+      _windowCenter(0, 0, 0),
+      _projection(Projection::PARALLEL),
+      _projectionDistance(0)
 {
 }
 
@@ -85,9 +87,23 @@ void ViewWindow::rotate(Coordinate angles)
 
 void ViewWindow::callObservers()
 {
+  auto translation = -this->_windowCenter;
+  translation.z += _projectionDistance;
   this->_transformation.clear();
-  this->_transformation.add_translation("Window to center", -this->_windowCenter);
+  this->_transformation.add_translation("Window to center", translation);
   this->_transformation.add_rotation("Window rotation", this->_angles);
+  this->_transformation.set_geometric_center(_origin_coordinate_value);
+
+  if( _projection == Projection::PERSPECTIVE )
+  {
+    this->_transformation.isPreProjection = true;
+    this->_transformation.isPostProjection = true;
+    this->_updateAllObjectCoordinates(this->_transformation, this->_axes);
+
+    this->_transformation.clear();
+    this->_transformation.isPostProjection = true;
+    this->_transformation.projectionDistance = _projectionDistance;
+  }
 
   Coordinate inverse{ 1.0 / _dimentions[0], 1.0 / _dimentions[1], 2.0 / ( _dimentions[0] + _dimentions[1] ) };
   this->_transformation.add_scaling("Window coordinate scaling", inverse);

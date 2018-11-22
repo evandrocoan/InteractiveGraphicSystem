@@ -19,11 +19,21 @@
 #include "matrixform.h"
 #include "transformationdata.h"
 
+enum Projection
+{
+  PARALLEL,
+  PERSPECTIVE
+};
+
 class Transformation
 {
 public:
   Transformation();
   ~Transformation();
+
+  bool isPreProjection;
+  bool isPostProjection;
+  big_double projectionDistance;
 
   /**
    * Create and configure correctly a rotation.
@@ -50,6 +60,7 @@ public:
    */
   void clear();
   unsigned int size() const;
+
   void remove_transformation(const std::string name);
 
   const std::vector<TransformationData>& getTransformations() const;
@@ -83,6 +94,7 @@ protected:
    * to transform the object when calling `apply()`.
    */
   bool isInitialized;
+
   MatrixForm _transformation;
 
   /**

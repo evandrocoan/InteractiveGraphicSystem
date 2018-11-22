@@ -56,6 +56,12 @@ public:
     return this->convertCoordinateToViewPort( this->_axes[index] );
   }
 
+  void setProjection(Projection projection, big_double projection_depth) {
+      _projection = projection;
+      _projectionDistance = ( projection == Projection::PARALLEL ) ? 0.0 : projection_depth;
+      this->callObservers();
+  }
+
   Coordinate* convertCoordinateToViewPort(const Coordinate&) const;
   void updateViewPortSize(big_double width, big_double height);
 
@@ -118,6 +124,8 @@ protected:
   Coordinate _dimentions;
   Coordinate _windowCenter;
 
+  Projection _projection;
+  big_double _projectionDistance;
   Transformation _transformation;
 
   void callObservers();

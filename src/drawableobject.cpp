@@ -144,14 +144,25 @@ void DrawableObject::updateWindowCoordinates(const Transformation& transformatio
   LOG(8, "...");
   Coordinate* new_coordinate;
 
-  auto coordinates = this->worldCoordinates();
-  DrawableObject::destroyList(this->_windowCoordinates);
+  if( transformation.isPreProjection || !transformation.isPostProjection ) {
+    DrawableObject::destroyList(this->_windowCoordinates);
 
-  for(auto coordinate : coordinates)
-  {
-    new_coordinate = new Coordinate(*coordinate);
-    transformation.apply(*new_coordinate);
-    this->_windowCoordinates.push_back(new_coordinate);
+    for(auto coordinate : this->_worldCoordinates)
+    {
+      new_coordinate = new Coordinate(*coordinate);
+      transformation.apply(*new_coordinate);
+      this->_windowCoordinates.push_back(new_coordinate);
+    }
+  }
+  else {
+    for(auto coordinate : this->_windowCoordinates)
+    {
+      if( !( coordinate->z - 0.001 < 0 && coordinate->z + 0.001 > 0 ) ) {
+        coordinate->x = transformation.projectionDistance * coordinate->x / coordinate->z;
+        coordinate->y = transformation.projectionDistance * coordinate->y / coordinate->z;
+      }
+      transformation.apply(*coordinate);
+    }
   }
 }
 
