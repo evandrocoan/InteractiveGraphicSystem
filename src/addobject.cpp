@@ -115,10 +115,14 @@ void AddObject::on_button_save_point()
   std::string name = this->_get_field_name(polygon_name_field);
   LOG(4, "Name: %s", name);
 
-  if (name.empty())
+  if( name.empty() )
   {
     polygon_name_field.grab_focus();
-    return;
+    std::ostringstream contents;
+    std::string error = tfm::format( "The name field cannot be empty!" );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   if( polygon_coord_list.size() < 3 )
@@ -167,10 +171,14 @@ void AddObject::on_button_save_line()
   std::string name = this->_get_field_name(polygon_name_field);
   LOG(4, "Name: %s", name);
 
-  if (name.empty())
+  if( name.empty() )
   {
     polygon_name_field.grab_focus();
-    return;
+    std::ostringstream contents;
+    std::string error = tfm::format( "The name field cannot be empty!" );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   if( polygon_coord_list.size() < 6 )
@@ -214,10 +222,14 @@ void AddObject::on_button_save_polygon()
   std::string name = this->_get_field_name(polygon_name_field);
   LOG(4, "Name: %s", name);
 
-  if (name.empty())
+  if( name.empty() )
   {
     polygon_name_field.grab_focus();
-    return;
+    std::ostringstream contents;
+    std::string error = tfm::format( "The name field cannot be empty!" );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   if( polygon_coord_list.size() < 9 )
@@ -257,10 +269,14 @@ void AddObject::on_button_save_bezier()
   std::string name = this->_get_field_name(polygon_name_field);
   LOG(4, "Name: %s", name);
 
-  if (name.empty())
+  if( name.empty() )
   {
     polygon_name_field.grab_focus();
-    return;
+    std::ostringstream contents;
+    std::string error = tfm::format( "The name field cannot be empty!" );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
@@ -287,10 +303,14 @@ void AddObject::on_button_save_bspline()
   std::string name = this->_get_field_name(polygon_name_field);
   LOG(4, "Name: %s", name);
 
-  if (name.empty())
+  if( name.empty() )
   {
     polygon_name_field.grab_focus();
-    return;
+    std::ostringstream contents;
+    std::string error = tfm::format( "The name field cannot be empty!" );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
