@@ -892,6 +892,7 @@ void MainWindow::add_test_objects()
 {
   // this->rw_object_service.read("./simple_line_polygon_test.obj");
   // this->rw_object_service.read("./simple_bezier_polygon.obj");
+  this->rw_object_service.read("./simple_polyhedron.obj");
 
   // std::vector<big_double> point_list;
   // point_list.clear();
@@ -911,26 +912,24 @@ void MainWindow::add_test_objects()
   // point_list.push_back(60); point_list.push_back(10); point_list.push_back(1);
   // this->facade.addPolygon("Bezier", point_list, _origin_coordinate_value, _origin_coordinate_value, CurveType::BEZIER);
 
-  std::vector<Coordinate*> coord_list;
-  std::vector<unsigned int> segment_list;
-  segment_list.push_back(1); segment_list.push_back(2); segment_list.push_back(4); segment_list.push_back(3);
-  segment_list.push_back(3); segment_list.push_back(4); segment_list.push_back(8); segment_list.push_back(7);
-  segment_list.push_back(7); segment_list.push_back(8); segment_list.push_back(6); segment_list.push_back(5);
-  segment_list.push_back(5); segment_list.push_back(6); segment_list.push_back(2); segment_list.push_back(1);
-  segment_list.push_back(3); segment_list.push_back(7); segment_list.push_back(5); segment_list.push_back(1);
-  segment_list.push_back(8); segment_list.push_back(4); segment_list.push_back(2); segment_list.push_back(6);
+  // std::vector<Coordinate*> coord_list;
+  // std::vector<int> segment_list;
+  // segment_list.push_back(1); segment_list.push_back(2); segment_list.push_back(4); segment_list.push_back(3);
+  // segment_list.push_back(3); segment_list.push_back(4); segment_list.push_back(8); segment_list.push_back(7);
+  // segment_list.push_back(7); segment_list.push_back(8); segment_list.push_back(6); segment_list.push_back(5);
+  // segment_list.push_back(5); segment_list.push_back(6); segment_list.push_back(2); segment_list.push_back(1);
+  // segment_list.push_back(3); segment_list.push_back(7); segment_list.push_back(5); segment_list.push_back(1);
+  // segment_list.push_back(8); segment_list.push_back(4); segment_list.push_back(2); segment_list.push_back(6);
 
-  coord_list.clear();
-  coord_list.push_back( new Coordinate(15.112263 , 7.1202320, 76.854355 ) );
-  coord_list.push_back( new Coordinate(15.112263 , 67.120232, 76.854355 ) );
-  coord_list.push_back( new Coordinate(15.112263 , 7.1202320, 16.854351 ) );
-  coord_list.push_back( new Coordinate(15.112263 , 67.120232, 16.854351 ) );
-  coord_list.push_back( new Coordinate(75.112259 , 7.1202320, 76.854355 ) );
-  coord_list.push_back( new Coordinate(75.112259 , 67.120232, 76.854355 ) );
-  coord_list.push_back( new Coordinate(75.112259 , 7.1202320, 16.854351 ) );
-  coord_list.push_back( new Coordinate(75.112259 , 67.120232, 16.854351 ) );
-  this->facade.addPolyhedron("Polyhedron", coord_list, segment_list, 4,
-      _origin_coordinate_value, _origin_coordinate_value);
-
-  this->facade.queue_draw();
+  // coord_list.clear();
+  // coord_list.push_back( new Coordinate(15.112263 , 7.1202320, 76.854355 ) );
+  // coord_list.push_back( new Coordinate(15.112263 , 67.120232, 76.854355 ) );
+  // coord_list.push_back( new Coordinate(15.112263 , 7.1202320, 16.854351 ) );
+  // coord_list.push_back( new Coordinate(15.112263 , 67.120232, 16.854351 ) );
+  // coord_list.push_back( new Coordinate(75.112259 , 7.1202320, 76.854355 ) );
+  // coord_list.push_back( new Coordinate(75.112259 , 67.120232, 76.854355 ) );
+  // coord_list.push_back( new Coordinate(75.112259 , 7.1202320, 16.854351 ) );
+  // coord_list.push_back( new Coordinate(75.112259 , 67.120232, 16.854351 ) );
+  // this->facade.addPolyhedron("Polyhedron", coord_list, segment_list, 4, _origin_coordinate_value, _origin_coordinate_value);
+  // this->facade.queue_draw();
 }

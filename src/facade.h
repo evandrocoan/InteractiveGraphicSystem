@@ -49,7 +49,7 @@ public:
     this->_world.addPolygon(name, points, _borderColor, _fillingColor, type); }
 
   void addPolyhedron(std::string name, std::vector<Coordinate*> points,
-              std::vector<unsigned int> _line_segments, int _facet_size,
+              std::vector<int> _line_segments, int _facet_size,
               Coordinate _borderColor=_origin_coordinate_value,
               Coordinate _fillingColor=_origin_coordinate_value)
   {

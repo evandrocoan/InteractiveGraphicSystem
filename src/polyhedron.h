@@ -12,7 +12,7 @@ class Polyhedron : public DrawableObject
 {
 public:
   Polyhedron(std::string name, std::vector<Coordinate*>,
-      std::vector<unsigned int> _line_segments, int _facet_size,
+      std::vector<int> _line_segments, int _facet_size,
       Coordinate _borderColor, Coordinate _fillingColor);
 
   virtual ~Polyhedron();
@@ -25,7 +25,7 @@ private:
   int _facet_size;
 
   std::vector<Polygon*> _polygons;
-  std::vector<unsigned int> _line_segments;
+  std::vector<int> _line_segments;
 };
 
 #endif // GTKMM_APP_POLYHEDRON

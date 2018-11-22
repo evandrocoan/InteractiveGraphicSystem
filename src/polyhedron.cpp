@@ -2,7 +2,7 @@
 #include "polygon.h"
 
 Polyhedron::Polyhedron(std::string name, std::vector<Coordinate*> _worldCoordinates,
-              std::vector<unsigned int> _line_segments, int _facet_size,
+              std::vector<int> _line_segments, int _facet_size,
               Coordinate _borderColor, Coordinate _fillingColor) :
       DrawableObject(name, _worldCoordinates, _borderColor, _fillingColor),
       _facet_size(_facet_size),
@@ -93,7 +93,7 @@ void Polyhedron::updateWindowCoordinates(const Transformation& transformation)
   for( int slice = _line_segments.size(); slice > 0; slice -= _facet_size )
   {
     LOG( 8, "slice: %s", slice );
-    std::vector<unsigned int> facets( _line_segments.begin() + slice - _facet_size, _line_segments.begin() + slice );
+    std::vector<int> facets( _line_segments.begin() + slice - _facet_size, _line_segments.begin() + slice );
 
     std::ostringstream contents1;
     for( auto value : facets ) contents1 << value << ", ";
