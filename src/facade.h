@@ -92,7 +92,7 @@ public:
   void updateObjectCoordinates(DrawableObject* object)
   {
     if( object != nullptr ) {
-      this->_world.updateObjectCoordinates(object, this->_viewWindow.transformation(), this->_viewWindow.axes());
+      this->_viewWindow.updateObjectCoordinates(object);
     }
     this->_updateDropdownList();
     this->_drawingArea.queue_draw();

@@ -12,6 +12,7 @@
 #include "axes.h"
 #include "noncopyable.h"
 #include "transformation.h"
+#include "drawableobject.h"
 
 #define MIN_WIDTH 15
 #define MIN_HEIGHT 15
@@ -48,8 +49,8 @@ public:
   void move(Coordinate steps);
   void rotate(Coordinate steps);
 
-  const Axes& axes() const                     { return this->_axes; };
-  const Transformation& transformation() const { return this->_transformation; }
+  const Axes& axes() const { return this->_axes; };
+  void updateObjectCoordinates(const DrawableObject* object);
 
   const Coordinate& point(unsigned int index) const { return this->_axes[index]; }
   const Coordinate* viewPort(unsigned int index) const {
@@ -126,7 +127,6 @@ protected:
 
   Projection _projection;
   big_double _projectionDistance;
-  Transformation _transformation;
 
   void callObservers();
 };
