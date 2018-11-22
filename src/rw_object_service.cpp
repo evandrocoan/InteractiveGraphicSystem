@@ -258,14 +258,14 @@ void RwObjectService::getFacetIndexes(std::vector<int>& result, std::string& lin
     _facets_size = result.size();
   }
 
-  if( ( _facets_size <= 0 ) ? 1 : ( indexes.size() % _facets_size != 0 )
+  if( ( _facets_size <= 0 ) ? 1 : ( result.size() % _facets_size != 0 )
         || ( _facets_size != 3 && _facets_size != 4 ) )
   {
     std::ostringstream contents;
-    for( auto value : indexes ) contents << value << ", ";
+    for( auto value : result ) contents << value << ", ";
 
     std::string error = tfm::format(
-        "The facets size should be modular with 3 or 4, not %s.\n\n%s",
+        "The facets size should be modular with 3 or 4, not %s with %s sides",
         _facets_size, contents.str() );
 
     LOG( 1, "%s", error );
@@ -279,7 +279,6 @@ std::vector<Coordinate*> RwObjectService::getFacetVertexes(std::vector<int>& lin
   int coordinates_size = coordinates.size();
 
   LOG( 8, "_last_index: %s", _last_index );
-  LOG( 8, "_facets_size: %s", _facets_size );
   LOG( 8, "coordinates_size: %s", coordinates_size );
 
   std::vector<Coordinate*> internal( coordinates.begin() + _last_index, coordinates.begin() + coordinates.size() );
@@ -553,5 +552,134 @@ TEST_CASE("Testing basic getLineIndexes loading duplicated vertexes on middle of
   std::ostringstream contents;
   for( auto value : indexes ) contents << value << ", ";
   CHECK( "1, 2, 3, 3, 3, 4, " == contents.str() );
+}
+
+
+TEST_CASE("Testing basic getFacetIndexes case load with 3 _facets_size")
+{
+  // _debugger_int_debug_level = 127-16;
+  // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
+  Facade& nullface( *static_cast<Facade*>( nullptr ) );
+  RwObjectService rw_object_service( nullface );
+
+  std::vector<int> indexes{};
+  std::string line = "f 1//1 2//1 4//1";
+  rw_object_service.getFacetIndexes(indexes, line);
+
+  std::ostringstream contents;
+  for( auto value : indexes ) contents << value << ", ";
+  CHECK( "1, 2, 4, " == contents.str() );
+
+  line = "f 3//2 4//2 8//2";
+  rw_object_service.getFacetIndexes(indexes, line);
+
+  std::ostringstream contents2;
+  for( auto value : indexes ) contents2 << value << ", ";
+  CHECK( "1, 2, 4, 3, 4, 8, " == contents2.str() );
+}
+
+
+TEST_CASE("Testing basic getFacetIndexes case load with 4 _facets_size")
+{
+  // _debugger_int_debug_level = 127-16;
+  // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
+  Facade& nullface( *static_cast<Facade*>( nullptr ) );
+  RwObjectService rw_object_service( nullface );
+
+  std::vector<int> indexes{};
+  std::string line = "f 1//1 2//1 4//1 3//1";
+  rw_object_service.getFacetIndexes(indexes, line);
+
+  std::ostringstream contents;
+  for( auto value : indexes ) contents << value << ", ";
+  CHECK( "1, 2, 4, 3, " == contents.str() );
+
+  line = "f 3//2 4//2 8//2 7//2";
+  rw_object_service.getFacetIndexes(indexes, line);
+
+  std::ostringstream contents2;
+  for( auto value : indexes ) contents2 << value << ", ";
+  CHECK( "1, 2, 4, 3, 3, 4, 8, 7, " == contents2.str() );
+}
+
+
+TEST_CASE("Testing invalid getFacetIndexes case load with 2 facets")
+{
+  // _debugger_int_debug_level = 127-16;
+  // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
+  Facade& nullface( *static_cast<Facade*>( nullptr ) );
+  RwObjectService rw_object_service( nullface );
+
+  std::vector<int> indexes{};
+  std::string line = "f 1//1 2//1";
+
+  // https://github.com/onqtam/doctest/blob/master/doc/markdown/assertions.md
+  REQUIRE_THROWS_AS( rw_object_service.getFacetIndexes(indexes, line), std::runtime_error );
+}
+
+
+TEST_CASE("Testing invalid getFacetIndexes case load with 5 facets")
+{
+  // _debugger_int_debug_level = 127-16;
+  // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
+  Facade& nullface( *static_cast<Facade*>( nullptr ) );
+  RwObjectService rw_object_service( nullface );
+
+  std::vector<int> indexes{};
+  std::string line = "f 3//2 4//2 8//2 7//2 2//1";
+
+  // https://github.com/onqtam/doctest/blob/master/doc/markdown/assertions.md
+  REQUIRE_THROWS_AS( rw_object_service.getFacetIndexes(indexes, line), std::runtime_error );
+}
+
+
+TEST_CASE("Testing invalid getFacetIndexes case load with 7 facets")
+{
+  // _debugger_int_debug_level = 127-16;
+  // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
+  Facade& nullface( *static_cast<Facade*>( nullptr ) );
+  RwObjectService rw_object_service( nullface );
+
+  std::vector<int> indexes{};
+  std::string line = "f 3//2 4//2 8//2 7//2";
+  rw_object_service.getFacetIndexes(indexes, line);
+
+  line = "f 3//2 4//2 8//2";
+  // https://github.com/onqtam/doctest/blob/master/doc/markdown/assertions.md
+  REQUIRE_THROWS_AS( rw_object_service.getFacetIndexes(indexes, line), std::runtime_error );
+}
+
+
+TEST_CASE("Testing basic getFacetVertexes case load with load count recovery")
+{
+  // _debugger_int_debug_level = 127-16;
+  // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
+  Facade& nullface( *static_cast<Facade*>( nullptr ) );
+  RwObjectService rw_object_service( nullface );
+
+  std::vector<int> indexes{1, 2};
+  std::vector<Coordinate*> coordinates{new Coordinate(1, 2, 3), new Coordinate(4, 5, 6)};
+  std::vector<Coordinate*> results = rw_object_service.getFacetVertexes(indexes, coordinates);
+
+  std::ostringstream contents;
+  for( auto value : results ) contents << *value << ", ";
+  CHECK( "(1, 2, 3, 1), (4, 5, 6, 1), " == contents.str() );
+
+  std::ostringstream contents2;
+  for( auto value : indexes ) contents2 << value << ", ";
+  CHECK( "1, 2, " == contents2.str() );
+
+  std::vector<int> indexes2{3, 4};
+  std::vector<Coordinate*> coordinates2{new Coordinate(1, 2, 3), new Coordinate(4, 5, 6),
+      new Coordinate(7, 8, 9), new Coordinate(10, 11, 12)};
+  std::vector<Coordinate*> results2 = rw_object_service.getFacetVertexes(indexes2, coordinates2);
+
+  std::ostringstream contents3;
+  for( auto value : results2 ) contents3 << *value << ", ";
+  CHECK( "(7, 8, 9, 1), (10, 11, 12, 1), " == contents3.str() );
+
+  std::ostringstream contents4;
+  for( auto value : indexes2 ) contents4 << value << ", ";
+  CHECK( "1, 2, " == contents4.str() );
 }
 
