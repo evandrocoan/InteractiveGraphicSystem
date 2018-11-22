@@ -14,17 +14,20 @@ ViewWindow::~ViewWindow()
 {
 }
 
-ViewWindow::UpdateAllObjectCoordinates::Connection ViewWindow::addObserver(const ViewWindow::UpdateAllObjectCoordinates::Callback& callback)
-{
+ViewWindow::UpdateAllObjectCoordinates::Connection ViewWindow::addObserver(const ViewWindow::UpdateAllObjectCoordinates::Callback& callback) {
   auto connection = this->_updateAllObjectCoordinates.connect(callback);
-  this->callObservers();
   return connection;
+}
+
+void ViewWindow::updateObjectCoordinates(const DrawableObject* object) {
+  std::string error = tfm::format( "Update a given Object Coordinates is not implemented yet!" );
+  LOG( 1, "%s", error );
+  // throw std::runtime_error( error );
 }
 
 std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
 {
-  output << "ViewWindow" << object._dimentions
-      << object._windowCenter << ", " << object._transformation;
+  output << "ViewWindow" << object._dimentions << object._windowCenter;
   return output;
 }
 
@@ -66,14 +69,14 @@ void ViewWindow::move(Coordinate moves)
   // moves._data[0] = moves._data[0]*cosine+ moves._data[1]*sine;
   // moves._data[1] = x_move*(-1*sine)+ moves._data[1]*cosine;
   //_windowCenter = moves*T
-  this->_transformation.clear();
-  this->_transformation.add_rotation("Fix window rotation", -this->_angles);
-  this->_transformation.set_geometric_center(_origin_coordinate_value);
-  this->_transformation.apply(moves);
+  Transformation transformation;
+  transformation.add_rotation("Fix window rotation", -this->_angles);
+  transformation.set_geometric_center(_origin_coordinate_value);
+  transformation.apply(moves);
 
   LOG(16, "moves: %s", moves);
   // LOG(4, "_angles: %s", this->_angles);
-  // LOG(4, "moves transformation: %s", _transformation);
+  // LOG(4, "moves transformation: %s", transformation);
 
   this->_windowCenter += moves;
   this->callObservers();
@@ -91,23 +94,23 @@ void ViewWindow::callObservers()
   big_double z_angle = angles.z;
   angles.z = 0.0;
 
-  this->_transformation.clear();
-  this->_transformation.add_translation( "Window to center", -this->_windowCenter );
-  this->_transformation.add_rotation( "Window rotation", -angles );
+  Transformation transformation;
+  transformation.add_translation( "Window to center", -this->_windowCenter );
+  transformation.add_rotation( "Window rotation", -angles );
 
   if( _projection == Projection::PERSPECTIVE )
   {
-    this->_transformation.projectionDistance = _projectionDistance;
+    transformation.projectionDistance = _projectionDistance;
   }
 
   Coordinate inverse{ 2.0 / _dimentions.x, 2.0 / _dimentions.y, 1.0 };
-  this->_transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -z_angle ));
-  this->_transformation.add_scaling( "Window coordinate scaling", inverse );
-  this->_transformation.set_geometric_center( _origin_coordinate_value );
+  transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -z_angle ));
+  transformation.add_scaling( "Window coordinate scaling", inverse );
+  transformation.set_geometric_center( _origin_coordinate_value );
 
-  // LOG(16, "World transformation: %s", _transformation);
+  // LOG(16, "World transformation: %s", transformation);
   // LOG(16, "Window dimensions: %s, inversed dimensions: %s", this->_dimentions, inverse);
-  this->_updateAllObjectCoordinates(this->_transformation, this->_axes);
+  this->_updateAllObjectCoordinates(transformation, this->_axes);
 }
 
 /**

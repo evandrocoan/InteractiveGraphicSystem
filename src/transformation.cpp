@@ -19,7 +19,7 @@ void Transformation::apply(Coordinate &point) const
   if( this->isInitialized )
   {
     // point.z = 1.0; // No 3D support yet
-    point.multiply(this->_transformation);
+    point.multiply(_transformation);
     // LOG(8, "Transformation result %s", point);
   }
 }
@@ -171,13 +171,13 @@ void Transformation::_set_translation_data(const TransformationData &data, const
 {
   if( index == 0 )
   {
-    this->_transformation = data.matrix;
+    _transformation = data.matrix;
   }
   else
   {
-    this->_transformation.multiply(data.matrix);
+    _transformation.multiply(data.matrix);
   }
-  // LOG(16, "_transformation.multiply: %s", this->_transformation);
+  // LOG(16, "_transformation.multiply: %s", _transformation);
 }
 
 void Transformation::_set_scaling_data(const TransformationData &data, const unsigned int &index, const Coordinate &center)
@@ -218,11 +218,11 @@ void Transformation::_scaling_on_world_center(const TransformationData &data, co
   // LOG(16, "Just rotate it, as all scalings are based on the world center");
   if( index == 0 )
   {
-    this->_transformation = data.matrix;
+    _transformation = data.matrix;
   }
   else
   {
-    this->_transformation.multiply(data.matrix);
+    _transformation.multiply(data.matrix);
   }
 }
 
@@ -242,21 +242,21 @@ void Transformation::_scaling_on_its_own_center(const TransformationData &data, 
 
   if( index == 0 )
   {
-    this->_transformation = move_to_center;
+    _transformation = move_to_center;
   }
   else
   {
-    this->_transformation.multiply(move_to_center);
+    _transformation.multiply(move_to_center);
   }
 
   LOG(4, "Do the scaling on the origin");
-  this->_transformation.multiply(data.matrix);
+  _transformation.multiply(data.matrix);
 
   LOG(4, "Move back to its origin");
   move_to_center = this->_get_translation_matrix(center);
   LOG(4, "move_to_center: %s", move_to_center);
 
-  this->_transformation.multiply(move_to_center);
+  _transformation.multiply(move_to_center);
   LOG(4, "Final _transformation: %s", _transformation);
 }
 
@@ -298,11 +298,11 @@ void Transformation::_rotation_on_world_center(const TransformationData &data, c
   // LOG(16, "Just rotate it, as all rotations are based on the world center");
   if( index == 0 )
   {
-    this->_transformation = data.matrix;
+    _transformation = data.matrix;
   }
   else
   {
-    this->_transformation.multiply(data.matrix);
+    _transformation.multiply(data.matrix);
   }
 }
 
@@ -321,11 +321,11 @@ void Transformation::_rotation_on_its_own_center(const TransformationData &data,
 
   if( index == 0 )
   {
-    this->_transformation = move_to_center;
+    _transformation = move_to_center;
   }
   else
   {
-    this->_transformation.multiply(move_to_center);
+    _transformation.multiply(move_to_center);
   }
 
   // https://www.youtube.com/watch?v=gRVxv8kWl0Q
@@ -350,16 +350,16 @@ void Transformation::_rotation_on_its_own_center(const TransformationData &data,
   LOG(4, "distance: %s, angle_beta: %s, angle_alfa: %s", distance, angle_beta, angle_alfa);
   LOG(4, "data.matrix: %s", data.matrix);
 
-  this->_transformation.multiply( _get_y_rotation_matrix(-angle_beta, true) );
-  this->_transformation.multiply( _get_x_rotation_matrix(angle_alfa, true) );
-  this->_transformation.multiply( data.matrix );
-  this->_transformation.multiply( _get_x_rotation_matrix(-angle_alfa, true) );
-  this->_transformation.multiply( _get_y_rotation_matrix(angle_beta, true) );
+  _transformation.multiply( _get_y_rotation_matrix(-angle_beta, true) );
+  _transformation.multiply( _get_x_rotation_matrix(angle_alfa, true) );
+  _transformation.multiply( data.matrix );
+  _transformation.multiply( _get_x_rotation_matrix(-angle_alfa, true) );
+  _transformation.multiply( _get_y_rotation_matrix(angle_beta, true) );
 
   move_to_center = this->_get_translation_matrix(center);
   LOG(4, "Move back to its origin, move_to_center: %s", move_to_center);
 
-  this->_transformation.multiply(move_to_center);
+  _transformation.multiply(move_to_center);
   LOG(4, "Final _transformation: %s", _transformation);
 }
 
