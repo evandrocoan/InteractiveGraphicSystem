@@ -31,10 +31,9 @@ TESTS_TARGET_HACK := $(SRCDIR)/doctest_hack.h
 #
 # Options to Request or Suppress Warnings
 # https://gcc.gnu.org/onlinedocs/gcc-4.7.0/gcc/Warning-Options.html
-CFLAGS := -O0 -ggdb -Wall -Wextra -pedantic-errors -Werror -Wc++11-compat -Wcast-qual -Wno-unused-parameter -std=c++11 -fstack-protector
-# CFLAGS := -Wall -O3 -g -std=c++11
+CFLAGS := -O0 -ggdb -Wall -Wextra -pedantic-errors -Werror -Wc++11-compat -Wcast-qual -Wno-unused-parameter -std=c++11 -fstack-protector -Wl,--export-all-symbols
 
-LIBS := `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
+POST_LIBS := `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
 FIND_EXCLUSIONS := \( ! -name "*test.cpp" \)
 
 INC := -I.
@@ -203,7 +202,7 @@ veryclean: clean
 
 # Link
 $(FULL_TARGET): $(OBJECTS)
-	$(CC) $(CFLAGS) -o $(FULL_TARGET) $^ $(LIBS)
+	$(CC) $(CFLAGS) -o $(FULL_TARGET) $^ $(POST_LIBS)
 
 # Compile
 # @echo "Building target: $@ from $<"
@@ -221,7 +220,7 @@ $(FULL_TARGET): $(OBJECTS)
 #   sed:    add trailing colons
 $(BUILDDIR)/%.$(OBJEXT): $(SRCDIR)/%.$(SRCEXT)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INC) -c -o $@ $< $(LIBS)
+	$(CC) $(CFLAGS) $(INC) -c -o $@ $< $(POST_LIBS)
 	@$(CC) $(CFLAGS) $(INCDEP) -MM $(SRCDIR)/$*.$(SRCEXT) > $(BUILDDIR)/$*.$(DEPEXT)
 	@cp -f $(BUILDDIR)/$*.$(DEPEXT) $(BUILDDIR)/$*.$(DEPEXT).tmp
 	@sed -e 's|.*:|$(BUILDDIR)/$*.$(OBJEXT):|' < $(BUILDDIR)/$*.$(DEPEXT).tmp > $(BUILDDIR)/$*.$(DEPEXT)
