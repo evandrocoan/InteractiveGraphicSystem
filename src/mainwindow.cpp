@@ -890,8 +890,8 @@ void MainWindow::on_given_coordinate_rotation_radiobutton()
 
 void MainWindow::add_test_objects()
 {
-  // this->rw_object_service.read("./simple_line_polygon_test.obj");
-  // this->rw_object_service.read("./simple_bezier_polygon.obj");
+  this->rw_object_service.read("./simple_line_polygon_test.obj");
+  this->rw_object_service.read("./simple_bezier_polygon.obj");
   this->rw_object_service.read("./simple_polyhedron.obj");
 
   // std::vector<big_double> point_list;
