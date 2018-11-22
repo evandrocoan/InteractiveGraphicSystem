@@ -28,7 +28,7 @@ public:
   void addPolygon(const std::string name, const std::vector<big_double>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
   void addPolygon(const std::string name, const std::vector<Coordinate*>, Coordinate _borderColor, Coordinate _fillingColor, CurveType type);
 
-  void addPolyhedron(std::string name, std::vector<Coordinate*> points, std::vector<unsigned int> _line_segments,
+  void addPolyhedron(std::string name, std::vector<Coordinate*> points, std::vector<int> _line_segments,
       int _facet_size, Coordinate _borderColor, Coordinate _fillingColor);
 
   void removeObject(const std::string name);
