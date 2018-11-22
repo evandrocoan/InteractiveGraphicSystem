@@ -87,27 +87,23 @@ void ViewWindow::rotate(Coordinate angles)
 
 void ViewWindow::callObservers()
 {
-  auto translation = -this->_windowCenter;
-  translation.z += _projectionDistance;
+  Coordinate angles = this->_angles;
+  big_double z_angle = angles.z;
+  angles.z = 0.0;
+
   this->_transformation.clear();
-  this->_transformation.add_translation("Window to center", translation);
-  this->_transformation.add_rotation("Window rotation", this->_angles);
-  this->_transformation.set_geometric_center(_origin_coordinate_value);
+  this->_transformation.add_translation( "Window to center", -this->_windowCenter );
+  this->_transformation.add_rotation( "Window rotation", -angles );
 
   if( _projection == Projection::PERSPECTIVE )
   {
-    this->_transformation.isPreProjection = true;
-    this->_transformation.isPostProjection = true;
-    this->_updateAllObjectCoordinates(this->_transformation, this->_axes);
-
-    this->_transformation.clear();
-    this->_transformation.isPostProjection = true;
     this->_transformation.projectionDistance = _projectionDistance;
   }
 
-  Coordinate inverse{ 1.0 / _dimentions[0], 1.0 / _dimentions[1], 2.0 / ( _dimentions[0] + _dimentions[1] ) };
-  this->_transformation.add_scaling("Window coordinate scaling", inverse);
-  this->_transformation.set_geometric_center(_origin_coordinate_value);
+  Coordinate inverse{ 2.0 / _dimentions.x, 2.0 / _dimentions.y, 1.0 };
+  this->_transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -z_angle ));
+  this->_transformation.add_scaling( "Window coordinate scaling", inverse );
+  this->_transformation.set_geometric_center( _origin_coordinate_value );
 
   // LOG(16, "World transformation: %s", _transformation);
   // LOG(16, "Window dimensions: %s, inversed dimensions: %s", this->_dimentions, inverse);
