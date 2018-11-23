@@ -31,9 +31,9 @@ public:
   Transformation();
   ~Transformation();
 
-  bool isPreProjection;
-  bool isPostProjection;
+  bool isPerspectiveProjection;
   big_double projectionDistance;
+  Transformation* preTransformation;
 
   /**
    * Create and configure correctly a rotation.
@@ -94,7 +94,6 @@ protected:
    * to transform the object when calling `apply()`.
    */
   bool isInitialized;
-
   MatrixForm _transformation;
 
   /**
