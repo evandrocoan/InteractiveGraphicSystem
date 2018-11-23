@@ -1,5 +1,33 @@
 #include "transformation.h"
 
+/**
+ * Prints a more beauty version of the transformations when called on `std::cout`
+ */
+std::ostream& operator<<( std::ostream &output, const Transformation &object )
+{
+  unsigned int index = 0;
+  unsigned int size = object.transformations.size() - 1;
+
+  output << "[" << object._transformation << "] " << std::endl << " - ";
+
+  for( auto data : object.transformations )
+  {
+    output << data;
+
+    if( index != size )
+    {
+      output << std::endl << " - ";
+    }
+
+    index++;
+  }
+
+  if( object.isPerspectiveProjection ) {
+    output << ", preTransoformation: " << *object.preTransformation;
+  }
+  return output;
+}
+
 Transformation::Transformation() :
     isPerspectiveProjection{false},
     _transformation{}
@@ -385,32 +413,4 @@ const std::vector<TransformationData>& Transformation::getTransformations() cons
 unsigned int Transformation::size() const
 {
   return this->transformations.size();
-}
-
-/**
- * Prints a more beauty version of the transformations when called on `std::cout`
- */
-std::ostream& operator<<( std::ostream &output, const Transformation &object )
-{
-  unsigned int index = 0;
-  unsigned int size = object.transformations.size() - 1;
-
-  output << "[" << object._transformation << "] " << std::endl << " - ";
-
-  for( auto data : object.transformations )
-  {
-    output << data;
-
-    if( index != size )
-    {
-      output << std::endl << " - ";
-    }
-
-    index++;
-  }
-
-  if( object.isPerspectiveProjection ) {
-    output << ", preTransoformation: " << *object.preTransformation;
-  }
-  return output;
 }
