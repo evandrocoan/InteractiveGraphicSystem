@@ -6,11 +6,13 @@
 std::ostream& operator<<( std::ostream &output, const Transformation &object )
 {
   unsigned int index = 0;
-  unsigned int size = object.transformations.size() - 1;
+  unsigned int size = object._transformations.size() - 1;
 
-  output << "[" << object._transformation << "] " << std::endl << " - ";
+  output << "[" << object._transformation << "] "
+      << ", projectionDistance: " << object.projectionDistance
+      << std::endl << " - ";
 
-  for( auto data : object.transformations )
+  for( auto data : object._transformations )
   {
     output << data;
 
@@ -22,14 +24,14 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
     index++;
   }
 
-  if( object.isPerspectiveProjection ) {
-    output << ", preTransoformation: " << *object.preTransformation;
+  if( object.projectionDistance ) {
+    output << ", posTransformation: " << *object.posTransformation;
   }
   return output;
 }
 
 Transformation::Transformation() :
-    isPerspectiveProjection{false},
+    projectionDistance{0.0},
     _transformation{}
 {
   this->clear();
@@ -44,22 +46,27 @@ void Transformation::apply(Coordinate &point) const
 {
   // LOG(8, "Apply transformation: %s", point);
 
-  if( this->isInitialized )
-  {
+  if( this->_isInitialized ) {
     // point.z = 1.0; // No 3D support yet
     point.multiply(_transformation);
-    // LOG(8, "Transformation result %s", point);
+  }
+  else {
+    std::string error = tfm::format(
+        "The transformation object is not initialized. Did you forget to call `set_geometric_center()`? \n\n%s", *this );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 }
 
-void Transformation::clear()
-{
-  if( this->isPerspectiveProjection ) {
-    delete this->preTransformation;
+void Transformation::clear() {
+  if( this->projectionDistance ) {
+    delete this->posTransformation;
   }
-  this->isInitialized = false;
-  this->isPerspectiveProjection = false;
-  this->transformations.clear();
+
+  this->_isInitialized = false;
+  this->_transformations.clear();
+  this->projectionDistance = 0.0;
 }
 
 const MatrixForm Transformation::_get_translation_matrix(const Coordinate& moves) const
@@ -129,40 +136,43 @@ const MatrixForm Transformation::_get_z_rotation_matrix(const big_double& degree
     };
 }
 
-void Transformation::add_rotation(const std::string name, const Coordinate degrees, const TransformationPoint point, const Coordinate center)
-{
+void Transformation::add_rotation(const std::string name, const Coordinate degrees, const TransformationPoint point, const Coordinate center) {
+  this->_isInitialized = false;
+
   if( point == TransformationPoint::ON_WORLD_CENTER ) {
     MatrixForm matrix = _get_x_rotation_matrix(degrees.x, false);
 
     matrix.multiply( _get_y_rotation_matrix(degrees.y, false) );
     matrix.multiply( _get_z_rotation_matrix(degrees.z, false) );
-    transformations.push_back( TransformationData{name, matrix, TransformationType::ROTATION, point, center} );
+    _transformations.push_back( TransformationData{name, matrix, TransformationType::ROTATION, point, center} );
   }
   else {
     TransformationData transformation{name, _get_z_rotation_matrix(degrees.x), TransformationType::ROTATION, point, center};
-    this->transformations.push_back(transformation);
+    this->_transformations.push_back(transformation);
   }
 }
 
-void Transformation::add_scaling(const std::string name, const Coordinate factors,  const TransformationPoint point, const Coordinate center)
-{
+void Transformation::add_scaling(const std::string name, const Coordinate factors,  const TransformationPoint point, const Coordinate center) {
+  this->_isInitialized = false;
+
   TransformationData transformation{name, this->_get_scaling_matrix(factors), TransformationType::SCALING, point, center};
-  this->transformations.push_back(transformation);
+  this->_transformations.push_back(transformation);
 }
 
-void Transformation::add_translation(const std::string name, const Coordinate moves)
-{
+void Transformation::add_translation(const std::string name, const Coordinate moves) {
+  this->_isInitialized = false;
+
   TransformationData transformation{name, _get_translation_matrix(moves), TransformationType::TRANSLATION};
-  this->transformations.push_back(transformation);
+  this->_transformations.push_back(transformation);
 }
 
 void Transformation::set_geometric_center(const Coordinate &center)
 {
   LOG( 16, "..." );
-  // LOG( 16, "Center on %s - %s", center, *this );
   unsigned int index = 0;
+  // LOG( 16, "Center on %s - %s", center, *this );
 
-  for( auto data : this->transformations )
+  for( auto data : this->_transformations )
   {
     switch( data.type )
     {
@@ -193,7 +203,7 @@ void Transformation::set_geometric_center(const Coordinate &center)
     }
 
     index++;
-    this->isInitialized = true;
+    this->_isInitialized = true;
   }
 }
 
@@ -395,11 +405,11 @@ void Transformation::_rotation_on_its_own_center(const TransformationData &data,
 
 void Transformation::remove_transformation(const std::string name)
 {
-  for( auto iterator = this->transformations.begin(); iterator != this->transformations.end(); iterator++ )
+  for( auto iterator = this->_transformations.begin(); iterator != this->_transformations.end(); iterator++ )
   {
     if( (*iterator).name == name )
     {
-      this->transformations.erase(iterator);
+      this->_transformations.erase(iterator);
       return;
     }
   }
@@ -407,10 +417,10 @@ void Transformation::remove_transformation(const std::string name)
 
 const std::vector<TransformationData>& Transformation::getTransformations() const
 {
-  return this->transformations;
+  return this->_transformations;
 }
 
 unsigned int Transformation::size() const
 {
-  return this->transformations.size();
+  return this->_transformations.size();
 }

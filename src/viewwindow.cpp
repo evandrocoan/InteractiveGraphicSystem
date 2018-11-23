@@ -92,10 +92,11 @@ void ViewWindow::rotate(Coordinate angles)
   this->callObservers();
 }
 
-Transformation ViewWindow::_getTransformation()
-{
+Transformation ViewWindow::_getTransformation() {
   Coordinate angles = this->_angles;
-  big_double z_angle = angles.z;
+  Coordinate inverse{ 1.0 / _dimentions.x, 1.0 / _dimentions.y, 1.0 };
+
+  big_double angle_z = angles.z;
   angles.z = 0.0;
 
   Transformation transformation;
@@ -104,16 +105,18 @@ Transformation ViewWindow::_getTransformation()
 
   if( _projection == Projection::PERSPECTIVE ) {
     transformation.add_translation( "Window to center", Coordinate( 0, 0, _projectionDistance ) );
-    transformation.set_geometric_center( _origin_coordinate_value );
 
-    transformation.preTransformation = new Transformation();
     transformation.projectionDistance = _projectionDistance;
-    transformation.isPerspectiveProjection = true;
+    transformation.posTransformation = new Transformation();
+    transformation.posTransformation->add_rotation( "Window rotation", Coordinate( 0, 0, -angle_z ) );
+    transformation.posTransformation->add_scaling( "Window coordinate scaling", inverse );
+    transformation.posTransformation->set_geometric_center( _origin_coordinate_value );
+  }
+  else {
+    transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -angle_z ) );
+    transformation.add_scaling( "Window coordinate scaling", inverse );
   }
 
-  Coordinate inverse{ 1.0 / _dimentions.x, 1.0 / _dimentions.y, 1.0 };
-  transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -z_angle ) );
-  transformation.add_scaling( "Window coordinate scaling", inverse );
   transformation.set_geometric_center( _origin_coordinate_value );
 
   // LOG(1, "World transformation: %s", transformation);

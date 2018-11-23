@@ -31,9 +31,8 @@ public:
   Transformation();
   ~Transformation();
 
-  bool isPerspectiveProjection;
   big_double projectionDistance;
-  Transformation* preTransformation;
+  Transformation* posTransformation;
 
   /**
    * Create and configure correctly a rotation.
@@ -87,13 +86,13 @@ protected:
    * Therefore, this variable is only set within the minimum required information to build the final
    * transformation matrix. This happens right after the `set_geometric_center()` method is called on.
    */
-  std::vector<TransformationData> transformations;
+  std::vector<TransformationData> _transformations;
 
   /**
    * These values are set after calling `set_geometric_center()`. They will be the values used
    * to transform the object when calling `apply()`.
    */
-  bool isInitialized;
+  bool _isInitialized;
   MatrixForm _transformation;
 
   /**
