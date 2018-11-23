@@ -50,7 +50,7 @@ public:
   void rotate(Coordinate steps);
 
   const Axes& axes() const { return this->_axes; };
-  void updateObjectCoordinates(const DrawableObject* object);
+  void updateObjectCoordinates(DrawableObject* object);
 
   const Coordinate& point(unsigned int index) const { return this->_axes[index]; }
   const Coordinate* viewPort(unsigned int index) const {
@@ -114,11 +114,15 @@ public:
    * Implementations types for the Observer Design Pattern with C++ 11 templates and function
    * pointers, instead of tight coupled inheritance.
    */
+  typedef Signal<DrawableObject*, const Transformation&, const Axes&> UpdateObjectCoordinates;
   typedef Signal<const Transformation&, const Axes&> UpdateAllObjectCoordinates;
+
+  UpdateObjectCoordinates::Connection addObserver(const UpdateObjectCoordinates::Callback&);
   UpdateAllObjectCoordinates::Connection addObserver(const UpdateAllObjectCoordinates::Callback&);
 
 protected:
   Axes _axes;
+  UpdateObjectCoordinates _updateObjectCoordinates;
   UpdateAllObjectCoordinates _updateAllObjectCoordinates;
 
   Coordinate _angles;
@@ -129,6 +133,7 @@ protected:
   big_double _projectionDistance;
 
   void callObservers();
+  Transformation _getTransformation();
 };
 
 #endif // GTKMM_APP_VIEW_WINDOW

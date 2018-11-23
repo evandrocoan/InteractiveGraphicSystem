@@ -168,7 +168,7 @@ protected:
 
   void _addThingsToTheWindow();
   void _connectButtons();
-  void _update_transmations_list();
+  void _update_transformations_list();
 
 private:
   int _object_list_active_index;

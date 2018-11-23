@@ -19,10 +19,14 @@ ViewWindow::UpdateAllObjectCoordinates::Connection ViewWindow::addObserver(const
   return connection;
 }
 
-void ViewWindow::updateObjectCoordinates(const DrawableObject* object) {
-  std::string error = tfm::format( "Update a given Object Coordinates is not implemented yet!" );
-  LOG( 1, "%s", error );
-  // throw std::runtime_error( error );
+ViewWindow::UpdateObjectCoordinates::Connection ViewWindow::addObserver(const ViewWindow::UpdateObjectCoordinates::Callback& callback) {
+  auto connection = this->_updateObjectCoordinates.connect(callback);
+  return connection;
+}
+
+void ViewWindow::updateObjectCoordinates(DrawableObject* object) {
+  LOG( 1, "..." );
+  this->_updateObjectCoordinates( object, _getTransformation(), this->_axes );
 }
 
 std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
@@ -88,7 +92,7 @@ void ViewWindow::rotate(Coordinate angles)
   this->callObservers();
 }
 
-void ViewWindow::callObservers()
+Transformation ViewWindow::_getTransformation()
 {
   Coordinate angles = this->_angles;
   big_double z_angle = angles.z;
@@ -101,24 +105,25 @@ void ViewWindow::callObservers()
   if( _projection == Projection::PERSPECTIVE ) {
     transformation.add_translation( "Window to center", Coordinate( 0, 0, _projectionDistance ) );
     transformation.set_geometric_center( _origin_coordinate_value );
-    // LOG(1, "transformation: %s", transformation);
 
-    Transformation preTransformation;
-    preTransformation.preTransformation = &transformation;
-    transformation = preTransformation;
-
+    transformation.preTransformation = new Transformation();
     transformation.projectionDistance = _projectionDistance;
     transformation.isPerspectiveProjection = true;
   }
 
-  Coordinate inverse{ 2.0 / _dimentions.x, 2.0 / _dimentions.y, 1.0 };
+  Coordinate inverse{ 1.0 / _dimentions.x, 1.0 / _dimentions.y, 1.0 };
   transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -z_angle ) );
   transformation.add_scaling( "Window coordinate scaling", inverse );
   transformation.set_geometric_center( _origin_coordinate_value );
 
   // LOG(1, "World transformation: %s", transformation);
   // LOG(16, "Window dimensions: %s, inversed dimensions: %s", this->_dimentions, inverse);
-  this->_updateAllObjectCoordinates( transformation, this->_axes );
+  return transformation;
+}
+
+void ViewWindow::callObservers()
+{
+  this->_updateAllObjectCoordinates( _getTransformation(), this->_axes );
 }
 
 /**
