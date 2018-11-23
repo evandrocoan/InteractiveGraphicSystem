@@ -77,7 +77,8 @@ public:
     this->_updateViewPortSize = this->_drawingArea.addObserver(std::bind(&ViewWindow::updateViewPortSize, &this->_viewWindow, _1, _2));
 
     // ViewWindow observe World object creation/deletion
-    this->_updateObjectCoordinates = this->_world.addObserver(std::bind(&Facade::updateObjectCoordinates, this, _1));
+    this->_updateObjectCoordinates1 = this->_world.addObserver(std::bind(&ViewWindow::updateObjectCoordinates, &this->_viewWindow, _1));
+    this->_updateObjectCoordinates2 = this->_viewWindow.addObserver(std::bind(&Facade::updateObjectCoordinates, this, _1, _2, _3));
 
     // World observe ViewWindow coordinates update
     this->_updateAllObjectCoordinates = this->_viewWindow.addObserver(std::bind(&Facade::updateAllObjectCoordinates, this, _1, _2));
@@ -89,10 +90,10 @@ public:
    * @param `object` we receive a nullptr when a object was removed and we just want to draw the
    *        screen without it.
    */
-  void updateObjectCoordinates(DrawableObject* object)
+  void updateObjectCoordinates(DrawableObject* object, const Transformation& transformation, const Axes& axes)
   {
     if( object != nullptr ) {
-      this->_viewWindow.updateObjectCoordinates(object);
+      this->_world.updateObjectCoordinates(object, transformation, axes);
     }
     this->_updateDropdownList();
     this->_drawingArea.queue_draw();
@@ -113,7 +114,8 @@ public:
     result = this->_updateViewPortSize.disconnect();
     LOG(1, "Disconnecting the object `_updateViewPortSize` from its observer: %s", result);
 
-    result = this->_updateObjectCoordinates.disconnect();
+    result = this->_updateObjectCoordinates1.disconnect();
+    result = this->_updateObjectCoordinates2.disconnect();
     LOG(1, "Disconnecting the object `_updateObjectCoordinates` from its observer: %s", result);
 
     result = this->_updateAllObjectCoordinates.disconnect();
@@ -138,7 +140,8 @@ protected:
   DrawingArea _drawingArea;
 
   DrawingArea::UpdateViewPortSize::Connection        _updateViewPortSize;
-  World::UpdateObjectCoordinates::Connection         _updateObjectCoordinates;
+  World::UpdateObjectCoordinates::Connection         _updateObjectCoordinates1;
+  ViewWindow::UpdateObjectCoordinates::Connection    _updateObjectCoordinates2;
   ViewWindow::UpdateAllObjectCoordinates::Connection _updateAllObjectCoordinates;
 };
 

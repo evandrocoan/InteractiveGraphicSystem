@@ -9,6 +9,7 @@ Transformation::Transformation() :
 
 Transformation::~Transformation()
 {
+  this->clear();
 }
 
 void Transformation::apply(Coordinate &point) const
@@ -25,6 +26,9 @@ void Transformation::apply(Coordinate &point) const
 
 void Transformation::clear()
 {
+  if( this->isPerspectiveProjection ) {
+    delete this->preTransformation;
+  }
   this->isInitialized = false;
   this->isPerspectiveProjection = false;
   this->transformations.clear();
@@ -99,11 +103,11 @@ const MatrixForm Transformation::_get_z_rotation_matrix(const big_double& degree
 
 void Transformation::add_rotation(const std::string name, const Coordinate degrees, const TransformationPoint point, const Coordinate center)
 {
-  if( point == TransformationPoint::ON_WORLD_CENTER )
-  {
-    MatrixForm matrix = _get_x_rotation_matrix(degrees.x);
-    matrix.multiply( _get_y_rotation_matrix(degrees.y) );
-    matrix.multiply( _get_z_rotation_matrix(degrees.z) );
+  if( point == TransformationPoint::ON_WORLD_CENTER ) {
+    MatrixForm matrix = _get_x_rotation_matrix(degrees.x, false);
+
+    matrix.multiply( _get_y_rotation_matrix(degrees.y, false) );
+    matrix.multiply( _get_z_rotation_matrix(degrees.z, false) );
     transformations.push_back( TransformationData{name, matrix, TransformationType::ROTATION, point, center} );
   }
   else {
@@ -405,5 +409,8 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
     index++;
   }
 
+  if( object.isPerspectiveProjection ) {
+    output << ", preTransoformation: " << *object.preTransformation;
+  }
   return output;
 }

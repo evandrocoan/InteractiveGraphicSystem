@@ -149,7 +149,7 @@ void DrawableObject::updateWindowCoordinates(const Transformation& transformatio
   {
     for(auto coordinate : this->_worldCoordinates) {
       new_coordinate = new Coordinate(*coordinate);
-      transformation.preTransformation->apply(*new_coordinate);
+      transformation.apply(*new_coordinate);
 
       if( new_coordinate->z - 0.001 < 0 && new_coordinate->z + 0.001 > 0 ) {
         LOG( 8, "%s new_coordinate->z is %s", getName(), new_coordinate->z );
@@ -165,7 +165,7 @@ void DrawableObject::updateWindowCoordinates(const Transformation& transformatio
         }
       }
 
-      transformation.apply(*new_coordinate);
+      transformation.preTransformation->apply(*new_coordinate);
       this->_windowCoordinates.push_back(new_coordinate);
     }
   }

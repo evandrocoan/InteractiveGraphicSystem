@@ -311,16 +311,8 @@ void MainWindow::on_objects_list_change()
 void MainWindow::on_button_move_inside()
 { try {
 
-  int move_length = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (move_length == 0)
-  {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else
-  {
-    this->facade.move(Coordinate(0, 0, -move_length));
-  }
+  big_double move_length = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.move(Coordinate(0, 0, -move_length));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -329,16 +321,8 @@ void MainWindow::on_button_move_inside()
 void MainWindow::on_button_move_outside()
 { try {
 
-  int move_length = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (move_length == 0)
-  {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else
-  {
-    this->facade.move(Coordinate(0, 0, move_length));
-  }
+  big_double move_length = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.move(Coordinate(0, 0, move_length));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -347,16 +331,8 @@ void MainWindow::on_button_move_outside()
 void MainWindow::on_button_move_up()
 { try {
 
-  int move_length = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (move_length == 0)
-  {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else
-  {
-    this->facade.move(Coordinate(0, move_length, 0));
-  }
+  big_double move_length = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.move(Coordinate(0, move_length, 0));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -365,16 +341,8 @@ void MainWindow::on_button_move_up()
 void MainWindow::on_button_move_down()
 { try {
 
-  int move_length = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (move_length == 0)
-  {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else
-  {
-    this->facade.move(Coordinate(0, -move_length, 0));
-  }
+  big_double move_length = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.move(Coordinate(0, -move_length, 0));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -383,16 +351,8 @@ void MainWindow::on_button_move_down()
 void MainWindow::on_button_move_left()
 { try {
 
-  int move_length = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (move_length == 0)
-  {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else
-  {
-    this->facade.move(Coordinate(-move_length, 0, 0));
-  }
+  big_double move_length = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.move(Coordinate(-move_length, 0, 0));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -401,16 +361,8 @@ void MainWindow::on_button_move_left()
 void MainWindow::on_button_move_right()
 { try {
 
-  int move_length = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (move_length == 0)
-  {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else
-  {
-    this->facade.move(Coordinate(move_length, 0, 0));
-  }
+  big_double move_length = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.move(Coordinate(move_length, 0, 0));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -420,19 +372,7 @@ void MainWindow::on_button_zoom_in()
 { try {
 
   big_double zoom_scale = atof(entry_move_length.get_text().raw().c_str());
-
-  if (zoom_scale <=1)
-  {
-    char array[4];
-    sprintf(array, "%s", DEFAULT_MOVE_LENGTH);
-
-    array[3] = '\0';
-    entry_move_length.set_text(array);
-  }
-  else
-  {
-    this->facade.zoom(Coordinate(-zoom_scale, -zoom_scale, -zoom_scale));
-  }
+  this->facade.zoom(Coordinate(-zoom_scale, -zoom_scale, -zoom_scale));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -442,19 +382,7 @@ void MainWindow::on_button_zoom_out()
 { try {
 
   float zoom_scale = atof(entry_move_length.get_text().raw().c_str());
-
-  if (zoom_scale <=1)
-  {
-    char array[4];
-    sprintf(array, "%s", DEFAULT_MOVE_LENGTH);
-
-    array[3] = '\0';
-    entry_move_length.set_text(array);
-  }
-  else
-  {
-    this->facade.zoom(Coordinate(zoom_scale, zoom_scale, zoom_scale));
-  }
+  this->facade.zoom(Coordinate(zoom_scale, zoom_scale, zoom_scale));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -463,14 +391,8 @@ void MainWindow::on_button_zoom_out()
 void MainWindow::on_button_rotate_left_x()
 { try {
 
-  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (rotate_angle == 0) {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else {
-    this->facade.rotate(Coordinate(rotate_angle, 0, 0));
-  }
+  big_double rotate_angle = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.rotate(Coordinate(rotate_angle, 0, 0));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -479,14 +401,8 @@ void MainWindow::on_button_rotate_left_x()
 void MainWindow::on_button_rotate_right_x()
 { try {
 
-  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (rotate_angle == 0) {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else {
-    this->facade.rotate(Coordinate(-rotate_angle, 0, 0));
-  }
+  big_double rotate_angle = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.rotate(Coordinate(-rotate_angle, 0, 0));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -495,14 +411,8 @@ void MainWindow::on_button_rotate_right_x()
 void MainWindow::on_button_rotate_left_y()
 { try {
 
-  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (rotate_angle == 0) {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else {
-    this->facade.rotate(Coordinate(0, rotate_angle, 0));
-  }
+  big_double rotate_angle = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.rotate(Coordinate(0, rotate_angle, 0));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -511,14 +421,8 @@ void MainWindow::on_button_rotate_left_y()
 void MainWindow::on_button_rotate_right_y()
 { try {
 
-  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (rotate_angle == 0) {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else {
-    this->facade.rotate(Coordinate(0, -rotate_angle, 0));
-  }
+  big_double rotate_angle = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.rotate(Coordinate(0, -rotate_angle, 0));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -527,14 +431,8 @@ void MainWindow::on_button_rotate_right_y()
 void MainWindow::on_button_rotate_left_z()
 { try {
 
-  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (rotate_angle == 0) {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else {
-    this->facade.rotate(Coordinate(0, 0, rotate_angle));
-  }
+  big_double rotate_angle = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.rotate(Coordinate(0, 0, rotate_angle));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -543,14 +441,8 @@ void MainWindow::on_button_rotate_left_z()
 void MainWindow::on_button_rotate_right_z()
 { try {
 
-  big_double rotate_angle = atoi(entry_move_length.get_text().raw().c_str());
-
-  if (rotate_angle == 0) {
-    entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
-  }
-  else {
-    this->facade.rotate(Coordinate(0, 0, -rotate_angle));
-  }
+  big_double rotate_angle = atof(entry_move_length.get_text().raw().c_str());
+  this->facade.rotate(Coordinate(0, 0, -rotate_angle));
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -825,7 +717,7 @@ void MainWindow::on_button_save_transformation()
   }
 
   LOG(4, "%s", name);
-  this->_update_transmations_list();
+  this->_update_transformations_list();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -834,7 +726,7 @@ void MainWindow::on_button_save_transformation()
 /**
  * Update the list after adding or removing a new item.
  */
-void MainWindow::_update_transmations_list()
+void MainWindow::_update_transformations_list()
 {
   list_view_text.clear_items();
 
@@ -854,7 +746,7 @@ void MainWindow::on_button_remove_transformation()
     std::string current_name = (std::string)list_view_text.get_text(0);
 
     this->transformation.remove_transformation(current_name);
-    this->_update_transmations_list();
+    this->_update_transformations_list();
   }
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
