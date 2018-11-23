@@ -143,25 +143,38 @@ void DrawableObject::updateWindowCoordinates(const Transformation& transformatio
 {
   LOG(8, "...");
   Coordinate* new_coordinate;
+  DrawableObject::destroyList(this->_windowCoordinates);
 
-  if( transformation.isPreProjection || !transformation.isPostProjection ) {
-    DrawableObject::destroyList(this->_windowCoordinates);
-
-    for(auto coordinate : this->_worldCoordinates)
-    {
+  if( transformation.isPerspectiveProjection )
+  {
+    for(auto coordinate : this->_worldCoordinates) {
       new_coordinate = new Coordinate(*coordinate);
+      transformation.preTransformation->apply(*new_coordinate);
+
+      if( new_coordinate->z - 0.001 < 0 && new_coordinate->z + 0.001 > 0 ) {
+        LOG( 8, "%s new_coordinate->z is %s", getName(), new_coordinate->z );
+      }
+      else {
+        if( transformation.projectionDistance - 0.001 < 0 && transformation.projectionDistance + 0.001 > 0 ) {
+          LOG( 8, "%s transformation.projectionDistance is %s", getName(), transformation.projectionDistance );
+        }
+        else {
+          new_coordinate->x = new_coordinate->x / ( new_coordinate->z / transformation.projectionDistance );
+          new_coordinate->y = new_coordinate->y / ( new_coordinate->z / transformation.projectionDistance );
+          new_coordinate->z = transformation.projectionDistance;
+        }
+      }
+
       transformation.apply(*new_coordinate);
       this->_windowCoordinates.push_back(new_coordinate);
     }
   }
   else {
-    for(auto coordinate : this->_windowCoordinates)
+    for(auto coordinate : this->_worldCoordinates)
     {
-      if( !( coordinate->z - 0.001 < 0 && coordinate->z + 0.001 > 0 ) ) {
-        coordinate->x = transformation.projectionDistance * coordinate->x / coordinate->z;
-        coordinate->y = transformation.projectionDistance * coordinate->y / coordinate->z;
-      }
-      transformation.apply(*coordinate);
+      new_coordinate = new Coordinate(*coordinate);
+      transformation.apply(*new_coordinate);
+      this->_windowCoordinates.push_back(new_coordinate);
     }
   }
 }

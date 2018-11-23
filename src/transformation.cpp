@@ -1,8 +1,7 @@
 #include "transformation.h"
 
 Transformation::Transformation() :
-    isPreProjection{false},
-    isPostProjection{false},
+    isPerspectiveProjection{false},
     _transformation{}
 {
   this->clear();
@@ -27,8 +26,7 @@ void Transformation::apply(Coordinate &point) const
 void Transformation::clear()
 {
   this->isInitialized = false;
-  this->isPreProjection = false;
-  this->isPostProjection = false;
+  this->isPerspectiveProjection = false;
   this->transformations.clear();
 }
 
@@ -393,7 +391,7 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
   unsigned int index = 0;
   unsigned int size = object.transformations.size() - 1;
 
-  output << "[" << object._transformation << "] ";
+  output << "[" << object._transformation << "] " << std::endl << " - ";
 
   for( auto data : object.transformations )
   {
@@ -401,7 +399,7 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
 
     if( index != size )
     {
-      output << " - ";
+      output << std::endl << " - ";
     }
 
     index++;

@@ -98,19 +98,27 @@ void ViewWindow::callObservers()
   transformation.add_translation( "Window to center", -this->_windowCenter );
   transformation.add_rotation( "Window rotation", -angles );
 
-  if( _projection == Projection::PERSPECTIVE )
-  {
+  if( _projection == Projection::PERSPECTIVE ) {
+    transformation.add_translation( "Window to center", Coordinate( 0, 0, _projectionDistance ) );
+    transformation.set_geometric_center( _origin_coordinate_value );
+    // LOG(1, "transformation: %s", transformation);
+
+    Transformation preTransformation;
+    preTransformation.preTransformation = &transformation;
+    transformation = preTransformation;
+
     transformation.projectionDistance = _projectionDistance;
+    transformation.isPerspectiveProjection = true;
   }
 
   Coordinate inverse{ 2.0 / _dimentions.x, 2.0 / _dimentions.y, 1.0 };
-  transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -z_angle ));
+  transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -z_angle ) );
   transformation.add_scaling( "Window coordinate scaling", inverse );
   transformation.set_geometric_center( _origin_coordinate_value );
 
-  // LOG(16, "World transformation: %s", transformation);
+  // LOG(1, "World transformation: %s", transformation);
   // LOG(16, "Window dimensions: %s, inversed dimensions: %s", this->_dimentions, inverse);
-  this->_updateAllObjectCoordinates(transformation, this->_axes);
+  this->_updateAllObjectCoordinates( transformation, this->_axes );
 }
 
 /**

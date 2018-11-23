@@ -141,7 +141,7 @@ void MainWindow::setupButtons()
   entry_move_length.set_width_chars(3);
   entry_move_length.set_text(DEFAULT_MOVE_LENGTH);
   projection_depth.set_width_chars(3);
-  projection_depth.set_text("2");
+  projection_depth.set_text("220");
 
   liang_barsky_radiobutton.set_active();
   liang_barsky_radiobutton.set_halign( Gtk::ALIGN_CENTER );
@@ -642,7 +642,7 @@ void MainWindow::on_parallel_radiobutton()
 void MainWindow::on_perspective_radiobutton()
 { try {
 
-  big_double projection = atoi(entry_move_length.get_text().raw().c_str());
+  big_double projection = atof(projection_depth.get_text().raw().c_str());
   this->facade.setProjection( Projection::PERSPECTIVE, projection );
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
