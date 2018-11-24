@@ -25,7 +25,7 @@ ViewWindow::UpdateObjectCoordinates::Connection ViewWindow::addObserver(const Vi
 }
 
 void ViewWindow::updateObjectCoordinates(DrawableObject* object) {
-  LOG( 1, "..." );
+  LOG( 2, "..." );
   this->_updateObjectCoordinates( object, _getTransformation(), this->_axes );
 }
 
