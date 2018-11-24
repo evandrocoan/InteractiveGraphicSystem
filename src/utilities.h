@@ -61,6 +61,17 @@ inline big_double factorial(int n)
     return x;
 }
 
+template<typename Type>
+void normalize_angle(Type& angle, const Type value) {
+  angle += value;
+  while (angle >= 360) {
+    angle -= 360;
+  }
+  while (angle < 0) {
+    angle += 360;
+  }
+}
+
 /**
  *  Calculates a static array size.
  */

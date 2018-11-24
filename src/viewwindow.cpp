@@ -101,7 +101,7 @@ void ViewWindow::move(Coordinate moves)
 
 void ViewWindow::rotate(Coordinate angles)
 {
-  this->_angles += -angles;
+  normalize_angle(_angles, -angles);
   this->callObservers();
 }
 
