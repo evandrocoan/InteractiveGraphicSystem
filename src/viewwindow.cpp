@@ -109,8 +109,8 @@ Transformation ViewWindow::_getTransformation() {
     //     {
     //       {1.0, 0.0, 0.0, 0.0},
     //       {1.0, 1.0, 0.0, 0.0},
-    //       {1.0, 0.0, 1.0, 0.0},
-    //       {1.0, 0.0, 1.0/_projectionDistance, 0},
+    //       {1.0, 0.0, 0.0, 0.0},
+    //       {1.0, 0.0, 1.0/_projectionDistance, 1},
     //     }
     //   );
     // transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -angle_z ) );
