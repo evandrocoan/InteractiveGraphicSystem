@@ -202,8 +202,8 @@ void Transformation::add_rotation(const std::string name, const Coordinate degre
   }
 }
 
-void Transformation::add_matrix(const std::string name, MatrixForm matrix,
-    TransformationType type, const TransformationPoint point, const Coordinate center)
+void Transformation::add_matrix(const std::string name, const MatrixForm matrix,
+    const TransformationType type, const TransformationPoint point, const Coordinate center)
 {
   this->_isInitialized = false;
 
