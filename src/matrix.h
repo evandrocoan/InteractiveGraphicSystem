@@ -17,11 +17,11 @@
  * https://stackoverflow.com/questions/49312484/error-incompatible-types-in-assignment-of-long-int-4-to-long-int
  */
 template <unsigned int matrix_width=3, unsigned int matrix_height=3, typename DataType=long int>
-struct Matrix : public ArrayBase
+struct Matrix : public Array
     <
       matrix_height,
-      ArrayBase< matrix_width, DataType, ConcreteArray >,
-      ArrayBase< matrix_width, DataType, ConcreteArray >
+      Array< matrix_width, DataType >,
+      Array< matrix_width, DataType >
     >
 {
   Matrix()
