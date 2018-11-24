@@ -2,8 +2,8 @@
 # http://www.fileformat.info/format/wavefrontobj/egff.htm
 
 o Line1
-v 0,000000 0,000000 1,000000   # 1
-v 50,000000 50,000000 1,000000 # 2
+v 0,000000 0,000000 0,000000   # 1
+v 50,000000 50,000000 0,000000 # 2
 l 1 2
 
 o Polygon1
