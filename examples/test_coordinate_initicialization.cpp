@@ -80,10 +80,17 @@ TEST_CASE("Testing basic coordinate division by scalar") {
 
   Coordinate new_coordinate = coordinate / 10.0;
   std::ostringstream().swap(contents); contents << new_coordinate;
-  CHECK( "" == contents.str() );
+  CHECK( "(0.1, 0.1, 0.1, 0.1)" == contents.str() );
 
   std::ostringstream().swap(contents); contents << coordinate;
-  CHECK( "" == contents.str() );
+  CHECK( "(1, 1, 1, 1)" == contents.str() );
+
+  new_coordinate = coordinate.divide(100.0);
+  std::ostringstream().swap(contents); contents << new_coordinate;
+  CHECK( "(0.01, 0.01, 0.01, 0.01)" == contents.str() );
+
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "(0.01, 0.01, 0.01, 0.01)" == contents.str() );
 }
 
 TEST_CASE("Testing basic matrix multiplication") {

@@ -111,8 +111,41 @@ struct ArrayBase
   bool operator!=(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] == data ) { return false; } } return true; }
 
+  // Coordinate operator-() const { Coordinate new_value{*this}; for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  //     { new_value._data[index] = -new_value._data[index]; } return new_value; }
+
+  // Coordinate operator+(const big_double& data) { Coordinate new_value{*this};
+  //     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  //     { new_value._data[index] += data; } return new_value; }
+
+  // Coordinate operator-(const big_double& data) { Coordinate new_value{*this};
+  //     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  //     { new_value._data[index] -= data; } return new_value; }
+
+  // Coordinate& operator+=(const big_double& data) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  //     { this->_data[index] += data; } return *this; }
+
+  // Coordinate& operator-=(const big_double& data) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  //     { this->_data[index] -= data; } return *this; }
+
+  DerivedType operator/(const double& data) {
+    unsigned int column;
+    DerivedType new_array;
+
+    for(column = 0; column < array_width; column++) {
+      new_array._data[column] = _data[column] / data;
+    }
+    return new_array;
+  }
+
+  DerivedType divide(const double& data) {
+    DerivedType result = this->operator/(data);
+    _data = result._data;
+    return result;
+  }
+
   /**
-   * Generic Object to Object operators.
+   * Object to Object operators.
    */
   bool operator<=(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
@@ -131,6 +164,20 @@ struct ArrayBase
 
   bool operator!=(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] == object._data[index] ) { return false; } } return true; }
+
+  // Coordinate operator+(const SuperClass& object) { Coordinate new_value{*this};
+  //     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  //     { new_value._data[index] += object._data[index]; } return new_value; }
+
+  // Coordinate operator-(const SuperClass& object) { Coordinate new_value{*this};
+  //     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  //     { new_value._data[index] -= object._data[index]; } return new_value; }
+
+  // Coordinate& operator+=(const SuperClass& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  //     { this->_data[index] += object._data[index]; } return *this; }
+
+  // Coordinate& operator-=(const SuperClass& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  //     { this->_data[index] -= object._data[index]; } return *this; }
 
   /**
    * Set all the values on the array to the specified single data parameter.
