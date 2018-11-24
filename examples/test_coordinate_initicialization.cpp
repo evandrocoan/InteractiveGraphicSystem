@@ -1,7 +1,16 @@
 #include <iostream>
+#include <typeinfo>
+#include <algorithm>
 
-#include "src/tinyformat.h"
-#include "src/coordinate.h"
+#include "../src/tinyformat.h"
+#include "../src/coordinate.h"
+#include "../src/matrixform.h"
+
+// #define DOCTEST_CONFIG_DISABLE
+#ifndef DOCTEST_CONFIG_DISABLE
+  #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#endif
+#include "../src/doctest.h"
 
 Coordinate _default_coordinate_value_parameter{0.0, 0.0, 1.0};
 
@@ -35,11 +44,72 @@ void print_my_custom_class_type(MyCustomClassType my_custom_class_type = _my_cus
   std::cout << "my_custom_class_type: " << my_custom_class_type << std::endl;
 }
 
-void print_coordinate(Coordinate coordinate)
-{
-  std::cout << tfm::format("Coordinate: %s", coordinate) << std::endl;
+template<typename Type>
+void print_type(Type coordinate) {
+  std::cout << tfm::format("%s: %s", typeid(Type).name(), coordinate) << std::endl;
 }
 
+
+TEST_CASE("Testing basic coordinate initialization with a constant value")
+{
+  Coordinate coordinate{2};
+  std::ostringstream contents;
+
+  contents << coordinate;
+  CHECK( "(2, 2, 2, 1)" == contents.str() );
+}
+
+TEST_CASE("Testing basic coordinate multiplication") {
+  std::ostringstream contents;
+
+  Coordinate coordinate1{1};
+  Coordinate coordinate2{2};
+
+  coordinate1.multiply(coordinate1);
+  std::ostringstream().swap(contents); contents << coordinate1;
+  CHECK( "(1, 1, 1, 1)" == contents.str() );
+
+  coordinate1.multiply(coordinate2);
+  std::ostringstream().swap(contents); contents << coordinate2;
+  CHECK( "(2, 2, 2, 1)" == contents.str() );
+}
+
+TEST_CASE("Testing basic coordinate division by scalar") {
+  std::ostringstream contents;
+  Coordinate coordinate{1.0};
+
+  Coordinate new_coordinate = coordinate / 10.0;
+  std::ostringstream().swap(contents); contents << new_coordinate;
+  CHECK( "" == contents.str() );
+
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "" == contents.str() );
+}
+
+TEST_CASE("Testing basic matrix multiplication") {
+  std::ostringstream contents;
+
+  Coordinate coordinate{2};
+  MatrixForm matrix{
+    {1, 0, 0, 0},
+    {0, 1, 0, 0},
+    {0, 0, 1, 0},
+    {0, 0, 0, 1}
+  };
+
+  matrix.multiply(matrix);
+  coordinate.multiply(matrix);
+
+  // https://stackoverflow.com/questions/2848087/how-to-clear-stringstream
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "(2, 2, 2, 1)" == contents.str() );
+
+  std::ostringstream().swap(contents); contents << matrix;
+  CHECK( "{(1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1)}" == contents.str() );
+}
+
+
+#ifdef DOCTEST_CONFIG_DISABLE
 int main (int argc, char* argv[])
 {
   std::cout << "Running..." << std::endl;
@@ -47,12 +117,34 @@ int main (int argc, char* argv[])
 
   print_my_custom_class_type();
   print_my_custom_class_type(my_custom_class_type);
-  std::cout << std::endl;
 
+  std::cout << std::endl << "Basic initialization" << std::endl;
   Coordinate coordinate;
-  print_coordinate(coordinate);
+  print_type(coordinate);
 
   Coordinate coordinate2{1};
-  print_coordinate(coordinate2);
-}
+  Coordinate coordinate3{2};
 
+  print_type(coordinate2);
+  print_type(coordinate3);
+
+  std::cout << std::endl << "Basic coordinate multiplication" << std::endl;
+  coordinate2.multiply(coordinate3);
+  print_type(coordinate2);
+
+  MatrixForm matrix{
+    {1, 0, 0, 0},
+    {0, 1, 0, 0},
+    {0, 0, 1, 0},
+    {0, 0, 0, 1}
+  };
+  print_type(matrix);
+
+  std::cout << std::endl << "Basic matrix multiplication" << std::endl;
+  coordinate3.multiply(matrix);
+  print_type(coordinate3);
+
+  matrix.multiply(matrix);
+  print_type(matrix);
+}
+#endif
