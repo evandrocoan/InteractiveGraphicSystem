@@ -20,9 +20,9 @@
  * C++ static polymorphism (CRTP) and using typedefs from derived classes
  * https://stackoverflow.com/questions/6006614/c-static-polymorphism-crtp-and-using-typedefs-from-derived-classes
  */
-struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
+struct Coordinate : public ArrayBase<MATRICES_DIMENSION, big_double, Coordinate>
 {
-  typedef Array< MATRICES_DIMENSION, big_double > SuperClass;
+  typedef ArrayBase< MATRICES_DIMENSION, big_double, Coordinate > SuperClass;
 
   /**
    * C++ member variable aliases?
@@ -93,59 +93,7 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
 
   /**
    * Data to Object operators.
-   */
-  Coordinate operator-() const { Coordinate new_value{*this}; for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-      { new_value._data[index] = -new_value._data[index]; } return new_value; }
-
-  Coordinate operator+(const big_double& data) { Coordinate new_value{*this};
-      for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-      { new_value._data[index] += data; } return new_value; }
-
-  Coordinate operator-(const big_double& data) { Coordinate new_value{*this};
-      for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-      { new_value._data[index] -= data; } return new_value; }
-
-  Coordinate& operator+=(const big_double& data) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-      { this->_data[index] += data; } return *this; }
-
-  Coordinate& operator-=(const big_double& data) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-      { this->_data[index] -= data; } return *this; }
-
-  /**
-   * Object to Object operators.
-   */
-  Coordinate operator+(const SuperClass& object) { Coordinate new_value{*this};
-      for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-      { new_value._data[index] += object._data[index]; } return new_value; }
-
-  Coordinate operator-(const SuperClass& object) { Coordinate new_value{*this};
-      for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-      { new_value._data[index] -= object._data[index]; } return new_value; }
-
-  Coordinate& operator+=(const SuperClass& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-      { this->_data[index] += object._data[index]; } return *this; }
-
-  Coordinate& operator-=(const SuperClass& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-      { this->_data[index] -= object._data[index]; } return *this; }
-
-  /**
-   * Double Data to Object precision comparison.
-   */
-  bool operator!=(const big_double& data) const { return !(*this == data); }
-  bool operator<=(const big_double& data) const { return *this > data;     }
-  bool operator>=(const big_double& data) const { return *this < data;     }
-
-  bool operator<(const big_double& data) const {
-  if( *this == data ) { return false; }
-  for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-    { if( this->_data[index] > data ) { return false; } } return true; }
-
-  bool operator>(const big_double& data) const {
-    if( *this == data ) { return false; }
-    for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-      { if( this->_data[index] < data ) { return false; } } return true; }
-
-  /**
+   *
    * Comparing doubles
    * https://stackoverflow.com/questions/4010240/comparing-doubles
    *
@@ -167,22 +115,8 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
   }
 
   /**
-   * Double Object to Object precision comparison.
+   * Object to Object precision comparison.
    */
-  bool operator!=(const Coordinate& object) const { return !(*this == object); }
-  bool operator<=(const Coordinate& object) const { return *this > object;     }
-  bool operator>=(const Coordinate& object) const { return *this < object;     }
-
-  bool operator<(const Coordinate& object) const {
-  if( *this == object ) { return false; }
-  for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-    { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
-
-  bool operator>(const Coordinate& object) const {
-    if( *this == object ) { return false; }
-    for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-      { if( this->_data[index] < object._data[index] ) { return false; } } return true; }
-
   bool operator==(const Coordinate& object) const
   {
     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
