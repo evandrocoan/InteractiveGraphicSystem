@@ -34,6 +34,11 @@ public:
   big_double projectionDistance;
   Transformation* posTransformation;
 
+  void add_matrix(const std::string name, MatrixForm matrix,
+      TransformationType type=TransformationType::TRANSLATION,
+      const TransformationPoint point=TransformationPoint::ON_WORLD_CENTER,
+      const Coordinate center=_origin_coordinate_value);
+
   /**
    * Create and configure correctly a rotation.
    *

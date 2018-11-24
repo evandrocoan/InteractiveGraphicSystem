@@ -24,7 +24,7 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
     index++;
   }
 
-  if( object.projectionDistance ) {
+  if( object.posTransformation ) {
     output << ", posTransformation: " << *object.posTransformation;
   }
   return output;
@@ -32,6 +32,7 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
 
 Transformation::Transformation() :
     projectionDistance{0.0},
+    posTransformation{0},
     _transformation{}
 {
   this->clear();
@@ -60,7 +61,7 @@ void Transformation::apply(Coordinate &point) const
 }
 
 void Transformation::clear() {
-  if( this->projectionDistance ) {
+  if( this->posTransformation ) {
     delete this->posTransformation;
   }
 
@@ -152,7 +153,16 @@ void Transformation::add_rotation(const std::string name, const Coordinate degre
   }
 }
 
-void Transformation::add_scaling(const std::string name, const Coordinate factors,  const TransformationPoint point, const Coordinate center) {
+void Transformation::add_matrix(const std::string name, MatrixForm matrix,
+    TransformationType type, const TransformationPoint point, const Coordinate center)
+{
+  this->_isInitialized = false;
+
+  TransformationData transformation{name, matrix, type, point, center};
+  this->_transformations.push_back(transformation);
+}
+
+void Transformation::add_scaling(const std::string name, const Coordinate factors, const TransformationPoint point, const Coordinate center) {
   this->_isInitialized = false;
 
   TransformationData transformation{name, this->_get_scaling_matrix(factors), TransformationType::SCALING, point, center};
