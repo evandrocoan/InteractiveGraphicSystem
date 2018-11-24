@@ -5,30 +5,31 @@
 #include <cassert>
 #include <iostream>
 
+#include "traits.h"
 #include "stacktrace.h"
 
 /**
  * C++ static polymorphism (CRTP) and using typedefs from derived classes
  * https://stackoverflow.com/questions/6006614/c-static-polymorphism-crtp-and-using-typedefs-from-derived-classes
  */
-template <unsigned int array_width, typename array_datatype=long int>
-struct Array
+template <unsigned int array_width, typename DataType, typename DerivedType>
+struct ArrayBase
 {
   /**
    * Is it okay to inherit implementation from STL containers, rather than delegate?
    * https://stackoverflow.com/questions/2034916/is-it-okay-to-inherit-implementation-from-stl-containers-rather-than-delegate
    */
-  std::array<array_datatype, array_width> _data;
+  std::array<DataType, array_width> _data;
 
   /**
    * std::array constructor inheritance
    * https://stackoverflow.com/questions/24280521/stdarray-constructor-inheritance
    */
-  Array()
+  ArrayBase()
   {
   }
 
-  Array(std::initializer_list< array_datatype > new_values)
+  ArrayBase(std::initializer_list< DataType > new_values)
   {
     unsigned int data_size = new_values.size();
     unsigned int column_index = 0;
@@ -71,19 +72,19 @@ struct Array
    * @param  line the current line you want to access
    * @return      a pointer to the current line
    */
-  array_datatype operator[](unsigned int line) &&
+  DataType operator[](unsigned int line) &&
   {
     assert(line < array_width);
     return this->_data[line];
   }
 
-  array_datatype const& operator[](unsigned int line) const&
+  DataType const& operator[](unsigned int line) const&
   {
     assert(line < array_width);
     return this->_data[line];
   }
 
-  array_datatype& operator[](unsigned int line) &
+  DataType& operator[](unsigned int line) &
   {
     assert(line < array_width);
     return this->_data[line];
@@ -92,43 +93,43 @@ struct Array
   /**
    * Generic Data to Object operators.
    */
-  bool operator<=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator<=(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] > data ) { return false; } } return true; }
 
-  bool operator<(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator<(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] >= data ) { return false; } } return true; }
 
-  bool operator>=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator>=(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] < data ) { return false; } } return true; }
 
-  bool operator>(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator>(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] <= data ) { return false; } } return true; }
 
-  bool operator==(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator==(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] != data ) { return false; } } return true; }
 
-  bool operator!=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator!=(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] == data ) { return false; } } return true; }
 
   /**
    * Generic Object to Object operators.
    */
-  bool operator<=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator<=(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
 
-  bool operator<(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator<(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] >= object._data[index] ) { return false; } } return true; }
 
-  bool operator>=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator>=(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] < object._data[index] ) { return false; } } return true; }
 
-  bool operator>(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator>(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] <= object._data[index] ) { return false; } } return true; }
 
-  bool operator==(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator==(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] != object._data[index] ) { return false; } } return true; }
 
-  bool operator!=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator!=(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] == object._data[index] ) { return false; } } return true; }
 
   /**
@@ -136,7 +137,7 @@ struct Array
    *
    * @param `initial` the value to the used
    */
-  void clear(const array_datatype initial = 0)
+  void clear(const DataType initial = 0)
   {
     unsigned int column_index = 0;
 
@@ -146,16 +147,39 @@ struct Array
     }
   }
 
+  template<typename BaseClass>
+  ArrayBase operator*(const ArrayBase< array_width, DataType, BaseClass >& array)
+  {
+    unsigned int column;
+    ArrayBase new_array;
+
+    for(column = 0; column < array_width; column++) {
+      new_array._data[column] = _data[column] * array._data[column];
+    }
+    return new_array;
+  }
+
+  template<typename BaseClass>
+  void multiply(const ArrayBase< array_width, DataType, BaseClass >& array)
+  {
+    _data = this->operator*(array)._data;
+  }
+
   /**
-   * The Array<> type includes the Matrix<> type, because you can multiply a `Array` by an `Matrix`,
+   * The ArrayBase<> type includes the Matrix<> type, because you can multiply a `ArrayBase` by an `Matrix`,
    * but not a vice-versa.
    */
-  void multiply(const Array< array_width, Array< array_width, array_datatype > > &matrix)
+  template<typename BaseClass>
+  void multiply(const ArrayBase
+      <
+          array_width,
+          ArrayBase< array_width, DataType, BaseClass >,
+          ArrayBase< array_width, DataType, BaseClass >
+      > matrix)
   {
     unsigned int column;
     unsigned int step;
-
-    array_datatype old_array[array_width];
+    DataType old_array[array_width];
 
     for(column = 0; column < array_width; column++)
     {
@@ -171,13 +195,13 @@ struct Array
       }
     }
     // If you would like to preserve the original value, it can be returned here
-    // return old_array;
+    // return DerivedType{}._data = old_array;
   }
 
   /**
    * Prints a more beauty version of the array when called on `std::cout << array << std::end;`
    */
-  friend std::ostream& operator<<( std::ostream &output, const Array &array )
+  friend std::ostream& operator<<( std::ostream &output, const ArrayBase &array )
   {
     unsigned int column;
     output << "(";
@@ -195,6 +219,17 @@ struct Array
     output << ")";
     return output;
   }
+};
+
+/**
+ * Defines a simple array interface when the `Curiously Recurring Template Pattern` is not required.
+ */
+struct ConcreteArray{};
+
+template <unsigned int array_width, typename DataType>
+struct Array : public ArrayBase< array_width, DataType, ConcreteArray >
+{
+  using ArrayBase< array_width, DataType, ConcreteArray >::ArrayBase;
 };
 
 #endif // GTKMM_APP_ARRAY_H

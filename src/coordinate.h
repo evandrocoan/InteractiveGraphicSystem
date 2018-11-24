@@ -22,7 +22,7 @@
  */
 struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
 {
-  typedef Array<MATRICES_DIMENSION, big_double> BaseClass;
+  typedef Array< MATRICES_DIMENSION, big_double > SuperClass;
 
   /**
    * C++ member variable aliases?
@@ -40,7 +40,7 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
   big_double& w;
 
   Coordinate() :
-      Array{},
+      SuperClass{},
       x{this->_data[0]},
       y{this->_data[1]},
       z{this->_data[2]},
@@ -50,7 +50,7 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
   }
 
   Coordinate(big_double initial) :
-      Array{initial},
+      SuperClass{initial},
       x{this->_data[0]},
       y{this->_data[1]},
       z{this->_data[2]},
@@ -60,7 +60,7 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
   }
 
   Coordinate(big_double x, big_double y, big_double z) :
-      Array{x, y, z, 1.0},
+      SuperClass{x, y, z, 1.0},
       x{this->_data[0]},
       y{this->_data[1]},
       z{this->_data[2]},
@@ -69,7 +69,7 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
   }
 
   Coordinate(const Coordinate& object) :
-      Array{object},
+      SuperClass{object},
       x{this->_data[0]},
       y{this->_data[1]},
       z{this->_data[2]},
@@ -79,7 +79,7 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
 
   Coordinate& operator=(const Coordinate& object)
   {
-    Array::operator=(object);
+    SuperClass::operator=(object);
     this->x = this->_data[0];
     this->y = this->_data[1];
     this->z = this->_data[2];
@@ -114,18 +114,18 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
   /**
    * Object to Object operators.
    */
-  Coordinate operator+(const Array& object) { Coordinate new_value{*this};
+  Coordinate operator+(const SuperClass& object) { Coordinate new_value{*this};
       for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
       { new_value._data[index] += object._data[index]; } return new_value; }
 
-  Coordinate operator-(const Array& object) { Coordinate new_value{*this};
+  Coordinate operator-(const SuperClass& object) { Coordinate new_value{*this};
       for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
       { new_value._data[index] -= object._data[index]; } return new_value; }
 
-  Coordinate& operator+=(const Array& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  Coordinate& operator+=(const SuperClass& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
       { this->_data[index] += object._data[index]; } return *this; }
 
-  Coordinate& operator-=(const Array& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
+  Coordinate& operator-=(const SuperClass& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
       { this->_data[index] -= object._data[index]; } return *this; }
 
   /**
@@ -195,27 +195,6 @@ struct Coordinate : public Array<MATRICES_DIMENSION, big_double>
       }
     }
     return true;
-  }
-
-  /**
-   * Compute the 1/x for all values on the coordinate.
-   * @return a new Coordinate object copy with the changed values
-   */
-  Coordinate inverse() const
-  {
-    Coordinate inverse_value{*this};
-    for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-    {
-      if( inverse_value._data[index] != 0 )
-      {
-        inverse_value[index] = 1.0 / inverse_value._data[index];
-      }
-      else
-      {
-        inverse_value[index] = 0.0;
-      }
-    }
-    return inverse_value;
   }
 };
 
