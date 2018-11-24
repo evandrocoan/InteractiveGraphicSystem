@@ -59,6 +59,7 @@ protected:
 
   Gtk::Button button_zoom_in;
   Gtk::Button button_zoom_out;
+  Gtk::Button button_reset_window;
 
   Gtk::Button button_add_object;
   Gtk::Button button_delete_object;
@@ -151,6 +152,7 @@ protected:
   Gtk::Button button_remove_transformation;
 
   void on_button_apply();
+  void on_button_reset_window();
   void on_button_save_transformation();
   void on_button_remove_transformation();
 

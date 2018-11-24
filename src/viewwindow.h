@@ -49,6 +49,7 @@ public:
   void move(Coordinate steps);
   void rotate(Coordinate steps);
 
+  void reset(bool isToCallObservers=true);
   const Axes& axes() const { return this->_axes; };
   void updateObjectCoordinates(DrawableObject* object);
 

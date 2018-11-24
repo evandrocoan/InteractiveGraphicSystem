@@ -22,6 +22,7 @@ MainWindow::MainWindow() :
       button_rotate_right_z("↻"),
       button_zoom_in("+"),
       button_zoom_out("-"),
+      button_reset_window("R"),
       button_add_object("Add"),
       button_delete_object("Rem"),
       button_open_file("Open"),
@@ -123,6 +124,7 @@ void MainWindow::setDefaultTooltips()
 
   button_zoom_in      .set_tooltip_text("Apply the scaling factor to the ViewWindow over the Drawing World");
   button_zoom_out     .set_tooltip_text("Apply inverted the scaling factor to the ViewWindow over the Drawing World");
+  button_reset_window .set_tooltip_text("Restores the View Window to the first/default configuration");
   button_open_file    .set_tooltip_text("Select a file to load the OBJ file");
   button_save_file    .set_tooltip_text("Select a file to save the current drawing to the OBJ");
 
@@ -176,6 +178,7 @@ void MainWindow::setupButtons()
   LOG(4, "Adding the movement buttons in the zoom grid");
   grid_zoom.set_column_homogeneous(true);
   grid_zoom.attach(liang_barsky_radiobutton,    1, 1, 1, 1);
+  grid_zoom.attach(button_reset_window,         2, 1, 1, 1);
   grid_zoom.attach(cohen_sutheland_radiobutton, 3, 1, 1, 1);
   grid_zoom.attach(parallel_radiobutton,        1, 2, 1, 1);
   grid_zoom.attach(projection_depth,            2, 2, 1, 1);
@@ -221,6 +224,7 @@ void MainWindow::connectButtons()
 
   this->button_zoom_in.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_zoom_in));
   this->button_zoom_out.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_zoom_out));
+  this->button_reset_window.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_reset_window));
 
   this->button_rotate_left_x.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_left_x));
   this->button_rotate_right_x.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_rotate_right_x));
@@ -383,6 +387,16 @@ void MainWindow::on_button_zoom_out()
 
   float zoom_scale = atof(entry_move_length.get_text().raw().c_str());
   this->facade.zoom(Coordinate(zoom_scale, zoom_scale, zoom_scale));
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
+}
+
+
+void MainWindow::on_button_reset_window()
+{ try {
+
+  this->facade.resetWindow();
+  parallel_radiobutton.set_active();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
