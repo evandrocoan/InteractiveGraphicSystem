@@ -223,15 +223,20 @@ void World::apply(const std::string object_name, Transformation &transformation)
 void World::draw_xy_axes()
 {
   LOG(4, "Drawing the X T axes as world objects.");
-  this->addLine("Y Axe", 0, -WORLD_AXES_SIZE, 0,
-      0, WORLD_AXES_SIZE, 0,
+  constexpr int AXES_SIZE = 500;
+
+  this->addLine("Y Axe",
+      0, -AXES_SIZE, 0,
+      0,  AXES_SIZE, 0,
       Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
 
-  this->addLine("X Axe", -WORLD_AXES_SIZE, 0, 0,
-      WORLD_AXES_SIZE, 0, 0,
+  this->addLine("X Axe",
+      -AXES_SIZE, 0, 0,
+       AXES_SIZE, 0, 0,
       Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
 
-  this->addLine("Z Axe", 0, 0, -WORLD_AXES_SIZE,
-      0, 0, WORLD_AXES_SIZE,
+  this->addLine("Z Axe",
+      0, 0, -AXES_SIZE,
+      0, 0,  AXES_SIZE,
       Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
 }

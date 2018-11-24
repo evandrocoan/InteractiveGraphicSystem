@@ -2,9 +2,7 @@
 #define GTKMM_APP_TRAITS_H
 
 typedef long double big_double;
-
 constexpr const int MATRICES_DIMENSION = 4;
-constexpr const int WORLD_AXES_SIZE = 5000;
 
 constexpr const int MINIMUM_ZOOM_LIMIT = 1;
 constexpr const int MAXIMUM_ZOOM_LIMIT = 5000;
