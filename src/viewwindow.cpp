@@ -105,6 +105,16 @@ Transformation ViewWindow::_getTransformation() {
 
   if( _projection == Projection::PERSPECTIVE ) {
     transformation.add_translation( "Window to center", Coordinate( 0, 0, _projectionDistance ) );
+    // transformation.add_matrix( "Perspective Projection",
+    //     {
+    //       {1.0, 0.0, 0.0, 0.0},
+    //       {1.0, 1.0, 0.0, 0.0},
+    //       {1.0, 0.0, 1.0, 0.0},
+    //       {1.0, 0.0, 1.0/_projectionDistance, 0},
+    //     }
+    //   );
+    // transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -angle_z ) );
+    // transformation.add_scaling( "Window coordinate scaling", inverse );
 
     transformation.projectionDistance = _projectionDistance;
     transformation.posTransformation = new Transformation();

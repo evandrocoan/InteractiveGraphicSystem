@@ -164,7 +164,6 @@ void DrawableObject::updateWindowCoordinates(const Transformation& transformatio
           new_coordinate->z = transformation.projectionDistance;
         }
       }
-
       transformation.posTransformation->apply(*new_coordinate);
       this->_windowCoordinates.push_back(new_coordinate);
     }
