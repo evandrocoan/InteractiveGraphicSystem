@@ -8,13 +8,28 @@
 #include "traits.h"
 #include "stacktrace.h"
 
+template<typename condition, typename Then, typename Else>
+struct ARRAY_DEFAULT_IF_TYPE {
+  typedef Else Result;
+};
+
+template<typename Then, typename Else>
+struct ARRAY_DEFAULT_IF_TYPE<void, Then, Else> {
+  typedef Then Result;
+};
+
 /**
  * C++ static polymorphism (CRTP) and using typedefs from derived classes
  * https://stackoverflow.com/questions/6006614/c-static-polymorphism-crtp-and-using-typedefs-from-derived-classes
+ *
+ * How to instantiate the base class when using the Curiously Recurring Template Pattern?
+ * https://stackoverflow.com/questions/53463049/how-to-instantiate-the-base-class-when-using-the-curiously-recurring-template-pa
  */
-template <unsigned int array_width, typename DataType, typename DerivedType>
-struct ArrayBase
+template <unsigned int array_width, typename DataType, typename DerivedTypeDefault=void>
+struct Array
 {
+  typedef typename ARRAY_DEFAULT_IF_TYPE<DerivedTypeDefault, Array, DerivedTypeDefault>::Result DerivedType;
+
   /**
    * Is it okay to inherit implementation from STL containers, rather than delegate?
    * https://stackoverflow.com/questions/2034916/is-it-okay-to-inherit-implementation-from-stl-containers-rather-than-delegate
@@ -25,11 +40,11 @@ struct ArrayBase
    * std::array constructor inheritance
    * https://stackoverflow.com/questions/24280521/stdarray-constructor-inheritance
    */
-  ArrayBase()
+  Array()
   {
   }
 
-  ArrayBase(std::initializer_list< DataType > new_values)
+  Array(std::initializer_list< DataType > new_values)
   {
     unsigned int data_size = new_values.size();
     unsigned int column_index = 0;
@@ -147,22 +162,22 @@ struct ArrayBase
   /**
    * Object to Object operators.
    */
-  bool operator<=(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator<=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
 
-  bool operator<(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator<(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] >= object._data[index] ) { return false; } } return true; }
 
-  bool operator>=(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator>=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] < object._data[index] ) { return false; } } return true; }
 
-  bool operator>(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator>(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] <= object._data[index] ) { return false; } } return true; }
 
-  bool operator==(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator==(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] != object._data[index] ) { return false; } } return true; }
 
-  bool operator!=(const ArrayBase& object) const { for( unsigned int index = 0; index < array_width; index++ )
+  bool operator!=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] == object._data[index] ) { return false; } } return true; }
 
   // Coordinate operator+(const SuperClass& object) { Coordinate new_value{*this};
@@ -195,10 +210,10 @@ struct ArrayBase
   }
 
   template<typename BaseClass>
-  ArrayBase operator*(const ArrayBase< array_width, DataType, BaseClass >& array)
+  Array operator*(const Array< array_width, DataType, BaseClass >& array)
   {
     unsigned int column;
-    ArrayBase new_array;
+    Array new_array;
 
     for(column = 0; column < array_width; column++) {
       new_array._data[column] = _data[column] * array._data[column];
@@ -207,21 +222,21 @@ struct ArrayBase
   }
 
   template<typename BaseClass>
-  void multiply(const ArrayBase< array_width, DataType, BaseClass >& array)
+  void multiply(const Array< array_width, DataType, BaseClass >& array)
   {
     _data = this->operator*(array)._data;
   }
 
   /**
-   * The ArrayBase<> type includes the Matrix<> type, because you can multiply a `ArrayBase` by an `Matrix`,
+   * The Array<> type includes the Matrix<> type, because you can multiply a `Array` by an `Matrix`,
    * but not a vice-versa.
    */
   template<typename BaseClass>
-  void multiply(const ArrayBase
+  void multiply(const Array
       <
           array_width,
-          ArrayBase< array_width, DataType, BaseClass >,
-          ArrayBase< array_width, DataType, BaseClass >
+          Array< array_width, DataType, BaseClass >,
+          Array< array_width, DataType, BaseClass >
       > matrix)
   {
     unsigned int column;
@@ -248,7 +263,7 @@ struct ArrayBase
   /**
    * Prints a more beauty version of the array when called on `std::cout << array << std::end;`
    */
-  friend std::ostream& operator<<( std::ostream &output, const ArrayBase &array )
+  friend std::ostream& operator<<( std::ostream &output, const Array &array )
   {
     unsigned int column;
     output << "(";
@@ -266,17 +281,6 @@ struct ArrayBase
     output << ")";
     return output;
   }
-};
-
-/**
- * Defines a simple array interface when the `Curiously Recurring Template Pattern` is not required.
- */
-struct ConcreteArray{};
-
-template <unsigned int array_width, typename DataType>
-struct Array : public ArrayBase< array_width, DataType, ConcreteArray >
-{
-  using ArrayBase< array_width, DataType, ConcreteArray >::ArrayBase;
 };
 
 #endif // GTKMM_APP_ARRAY_H

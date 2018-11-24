@@ -93,6 +93,18 @@ TEST_CASE("Testing basic coordinate division by scalar") {
   CHECK( "(0.01, 0.01, 0.01, 0.01)" == contents.str() );
 }
 
+TEST_CASE("Testing basic array division by scalar") {
+  std::ostringstream contents;
+
+  Array<5, double> array{1};
+  std::ostringstream().swap(contents); contents << array;
+  CHECK( "(1, 1, 1, 1, 1)" == contents.str() );
+
+  Array<5, double> new_array = array / 10.0;
+  std::ostringstream().swap(contents); contents << new_array;
+  CHECK( "(0.1, 0.1, 0.1, 0.1, 0.1)" == contents.str() );
+}
+
 TEST_CASE("Testing basic matrix multiplication") {
   std::ostringstream contents;
 

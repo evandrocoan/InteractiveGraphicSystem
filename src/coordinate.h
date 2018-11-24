@@ -20,9 +20,9 @@
  * C++ static polymorphism (CRTP) and using typedefs from derived classes
  * https://stackoverflow.com/questions/6006614/c-static-polymorphism-crtp-and-using-typedefs-from-derived-classes
  */
-struct Coordinate : public ArrayBase<MATRICES_DIMENSION, big_double, Coordinate>
+struct Coordinate : public Array<MATRICES_DIMENSION, big_double, Coordinate>
 {
-  typedef ArrayBase< MATRICES_DIMENSION, big_double, Coordinate > SuperClass;
+  typedef Array< MATRICES_DIMENSION, big_double, Coordinate > SuperClass;
 
   /**
    * C++ member variable aliases?
