@@ -59,6 +59,7 @@ public:
   {
     this->_world.setLineClipping(type); }
 
+  void resetWindow() { this->_viewWindow.reset(); }
   void setProjection(Projection type, big_double projection) { this->_viewWindow.setProjection(type, projection); }
   void removeObject(std::string name) { this->_world.removeObject(name); }
 

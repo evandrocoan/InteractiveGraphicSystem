@@ -6,12 +6,25 @@ ViewWindow::ViewWindow() :
       _dimentions(100, 100, 0),
       _windowCenter(0, 0, 0),
       _projection(Projection::PARALLEL),
-      _projectionDistance(0)
+      _projectionDistance(0.0)
 {
+  this->reset(false);
 }
 
 ViewWindow::~ViewWindow()
 {
+}
+
+void ViewWindow::reset(bool isToCallObservers) {
+  _angles = *new Coordinate(0, 0, 0);
+  _dimentions = *new Coordinate(100, 100, 0);
+  _windowCenter = *new Coordinate(0, 0, 0);
+  _projection = Projection::PARALLEL;
+  _projectionDistance = 0.0;
+
+  if(isToCallObservers) {
+    this->callObservers();
+  }
 }
 
 ViewWindow::UpdateAllObjectCoordinates::Connection ViewWindow::addObserver(const ViewWindow::UpdateAllObjectCoordinates::Callback& callback) {

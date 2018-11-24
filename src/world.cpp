@@ -223,7 +223,7 @@ void World::apply(const std::string object_name, Transformation &transformation)
 void World::draw_xy_axes()
 {
   LOG(4, "Drawing the X T axes as world objects.");
-  constexpr int AXES_SIZE = 500;
+  constexpr int AXES_SIZE = 200;
 
   this->addLine("Y Axe",
       0, -AXES_SIZE, 0,
