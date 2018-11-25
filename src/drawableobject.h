@@ -11,6 +11,7 @@
 /**
  * This class represents a object such as line or polygon to be draw on the viewport.
  */
+#include <map>
 #include <list>
 #include <string>
 
