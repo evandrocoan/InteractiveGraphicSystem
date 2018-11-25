@@ -41,6 +41,14 @@ public:
     }
   }
 
+  void apply(const Transformation& transformation, const Axes& axes)
+  {
+    for( auto iterator = objectsMap.begin(); iterator != objectsMap.end(); iterator++ ) {
+      iterator->second->updateWindowCoordinates(transformation);
+      iterator->second->updateClippingCoordinates(axes);
+    }
+  }
+
   Type apply(std::string object_name, Transformation &transformation)
   {
     auto object = this->getObjectByName(object_name);
