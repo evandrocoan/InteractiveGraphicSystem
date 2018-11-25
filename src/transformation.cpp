@@ -3,8 +3,7 @@
 /**
  * Prints a more beauty version of the transformations when called on `std::cout`
  */
-std::ostream& operator<<( std::ostream &output, const Transformation &object )
-{
+std::ostream& operator<<( std::ostream &output, const Transformation &object ) {
   unsigned int index = 0;
   unsigned int size = object._transformations.size() - 1;
 
@@ -12,12 +11,10 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
       << ", projectionDistance: " << object.projectionDistance
       << std::endl << " - ";
 
-  for( auto data : object._transformations )
-  {
+  for( auto data : object._transformations ) {
     output << data;
 
-    if( index != size )
-    {
+    if( index != size ) {
       output << std::endl << " - ";
     }
 
@@ -33,8 +30,7 @@ std::ostream& operator<<( std::ostream &output, const Transformation &object )
 /**
  * Prints a basic information of this object when called on `std::cout<< matrix << std::end;`
  */
-std::ostream& operator<<( std::ostream &output, const TransformationData &data )
-{
+std::ostream& operator<<( std::ostream &output, const TransformationData &data ) {
   output << data.name << ", ";
   output << data.type << ", ";
   output << data.matrix << ", ";
@@ -43,8 +39,7 @@ std::ostream& operator<<( std::ostream &output, const TransformationData &data )
   return output;
 }
 
-inline std::ostream& operator<<(std::ostream &output, const TransformationType object)
-{
+inline std::ostream& operator<<(std::ostream &output, const TransformationType object) {
   switch( object )
   {
     case TransformationType::SCALING:     output << "SCALING"; break;
@@ -56,8 +51,7 @@ inline std::ostream& operator<<(std::ostream &output, const TransformationType o
   return output;
 }
 
-inline std::ostream& operator<<(std::ostream &output, const TransformationPoint object)
-{
+inline std::ostream& operator<<(std::ostream &output, const TransformationPoint object) {
   switch( object )
   {
     case TransformationPoint::ON_WORLD_CENTER:     output << "ON_WORLD_CENTER"; break;
@@ -87,13 +81,11 @@ Transformation::Transformation() :
   this->clear();
 }
 
-Transformation::~Transformation()
-{
+Transformation::~Transformation() {
   this->clear();
 }
 
-void Transformation::apply(Coordinate &point) const
-{
+void Transformation::apply(Coordinate &point) const {
   // LOG(8, "Apply transformation: %s", point);
 
   if( this->_isInitialized ) {
@@ -119,8 +111,7 @@ void Transformation::clear() {
   this->projectionDistance = 0.0;
 }
 
-const MatrixForm Transformation::_get_translation_matrix(const Coordinate& moves) const
-{
+const MatrixForm Transformation::_get_translation_matrix(const Coordinate& moves) const {
   return
   {
     {1      , 0      ,       0, 0},
@@ -130,8 +121,7 @@ const MatrixForm Transformation::_get_translation_matrix(const Coordinate& moves
   };
 }
 
-const MatrixForm Transformation::_get_scaling_matrix(const Coordinate& factors) const
-{
+const MatrixForm Transformation::_get_scaling_matrix(const Coordinate& factors) const {
   return
   {
     {factors.x, 0        ,         0, 0},
@@ -141,9 +131,9 @@ const MatrixForm Transformation::_get_scaling_matrix(const Coordinate& factors) 
   };
 }
 
-const MatrixForm Transformation::_get_x_rotation_matrix(const big_double& degrees, const bool& is_radians) const
-{
+const MatrixForm Transformation::_get_x_rotation_matrix(const big_double& degrees, const bool& is_radians) const {
   // LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
+
   auto radians = is_radians ? degrees : convert_degrees_to_radians(degrees);
   auto sine    = std::sin(radians);
   auto cosine  = std::cos(radians);
@@ -156,9 +146,9 @@ const MatrixForm Transformation::_get_x_rotation_matrix(const big_double& degree
     };
 }
 
-const MatrixForm Transformation::_get_y_rotation_matrix(const big_double& degrees, const bool& is_radians) const
-{
+const MatrixForm Transformation::_get_y_rotation_matrix(const big_double& degrees, const bool& is_radians) const {
   // LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
+
   auto radians = is_radians ? degrees : convert_degrees_to_radians(degrees);
   auto sine    = std::sin(radians);
   auto cosine  = std::cos(radians);
@@ -171,9 +161,9 @@ const MatrixForm Transformation::_get_y_rotation_matrix(const big_double& degree
     };
 }
 
-const MatrixForm Transformation::_get_z_rotation_matrix(const big_double& degrees, const bool& is_radians) const
-{
+const MatrixForm Transformation::_get_z_rotation_matrix(const big_double& degrees, const bool& is_radians) const {
   // LOG( 4, "degrees: %s, is_radians: %s", degrees, is_radians );
+
   auto radians = is_radians ? degrees : convert_degrees_to_radians(degrees);
   auto sine    = std::sin(radians);
   auto cosine  = std::cos(radians);
@@ -225,36 +215,30 @@ void Transformation::add_translation(const std::string name, const Coordinate mo
   this->_transformations.push_back(transformation);
 }
 
-void Transformation::set_geometric_center(const Coordinate &center)
-{
+void Transformation::set_geometric_center(const Coordinate &center) {
   LOG( 16, "..." );
   unsigned int index = 0;
   // LOG( 16, "Center on %s - %s", center, *this );
 
-  for( auto data : this->_transformations )
-  {
+  for( auto data : this->_transformations ) {
     switch( data.type )
     {
-      case TransformationType::TRANSLATION:
-      {
+      case TransformationType::TRANSLATION: {
         this->_set_translation_data(data, index, center);
         break;
       }
 
-      case TransformationType::SCALING:
-      {
+      case TransformationType::SCALING: {
         this->_set_scaling_data(data, index, center);
         break;
       }
 
-      case TransformationType::ROTATION:
-      {
+      case TransformationType::ROTATION: {
         this->_set_rotation_data(data, index, center);
         break;
       }
 
-      default:
-      {
+      default: {
         LOG(1, "");
         LOG(1, "");
         LOG(1, "ERROR! Invalid TransformationData type used: %d", data.type);
@@ -266,21 +250,17 @@ void Transformation::set_geometric_center(const Coordinate &center)
   }
 }
 
-void Transformation::_set_translation_data(const TransformationData &data, const unsigned int &index, const Coordinate &center)
-{
-  if( index == 0 )
-  {
+void Transformation::_set_translation_data(const TransformationData &data, const unsigned int &index, const Coordinate &center) {
+  if( index == 0 ) {
     _transformation = data.matrix;
   }
-  else
-  {
+  else {
     _transformation.multiply(data.matrix);
   }
   // LOG(16, "_transformation.multiply: %s", _transformation);
 }
 
-void Transformation::_set_scaling_data(const TransformationData &data, const unsigned int &index, const Coordinate &center)
-{
+void Transformation::_set_scaling_data(const TransformationData &data, const unsigned int &index, const Coordinate &center) {
   LOG(16, "...");
 
   switch(data.point)
@@ -312,39 +292,34 @@ void Transformation::_set_scaling_data(const TransformationData &data, const uns
   }
 }
 
-void Transformation::_scaling_on_world_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
-{
+void Transformation::_scaling_on_world_center(const TransformationData &data, const unsigned int &index, const Coordinate &center) {
   // LOG(16, "Just rotate it, as all scalings are based on the world center");
-  if( index == 0 )
-  {
+
+  if( index == 0 ) {
     _transformation = data.matrix;
   }
-  else
-  {
+  else {
     _transformation.multiply(data.matrix);
   }
 }
 
-void Transformation::_scaling_on_coordinate(const TransformationData &data, const unsigned int &index, const Coordinate &center)
-{
+void Transformation::_scaling_on_coordinate(const TransformationData &data, const unsigned int &index, const Coordinate &center) {
   LOG(2, "...");
   _scaling_on_its_own_center( data, index, data.center);
 }
 
-void Transformation::_scaling_on_its_own_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
-{
+void Transformation::_scaling_on_its_own_center(const TransformationData &data, const unsigned int &index, const Coordinate &center) {
   LOG(2, "...");
   MatrixForm move_to_center = this->_get_translation_matrix(-center);
+
   LOG(4, "center: %s", center);
   LOG(4, "data: %s", data);
   LOG(4, "move_to_center: %s", move_to_center);
 
-  if( index == 0 )
-  {
+  if( index == 0 ) {
     _transformation = move_to_center;
   }
-  else
-  {
+  else {
     _transformation.multiply(move_to_center);
   }
 
@@ -359,26 +334,22 @@ void Transformation::_scaling_on_its_own_center(const TransformationData &data, 
   LOG(4, "Final _transformation: %s", _transformation);
 }
 
-void Transformation::_set_rotation_data(const TransformationData &data, const unsigned int &index, const Coordinate &center)
-{
+void Transformation::_set_rotation_data(const TransformationData &data, const unsigned int &index, const Coordinate &center) {
   LOG(16, "...");
 
   switch(data.point)
   {
-    case TransformationPoint::ON_WORLD_CENTER:
-    {
+    case TransformationPoint::ON_WORLD_CENTER: {
       this->_rotation_on_world_center(data, index, center);
       break;
     }
 
-    case TransformationPoint::ON_ITS_OWN_CENTER:
-    {
+    case TransformationPoint::ON_ITS_OWN_CENTER: {
       this->_rotation_on_its_own_center(data, index, center);
       break;
     }
 
-    case TransformationPoint::ON_GIVEN_COORDINATE:
-    {
+    case TransformationPoint::ON_GIVEN_COORDINATE: {
       this->_rotation_on_coordinate(data, index, center);
       break;
     }
@@ -392,15 +363,13 @@ void Transformation::_set_rotation_data(const TransformationData &data, const un
   }
 }
 
-void Transformation::_rotation_on_world_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
-{
+void Transformation::_rotation_on_world_center(const TransformationData &data, const unsigned int &index, const Coordinate &center) {
   // LOG(16, "Just rotate it, as all rotations are based on the world center");
-  if( index == 0 )
-  {
+
+  if( index == 0 ) {
     _transformation = data.matrix;
   }
-  else
-  {
+  else {
     _transformation.multiply(data.matrix);
   }
 }
@@ -410,20 +379,18 @@ void Transformation::_rotation_on_coordinate(const TransformationData &data, con
   _rotation_on_its_own_center( data, index, data.center );
 }
 
-void Transformation::_rotation_on_its_own_center(const TransformationData &data, const unsigned int &index, const Coordinate &center)
-{
+void Transformation::_rotation_on_its_own_center(const TransformationData &data, const unsigned int &index, const Coordinate &center) {
   LOG(2, "...");
   MatrixForm move_to_center = this->_get_translation_matrix(-center);
+
   LOG(4, "center: %s", center);
   LOG(4, "data: %s", data);
   LOG(4, "move_to_center: %s", move_to_center);
 
-  if( index == 0 )
-  {
+  if( index == 0 ) {
     _transformation = move_to_center;
   }
-  else
-  {
+  else {
     _transformation.multiply(move_to_center);
   }
 
@@ -462,24 +429,20 @@ void Transformation::_rotation_on_its_own_center(const TransformationData &data,
   LOG(4, "Final _transformation: %s", _transformation);
 }
 
-void Transformation::remove_transformation(const std::string name)
-{
+void Transformation::remove_transformation(const std::string name) {
   for( auto iterator = this->_transformations.begin(); iterator != this->_transformations.end(); iterator++ )
   {
-    if( (*iterator).name == name )
-    {
+    if( (*iterator).name == name ) {
       this->_transformations.erase(iterator);
       return;
     }
   }
 }
 
-const std::vector<TransformationData>& Transformation::getTransformations() const
-{
+const std::vector<TransformationData>& Transformation::getTransformations() const {
   return this->_transformations;
 }
 
-unsigned int Transformation::size() const
-{
+unsigned int Transformation::size() const {
   return this->_transformations.size();
 }
