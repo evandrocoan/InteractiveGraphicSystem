@@ -68,6 +68,7 @@ public:
   void rotate(Coordinate coordinate) { this->_viewWindow.rotate(coordinate); }
 
   void queue_draw() { this->_drawingArea.queue_draw(); }
+  void apply(Transformation& matrices) { this->_world.apply(matrices); this->_viewWindow.callObservers(); }
   void apply(std::string object_name, Transformation& matrices) { this->_world.apply(object_name, matrices); }
 
   Facade() : _drawingArea(_world, _viewWindow)

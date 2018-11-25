@@ -247,19 +247,19 @@ void MainWindow::connectButtons()
 void MainWindow::updateDropdownList()
 {
   LOG( 8, "..." );
-  int added_objects = 0;
   auto objects = this->facade.displayFile().getObjects();
 
   LOG( 8, "clear the list of objects to print it" );
   this->_skip_object_list_signals = true;
   this->objects_list.remove_all();
 
-  for(auto object : objects)
-  {
+  int added_objects = 1;
+  this->objects_list.append(WHOLE_WORLD);
+
+  for(auto object : objects) {
     LOG( 8, "isVisibleOnGui: %s, object: %s", object->isVisibleOnGui(), *object );
 
-    if( object->isVisibleOnGui() )
-    {
+    if( object->isVisibleOnGui() ) {
       added_objects += 1;
       this->objects_list.append(object->getName());
     }
@@ -291,11 +291,11 @@ void MainWindow::on_objects_list_change()
   Glib::ustring name = static_cast<std::string>( objects_list.get_active_text() );
   this->object_name = name;
 
-  int object_index = 0;
+  // Including the WHOLE_WORLD element
+  int object_index = 1;
   auto objects = this->facade.displayFile().getObjects();
 
-  for(auto object : objects)
-  {
+  for(auto object : objects) {
     LOG( 8, "isVisibleOnGui: %s, object: %s", object->isVisibleOnGui(), *object );
 
     if( object->isVisibleOnGui() )
@@ -770,7 +770,13 @@ void MainWindow::on_button_remove_transformation()
 void MainWindow::on_button_apply()
 { try {
 
-  this->facade.apply(this->object_name, this->transformation);
+  if( this->object_name == WHOLE_WORLD ) {
+    this->facade.apply(this->transformation);
+  }
+  else {
+    this->facade.apply(this->object_name, this->transformation);
+  }
+
   this->facade.queue_draw();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }

@@ -34,6 +34,13 @@ public:
     this->objectsMap.erase(name);
   }
 
+  void apply(Transformation &transformation)
+  {
+    for( auto iterator = objectsMap.begin(); iterator != objectsMap.end(); iterator++ ) {
+      iterator->second->apply(transformation);
+    }
+  }
+
   Type apply(std::string object_name, Transformation &transformation)
   {
     auto object = this->getObjectByName(object_name);
@@ -44,8 +51,7 @@ public:
   bool isObjectOnByName(std::string name) {
     auto iterator = this->objectsMap.find(name);
 
-    if( iterator == this->objectsMap.end() )
-    {
+    if( iterator == this->objectsMap.end() ) {
       return false;
     }
 
@@ -72,21 +78,18 @@ public:
   std::vector<std::string> objectNames() const {
     std::vector<std::string> list;
 
-    for(auto it = objectsMap.begin(); it != objectsMap.end(); it++)
-    {
-      list.push_back(it->first);
+    for(auto iterator = objectsMap.begin(); iterator != objectsMap.end(); iterator++) {
+      list.push_back(iterator->first);
     }
 
     return list;
   }
 
-  std::vector<Type> getObjects() const
-  {
+  std::vector<Type> getObjects() const {
     std::vector<Type> list;
 
-    for(auto it = objectsMap.begin(); it != objectsMap.end(); it++)
-    {
-      list.push_back(it->second);
+    for(auto iterator = objectsMap.begin(); iterator != objectsMap.end(); iterator++) {
+      list.push_back(iterator->second);
     }
 
     return list;

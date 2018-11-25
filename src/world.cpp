@@ -38,8 +38,7 @@ void World::addPolygon(std::string name, std::vector<big_double> coordinates_poi
   int unsigned coordinates_size = coordinates_points.size();
   std::vector<Coordinate*> coordinates;
 
-  for( unsigned int index = 2; index < coordinates_size; index++, index++, index++ )
-  {
+  for( unsigned int index = 2; index < coordinates_size; index++, index++, index++ ) {
     coordinates.push_back( new Coordinate( coordinates_points.at(index-2), coordinates_points.at(index-1), coordinates_points.at(index) ) );
   }
 
@@ -99,40 +98,32 @@ void World::addPolyhedron(std::string name, std::vector<Coordinate*> points,
   this->_updateObjectCoordinates(polyhedron);
 }
 
-void World::setLineClipping(LineClippingType type)
-{
+void World::setLineClipping(LineClippingType type) {
   auto objects = this->_lines.getObjects();
 
-  for( auto line : objects )
-  {
+  for( auto line : objects ) {
     line->setLineClipping( type );
   }
 }
 
-void World::removeObject(std::string name)
-{
+void World::removeObject(std::string name) {
   // LOG(4, "Removing an object by name is faster than by pointer because it internally calls `removeObjectByName()`");
 
   if( this->_displayFile.isObjectOnByName(name) )
   {
-    if( this->_polygons.isObjectOnByName(name) )
-    {
+    if( this->_polygons.isObjectOnByName(name) ) {
       this->_polygons.removeObjectByName(name);
     }
-    else if( this->_polyhedrons.isObjectOnByName(name) )
-    {
+    else if( this->_polyhedrons.isObjectOnByName(name) ) {
       this->_polyhedrons.removeObjectByName(name);
     }
-    else if( this->_curves.isObjectOnByName(name) )
-    {
+    else if( this->_curves.isObjectOnByName(name) ) {
       this->_curves.removeObjectByName(name);
     }
-    else if( this->_lines.isObjectOnByName(name) )
-    {
+    else if( this->_lines.isObjectOnByName(name) ) {
       this->_lines.removeObjectByName(name);
     }
-    else if( this->_points.isObjectOnByName(name) )
-    {
+    else if( this->_points.isObjectOnByName(name) ) {
       this->_points.removeObjectByName(name);
     }
     else {
@@ -153,8 +144,7 @@ void World::removeObject(std::string name)
   this->_updateObjectCoordinates(nullptr);
 }
 
-World::UpdateObjectCoordinates::Connection World::addObserver(const World::UpdateObjectCoordinates::Callback& callback)
-{
+World::UpdateObjectCoordinates::Connection World::addObserver(const World::UpdateObjectCoordinates::Callback& callback) {
   return this->_updateObjectCoordinates.connect(callback);
 }
 
@@ -164,8 +154,7 @@ void World::updateAllObjectCoordinates(const Transformation& transformation, con
   LOG( 8, "..." );
   auto objects = this->_displayFile.getObjects();
 
-  for (auto object : objects)
-  {
+  for( auto object : objects ) {
     object->updateWindowCoordinates(transformation);
     object->updateClippingCoordinates(axes);
   }
@@ -186,13 +175,16 @@ void World::updateObjectCoordinates(DrawableObject* object, const Transformation
     LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
-  else
-  {
+  else {
     LOG(4, "Updating the object %s with %s", *object, transformation);
   }
 
   object->updateWindowCoordinates(transformation);
   object->updateClippingCoordinates(axes);
+}
+
+void World::apply(Transformation &transformation) {
+  this->_displayFile.apply(transformation);
 }
 
 void World::apply(const std::string object_name, Transformation &transformation)

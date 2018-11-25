@@ -37,6 +37,7 @@ public:
   const DisplayFile<DrawableObject*>& displayFile() const { return this->_displayFile; }
 
   void draw_xy_axes();
+  void apply(Transformation& matrices);
   void apply(const std::string object_name, Transformation& matrices);
 
   void updateAllObjectCoordinates(const Transformation&, const Axes&);
