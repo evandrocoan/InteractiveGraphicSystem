@@ -40,37 +40,31 @@ struct Array
    * std::array constructor inheritance
    * https://stackoverflow.com/questions/24280521/stdarray-constructor-inheritance
    */
-  Array()
-  {
+  Array() {
   }
 
-  Array(std::initializer_list< DataType > new_values)
-  {
+  Array(std::initializer_list< DataType > new_values) {
     unsigned int data_size = new_values.size();
     unsigned int column_index = 0;
     // std::cout << data_size << std::endl;
 
-    if( data_size == 0 )
-    {
+    if( data_size == 0 ) {
       #ifdef DEBUG
-        std::cerr << "Welcome to the Moodle VPL(Virtual Programming Lab) awesome got nuts bug!\n";
+        std::cerr << "Welcome to the Ubuntu 16.04 awesome got nuts bug!\n";
         std::cerr << "Just give a look into his nonsense " << std::endl;
         print_stacktrace();
         std::cerr << "Array(new_values), " << "data_size: " << data_size << ", " << "array_width: " << array_width << std::endl;
       #endif
     }
-    else if( data_size == 1 )
-    {
+    else if( data_size == 1 ) {
       this->clear(*(new_values.begin()));
     }
-    else
-    {
+    else {
       // std::cerr << "Array(new_values), " << "data_size: " << data_size << ", " << "array_width: " << array_width << std::endl;
       // if(data_size != array_width) std::runtime_error( "" );
       assert(data_size == array_width);
 
-      for( auto column : new_values )
-      {
+      for( auto column : new_values ) {
         this->_data[column_index] = column;
         column_index++;
       }
@@ -87,20 +81,17 @@ struct Array
    * @param  line the current line you want to access
    * @return      a pointer to the current line
    */
-  DataType operator[](unsigned int line) &&
-  {
+  DataType operator[](unsigned int line) && {
     assert(line < array_width);
     return this->_data[line];
   }
 
-  DataType const& operator[](unsigned int line) const&
-  {
+  DataType const& operator[](unsigned int line) const& {
     assert(line < array_width);
     return this->_data[line];
   }
 
-  DataType& operator[](unsigned int line) &
-  {
+  DataType& operator[](unsigned int line) & {
     assert(line < array_width);
     return this->_data[line];
   }
