@@ -45,6 +45,7 @@ public:
   ViewWindow();
   virtual ~ViewWindow();
 
+  void callObservers();
   void zoom(Coordinate steps);
   void move(Coordinate steps);
   void rotate(Coordinate steps);
@@ -133,7 +134,6 @@ protected:
   Projection _projection;
   big_double _projectionDistance;
 
-  void callObservers();
   Transformation _getTransformation();
 };
 

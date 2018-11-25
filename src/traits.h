@@ -9,6 +9,7 @@ constexpr const big_double MAXIMUM_ZOOM_LIMIT = 5000.0;
 
 constexpr const big_double CLIPPING_WINDOW_MARGIN_DISTANCE = 0.1;
 
+constexpr const char* const WHOLE_WORLD = "Whole World";
 constexpr const char* const DEFAULT_MOVE_LENGTH = "15";
 constexpr const char* const PROGRAM_AUTHORS = "Graphics Computing - Interactive Graphic System - Evandro Coan, Marcello da Silva Klingelfus Junior";
 

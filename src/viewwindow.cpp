@@ -143,8 +143,7 @@ Transformation ViewWindow::_getTransformation() {
   return transformation;
 }
 
-void ViewWindow::callObservers()
-{
+void ViewWindow::callObservers() {
   this->_updateAllObjectCoordinates( _getTransformation(), this->_axes );
 }
 
