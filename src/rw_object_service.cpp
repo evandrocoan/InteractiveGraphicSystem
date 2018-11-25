@@ -63,6 +63,22 @@ void RwObjectService::read(std::string file_path)
         name = line.substr(2, line.length());
         LOG( 8, "name: %s, ", name );
       }
+      else if( line.front() == 'w' )
+      {
+        if( name == "window" ) {
+          std::vector<int> indexes;
+
+          this->getLineIndexes( indexes, line );
+          std::vector<Coordinate*> vertexes = this->getVertexes( indexes, coordinates );
+
+          std::ostringstream contents;
+          for( auto value : vertexes ) contents << *value << ", ";
+
+          LOG( 8, "vertexes: %s, ", contents.str() );
+          // throw std::runtime_error( contents.str() );
+        }
+        LOG( 8, "line: %s, ", line );
+      }
       else if( line.size() > 6
           && line[0] == 'c' && line[1] == 's' && line[2] == 't' && line[3] == 'y' && line[4] == 'p' && line[5] == 'e' && line[6] == ' ' )
       {
