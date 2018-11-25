@@ -126,22 +126,43 @@ struct Array
   bool operator!=(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] == data ) { return false; } } return true; }
 
-  // Coordinate operator-() const { Coordinate new_value{*this}; for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-  //     { new_value._data[index] = -new_value._data[index]; } return new_value; }
+  DerivedType operator-() {
+    DerivedType new_array;
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      new_array._data[index] = -_data[index];
+    }
+    return new_array;
+  }
 
-  // Coordinate operator+(const big_double& data) { Coordinate new_value{*this};
-  //     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-  //     { new_value._data[index] += data; } return new_value; }
+  DerivedType operator+(const big_double& data) {
+    DerivedType new_array;
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      new_array._data[index] = _data[index] + data;
+    }
+    return new_array;
+  }
 
-  // Coordinate operator-(const big_double& data) { Coordinate new_value{*this};
-  //     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-  //     { new_value._data[index] -= data; } return new_value; }
+  DerivedType operator-(const big_double& data) {
+    DerivedType new_array;
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      new_array._data[index] = _data[index] - data;
+    }
+    return new_array;
+  }
 
-  // Coordinate& operator+=(const big_double& data) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-  //     { this->_data[index] += data; } return *this; }
+  DerivedType& operator+=(const big_double& data) {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      this->_data[index] += data;
+    }
+    return *static_cast<DerivedType*>(this);
+  }
 
-  // Coordinate& operator-=(const big_double& data) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-  //     { this->_data[index] -= data; } return *this; }
+  DerivedType& operator-=(const big_double& data) {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      this->_data[index] -= data;
+    }
+    return *static_cast<DerivedType*>(this);
+  }
 
   DerivedType operator/(const double& data) {
     unsigned int column;
@@ -180,25 +201,52 @@ struct Array
   bool operator!=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
       { if( this->_data[index] == object._data[index] ) { return false; } } return true; }
 
-  // Coordinate operator+(const SuperClass& object) { Coordinate new_value{*this};
-  //     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-  //     { new_value._data[index] += object._data[index]; } return new_value; }
+  template<typename BaseClass>
+  DerivedType operator+(const Array< array_width, DataType, BaseClass >& array) {
+    unsigned int column;
+    DerivedType new_array;
 
-  // Coordinate operator-(const SuperClass& object) { Coordinate new_value{*this};
-  //     for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-  //     { new_value._data[index] -= object._data[index]; } return new_value; }
-
-  // Coordinate& operator+=(const SuperClass& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-  //     { this->_data[index] += object._data[index]; } return *this; }
-
-  // Coordinate& operator-=(const SuperClass& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
-  //     { this->_data[index] -= object._data[index]; } return *this; }
+    for(column = 0; column < array_width; column++) {
+      new_array._data[column] = _data[column] + array._data[column];
+    }
+    return new_array;
+  }
 
   template<typename BaseClass>
-  Array operator*(const Array< array_width, DataType, BaseClass >& array)
-  {
+  DerivedType operator-(const Array< array_width, DataType, BaseClass >& array) {
     unsigned int column;
-    Array new_array;
+    DerivedType new_array;
+
+    for(column = 0; column < array_width; column++) {
+      new_array._data[column] = _data[column] - array._data[column];
+    }
+    return new_array;
+  }
+
+  template<typename BaseClass>
+  DerivedType& operator+=(const Array< array_width, DataType, BaseClass >& array) {
+    unsigned int column;
+
+    for(column = 0; column < array_width; column++) {
+      _data[column] += array._data[column];
+    }
+    return *static_cast<DerivedType*>(this);
+  }
+
+  template<typename BaseClass>
+  DerivedType& operator-=(const Array< array_width, DataType, BaseClass >& array) {
+    unsigned int column;
+
+    for(column = 0; column < array_width; column++) {
+      _data[column] -= array._data[column];
+    }
+    return *static_cast<DerivedType*>(this);
+  }
+
+  template<typename BaseClass>
+  DerivedType operator*(const Array< array_width, DataType, BaseClass >& array) {
+    unsigned int column;
+    DerivedType new_array;
 
     for(column = 0; column < array_width; column++) {
       new_array._data[column] = _data[column] * array._data[column];
@@ -207,8 +255,9 @@ struct Array
   }
 
   template<typename BaseClass>
-  void multiply(const Array< array_width, DataType, BaseClass >& array) {
+  DerivedType& multiply(const Array< array_width, DataType, BaseClass >& array) {
     _data = this->operator*(array)._data;
+    return *static_cast<DerivedType*>(this);
   }
 
   /**
@@ -216,7 +265,7 @@ struct Array
    * but not a vice-versa.
    */
   template<typename BaseClass>
-  void multiply(const Array
+  DerivedType& multiply(const Array
       <
           array_width,
           Array< array_width, DataType, BaseClass >,
@@ -240,8 +289,7 @@ struct Array
         this->_data[column] += old_array[step] * matrix._data[step][column];
       }
     }
-    // If you would like to preserve the original value, it can be returned here
-    // return DerivedType{}._data = old_array;
+    return *static_cast<DerivedType*>(this);
   }
 
   /**
@@ -249,12 +297,10 @@ struct Array
    *
    * @param `initial` the value to the used
    */
-  void clear(const DataType initial = 0)
-  {
+  void clear(const DataType initial = 0) {
     unsigned int column_index = 0;
 
-    for( ; column_index < array_width; column_index++ )
-    {
+    for( ; column_index < array_width; column_index++ ) {
       this->_data[column_index] = initial;
     }
   }
@@ -262,17 +308,14 @@ struct Array
   /**
    * Prints a more beauty version of the array when called on `std::cout << array << std::end;`
    */
-  friend std::ostream& operator<<( std::ostream &output, const Array &array )
-  {
+  friend std::ostream& operator<<( std::ostream &output, const Array &array ) {
     unsigned int column;
     output << "(";
 
-    for( column=0; column < array_width; column++ )
-    {
+    for( column=0; column < array_width; column++ ) {
       output << array._data[column];
 
-      if( column != array_width-1 )
-      {
+      if( column != array_width-1 ) {
         output << ", ";
       }
     }
