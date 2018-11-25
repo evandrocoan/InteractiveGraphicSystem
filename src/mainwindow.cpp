@@ -867,7 +867,8 @@ void MainWindow::on_given_coordinate_rotation_radiobutton()
 
 
 void MainWindow::add_test_objects()
-{
+{ try {
+
   this->rw_object_service.read("./simple_line_polygon_test.obj");
   this->rw_object_service.read("./simple_bezier_polygon.obj");
   this->rw_object_service.read("./simple_polyhedron.obj");
@@ -910,4 +911,6 @@ void MainWindow::add_test_objects()
   // coord_list.push_back( new Coordinate(75.112259 , 67.120232, 16.854351 ) );
   // this->facade.addPolyhedron("Polyhedron", coord_list, segment_list, 4, _origin_coordinate_value, _origin_coordinate_value);
   // this->facade.queue_draw();
+
+  } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }

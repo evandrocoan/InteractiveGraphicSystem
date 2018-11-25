@@ -49,11 +49,11 @@ public:
     this->_world.addPolygon(name, points, _borderColor, _fillingColor, type); }
 
   void addPolyhedron(std::string name, std::vector<Coordinate*> points,
-              std::vector<int> _line_segments, int _facet_size,
+              std::vector<int> _line_segments, std::vector<int> _facets_count,
               Coordinate _borderColor=_origin_coordinate_value,
               Coordinate _fillingColor=_origin_coordinate_value)
   {
-    this->_world.addPolyhedron(name, points, _line_segments, _facet_size, _borderColor, _fillingColor); }
+    this->_world.addPolyhedron(name, points, _line_segments, _facets_count, _borderColor, _fillingColor); }
 
   void setLineClipping(LineClippingType type)
   {

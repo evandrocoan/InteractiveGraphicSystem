@@ -33,6 +33,6 @@
 
   // Default debug level, if not defined on any other file
   // int _debugger_int_debug_level = 127-8-16;
-  int _debugger_int_debug_level = 1;
+  int _debugger_int_debug_level = 127;
 #endif
 

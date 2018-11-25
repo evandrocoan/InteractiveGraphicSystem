@@ -88,10 +88,10 @@ void World::addPolygon(std::string name, std::vector<Coordinate*> coordinates,
 }
 
 void World::addPolyhedron(std::string name, std::vector<Coordinate*> points,
-      std::vector<int> _line_segments, int _facet_size,
+      std::vector<int> _line_segments, std::vector<int> _facets_count,
       Coordinate _borderColor, Coordinate _fillingColor)
 {
-  Polyhedron* polyhedron = new Polyhedron(name, points, _line_segments, _facet_size, _borderColor, _fillingColor);
+  Polyhedron* polyhedron = new Polyhedron(name, points, _line_segments, _facets_count, _borderColor, _fillingColor);
   this->_polyhedrons.addObject(polyhedron);
 
   this->_displayFile.addObject(polyhedron);
