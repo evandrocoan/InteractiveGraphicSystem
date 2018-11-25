@@ -59,6 +59,109 @@ TEST_CASE("Testing basic coordinate initialization with a constant value")
   CHECK( "(2, 2, 2, 1)" == contents.str() );
 }
 
+TEST_CASE("Testing basic coordinate sum by scalar") {
+  std::ostringstream contents;
+  Coordinate coordinate{1.0};
+
+  Coordinate new_coordinate = coordinate + 10.0;
+  std::ostringstream().swap(contents); contents << new_coordinate;
+  CHECK( "(11, 11, 11, 11)" == contents.str() );
+
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "(1, 1, 1, 1)" == contents.str() );
+}
+
+TEST_CASE("Testing basic coordinate sum and attribution by scalar") {
+  std::ostringstream contents;
+  Coordinate coordinate{1.0};
+
+  coordinate += 10.0;
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "(11, 11, 11, 11)" == contents.str() );
+}
+
+TEST_CASE("Testing basic coordinate sum by another coordinate") {
+  std::ostringstream contents;
+  Coordinate coordinate{1.0};
+  Coordinate another_coordinate{2.0};
+
+  Coordinate new_coordinate = coordinate + another_coordinate;
+  std::ostringstream().swap(contents); contents << new_coordinate;
+  CHECK( "(3, 3, 3, 2)" == contents.str() );
+
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "(1, 1, 1, 1)" == contents.str() );
+}
+
+TEST_CASE("Testing basic coordinate sum and attribution by another coordinate") {
+  std::ostringstream contents;
+  Coordinate coordinate{1.0};
+  Coordinate another_coordinate{2.0};
+
+  coordinate += another_coordinate;
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "(3, 3, 3, 2)" == contents.str() );
+}
+
+TEST_CASE("Testing basic coordinate negative operator") {
+  std::ostringstream contents;
+  Coordinate coordinate{1.0};
+
+  Coordinate new_coordinate = -coordinate;
+  std::ostringstream().swap(contents); contents << new_coordinate;
+  CHECK( "(-1, -1, -1, -1)" == contents.str() );
+
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "(1, 1, 1, 1)" == contents.str() );
+}
+
+TEST_CASE("Testing basic coordinate difference by scalar") {
+  std::ostringstream contents;
+  Coordinate coordinate{1.0};
+
+  Coordinate new_coordinate = coordinate - 10.0;
+  std::ostringstream().swap(contents); contents << new_coordinate;
+  CHECK( "(-9, -9, -9, -9)" == contents.str() );
+
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "(1, 1, 1, 1)" == contents.str() );
+}
+
+TEST_CASE("Testing basic coordinate difference and attribution by scalar") {
+  std::ostringstream contents;
+  Coordinate coordinate{1.0};
+
+  coordinate -= 10.0;
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "(-9, -9, -9, -9)" == contents.str() );
+}
+
+TEST_CASE("Testing basic coordinate difference by another coordinate") {
+  std::ostringstream contents;
+  Coordinate coordinate{1.0};
+  Coordinate another_coordinate{2.0};
+
+  Coordinate new_coordinate = coordinate - another_coordinate;
+  std::ostringstream().swap(contents); contents << new_coordinate;
+  CHECK( "(-1, -1, -1, 0)" == contents.str() );
+
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "(1, 1, 1, 1)" == contents.str() );
+}
+
+TEST_CASE("Testing basic coordinate difference and attribution by another coordinate") {
+  std::ostringstream contents;
+  Coordinate coordinate{1.0};
+  Coordinate another_coordinate{2.0};
+
+  coordinate -= another_coordinate;
+  std::ostringstream().swap(contents); contents << another_coordinate;
+  CHECK( "(2, 2, 2, 1)" == contents.str() );
+
+  std::ostringstream().swap(contents); contents << coordinate;
+  CHECK( "(-1, -1, -1, 0)" == contents.str() );
+}
+
 TEST_CASE("Testing basic coordinate multiplication") {
   std::ostringstream contents;
 
