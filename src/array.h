@@ -194,21 +194,6 @@ struct Array
   // Coordinate& operator-=(const SuperClass& object) { for( unsigned int index = 0; index < MATRICES_DIMENSION; index++ )
   //     { this->_data[index] -= object._data[index]; } return *this; }
 
-  /**
-   * Set all the values on the array to the specified single data parameter.
-   *
-   * @param `initial` the value to the used
-   */
-  void clear(const DataType initial = 0)
-  {
-    unsigned int column_index = 0;
-
-    for( ; column_index < array_width; column_index++ )
-    {
-      this->_data[column_index] = initial;
-    }
-  }
-
   template<typename BaseClass>
   Array operator*(const Array< array_width, DataType, BaseClass >& array)
   {
@@ -222,8 +207,7 @@ struct Array
   }
 
   template<typename BaseClass>
-  void multiply(const Array< array_width, DataType, BaseClass >& array)
-  {
+  void multiply(const Array< array_width, DataType, BaseClass >& array) {
     _data = this->operator*(array)._data;
   }
 
@@ -258,6 +242,21 @@ struct Array
     }
     // If you would like to preserve the original value, it can be returned here
     // return DerivedType{}._data = old_array;
+  }
+
+  /**
+   * Set all the values on the array to the specified single data parameter.
+   *
+   * @param `initial` the value to the used
+   */
+  void clear(const DataType initial = 0)
+  {
+    unsigned int column_index = 0;
+
+    for( ; column_index < array_width; column_index++ )
+    {
+      this->_data[column_index] = initial;
+    }
   }
 
   /**
