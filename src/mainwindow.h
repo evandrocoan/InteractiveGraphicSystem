@@ -1,6 +1,10 @@
 #ifndef GTKMM_APP_MAIN_WINDOW
 #define GTKMM_APP_MAIN_WINDOW
 
+#include <chrono>
+#include <thread>
+#include <future>
+
 /* Include any library as need to use other's components such as
  * gtkmm/button or gtkmm/frame.
  */
@@ -28,14 +32,17 @@ public:
   virtual ~MainWindow();
 
   void updateDropdownList();
+  void updateDrawingAreaTitle(const ViewWindow&);
+
   Gtk::Window& getWindow();
 
 protected:
   Gtk::Window       window;
   Gtk::ComboBoxText objects_list;
 
-  Facade            facade;
-  AddObject         addObject;
+  Facade        facade;
+  AddObject     addObject;
+  DrawingArea& _drawingArea;
 
   RwObjectService   rw_object_service;
   ChooseFileWindow* choose_file_window;
@@ -175,6 +182,7 @@ protected:
 private:
   int _object_list_active_index;
   bool _skip_object_list_signals;
+  bool _isStartUp;
   void add_test_objects();
 };
 

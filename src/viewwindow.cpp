@@ -16,8 +16,8 @@ ViewWindow::~ViewWindow()
 }
 
 void ViewWindow::reset(bool isToCallObservers) {
-  _angles = *new Coordinate(0, 0, 0);
-  _dimentions = *new Coordinate(1, 1, 0);
+  _angles = *new Coordinate(15, 15, 0);
+  _dimentions = *new Coordinate(100, 100, 0);
   _windowCenter = *new Coordinate(0, 0, 0);
   _projection = Projection::PARALLEL;
   _projectionDistance = 0.0;
@@ -25,6 +25,11 @@ void ViewWindow::reset(bool isToCallObservers) {
   if(isToCallObservers) {
     this->callObservers();
   }
+}
+
+ViewWindow::UpdateViewWindowTitle::Connection ViewWindow::addObserver(const ViewWindow::UpdateViewWindowTitle::Callback& callback) {
+  auto connection = this->_updateViewWindowTitle.connect(callback);
+  return connection;
 }
 
 ViewWindow::UpdateAllObjectCoordinates::Connection ViewWindow::addObserver(const ViewWindow::UpdateAllObjectCoordinates::Callback& callback) {
@@ -44,7 +49,7 @@ void ViewWindow::updateObjectCoordinates(DrawableObject* object) {
 
 std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
 {
-  output << "ViewWindow" << object._dimentions << object._windowCenter;
+  output << "ViewWindow" << object._dimentions << object._windowCenter << object._angles;
   return output;
 }
 
@@ -145,6 +150,7 @@ Transformation ViewWindow::_getTransformation() {
 
 void ViewWindow::callObservers() {
   this->_updateAllObjectCoordinates( _getTransformation(), this->_axes );
+  this->_updateViewWindowTitle(*this);
 }
 
 /**

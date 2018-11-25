@@ -21,7 +21,7 @@ class Facade : public NonCopyable
   friend class RwObjectService;
 
 public:
-  DrawingArea& drawingArea()       { return this->_drawingArea; }
+  DrawingArea& drawingArea() { return this->_drawingArea; }
   const DisplayFile<DrawableObject*>& displayFile() { return this->_world.displayFile(); }
 
   void addPoint(std::string name, int x, int y, int z, Coordinate _borderColor=_origin_coordinate_value)
@@ -130,8 +130,12 @@ public:
    */
   typedef Signal<> UpdateDropdownList;
 
-  UpdateDropdownList::Connection addObserver(const UpdateDropdownList::Callback& callback) {
+  UpdateDropdownList::Connection addListObserver(const UpdateDropdownList::Callback& callback) {
     return this->_updateDropdownList.connect(callback);
+  }
+
+  ViewWindow::UpdateViewWindowTitle::Connection addTitleObserver(const ViewWindow::UpdateViewWindowTitle::Callback& callback) {
+    return this->_viewWindow.addObserver(callback);
   }
 
 protected:

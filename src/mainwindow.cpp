@@ -7,6 +7,7 @@
  */
 MainWindow::MainWindow() :
       addObject(this->facade),
+      _drawingArea(this->facade.drawingArea()),
       rw_object_service(this->facade),
       button_move_inside("▲"),
       button_move_outside("▼"),
@@ -49,7 +50,8 @@ MainWindow::MainWindow() :
       button_save_transformation("S"),
       button_remove_transformation("R"),
       _object_list_active_index(-1),
-      _skip_object_list_signals(false)
+      _skip_object_list_signals(false),
+      _isStartUp(true)
 {
   LOG(2, "...");
   this->on_liang_radiobutton();
@@ -72,11 +74,12 @@ MainWindow::MainWindow() :
   this->setDefaultTooltips();
 
   LOG(4, "DrawingArea");
-  DrawingArea& drawingArea = this->facade.drawingArea();
   this->main_box.pack_start(this->right_frame, Gtk::PACK_EXPAND_WIDGET, 10);
-  this->right_frame.add(drawingArea);
-  drawingArea.show();
-  this->facade.addObserver(std::bind(&MainWindow::updateDropdownList, this));
+  this->right_frame.add(_drawingArea);
+  _drawingArea.show();
+
+  this->facade.addListObserver(std::bind(&MainWindow::updateDropdownList, this));
+  this->facade.addTitleObserver(std::bind(&MainWindow::updateDrawingAreaTitle, this, std::placeholders::_1));
 
   LOG(4, "Show all components");
   this->window.set_title(PROGRAM_AUTHORS);
@@ -94,8 +97,7 @@ MainWindow::~MainWindow()
 }
 
 
-Gtk::Window& MainWindow::getWindow()
-{
+Gtk::Window& MainWindow::getWindow() {
   return this->window;
 }
 
@@ -238,6 +240,33 @@ void MainWindow::connectButtons()
 
   this->button_open_file.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_open_file));
   this->button_save_file.signal_clicked().connect(sigc::mem_fun(*this, &MainWindow::on_button_save_file));
+}
+
+
+void MainWindow::updateDrawingAreaTitle(const ViewWindow& viewWindow)
+{
+  std::string title = tfm::format( "Size(%.3f, %.3f) Angles(%.3f, %.3f, %.3f) Center(%.3f, %.3f, %.3f)",
+      viewWindow._dimentions.x, viewWindow._dimentions.y,
+      viewWindow._angles.x, viewWindow._angles.y, viewWindow._angles.z,
+      viewWindow._windowCenter.x, viewWindow._windowCenter.y, viewWindow._windowCenter.z
+    );
+
+  // I do not know why, but when the system is starting for the first time, and we directly set the
+  // window title, it stays blank until a full window refresh or you the time the titles change.
+  // Then, adding a small delay keeps it always working.
+  if( this->_isStartUp ) {
+    this->_isStartUp = false;
+
+    std::thread( [this, title] ()
+        {
+          std::this_thread::sleep_for( std::chrono::milliseconds{1000} );
+          LOG( 8, "Lights out!" );
+          right_frame.set_label( title );
+        }
+      ).detach();
+  }
+  right_frame.set_label( title );
+  LOG( 8, "Out Lights!" );
 }
 
 
