@@ -19,6 +19,8 @@
 #define MAX_HEIGHT 50000000
 #define MAX_WIDTH 50000000
 
+class MainWindow;
+
 /**
  * Window: Retângulo que representa um recorte do
  * mundo 2D representado pelo Display File que será
@@ -41,6 +43,8 @@
  */
 class ViewWindow : public NonCopyable
 {
+  friend class MainWindow;
+
 public:
   ViewWindow();
   virtual ~ViewWindow();
@@ -116,14 +120,17 @@ public:
    * Implementations types for the Observer Design Pattern with C++ 11 templates and function
    * pointers, instead of tight coupled inheritance.
    */
+  typedef Signal<const ViewWindow&> UpdateViewWindowTitle;
   typedef Signal<DrawableObject*, const Transformation&, const Axes&> UpdateObjectCoordinates;
   typedef Signal<const Transformation&, const Axes&> UpdateAllObjectCoordinates;
 
+  UpdateViewWindowTitle::Connection addObserver(const UpdateViewWindowTitle::Callback&);
   UpdateObjectCoordinates::Connection addObserver(const UpdateObjectCoordinates::Callback&);
   UpdateAllObjectCoordinates::Connection addObserver(const UpdateAllObjectCoordinates::Callback&);
 
 protected:
   Axes _axes;
+  UpdateViewWindowTitle _updateViewWindowTitle;
   UpdateObjectCoordinates _updateObjectCoordinates;
   UpdateAllObjectCoordinates _updateAllObjectCoordinates;
 
