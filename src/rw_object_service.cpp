@@ -28,12 +28,12 @@ void RwObjectService::read(std::string file_path)
 
   std::vector<Coordinate*> coordinates;
   std::string name;
+  std::string cstype;
 
   _last_index = 0;
   std::ifstream in_file(file_path);
 
-  if( in_file.is_open() )
-  {
+  if( in_file.is_open() ) {
     std::stringstream myfile;
 
     // removes all comments and empty lines
@@ -58,10 +58,18 @@ void RwObjectService::read(std::string file_path)
       // LOG( 8, "line: %s", line );
 
       // https://www.fileformat.info/format/wavefrontobj/egff.htm
-      if( line.front() == 'o' )
+      else if( line.front() == 'o' )
       {
         name = line.substr(2, line.length());
         LOG( 8, "name: %s, ", name );
+      }
+      else if( line.size() > 6
+          && line[0] == 'c' && line[1] == 's' && line[2] == 't' && line[3] == 'y' && line[4] == 'p' && line[5] == 'e' && line[6] == ' ' )
+      {
+        std::vector<std::string> contents = split(line, ' ');
+
+        cstype = contents.back();
+        LOG( 8, "cstype: %s, ", cstype );
       }
       else if( line.front() == 'v' && line[1] == ' ' ) {
         std::vector<std::string> indexes = split(line, ' ');
@@ -111,11 +119,8 @@ void RwObjectService::read(std::string file_path)
         this->facade.addPolyhedron( name, vertexes, segment_list, facets_count,
             _origin_coordinate_value, _origin_coordinate_value);
       }
-      else if( line.front() == 'l' || ( line.front() == 'b' && ( line[1] == 'z' || line[1] == 's' ) ) )
+      else if( line.front() == 'l' )
       {
-        char line_front = line.front();
-        char line_second = line[1];
-
         std::vector<int> indexes;
         this->getLineIndexes( indexes, line );
 
@@ -144,17 +149,22 @@ void RwObjectService::read(std::string file_path)
         }
         else
         {
-          if( line_front == 'b' )
+          if( cstype.size() )
           {
-            this->facade.addPolygon( name, vertexes,
-                _origin_coordinate_value,
-                _origin_coordinate_value, line_second == 'z' ? CurveType::BEZIER : CurveType::BSPLINE );
+            if( cstype == "bezier" || cstype == "bspline" )
+            {
+              this->facade.addPolygon( name, vertexes,
+                  _origin_coordinate_value,
+                  _origin_coordinate_value, cstype == "bezier" ? CurveType::BEZIER : CurveType::BSPLINE );
+            }
           }
           else
           {
             this->facade.addPolygon( name, vertexes );
           }
         }
+
+        cstype = "";
       }
     }
 
@@ -427,8 +437,14 @@ void RwObjectService::write(std::string file_path)
     LOG(8, "curve: %s", *object);
     if( !object->isVisibleOnGui() ) continue;
 
-    myfile << "o " + object->getName() + "\n";
+    myfile << "o " + object->getName();
+    myfile << "\n";
     auto objectCoordinates = object->worldCoordinates();
+
+    // https://stackoverflow.com/questions/351845/finding-the-type-of-an-object-in-c
+    myfile << "cstype ";
+    myfile << ( dynamic_cast<BezierCurve*> (object) ? "bezier" : "bspline" );
+    myfile << "\n";
 
     for( auto coordinate : objectCoordinates )
     {
@@ -437,9 +453,7 @@ void RwObjectService::write(std::string file_path)
           << std::to_string( coordinate->y ) << " "
           << std::to_string( coordinate->z ) << "\n";
     }
-
-    // https://stackoverflow.com/questions/351845/finding-the-type-of-an-object-in-c
-    myfile << ( dynamic_cast<BezierCurve*> (object) ? "bz " : "bs " );
+    myfile << "l ";
     last_index = index + objectCoordinates.size();
 
     for( ; index < last_index ; index++ ) {
