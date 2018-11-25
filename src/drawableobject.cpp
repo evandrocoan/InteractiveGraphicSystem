@@ -129,13 +129,19 @@ void DrawableObject::apply(Transformation &transformation)
 {
   LOG(8, "...");
   auto coordinates = this->worldCoordinates();
+  std::map<Coordinate*, Coordinate*> coordinatesMap;
 
   auto geometricCenter = getGeometricCenter();
   transformation.set_geometric_center(geometricCenter);
 
-  for(auto coordinate : coordinates)
-  {
-    transformation.apply(*coordinate);
+  for(auto coordinate : coordinates) {
+    auto iterator = coordinatesMap.find( coordinate );
+
+    if( iterator == coordinatesMap.end() )
+    {
+      coordinatesMap[coordinate] = coordinate;
+      transformation.apply(*coordinate);
+    }
   }
 }
 
