@@ -178,11 +178,13 @@ void World::updateObjectCoordinates(DrawableObject* object, const Transformation
 }
 
 void World::apply(Transformation &transformation) {
+  LOG(4, "transformation: %s", transformation);
   this->_displayFile.apply(transformation);
 }
 
-void World::apply(const std::string object_name, Transformation &transformation)
-{
+void World::apply(const std::string object_name, Transformation &transformation) {
+  LOG(4, "object_name: %s, transformation: %s", object_name, transformation);
+
   if( this->_displayFile.isObjectOnByName(object_name) )
   {
     if( transformation.size() )

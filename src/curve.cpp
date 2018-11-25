@@ -22,15 +22,13 @@ Curve::~Curve()
   }
 }
 
-void Curve::create_lines(const Transformation& transformation, std::vector<Coordinate*> generated_coordinates)
-{
+void Curve::create_lines(const Transformation& transformation, std::vector<Coordinate*> generated_coordinates) {
   Line* line;
   Coordinate* last_point = nullptr;
 
   for( auto coordinate : generated_coordinates )
   {
-    if( last_point != nullptr )
-    {
+    if( last_point != nullptr ) {
       // LOG( 8, "last_point: %s", *last_point );
       // LOG( 8, "point:      %s", *coordinate );
 
@@ -49,9 +47,9 @@ const std::vector<Line*> Curve::getLines() const {
   return this->lines;
 }
 
-void Curve::updateClippingCoordinates(const Axes& axes)
-{
+void Curve::updateClippingCoordinates(const Axes& axes) {
   LOG( 8, "..." );
+
   for( auto line : this->lines )
   {
     line->updateClippingCoordinates(axes);
@@ -164,8 +162,7 @@ BsplineCurve::BsplineCurve(std::string name, std::vector<Coordinate*> _worldCoor
 }
 
 // https://www.codeproject.com/Articles/25237/Bezier-Curves-Made-Simple
-void BsplineCurve::updateWindowCoordinates(const Transformation& transformation)
-{
+void BsplineCurve::updateWindowCoordinates(const Transformation& transformation) {
   LOG( 8, "..." );
 
   big_double blending_function_step = 0.1;

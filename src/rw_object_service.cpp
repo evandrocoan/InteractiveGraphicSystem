@@ -210,7 +210,7 @@ std::vector<Coordinate*> RwObjectService::getVertexes(std::vector<int>& indexes,
     indexes.pop_back();
 
     LOGL( 8, "Reading index %s, ", index );
-    LOGLN( 8, "value %s", coordinates[index] );
+    LOGLN( 8, "value %s", *coordinates[index] );
     LOGLN( 8, "\n" );
 
     internal.push_back( coordinates[index] );
