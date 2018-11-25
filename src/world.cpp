@@ -148,16 +148,10 @@ World::UpdateObjectCoordinates::Connection World::addObserver(const World::Updat
   return this->_updateObjectCoordinates.connect(callback);
 }
 
-void World::updateAllObjectCoordinates(const Transformation& transformation, const Axes& axes)
-{
+void World::updateAllObjectCoordinates(const Transformation& transformation, const Axes& axes) {
   LOGLN( 8, "\n" );
   LOG( 8, "..." );
-  auto objects = this->_displayFile.getObjects();
-
-  for( auto object : objects ) {
-    object->updateWindowCoordinates(transformation);
-    object->updateClippingCoordinates(axes);
-  }
+  this->_displayFile.apply(transformation, axes);
 }
 
 void World::updateObjectCoordinates(DrawableObject* object, const Transformation& transformation, const Axes& axes)
