@@ -108,23 +108,53 @@ struct Array
   /**
    * Generic Data to Object operators.
    */
-  bool operator<=(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] > data ) { return false; } } return true; }
+  bool operator<=(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] > data ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator<(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] >= data ) { return false; } } return true; }
+  bool operator<(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] >= data ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator>=(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] < data ) { return false; } } return true; }
+  bool operator>=(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] < data ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator>(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] <= data ) { return false; } } return true; }
+  bool operator>(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] <= data ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator==(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] != data ) { return false; } } return true; }
+  bool operator==(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] != data ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator!=(const DataType& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] == data ) { return false; } } return true; }
+  bool operator!=(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] == data ) {
+        return false;
+      }
+    } return true;
+  }
 
   DerivedType operator-() {
     DerivedType new_array;
@@ -183,23 +213,53 @@ struct Array
   /**
    * Object to Object operators.
    */
-  bool operator<=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
+  bool operator<=(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] > object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator<(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] >= object._data[index] ) { return false; } } return true; }
+  bool operator<(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] >= object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator>=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] < object._data[index] ) { return false; } } return true; }
+  bool operator>=(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] < object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator>(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] <= object._data[index] ) { return false; } } return true; }
+  bool operator>(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] <= object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator==(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] != object._data[index] ) { return false; } } return true; }
+  bool operator==(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] != object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator!=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] == object._data[index] ) { return false; } } return true; }
+  bool operator!=(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] == object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
 
   template<typename BaseClass>
   DerivedType operator+(const Array< array_width, DataType, BaseClass >& array) {
