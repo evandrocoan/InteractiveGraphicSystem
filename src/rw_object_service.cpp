@@ -10,8 +10,7 @@
 
 RwObjectService::RwObjectService(Facade& facade) :
       facade(facade),
-      _last_index(0),
-      _facets_size(-1)
+      _last_index(0)
 {
 }
 
@@ -87,9 +86,9 @@ void RwObjectService::read(std::string file_path)
       }
       else if( line.front() == 'f' )
       {
-        _facets_size = -1;
         std::vector<int> segment_list;
-        this->getFacetIndexes( segment_list, line );
+        std::vector<int> facets_count;
+        this->getFacetIndexes( segment_list, facets_count, line );
 
         do
         {
@@ -99,7 +98,7 @@ void RwObjectService::read(std::string file_path)
           is_there_a_next_line = line.front() == 'f';
           if( !is_there_a_next_line ) break;
 
-          this->getFacetIndexes( segment_list, line );
+          this->getFacetIndexes( segment_list, facets_count, line );
           if( !is_there_new_lines ) break;
         }
         while( true );
@@ -107,9 +106,9 @@ void RwObjectService::read(std::string file_path)
         LOGL( 8, "segment_list.size: %s, ", segment_list.size() );
         for( auto value : segment_list ) LOGLN( 8, "%s, ", value ); LOGLN( 8, "\n" );
 
-        std::vector<Coordinate*> vertexes = this->getFacetVertexes( segment_list, coordinates );
+        std::vector<Coordinate*> vertexes = this->getFacetVertexes( segment_list, facets_count, coordinates );
 
-        this->facade.addPolyhedron( name, vertexes, segment_list, _facets_size,
+        this->facade.addPolyhedron( name, vertexes, segment_list, facets_count,
             _origin_coordinate_value, _origin_coordinate_value);
       }
       else if( line.front() == 'l' || ( line.front() == 'b' && ( line[1] == 'z' || line[1] == 's' ) ) )
@@ -223,14 +222,16 @@ std::vector<Coordinate*> RwObjectService::getVertexes(std::vector<int>& indexes,
   return internal;
 }
 
-void RwObjectService::getFacetIndexes(std::vector<int>& result, std::string& line)
+void RwObjectService::getFacetIndexes(std::vector<int>& result, std::vector<int>& facets_count, std::string& line)
 {
   LOG( 8, "..." );
+  int facets_size;
 
   std::vector<std::string> indexes = this->split( line, ' ' );
   std::reverse( indexes.begin(), indexes.end() );
 
   indexes.pop_back();
+  int last_facets_size = result.size();
 
   while(!indexes.empty())
   {
@@ -254,26 +255,26 @@ void RwObjectService::getFacetIndexes(std::vector<int>& result, std::string& lin
     LOG( 8, "last: %s, result.size: %s", last, result.size() );
   }
 
-  if( _facets_size < 0 ) {
-    _facets_size = result.size();
-  }
+  facets_size = result.size() - last_facets_size;
 
-  if( ( _facets_size <= 0 ) ? 1 : ( result.size() % _facets_size != 0 )
-        || ( _facets_size != 3 && _facets_size != 4 ) )
+  if( facets_size < 3 )
   {
     std::ostringstream contents;
     for( auto value : result ) contents << value << ", ";
 
     std::string error = tfm::format(
-        "The facets size should be modular with 3 or 4, not %s with %s sides",
-        _facets_size, contents.str() );
+        "The facets size should have at least 3 sides, not %s sides: \n%s",
+        facets_size, contents.str() );
 
     LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
+
+  facets_count.push_back( facets_size );
 }
 
-std::vector<Coordinate*> RwObjectService::getFacetVertexes(std::vector<int>& line_segments, std::vector<Coordinate*>& coordinates)
+std::vector<Coordinate*> RwObjectService::getFacetVertexes(std::vector<int>& line_segments,
+    std::vector<int>& facets_count, std::vector<Coordinate*>& coordinates)
 {
   LOG( 8, "..." );
   int coordinates_size = coordinates.size();
@@ -343,7 +344,7 @@ void RwObjectService::write(std::string file_path)
   unsigned int index = 1;
   unsigned int last_index;
 
-  LOG(8, "Draw General Polygons");
+  LOG(8, "Write General Polygons");
   for (auto object : polygons)
   {
     LOG(8, "object: %s", *object);
@@ -370,7 +371,7 @@ void RwObjectService::write(std::string file_path)
     myfile << "\n\n";
   }
 
-  LOG(8, "Draw General Polyhedrons");
+  LOG(8, "Write General Polyhedrons");
   for (auto object : polyhedrons)
   {
     LOG(8, "object: %s", *object);
@@ -388,24 +389,39 @@ void RwObjectService::write(std::string file_path)
     }
 
     myfile << "vn 0.0 0.0 1.0";
-    int count = 0;
     auto line_segments = object->lineSegments();
+    auto facets_count = object->facetsCount();
+    auto facets_count_end = facets_count.end();
+    auto facets_count_iterator = facets_count.begin();
+    int facets_count_now = *facets_count_iterator;
+
+    myfile << "\nf ";
 
     for( auto segment : line_segments )
     {
-      if( count % object->facetSize() == 0 ) {
+      if( facets_count_now == 0 ) {
+        ++facets_count_iterator;
+
+        if( facets_count_iterator == facets_count_end ) {
+          auto error = tfm::format("The polyhedron has not enough facets count: \n%s", *object);
+
+          LOG( 1, "%s", error );
+          throw std::runtime_error(error);
+        }
+
+        facets_count_now = *facets_count_iterator;
         myfile << "\nf ";
       }
 
+      --facets_count_now;
       myfile << std::to_string(index + segment - 1) + "//1 ";
-      ++count;
     }
 
     index = index + objectCoordinates.size();
     myfile << "\n\n";
   }
 
-  LOG(8, "Draw Curves Types");
+  LOG(8, "Write Curves Types");
   for( auto object : curves )
   {
     LOG(8, "curve: %s", *object);
@@ -433,7 +449,7 @@ void RwObjectService::write(std::string file_path)
     myfile << "\n\n";
   }
 
-  LOG(8, "Draw Lines Types");
+  LOG(8, "Write Lines Types");
   for( auto object : lines )
   {
     LOG(8, "line: %s", *object);
@@ -460,7 +476,7 @@ void RwObjectService::write(std::string file_path)
     myfile << "\n\n";
   }
 
-  LOG(8, "Draw Points Types");
+  LOG(8, "Write Points Types");
   for( auto object : points )
   {
     LOG(8, "point: %s", *object);
@@ -591,7 +607,7 @@ TEST_CASE("Testing basic getLineIndexes loading duplicated vertexes on middle of
 }
 
 
-TEST_CASE("Testing basic getFacetIndexes case load with 3 _facets_size")
+TEST_CASE("Testing basic getFacetIndexes case load with 3 facets_size")
 {
   // _debugger_int_debug_level = 127-16;
   // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
@@ -599,23 +615,28 @@ TEST_CASE("Testing basic getFacetIndexes case load with 3 _facets_size")
   RwObjectService rw_object_service( nullface );
 
   std::vector<int> indexes{};
+  std::vector<int> facets_count{};
   std::string line = "f 1//1 2//1 4//1";
-  rw_object_service.getFacetIndexes(indexes, line);
+  rw_object_service.getFacetIndexes(indexes, facets_count, line);
 
   std::ostringstream contents;
   for( auto value : indexes ) contents << value << ", ";
   CHECK( "1, 2, 4, " == contents.str() );
 
   line = "f 3//2 4//2 8//2";
-  rw_object_service.getFacetIndexes(indexes, line);
+  rw_object_service.getFacetIndexes(indexes, facets_count, line);
 
   std::ostringstream contents2;
   for( auto value : indexes ) contents2 << value << ", ";
   CHECK( "1, 2, 4, 3, 4, 8, " == contents2.str() );
+
+  std::ostringstream contents1;
+  for( auto value : facets_count ) contents1 << value << ", ";
+  CHECK( "3, 3, " == contents1.str() );
 }
 
 
-TEST_CASE("Testing basic getFacetIndexes case load with 4 _facets_size")
+TEST_CASE("Testing basic getFacetIndexes case load with 4 facets_size")
 {
   // _debugger_int_debug_level = 127-16;
   // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
@@ -623,19 +644,24 @@ TEST_CASE("Testing basic getFacetIndexes case load with 4 _facets_size")
   RwObjectService rw_object_service( nullface );
 
   std::vector<int> indexes{};
+  std::vector<int> facets_count{};
   std::string line = "f 1//1 2//1 4//1 3//1";
-  rw_object_service.getFacetIndexes(indexes, line);
+  rw_object_service.getFacetIndexes(indexes, facets_count, line);
 
   std::ostringstream contents;
   for( auto value : indexes ) contents << value << ", ";
   CHECK( "1, 2, 4, 3, " == contents.str() );
 
   line = "f 3//2 4//2 8//2 7//2";
-  rw_object_service.getFacetIndexes(indexes, line);
+  rw_object_service.getFacetIndexes(indexes, facets_count, line);
 
   std::ostringstream contents2;
   for( auto value : indexes ) contents2 << value << ", ";
   CHECK( "1, 2, 4, 3, 3, 4, 8, 7, " == contents2.str() );
+
+  std::ostringstream contents1;
+  for( auto value : facets_count ) contents1 << value << ", ";
+  CHECK( "4, 4, " == contents1.str() );
 }
 
 
@@ -647,14 +673,15 @@ TEST_CASE("Testing invalid getFacetIndexes case load with 2 facets")
   RwObjectService rw_object_service( nullface );
 
   std::vector<int> indexes{};
+  std::vector<int> facets_count{};
   std::string line = "f 1//1 2//1";
 
   // https://github.com/onqtam/doctest/blob/master/doc/markdown/assertions.md
-  REQUIRE_THROWS_AS( rw_object_service.getFacetIndexes(indexes, line), std::runtime_error );
+  REQUIRE_THROWS_AS( rw_object_service.getFacetIndexes(indexes, facets_count, line), std::runtime_error );
 }
 
 
-TEST_CASE("Testing invalid getFacetIndexes case load with 5 facets")
+TEST_CASE("Testing getFacetIndexes case load with 5 facets")
 {
   // _debugger_int_debug_level = 127-16;
   // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
@@ -662,14 +689,24 @@ TEST_CASE("Testing invalid getFacetIndexes case load with 5 facets")
   RwObjectService rw_object_service( nullface );
 
   std::vector<int> indexes{};
+  std::vector<int> facets_count{};
   std::string line = "f 3//2 4//2 8//2 7//2 2//1";
 
   // https://github.com/onqtam/doctest/blob/master/doc/markdown/assertions.md
-  REQUIRE_THROWS_AS( rw_object_service.getFacetIndexes(indexes, line), std::runtime_error );
+  // REQUIRE_THROWS_AS( rw_object_service.getFacetIndexes(indexes, facets_count, line), std::runtime_error );
+  rw_object_service.getFacetIndexes(indexes, facets_count, line);
+
+  std::ostringstream contents;
+  for( auto value : indexes ) contents << value << ", ";
+  CHECK( "3, 4, 8, 7, 2, " == contents.str() );
+
+  std::ostringstream contents1;
+  for( auto value : facets_count ) contents1 << value << ", ";
+  CHECK( "5, " == contents1.str() );
 }
 
 
-TEST_CASE("Testing invalid getFacetIndexes case load with 7 facets")
+TEST_CASE("Testing getFacetIndexes case load with 7 facets")
 {
   // _debugger_int_debug_level = 127-16;
   // https://stackoverflow.com/questions/9055778/initializing-a-reference-to-member-to-null-in-c
@@ -677,12 +714,22 @@ TEST_CASE("Testing invalid getFacetIndexes case load with 7 facets")
   RwObjectService rw_object_service( nullface );
 
   std::vector<int> indexes{};
+  std::vector<int> facets_count{};
   std::string line = "f 3//2 4//2 8//2 7//2";
-  rw_object_service.getFacetIndexes(indexes, line);
+  rw_object_service.getFacetIndexes(indexes, facets_count, line);
 
   line = "f 3//2 4//2 8//2";
+  rw_object_service.getFacetIndexes(indexes, facets_count, line);
   // https://github.com/onqtam/doctest/blob/master/doc/markdown/assertions.md
-  REQUIRE_THROWS_AS( rw_object_service.getFacetIndexes(indexes, line), std::runtime_error );
+  // REQUIRE_THROWS_AS( rw_object_service.getFacetIndexes(indexes, facets_count, line), std::runtime_error );
+
+  std::ostringstream contents;
+  for( auto value : indexes ) contents << value << ", ";
+  CHECK( "3, 4, 8, 7, 3, 4, 8, " == contents.str() );
+
+  std::ostringstream contents1;
+  for( auto value : facets_count ) contents1 << value << ", ";
+  CHECK( "4, 3, " == contents1.str() );
 }
 
 
@@ -694,8 +741,9 @@ TEST_CASE("Testing basic getFacetVertexes case load with load count recovery")
   RwObjectService rw_object_service( nullface );
 
   std::vector<int> indexes{1, 2};
+  std::vector<int> facets_count{};
   std::vector<Coordinate*> coordinates{new Coordinate(1, 2, 3), new Coordinate(4, 5, 6)};
-  std::vector<Coordinate*> results = rw_object_service.getFacetVertexes(indexes, coordinates);
+  std::vector<Coordinate*> results = rw_object_service.getFacetVertexes(indexes, facets_count, coordinates);
 
   std::ostringstream contents;
   for( auto value : results ) contents << *value << ", ";
@@ -708,7 +756,7 @@ TEST_CASE("Testing basic getFacetVertexes case load with load count recovery")
   std::vector<int> indexes2{3, 4};
   std::vector<Coordinate*> coordinates2{new Coordinate(1, 2, 3), new Coordinate(4, 5, 6),
       new Coordinate(7, 8, 9), new Coordinate(10, 11, 12)};
-  std::vector<Coordinate*> results2 = rw_object_service.getFacetVertexes(indexes2, coordinates2);
+  std::vector<Coordinate*> results2 = rw_object_service.getFacetVertexes(indexes2, facets_count, coordinates2);
 
   std::ostringstream contents3;
   for( auto value : results2 ) contents3 << *value << ", ";
@@ -717,5 +765,9 @@ TEST_CASE("Testing basic getFacetVertexes case load with load count recovery")
   std::ostringstream contents4;
   for( auto value : indexes2 ) contents4 << value << ", ";
   CHECK( "1, 2, " == contents4.str() );
+
+  std::ostringstream contents1;
+  for( auto value : facets_count ) contents1 << value << ", ";
+  CHECK( "" == contents1.str() );
 }
 
