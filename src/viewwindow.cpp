@@ -17,7 +17,7 @@ ViewWindow::~ViewWindow()
 
 void ViewWindow::reset(bool isToCallObservers) {
   _angles = *new Coordinate(0, 0, 0);
-  _dimentions = *new Coordinate(100, 100, 0);
+  _dimentions = *new Coordinate(1, 1, 0);
   _windowCenter = *new Coordinate(0, 0, 0);
   _projection = Projection::PARALLEL;
   _projectionDistance = 0.0;
@@ -50,42 +50,38 @@ std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
 
 void ViewWindow::zoom(Coordinate steps)
 {
-  if( (this->_dimentions[0] + steps[0] <= MINIMUM_ZOOM_LIMIT
-      || this->_dimentions[1] + steps[0] <= MINIMUM_ZOOM_LIMIT)
-    && steps[0] < 0 )
+  Coordinate reversed = steps / 100.0;
+  Coordinate new_values = _dimentions * reversed;
+
+  LOG( 8, "steps: %s", steps );
+  LOG( 8, "reversed: %s", reversed );
+  LOG( 8, "new_values: %s", new_values );
+  LOG( 8, "_dimentions: %s", _dimentions );
+
+  if( (this->_dimentions[0] + new_values[0] < MINIMUM_ZOOM_LIMIT
+      || this->_dimentions[1] + new_values[0] < MINIMUM_ZOOM_LIMIT)
+    && new_values[0] < 0 )
   {
     std::string error = tfm::format( "You reached the minimum zoom limit! %s", MINIMUM_ZOOM_LIMIT );
     LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
-  else if( (this->_dimentions[0] + steps[0] >= MAXIMUM_ZOOM_LIMIT
-            || this->_dimentions[1] + steps[0] >= MAXIMUM_ZOOM_LIMIT)
-          && steps[0] > 0)
+  else if( (this->_dimentions[0] + new_values[0] > MAXIMUM_ZOOM_LIMIT
+            || this->_dimentions[1] + new_values[0] > MAXIMUM_ZOOM_LIMIT)
+          && new_values[0] > 0)
   {
     std::string error = tfm::format( "You reached the maximum zoom limit! %s", MAXIMUM_ZOOM_LIMIT );
     LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
-  else
-  {
-    this->_dimentions += steps;
+  else {
+    this->_dimentions += new_values;
     this->callObservers();
   }
 }
 
 void ViewWindow::move(Coordinate moves)
 {
-  // Matrix de rotação feita manualmente
-  //moves = (Cx+Mx,Cy+My)
-  // moves = this->_windowCenter;
-  //moves = moves * matrix de transformação
-  // double x_move = moves._data[0];
-  // auto radians = convert_degrees_to_radians(-_angles._data[0]);
-  // auto sine    = std::sin(radians);
-  // auto cosine  = std::cos(radians);
-  // moves._data[0] = moves._data[0]*cosine+ moves._data[1]*sine;
-  // moves._data[1] = x_move*(-1*sine)+ moves._data[1]*cosine;
-  //_windowCenter = moves*T
   Transformation transformation;
   transformation.add_rotation("Fix window rotation", -this->_angles);
   transformation.set_geometric_center(_origin_coordinate_value);
