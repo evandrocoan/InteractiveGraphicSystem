@@ -156,7 +156,7 @@ struct Array
     } return true;
   }
 
-  DerivedType operator-() {
+  DerivedType operator-() const {
     DerivedType new_array;
     for( unsigned int index = 0; index < array_width; index++ ) {
       new_array._data[index] = -_data[index];
