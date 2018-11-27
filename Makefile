@@ -31,7 +31,7 @@ TESTS_TARGET_HACK := $(SRCDIR)/doctest_hack.h
 #
 # Options to Request or Suppress Warnings
 # https://gcc.gnu.org/onlinedocs/gcc-4.7.0/gcc/Warning-Options.html
-CFLAGS := -O0 -ggdb -Wall -Wextra -pedantic-errors -Wc++11-compat -Wcast-qual -Wno-unused-parameter -std=c++11 -fstack-protector -Wl,--export-all-symbols
+CFLAGS := -O0 -ggdb -Wall -Wextra -pedantic-errors -Wc++11-compat -Wcast-qual -Wno-unused-parameter -std=c++11 -fstack-protector
 
 POST_LIBS := `pkg-config --cflags --libs glibmm-2.4 giomm-2.4 gtkmm-3.0`
 FIND_EXCLUSIONS := \( ! -name "*test.cpp" \)
