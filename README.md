@@ -16,6 +16,13 @@ git submodule init
 git submodule update
 ```
 
+### Running it
+
+```
+make run
+```
+![](https://user-images.githubusercontent.com/5332158/49179916-803e0100-f33a-11e8-9fc7-34f53b565206.png)
+
 
 ### Segmentation fault
 
