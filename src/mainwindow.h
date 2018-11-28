@@ -1,6 +1,10 @@
 #ifndef GTKMM_APP_MAIN_WINDOW
 #define GTKMM_APP_MAIN_WINDOW
 
+#include <chrono>
+#include <thread>
+#include <future>
+
 /* Include any library as need to use other's components such as
  * gtkmm/button or gtkmm/frame.
  */
@@ -28,28 +32,41 @@ public:
   virtual ~MainWindow();
 
   void updateDropdownList();
+  void updateDrawingAreaTitle(const ViewWindow&);
+
   Gtk::Window& getWindow();
 
 protected:
   Gtk::Window       window;
   Gtk::ComboBoxText objects_list;
 
-  Facade            facade;
-  AddObject         addObject;
+  Facade        facade;
+  AddObject     addObject;
+  DrawingArea& _drawingArea;
 
   RwObjectService   rw_object_service;
   ChooseFileWindow* choose_file_window;
 
+  Gtk::Button button_move_inside;
+  Gtk::Button button_move_outside;
   Gtk::Button button_move_up;
   Gtk::Button button_move_down;
   Gtk::Button button_move_left;
   Gtk::Button button_move_right;
 
-  Gtk::Button button_rotate_left;
-  Gtk::Button button_rotate_right;
+  Gtk::Entry projection_depth;
+  Gtk::Entry entry_move_length;
+
+  Gtk::Button button_rotate_left_x;
+  Gtk::Button button_rotate_right_x;
+  Gtk::Button button_rotate_left_y;
+  Gtk::Button button_rotate_right_y;
+  Gtk::Button button_rotate_left_z;
+  Gtk::Button button_rotate_right_z;
 
   Gtk::Button button_zoom_in;
   Gtk::Button button_zoom_out;
+  Gtk::Button button_reset_window;
 
   Gtk::Button button_add_object;
   Gtk::Button button_delete_object;
@@ -68,27 +85,35 @@ protected:
   Gtk::Grid grid_list_obj;
   Gtk::Grid grid_rotate;
 
-  Gtk::Entry entry_move_length;
-  Gtk::Entry entry_zoom_scale;
-  Gtk::Entry entry_rotate_angle;
-
   Gtk::RadioButton liang_barsky_radiobutton;
   Gtk::RadioButton cohen_sutheland_radiobutton;
 
+  Gtk::RadioButton parallel_radiobutton;
+  Gtk::RadioButton perspective_radiobutton;
+
   void on_liang_radiobutton();
   void on_cohen_radiobutton();
+
+  void on_parallel_radiobutton();
+  void on_perspective_radiobutton();
 
   void setupButtons();
   void connectButtons();
   void setDefaultTooltips();
 
+  void on_button_move_inside();
+  void on_button_move_outside();
   void on_button_move_up();
   void on_button_move_down();
   void on_button_move_left();
   void on_button_move_right();
 
-  void on_button_rotate_left();
-  void on_button_rotate_right();
+  void on_button_rotate_left_x();
+  void on_button_rotate_right_x();
+  void on_button_rotate_left_y();
+  void on_button_rotate_right_y();
+  void on_button_rotate_left_z();
+  void on_button_rotate_right_z();
 
   void on_button_zoom_in();
   void on_button_zoom_out();
@@ -134,6 +159,7 @@ protected:
   Gtk::Button button_remove_transformation;
 
   void on_button_apply();
+  void on_button_reset_window();
   void on_button_save_transformation();
   void on_button_remove_transformation();
 
@@ -151,11 +177,12 @@ protected:
 
   void _addThingsToTheWindow();
   void _connectButtons();
-  void _update_transmations_list();
+  void _update_transformations_list();
 
 private:
   int _object_list_active_index;
   bool _skip_object_list_signals;
+  bool _isStartUp;
   void add_test_objects();
 };
 

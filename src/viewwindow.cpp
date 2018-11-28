@@ -2,77 +2,99 @@
 
 ViewWindow::ViewWindow() :
       _axes(ViewWindow::xWiMin, ViewWindow::yWiMin, ViewWindow::xWiMax, ViewWindow::yWiMax),
-      _angles(0, 0),
+      _angles(0, 0, 0),
       _dimentions(100, 100, 0),
-      _windowCenter(0, 0, 0)
+      _windowCenter(0, 0, 0),
+      _projection(Projection::PARALLEL),
+      _projectionDistance(0.0)
 {
+  this->reset(false);
 }
 
 ViewWindow::~ViewWindow()
 {
 }
 
-ViewWindow::UpdateAllObjectCoordinates::Connection ViewWindow::addObserver(const ViewWindow::UpdateAllObjectCoordinates::Callback& callback)
-{
-  auto connection = this->_updateAllObjectCoordinates.connect(callback);
-  this->callObservers();
+void ViewWindow::reset(bool isToCallObservers) {
+  _angles = *new Coordinate(15, 15, 0);
+  _dimentions = *new Coordinate(100, 100, 0);
+  _windowCenter = *new Coordinate(0, 0, 0);
+  _projection = Projection::PARALLEL;
+  _projectionDistance = 0.0;
+
+  if(isToCallObservers) {
+    this->callObservers();
+  }
+}
+
+ViewWindow::UpdateViewWindowTitle::Connection ViewWindow::addObserver(const ViewWindow::UpdateViewWindowTitle::Callback& callback) {
+  auto connection = this->_updateViewWindowTitle.connect(callback);
   return connection;
+}
+
+ViewWindow::UpdateAllObjectCoordinates::Connection ViewWindow::addObserver(const ViewWindow::UpdateAllObjectCoordinates::Callback& callback) {
+  auto connection = this->_updateAllObjectCoordinates.connect(callback);
+  return connection;
+}
+
+ViewWindow::UpdateObjectCoordinates::Connection ViewWindow::addObserver(const ViewWindow::UpdateObjectCoordinates::Callback& callback) {
+  auto connection = this->_updateObjectCoordinates.connect(callback);
+  return connection;
+}
+
+void ViewWindow::updateObjectCoordinates(DrawableObject* object) {
+  LOG( 2, "..." );
+  this->_updateObjectCoordinates( object, _getTransformation(), this->_axes );
 }
 
 std::ostream& operator<<( std::ostream &output, const ViewWindow &object )
 {
-  output << "ViewWindow" << object._dimentions
-      << object._windowCenter << ", " << object._transformation;
+  output << "ViewWindow" << object._dimentions << object._windowCenter << object._angles;
   return output;
 }
 
 void ViewWindow::zoom(Coordinate steps)
 {
-  if( (this->_dimentions[0] + steps[0] <= MINIMUM_ZOOM_LIMIT
-      || this->_dimentions[1] + steps[0] <= MINIMUM_ZOOM_LIMIT)
-    && steps[0] < 0 )
+  Coordinate reversed = steps / 100.0;
+  Coordinate new_values = _dimentions * reversed;
+
+  LOG( 8, "steps: %s", steps );
+  LOG( 8, "reversed: %s", reversed );
+  LOG( 8, "new_values: %s", new_values );
+  LOG( 8, "_dimentions: %s", _dimentions );
+
+  if( (this->_dimentions[0] + new_values[0] < MINIMUM_ZOOM_LIMIT
+      || this->_dimentions[1] + new_values[0] < MINIMUM_ZOOM_LIMIT)
+    && new_values[0] < 0 )
   {
-    LOG(1, "");
-    LOG(1, "");
-    LOG(1, "ERROR: You reached the maximum zoom limit! %s", *this);
-    return;
+    std::string error = tfm::format( "You reached the minimum zoom limit! %s", MINIMUM_ZOOM_LIMIT );
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
-  else if( (this->_dimentions[0] + steps[0] >= MAXIMUM_ZOOM_LIMIT
-            || this->_dimentions[1] + steps[0] >= MAXIMUM_ZOOM_LIMIT)
-          && steps[0] > 0)
+  else if( (this->_dimentions[0] + new_values[0] > MAXIMUM_ZOOM_LIMIT
+            || this->_dimentions[1] + new_values[0] > MAXIMUM_ZOOM_LIMIT)
+          && new_values[0] > 0)
   {
-    LOG(1, "");
-    LOG(1, "");
-    LOG(1, "ERROR: You reached the minimum zoom limit! %s", *this);
-    return;
+    std::string error = tfm::format( "You reached the maximum zoom limit! %s", MAXIMUM_ZOOM_LIMIT );
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
-  else
-  {
-    this->_dimentions += steps;
+  else {
+    this->_dimentions += new_values;
     this->callObservers();
   }
 }
 
 void ViewWindow::move(Coordinate moves)
 {
-  // Matrix de rotação feita manualmente
-  //moves = (Cx+Mx,Cy+My)
-  // moves = this->_windowCenter;
-  //moves = moves * matrix de transformação
-  // double x_move = moves._data[0];
-  // auto radians = convert_degrees_to_radians(-_angles._data[0]);
-  // auto sine    = std::sin(radians);
-  // auto cosine  = std::cos(radians);
-  // moves._data[0] = moves._data[0]*cosine+ moves._data[1]*sine;
-  // moves._data[1] = x_move*(-1*sine)+ moves._data[1]*cosine;
-  //_windowCenter = moves*T
-  this->_transformation.clear();
-  this->_transformation.add_rotation("Fix window rotation", -this->_angles);
-  this->_transformation.set_geometric_center(_origin_coordinate_value);
-  this->_transformation.apply(moves);
+  Transformation transformation;
+  transformation.add_rotation("Fix window rotation", -this->_angles);
+  transformation.set_geometric_center(_origin_coordinate_value);
+  transformation.apply(moves);
 
   LOG(16, "moves: %s", moves);
-  // LOG(16, "moves transformation: %s", _transformation);
+  // LOG(4, "_angles: %s", this->_angles);
+  // LOG(4, "moves transformation: %s", transformation);
 
   this->_windowCenter += moves;
   this->callObservers();
@@ -80,21 +102,55 @@ void ViewWindow::move(Coordinate moves)
 
 void ViewWindow::rotate(Coordinate angles)
 {
-  this->_angles += -angles;
+  normalize_angle(_angles, -angles);
   this->callObservers();
 }
 
-void ViewWindow::callObservers()
-{
-  this->_transformation.clear();
-  this->_transformation.add_translation("Window to center", -this->_windowCenter);
-  this->_transformation.add_rotation("Window rotation", this->_angles);
-  this->_transformation.add_scaling("Window coordinate scaling", this->_dimentions.inverse());
-  this->_transformation.set_geometric_center(_origin_coordinate_value);
+Transformation ViewWindow::_getTransformation() {
+  Coordinate angles = this->_angles;
+  Coordinate inverse{ 1.0 / _dimentions.x, 1.0 / _dimentions.y, 1.0 };
 
-  // LOG(16, "World transformation: %s", _transformation);
-  // LOG(16, "Window dimensions: %s, inversed dimensions: %s", this->_dimentions, this->_dimentions.inverse());
-  this->_updateAllObjectCoordinates(this->_transformation, this->_axes);
+  big_double angle_z = angles.z;
+  angles.z = 0.0;
+
+  Transformation transformation;
+  transformation.add_translation( "Window to center", -this->_windowCenter );
+  transformation.add_rotation( "Window rotation", -angles );
+
+  if( _projection == Projection::PERSPECTIVE ) {
+    transformation.add_translation( "Window to center", Coordinate( 0, 0, _projectionDistance ) );
+    // transformation.add_matrix( "Perspective Projection",
+    //     {
+    //       {1.0, 0.0, 0.0, 0.0},
+    //       {1.0, 1.0, 0.0, 0.0},
+    //       {1.0, 0.0, 0.0, 0.0},
+    //       {1.0, 0.0, 1.0/_projectionDistance, 1},
+    //     }
+    //   );
+    // transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -angle_z ) );
+    // transformation.add_scaling( "Window coordinate scaling", inverse );
+
+    transformation.projectionDistance = _projectionDistance;
+    transformation.posTransformation = new Transformation();
+    transformation.posTransformation->add_rotation( "Window rotation", Coordinate( 0, 0, -angle_z ) );
+    transformation.posTransformation->add_scaling( "Window coordinate scaling", inverse );
+    transformation.posTransformation->set_geometric_center( _origin_coordinate_value );
+  }
+  else {
+    transformation.add_rotation( "Window rotation", Coordinate( 0, 0, -angle_z ) );
+    transformation.add_scaling( "Window coordinate scaling", inverse );
+  }
+
+  transformation.set_geometric_center( _origin_coordinate_value );
+
+  // LOG(1, "World transformation: %s", transformation);
+  // LOG(16, "Window dimensions: %s, inversed dimensions: %s", this->_dimentions, inverse);
+  return transformation;
+}
+
+void ViewWindow::callObservers() {
+  this->_updateAllObjectCoordinates( _getTransformation(), this->_axes );
+  this->_updateViewWindowTitle(*this);
 }
 
 /**
@@ -180,5 +236,5 @@ Coordinate* ViewWindow::convertCoordinateToViewPort(const Coordinate &c) const
   // std::cout << ", wiMin x: " << xWiMin << ", y: " << yWiMin;
   // std::cout << ", wiMax x: " << xWiMax << ", y: " << yWiMax;
   // std::cout << ", _width x: " << xVpMax - xVpMin << ", _height: " << yVpMax - yVpMin << std::endl;
-  return new Coordinate(xVp, yVp);
+  return new Coordinate(xVp, yVp, 0);
 }

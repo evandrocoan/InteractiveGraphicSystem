@@ -21,37 +21,46 @@ class Facade : public NonCopyable
   friend class RwObjectService;
 
 public:
-  DrawingArea& drawingArea()       { return this->_drawingArea; }
+  DrawingArea& drawingArea() { return this->_drawingArea; }
   const DisplayFile<DrawableObject*>& displayFile() { return this->_world.displayFile(); }
 
-  void addPoint(std::string name, int x, int y, int z, Coordinate _borderColor=_default_coordinate_value_parameter)
+  void addPoint(std::string name, int x, int y, int z, Coordinate _borderColor=_origin_coordinate_value)
   {
     this->_world.addPoint(name, x, y, z, _borderColor); }
 
   void addLine(std::string name, int x1, int y1, int z1, int x2, int y2, int z2,
-      Coordinate _borderColor=_default_coordinate_value_parameter,
+      Coordinate _borderColor=_origin_coordinate_value,
       LineClippingType type=LineClippingType::LIANG_BARSKY)
   {
     this->_world.addLine(name, x1, y1, z1, x2, y2, z2, _borderColor, type); }
 
   void addPolygon(std::string name, std::vector<big_double> points,
-      Coordinate _borderColor=_default_coordinate_value_parameter,
-      Coordinate _fillingColor=_default_coordinate_value_parameter,
+      Coordinate _borderColor=_origin_coordinate_value,
+      Coordinate _fillingColor=_origin_coordinate_value,
       CurveType type=CurveType::POLYGON)
   {
     this->_world.addPolygon(name, points, _borderColor, _fillingColor, type); }
 
   void addPolygon(std::string name, std::vector<Coordinate*> points,
-      Coordinate _borderColor=_default_coordinate_value_parameter,
-      Coordinate _fillingColor=_default_coordinate_value_parameter,
+      Coordinate _borderColor=_origin_coordinate_value,
+      Coordinate _fillingColor=_origin_coordinate_value,
       CurveType type=CurveType::POLYGON)
   {
     this->_world.addPolygon(name, points, _borderColor, _fillingColor, type); }
+
+  void addPolyhedron(std::string name, std::vector<Coordinate*> points,
+              std::vector<int> _line_segments, std::vector<int> _facets_count,
+              Coordinate _borderColor=_origin_coordinate_value,
+              Coordinate _fillingColor=_origin_coordinate_value)
+  {
+    this->_world.addPolyhedron(name, points, _line_segments, _facets_count, _borderColor, _fillingColor); }
 
   void setLineClipping(LineClippingType type)
   {
     this->_world.setLineClipping(type); }
 
+  void resetWindow() { this->_viewWindow.reset(); }
+  void setProjection(Projection type, big_double projection) { this->_viewWindow.setProjection(type, projection); }
   void removeObject(std::string name) { this->_world.removeObject(name); }
 
   void move(Coordinate moves)        { this->_viewWindow.move(moves);        }
@@ -59,6 +68,7 @@ public:
   void rotate(Coordinate coordinate) { this->_viewWindow.rotate(coordinate); }
 
   void queue_draw() { this->_drawingArea.queue_draw(); }
+  void apply(Transformation& matrices) { this->_world.apply(matrices); this->_viewWindow.callObservers(); }
   void apply(std::string object_name, Transformation& matrices) { this->_world.apply(object_name, matrices); }
 
   Facade() : _drawingArea(_world, _viewWindow)
@@ -69,7 +79,8 @@ public:
     this->_updateViewPortSize = this->_drawingArea.addObserver(std::bind(&ViewWindow::updateViewPortSize, &this->_viewWindow, _1, _2));
 
     // ViewWindow observe World object creation/deletion
-    this->_updateObjectCoordinates = this->_world.addObserver(std::bind(&Facade::updateObjectCoordinates, this, _1));
+    this->_updateObjectCoordinates1 = this->_world.addObserver(std::bind(&ViewWindow::updateObjectCoordinates, &this->_viewWindow, _1));
+    this->_updateObjectCoordinates2 = this->_viewWindow.addObserver(std::bind(&Facade::updateObjectCoordinates, this, _1, _2, _3));
 
     // World observe ViewWindow coordinates update
     this->_updateAllObjectCoordinates = this->_viewWindow.addObserver(std::bind(&Facade::updateAllObjectCoordinates, this, _1, _2));
@@ -81,10 +92,10 @@ public:
    * @param `object` we receive a nullptr when a object was removed and we just want to draw the
    *        screen without it.
    */
-  void updateObjectCoordinates(DrawableObject* object)
+  void updateObjectCoordinates(DrawableObject* object, const Transformation& transformation, const Axes& axes)
   {
     if( object != nullptr ) {
-      this->_world.updateObjectCoordinates(object, this->_viewWindow.transformation(), this->_viewWindow.axes());
+      this->_world.updateObjectCoordinates(object, transformation, axes);
     }
     this->_updateDropdownList();
     this->_drawingArea.queue_draw();
@@ -105,7 +116,8 @@ public:
     result = this->_updateViewPortSize.disconnect();
     LOG(1, "Disconnecting the object `_updateViewPortSize` from its observer: %s", result);
 
-    result = this->_updateObjectCoordinates.disconnect();
+    result = this->_updateObjectCoordinates1.disconnect();
+    result = this->_updateObjectCoordinates2.disconnect();
     LOG(1, "Disconnecting the object `_updateObjectCoordinates` from its observer: %s", result);
 
     result = this->_updateAllObjectCoordinates.disconnect();
@@ -118,8 +130,12 @@ public:
    */
   typedef Signal<> UpdateDropdownList;
 
-  UpdateDropdownList::Connection addObserver(const UpdateDropdownList::Callback& callback) {
+  UpdateDropdownList::Connection addListObserver(const UpdateDropdownList::Callback& callback) {
     return this->_updateDropdownList.connect(callback);
+  }
+
+  ViewWindow::UpdateViewWindowTitle::Connection addTitleObserver(const ViewWindow::UpdateViewWindowTitle::Callback& callback) {
+    return this->_viewWindow.addObserver(callback);
   }
 
 protected:
@@ -130,7 +146,8 @@ protected:
   DrawingArea _drawingArea;
 
   DrawingArea::UpdateViewPortSize::Connection        _updateViewPortSize;
-  World::UpdateObjectCoordinates::Connection         _updateObjectCoordinates;
+  World::UpdateObjectCoordinates::Connection         _updateObjectCoordinates1;
+  ViewWindow::UpdateObjectCoordinates::Connection    _updateObjectCoordinates2;
   ViewWindow::UpdateAllObjectCoordinates::Connection _updateAllObjectCoordinates;
 };
 

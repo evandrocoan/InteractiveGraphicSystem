@@ -38,8 +38,7 @@ void World::addPolygon(std::string name, std::vector<big_double> coordinates_poi
   int unsigned coordinates_size = coordinates_points.size();
   std::vector<Coordinate*> coordinates;
 
-  for( unsigned int index = 2; index < coordinates_size; index++, index++, index++ )
-  {
+  for( unsigned int index = 2; index < coordinates_size; index++, index++, index++ ) {
     coordinates.push_back( new Coordinate( coordinates_points.at(index-2), coordinates_points.at(index-1), coordinates_points.at(index) ) );
   }
 
@@ -54,8 +53,10 @@ void World::addPolygon(std::string name, std::vector<Coordinate*> coordinates,
   switch(type) {
     case CurveType::POLYGON:
     {
-      object = new Polygon(name, coordinates, _borderColor, _fillingColor);
-      this->_polygons.addObject(object);
+      Polygon* polygon = new Polygon(name, coordinates, _borderColor, _fillingColor);
+      object = polygon;
+
+      this->_polygons.addObject(polygon);
       break;
     }
     case CurveType::BEZIER:
@@ -86,36 +87,43 @@ void World::addPolygon(std::string name, std::vector<Coordinate*> coordinates,
   this->_updateObjectCoordinates(object);
 }
 
-void World::setLineClipping(LineClippingType type)
+void World::addPolyhedron(std::string name, std::vector<Coordinate*> points,
+      std::vector<int> _line_segments, std::vector<int> _facets_count,
+      Coordinate _borderColor, Coordinate _fillingColor)
 {
+  Polyhedron* polyhedron = new Polyhedron(name, points, _line_segments, _facets_count, _borderColor, _fillingColor);
+  this->_polyhedrons.addObject(polyhedron);
+
+  this->_displayFile.addObject(polyhedron);
+  this->_updateObjectCoordinates(polyhedron);
+}
+
+void World::setLineClipping(LineClippingType type) {
   auto objects = this->_lines.getObjects();
 
-  for( auto line : objects )
-  {
+  for( auto line : objects ) {
     line->setLineClipping( type );
   }
 }
 
-void World::removeObject(std::string name)
-{
+void World::removeObject(std::string name) {
   // LOG(4, "Removing an object by name is faster than by pointer because it internally calls `removeObjectByName()`");
 
   if( this->_displayFile.isObjectOnByName(name) )
   {
-    if( this->_polygons.isObjectOnByName(name) )
-    {
+    if( this->_polygons.isObjectOnByName(name) ) {
       this->_polygons.removeObjectByName(name);
     }
-    else if( this->_curves.isObjectOnByName(name) )
-    {
+    else if( this->_polyhedrons.isObjectOnByName(name) ) {
+      this->_polyhedrons.removeObjectByName(name);
+    }
+    else if( this->_curves.isObjectOnByName(name) ) {
       this->_curves.removeObjectByName(name);
     }
-    else if( this->_lines.isObjectOnByName(name) )
-    {
+    else if( this->_lines.isObjectOnByName(name) ) {
       this->_lines.removeObjectByName(name);
     }
-    else if( this->_points.isObjectOnByName(name) )
-    {
+    else if( this->_points.isObjectOnByName(name) ) {
       this->_points.removeObjectByName(name);
     }
     else {
@@ -136,22 +144,14 @@ void World::removeObject(std::string name)
   this->_updateObjectCoordinates(nullptr);
 }
 
-World::UpdateObjectCoordinates::Connection World::addObserver(const World::UpdateObjectCoordinates::Callback& callback)
-{
+World::UpdateObjectCoordinates::Connection World::addObserver(const World::UpdateObjectCoordinates::Callback& callback) {
   return this->_updateObjectCoordinates.connect(callback);
 }
 
-void World::updateAllObjectCoordinates(const Transformation& transformation, const Axes& axes)
-{
+void World::updateAllObjectCoordinates(const Transformation& transformation, const Axes& axes) {
   LOGLN( 8, "\n" );
   LOG( 8, "..." );
-  auto objects = this->_displayFile.getObjects();
-
-  for (auto object : objects)
-  {
-    object->updateWindowCoordinates(transformation);
-    object->updateClippingCoordinates(axes);
-  }
+  this->_displayFile.apply(transformation, axes);
 }
 
 void World::updateObjectCoordinates(DrawableObject* object, const Transformation& transformation, const Axes& axes)
@@ -169,8 +169,7 @@ void World::updateObjectCoordinates(DrawableObject* object, const Transformation
     LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
-  else
-  {
+  else {
     LOG(4, "Updating the object %s with %s", *object, transformation);
   }
 
@@ -178,42 +177,22 @@ void World::updateObjectCoordinates(DrawableObject* object, const Transformation
   object->updateClippingCoordinates(axes);
 }
 
-void World::apply(const std::string object_name, Transformation &transformation)
-{
+void World::apply(Transformation &transformation) {
+  LOG(4, "transformation: %s", transformation);
+  this->_displayFile.apply(transformation);
+}
+
+void World::apply(const std::string object_name, Transformation &transformation) {
+  LOG(4, "object_name: %s, transformation: %s", object_name, transformation);
+
   if( this->_displayFile.isObjectOnByName(object_name) )
   {
     if( transformation.size() )
     {
-      DrawableObject* object;
-
-      if( this->_polygons.isObjectOnByName(object_name) )
-      {
-        object = this->_polygons.apply(object_name, transformation);
-      }
-      else if( this->_curves.isObjectOnByName(object_name) )
-      {
-        object = this->_curves.apply(object_name, transformation);
-      }
-      else if( this->_lines.isObjectOnByName(object_name) )
-      {
-        object = this->_lines.apply(object_name, transformation);
-      }
-      else if( this->_points.isObjectOnByName(object_name) )
-      {
-        object = this->_points.apply(object_name, transformation);
-      }
-      else
-      {
-        std::string error = tfm::format( "Inconsistency on the system. The object is not found internally: `%s`", object_name );
-
-        LOG( 1, "%s", error );
-        throw std::runtime_error( error );
-      }
-
+      DrawableObject* object = this->_displayFile.apply(object_name, transformation);
       this->_updateObjectCoordinates(object);
     }
-    else
-    {
+    else {
       std::string error = tfm::format(
           "There are no transformations available to be applied on your object: `%s` %s", object_name, transformation );
 
@@ -221,8 +200,7 @@ void World::apply(const std::string object_name, Transformation &transformation)
       throw std::runtime_error( error );
     }
   }
-  else
-  {
+  else {
     std::string error = tfm::format( "No object was found within the name: `%s`", object_name );
 
     LOG( 1, "%s", error );
@@ -233,15 +211,20 @@ void World::apply(const std::string object_name, Transformation &transformation)
 void World::draw_xy_axes()
 {
   LOG(4, "Drawing the X T axes as world objects.");
-  this->addLine("Y Axe", 0, -WORLD_AXES_SIZE, 0,
-      0, WORLD_AXES_SIZE, 0,
+  constexpr int AXES_SIZE = 200;
+
+  this->addLine("Y Axe",
+      0, -AXES_SIZE, 0,
+      0,  AXES_SIZE, 0,
       Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
 
-  this->addLine("X Axe", -WORLD_AXES_SIZE, 0, 0,
-      WORLD_AXES_SIZE, 0, 0,
+  this->addLine("X Axe",
+      -AXES_SIZE, 0, 0,
+       AXES_SIZE, 0, 0,
       Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
 
-  this->addLine("Z Axe", 0, 0, -WORLD_AXES_SIZE,
-      0, 0, WORLD_AXES_SIZE,
+  this->addLine("Z Axe",
+      0, 0, -AXES_SIZE,
+      0, 0,  AXES_SIZE,
       Coordinate(0.741176, 0.717647, 0.419608), LIANG_BARSKY, false);
 }

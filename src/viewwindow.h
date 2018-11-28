@@ -12,11 +12,14 @@
 #include "axes.h"
 #include "noncopyable.h"
 #include "transformation.h"
+#include "drawableobject.h"
 
 #define MIN_WIDTH 15
 #define MIN_HEIGHT 15
 #define MAX_HEIGHT 50000000
 #define MAX_WIDTH 50000000
+
+class MainWindow;
 
 /**
  * Window: Retângulo que representa um recorte do
@@ -40,20 +43,30 @@
  */
 class ViewWindow : public NonCopyable
 {
+  friend class MainWindow;
+
 public:
   ViewWindow();
   virtual ~ViewWindow();
 
+  void callObservers();
   void zoom(Coordinate steps);
   void move(Coordinate steps);
   void rotate(Coordinate steps);
 
-  const Axes& axes() const                     { return this->_axes; };
-  const Transformation& transformation() const { return this->_transformation; }
+  void reset(bool isToCallObservers=true);
+  const Axes& axes() const { return this->_axes; };
+  void updateObjectCoordinates(DrawableObject* object);
 
   const Coordinate& point(unsigned int index) const { return this->_axes[index]; }
   const Coordinate* viewPort(unsigned int index) const {
     return this->convertCoordinateToViewPort( this->_axes[index] );
+  }
+
+  void setProjection(Projection projection, big_double projection_depth) {
+      _projection = projection;
+      _projectionDistance = ( projection == Projection::PARALLEL ) ? 0.0 : projection_depth;
+      this->callObservers();
   }
 
   Coordinate* convertCoordinateToViewPort(const Coordinate&) const;
@@ -107,20 +120,28 @@ public:
    * Implementations types for the Observer Design Pattern with C++ 11 templates and function
    * pointers, instead of tight coupled inheritance.
    */
+  typedef Signal<const ViewWindow&> UpdateViewWindowTitle;
+  typedef Signal<DrawableObject*, const Transformation&, const Axes&> UpdateObjectCoordinates;
   typedef Signal<const Transformation&, const Axes&> UpdateAllObjectCoordinates;
+
+  UpdateViewWindowTitle::Connection addObserver(const UpdateViewWindowTitle::Callback&);
+  UpdateObjectCoordinates::Connection addObserver(const UpdateObjectCoordinates::Callback&);
   UpdateAllObjectCoordinates::Connection addObserver(const UpdateAllObjectCoordinates::Callback&);
 
 protected:
   Axes _axes;
+  UpdateViewWindowTitle _updateViewWindowTitle;
+  UpdateObjectCoordinates _updateObjectCoordinates;
   UpdateAllObjectCoordinates _updateAllObjectCoordinates;
 
   Coordinate _angles;
   Coordinate _dimentions;
   Coordinate _windowCenter;
 
-  Transformation _transformation;
+  Projection _projection;
+  big_double _projectionDistance;
 
-  void callObservers();
+  Transformation _getTransformation();
 };
 
 #endif // GTKMM_APP_VIEW_WINDOW

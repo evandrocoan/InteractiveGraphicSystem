@@ -88,14 +88,26 @@ AddObject::AddObject(Facade &facade) :
   this->window.show_all_children();
 }
 
+
 AddObject::~AddObject()
 {
 }
+
 
 Gtk::Window& AddObject::getWindow()
 {
   return this->window;
 }
+
+
+void AddObject::_update_footnote_coordinate_list()
+{
+  std::ostringstream contents;
+  for( auto value : entered_points_text ) contents << value << ", ";
+
+  entered_points_field.set_text( "Added Coordinates: " + contents.str() );
+}
+
 
 void AddObject::on_button_save_point()
 { try {
@@ -103,10 +115,14 @@ void AddObject::on_button_save_point()
   std::string name = this->_get_field_name(polygon_name_field);
   LOG(4, "Name: %s", name);
 
-  if (name.empty())
+  if( name.empty() )
   {
     polygon_name_field.grab_focus();
-    return;
+    std::ostringstream contents;
+    std::string error = tfm::format( "The name field cannot be empty!" );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   if( polygon_coord_list.size() < 3 )
@@ -128,12 +144,16 @@ void AddObject::on_button_save_point()
 
   Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
 
+  entered_points_text.pop_back();
+  _update_footnote_coordinate_list();
+
   this->facade.addPoint(name, x_coord, y_coord, z_coord, border);
   this->facade.queue_draw();
   this->window.close();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
+
 
 std::string AddObject::_get_field_name(Gtk::Entry &name_field)
 {
@@ -144,16 +164,21 @@ std::string AddObject::_get_field_name(Gtk::Entry &name_field)
   return name;
 }
 
+
 void AddObject::on_button_save_line()
 { try {
 
   std::string name = this->_get_field_name(polygon_name_field);
   LOG(4, "Name: %s", name);
 
-  if (name.empty())
+  if( name.empty() )
   {
     polygon_name_field.grab_focus();
-    return;
+    std::ostringstream contents;
+    std::string error = tfm::format( "The name field cannot be empty!" );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   if( polygon_coord_list.size() < 6 )
@@ -179,6 +204,10 @@ void AddObject::on_button_save_line()
 
   Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
 
+  entered_points_text.pop_back();
+  entered_points_text.pop_back();
+  _update_footnote_coordinate_list();
+
   this->facade.addLine(name, x1, y1, z1, x2, y2, z2, border);
   this->facade.queue_draw();
   this->window.close();
@@ -186,16 +215,21 @@ void AddObject::on_button_save_line()
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
 
+
 void AddObject::on_button_save_polygon()
 { try {
 
   std::string name = this->_get_field_name(polygon_name_field);
   LOG(4, "Name: %s", name);
 
-  if (name.empty())
+  if( name.empty() )
   {
     polygon_name_field.grab_focus();
-    return;
+    std::ostringstream contents;
+    std::string error = tfm::format( "The name field cannot be empty!" );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   if( polygon_coord_list.size() < 9 )
@@ -217,13 +251,12 @@ void AddObject::on_button_save_polygon()
   this->facade.addPolygon(name, polygon_coord_list, border, filling);
   this->facade.queue_draw();
 
-  while(!polygon_coord_list.empty())
-  {
+  while(!polygon_coord_list.empty()) {
     polygon_coord_list.pop_back();
   }
 
-  entered_points_field.set_text("Added Coordinates: ");
   entered_points_text.clear();
+  _update_footnote_coordinate_list();
   this->window.close();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
@@ -236,10 +269,14 @@ void AddObject::on_button_save_bezier()
   std::string name = this->_get_field_name(polygon_name_field);
   LOG(4, "Name: %s", name);
 
-  if (name.empty())
+  if( name.empty() )
   {
     polygon_name_field.grab_focus();
-    return;
+    std::ostringstream contents;
+    std::string error = tfm::format( "The name field cannot be empty!" );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
@@ -248,13 +285,12 @@ void AddObject::on_button_save_bezier()
   this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BEZIER);
   this->facade.queue_draw();
 
-  while(!polygon_coord_list.empty())
-  {
+  while(!polygon_coord_list.empty()) {
     polygon_coord_list.pop_back();
   }
 
-  entered_points_field.set_text("Added Coordinates: ");
   entered_points_text.clear();
+  _update_footnote_coordinate_list();
   this->window.close();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
@@ -267,10 +303,14 @@ void AddObject::on_button_save_bspline()
   std::string name = this->_get_field_name(polygon_name_field);
   LOG(4, "Name: %s", name);
 
-  if (name.empty())
+  if( name.empty() )
   {
     polygon_name_field.grab_focus();
-    return;
+    std::ostringstream contents;
+    std::string error = tfm::format( "The name field cannot be empty!" );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
   }
 
   Coordinate border = this->_get_rgb_color(insert_border_color_field_r, insert_border_color_field_g, insert_border_color_field_b);
@@ -279,13 +319,12 @@ void AddObject::on_button_save_bspline()
   this->facade.addPolygon(name, polygon_coord_list, border, filling, CurveType::BSPLINE);
   this->facade.queue_draw();
 
-  while(!polygon_coord_list.empty())
-  {
+  while(!polygon_coord_list.empty()) {
     polygon_coord_list.pop_back();
   }
 
-  entered_points_field.set_text("Added Coordinates: ");
   entered_points_text.clear();
+  _update_footnote_coordinate_list();
   this->window.close();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
@@ -316,10 +355,7 @@ void AddObject::on_button_add_coordinate()
       + std::to_string(y_coord) + ", "
       + std::to_string(z_coord) + ")" );
 
-  std::ostringstream contents;
-
-  for( auto value : entered_points_text ) contents << value << ", ";
-  entered_points_field.set_text( "Added Coordinates: " + contents.str() );
+  _update_footnote_coordinate_list();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }
@@ -333,10 +369,7 @@ void AddObject::on_button_remove_coordinate()
   polygon_coord_list.pop_back();
 
   entered_points_text.pop_back();
-  std::ostringstream contents;
-
-  for( auto value : entered_points_text ) contents << value << ", ";
-  entered_points_field.set_text( "Added Coordinates: " + contents.str() );
+  _update_footnote_coordinate_list();
 
   } catch( const std::runtime_error& error ) { errorMessage( error ); return; }
 }

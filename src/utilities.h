@@ -43,7 +43,7 @@
 #include <vector>
 
 #ifndef M_PI
-  #define M_PI 3.14159265358979323846
+  #define M_PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679
 #endif
 
 #include "traits.h"
@@ -59,6 +59,17 @@ inline big_double factorial(int n)
     for (int index = 1; index <= n; index++)
       x *= (big_double)index;
     return x;
+}
+
+template<typename Type>
+void normalize_angle(Type& angle, const Type value) {
+  angle += value;
+  while (angle >= 360) {
+    angle -= 360;
+  }
+  while (angle < 0) {
+    angle += 360;
+  }
 }
 
 /**

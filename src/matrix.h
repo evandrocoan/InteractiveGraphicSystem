@@ -16,19 +16,24 @@
  * error: incompatible types in assignment of 'long int (*)[4]' to 'long int [4][4]'
  * https://stackoverflow.com/questions/49312484/error-incompatible-types-in-assignment-of-long-int-4-to-long-int
  */
-template <unsigned int matrix_width=3, unsigned int matrix_height=3, typename matrix_datatype=long int>
-struct Matrix : public Array< matrix_height, Array< matrix_width, matrix_datatype > >
+template <unsigned int matrix_width=3, unsigned int matrix_height=3, typename DataType=long int>
+struct Matrix : public Array
+    <
+      matrix_height,
+      Array< matrix_width, DataType >,
+      Array< matrix_width, DataType >
+    >
 {
   Matrix()
   {
   }
 
-  Matrix(const matrix_datatype initial)
+  Matrix(const DataType initial)
   {
     this->clear(initial);
   }
 
-  Matrix(const std::initializer_list< std::initializer_list< matrix_datatype > > raw_data)
+  Matrix(const std::initializer_list< std::initializer_list< DataType > > raw_data)
   {
     // std::cout << raw_data.size() << std::endl;
     assert(raw_data.size() == matrix_height);
@@ -53,7 +58,7 @@ struct Matrix : public Array< matrix_height, Array< matrix_width, matrix_datatyp
     }
   }
 
-  void clear(const matrix_datatype initial=0)
+  void clear(const DataType initial=0)
   {
     unsigned int line;
     unsigned int column;
@@ -67,18 +72,18 @@ struct Matrix : public Array< matrix_height, Array< matrix_width, matrix_datatyp
     }
   }
 
-  void multiply(const Matrix &matrix)
+  void multiply(const Matrix matrix)
   {
     unsigned int line;
     unsigned int column;
     unsigned int step;
-    matrix_datatype old_matrix[matrix_height][matrix_width];
+    DataType old_matrix[matrix_height][matrix_width];
 
     for(line = 0; line < matrix_height; line++)
     {
       for(column = 0; column < matrix_width; column++)
       {
-        old_matrix [line][column] = this->_data[line][column];
+        old_matrix[line][column] = this->_data[line][column];
         this->_data[line][column] = 0;
       }
     }

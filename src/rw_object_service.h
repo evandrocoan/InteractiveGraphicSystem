@@ -37,9 +37,11 @@ public:
 
 protected:
   Facade& facade;
-  std::vector<Coordinate*> getVertexes(std::vector<int>&, std::vector<big_double>&);
+  std::vector<Coordinate*> getVertexes(std::vector<int>&, std::vector<Coordinate*>&);
+  std::vector<Coordinate*> getFacetVertexes(std::vector<int>&, std::vector<int>&, std::vector<Coordinate*>&);
 
   void getLineIndexes(std::vector<int>&, std::string&);
+  void getFacetIndexes(std::vector<int>&, std::vector<int>&, std::string&);
   std::vector<std::string> split(std::string&, char delimiter);
 
 private:

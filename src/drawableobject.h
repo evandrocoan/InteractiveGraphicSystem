@@ -11,6 +11,7 @@
 /**
  * This class represents a object such as line or polygon to be draw on the viewport.
  */
+#include <map>
 #include <list>
 #include <string>
 
@@ -40,7 +41,7 @@ public:
   const std::vector<Coordinate*>& windowCoordinates() const;
   const std::vector<Coordinate*>& clippingCoordinates() const;
 
-  static Coordinate getGeometricCenter(const std::vector<Coordinate*>&);
+  const Coordinate getGeometricCenter();
 
   /**
    * https://stackoverflow.com/questions/307082/cleaning-up-an-stl-list-vector-of-pointers
@@ -81,7 +82,7 @@ protected:
   DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates);
   DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates,
       Coordinate _borderColor,
-      Coordinate _fillingColor=_default_coordinate_value_parameter,
+      Coordinate _fillingColor=_origin_coordinate_value,
       bool _isVisibleOnGui=true );
 
   /// The name of this object used to display it on the Graphics User Interface

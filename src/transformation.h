@@ -17,13 +17,63 @@
 
 #include "coordinate.h"
 #include "matrixform.h"
-#include "transformationdata.h"
+
+enum Projection
+{
+  PARALLEL,
+  PERSPECTIVE
+};
+
+enum TransformationPoint
+{
+  ON_WORLD_CENTER,
+  ON_ITS_OWN_CENTER,
+  ON_GIVEN_COORDINATE
+};
+
+enum TransformationType
+{
+  SCALING,
+  ROTATION,
+  TRANSLATION
+};
+
+std::ostream& operator<<(std::ostream &output, const TransformationPoint object);
+std::ostream& operator<<(std::ostream &output, const TransformationType object);
+
+/**
+ * Ignoring the `translations` matrices, the `matrix` is the main operation applied after
+ * moving the object to the world center.
+ */
+struct TransformationData
+{
+  std::string name;
+  MatrixForm matrix;
+  TransformationType type;
+
+  Coordinate center;
+  TransformationPoint point;
+
+  /**
+   * This `center` default value is null, because it is only used when the object is a
+   * rotation which should be performed around some specific coordinate as the world center, instead
+   * of the object geometric center.
+   */
+  TransformationData(std::string name, MatrixForm matrix, TransformationType type,
+      TransformationPoint point = TransformationPoint::ON_WORLD_CENTER,
+      Coordinate center = _origin_coordinate_value);
+
+  friend std::ostream& operator<<(std::ostream &output, const TransformationData &object);
+};
 
 class Transformation
 {
 public:
   Transformation();
   ~Transformation();
+
+  big_double projectionDistance;
+  Transformation* posTransformation;
 
   /**
    * Create and configure correctly a rotation.
@@ -33,11 +83,22 @@ public:
    * @param point   this is a optional value, only required when using TransformationPoint::ON_GIVEN_COORDINATE
    */
   void add_translation(const std::string name, const Coordinate movement);
-  void add_scaling(const std::string name, const Coordinate scale);
+
+  void add_scaling(const std::string name,
+                   const Coordinate scale,
+                   const TransformationPoint point=TransformationPoint::ON_WORLD_CENTER,
+                   const Coordinate center=_origin_coordinate_value);
+
   void add_rotation(const std::string name,
                     const Coordinate degrees,
                     const TransformationPoint type=TransformationPoint::ON_WORLD_CENTER,
-                    const Coordinate point=_default_coordinate_value_parameter);
+                    const Coordinate point=_origin_coordinate_value);
+
+  void add_matrix(const std::string name,
+                  const MatrixForm matrix,
+                  const TransformationType type=TransformationType::TRANSLATION,
+                  const TransformationPoint point=TransformationPoint::ON_WORLD_CENTER,
+                  const Coordinate center=_origin_coordinate_value);
 
   /**
    * Remove all transformations from this container and set it as uninitialized. So, calling it
@@ -45,6 +106,7 @@ public:
    */
   void clear();
   unsigned int size() const;
+
   void remove_transformation(const std::string name);
 
   const std::vector<TransformationData>& getTransformations() const;
@@ -71,13 +133,13 @@ protected:
    * Therefore, this variable is only set within the minimum required information to build the final
    * transformation matrix. This happens right after the `set_geometric_center()` method is called on.
    */
-  std::vector<TransformationData> transformations;
+  std::vector<TransformationData> _transformations;
 
   /**
    * These values are set after calling `set_geometric_center()`. They will be the values used
    * to transform the object when calling `apply()`.
    */
-  bool isInitialized;
+  bool _isInitialized;
   MatrixForm _transformation;
 
   /**
@@ -85,7 +147,9 @@ protected:
    */
   const MatrixForm _get_translation_matrix(const Coordinate& moves) const;
   const MatrixForm _get_scaling_matrix(const Coordinate& factors) const;
-  const MatrixForm _get_rotation_matrix(const Coordinate& degrees) const;
+  const MatrixForm _get_x_rotation_matrix(const big_double& degrees, const bool& is_radians=false) const;
+  const MatrixForm _get_y_rotation_matrix(const big_double& degrees, const bool& is_radians=false) const;
+  const MatrixForm _get_z_rotation_matrix(const big_double& degrees, const bool& is_radians=false) const;
 
   void _set_translation_data(const TransformationData&, const unsigned int &index, const Coordinate &center);
   void _set_scaling_data    (const TransformationData&, const unsigned int &index, const Coordinate &center);

@@ -1,7 +1,7 @@
 #include "drawableobject.h"
 
 DrawableObject::DrawableObject(std::string name, std::vector<Coordinate*> _worldCoordinates) :
-      DrawableObject(name, _worldCoordinates, Coordinate(0, 0))
+      DrawableObject(name, _worldCoordinates, Coordinate(0, 0, 0))
 {
 }
 
@@ -61,15 +61,15 @@ const std::vector<Coordinate*>& DrawableObject::clippingCoordinates() const
   return this->_clippingCoordinates;
 }
 
-Coordinate DrawableObject::getGeometricCenter(const std::vector<Coordinate*>& coordinates)
+const Coordinate DrawableObject::getGeometricCenter()
 {
-  int coordinatesCount = coordinates.size();
+  int coordinatesCount = _worldCoordinates.size();
 
   big_double x_axes = 0;
   big_double y_axes = 0;
   big_double z_axes = 0;
 
-  for(auto coordinate : coordinates)
+  for(auto coordinate : _worldCoordinates)
   {
     x_axes += coordinate->x;
     y_axes += coordinate->y;
@@ -129,13 +129,19 @@ void DrawableObject::apply(Transformation &transformation)
 {
   LOG(8, "...");
   auto coordinates = this->worldCoordinates();
+  std::map<Coordinate*, Coordinate*> coordinatesMap;
 
-  auto geometricCenter = DrawableObject::getGeometricCenter(coordinates);
+  auto geometricCenter = getGeometricCenter();
   transformation.set_geometric_center(geometricCenter);
 
-  for(auto coordinate : coordinates)
-  {
-    transformation.apply(*coordinate);
+  for(auto coordinate : coordinates) {
+    auto iterator = coordinatesMap.find( coordinate );
+
+    if( iterator == coordinatesMap.end() )
+    {
+      coordinatesMap[coordinate] = coordinate;
+      transformation.apply(*coordinate);
+    }
   }
 }
 
@@ -143,15 +149,39 @@ void DrawableObject::updateWindowCoordinates(const Transformation& transformatio
 {
   LOG(8, "...");
   Coordinate* new_coordinate;
-
-  auto coordinates = this->worldCoordinates();
   DrawableObject::destroyList(this->_windowCoordinates);
 
-  for(auto coordinate : coordinates)
+  if( transformation.projectionDistance )
   {
-    new_coordinate = new Coordinate(*coordinate);
-    transformation.apply(*new_coordinate);
-    this->_windowCoordinates.push_back(new_coordinate);
+    for(auto coordinate : this->_worldCoordinates) {
+      new_coordinate = new Coordinate(*coordinate);
+      transformation.apply(*new_coordinate);
+
+      if( transformation.projectionDistance - 0.001 < 0 && transformation.projectionDistance + 0.001 > 0 ) {
+        LOG( 8, "%s transformation.projectionDistance is %s", getName(), transformation.projectionDistance );
+      }
+      else {
+        if( new_coordinate->z - 0.001 < 0 && new_coordinate->z + 0.001 > 0 ) {
+          LOG( 8, "%s new_coordinate->z is %s", getName(), new_coordinate->z );
+        }
+        else {
+          new_coordinate->x = new_coordinate->x / ( new_coordinate->z / transformation.projectionDistance );
+          new_coordinate->y = new_coordinate->y / ( new_coordinate->z / transformation.projectionDistance );
+          new_coordinate->z = transformation.projectionDistance;
+        }
+      }
+
+      transformation.posTransformation->apply(*new_coordinate);
+      this->_windowCoordinates.push_back(new_coordinate);
+    }
+  }
+  else {
+    for(auto coordinate : this->_worldCoordinates)
+    {
+      new_coordinate = new Coordinate(*coordinate);
+      transformation.apply(*new_coordinate);
+      this->_windowCoordinates.push_back(new_coordinate);
+    }
   }
 }
 

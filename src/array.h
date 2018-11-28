@@ -5,55 +5,66 @@
 #include <cassert>
 #include <iostream>
 
+#include "traits.h"
 #include "stacktrace.h"
+
+template<typename condition, typename Then, typename Else>
+struct ARRAY_DEFAULT_IF_TYPE {
+  typedef Else Result;
+};
+
+template<typename Then, typename Else>
+struct ARRAY_DEFAULT_IF_TYPE<void, Then, Else> {
+  typedef Then Result;
+};
 
 /**
  * C++ static polymorphism (CRTP) and using typedefs from derived classes
  * https://stackoverflow.com/questions/6006614/c-static-polymorphism-crtp-and-using-typedefs-from-derived-classes
+ *
+ * How to instantiate the base class when using the Curiously Recurring Template Pattern?
+ * https://stackoverflow.com/questions/53463049/how-to-instantiate-the-base-class-when-using-the-curiously-recurring-template-pa
  */
-template <unsigned int array_width, typename array_datatype=long int>
+template <unsigned int array_width, typename DataType, typename DerivedTypeDefault=void>
 struct Array
 {
+  typedef typename ARRAY_DEFAULT_IF_TYPE<DerivedTypeDefault, Array, DerivedTypeDefault>::Result DerivedType;
+
   /**
    * Is it okay to inherit implementation from STL containers, rather than delegate?
    * https://stackoverflow.com/questions/2034916/is-it-okay-to-inherit-implementation-from-stl-containers-rather-than-delegate
    */
-  std::array<array_datatype, array_width> _data;
+  std::array<DataType, array_width> _data;
 
   /**
    * std::array constructor inheritance
    * https://stackoverflow.com/questions/24280521/stdarray-constructor-inheritance
    */
-  Array()
-  {
+  Array() {
   }
 
-  Array(std::initializer_list< array_datatype > new_values)
-  {
+  Array(std::initializer_list< DataType > new_values) {
     unsigned int data_size = new_values.size();
     unsigned int column_index = 0;
     // std::cout << data_size << std::endl;
 
-    if( data_size == 0 )
-    {
+    if( data_size == 0 ) {
       #ifdef DEBUG
-        std::cerr << "Welcome to the Moodle VPL(Virtual Programming Lab) awesome got nuts bug!\n";
+        std::cerr << "Welcome to the Ubuntu 16.04 awesome got nuts bug!\n";
         std::cerr << "Just give a look into his nonsense " << std::endl;
         print_stacktrace();
         std::cerr << "Array(new_values), " << "data_size: " << data_size << ", " << "array_width: " << array_width << std::endl;
       #endif
     }
-    else if( data_size == 1 )
-    {
+    else if( data_size == 1 ) {
       this->clear(*(new_values.begin()));
     }
-    else
-    {
+    else {
       // std::cerr << "Array(new_values), " << "data_size: " << data_size << ", " << "array_width: " << array_width << std::endl;
+      // if(data_size != array_width) std::runtime_error( "" );
       assert(data_size == array_width);
 
-      for( auto column : new_values )
-      {
+      for( auto column : new_values ) {
         this->_data[column_index] = column;
         column_index++;
       }
@@ -70,20 +81,17 @@ struct Array
    * @param  line the current line you want to access
    * @return      a pointer to the current line
    */
-  array_datatype operator[](unsigned int line) &&
-  {
+  DataType operator[](unsigned int line) && {
     assert(line < array_width);
     return this->_data[line];
   }
 
-  array_datatype const& operator[](unsigned int line) const&
-  {
+  DataType const& operator[](unsigned int line) const& {
     assert(line < array_width);
     return this->_data[line];
   }
 
-  array_datatype& operator[](unsigned int line) &
-  {
+  DataType& operator[](unsigned int line) & {
     assert(line < array_width);
     return this->_data[line];
   }
@@ -91,70 +99,233 @@ struct Array
   /**
    * Generic Data to Object operators.
    */
-  bool operator<=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] > data ) { return false; } } return true; }
+  bool operator<=(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] > data ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator<(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] >= data ) { return false; } } return true; }
+  bool operator<(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] >= data ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator>=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] < data ) { return false; } } return true; }
+  bool operator>=(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] < data ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator>(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] <= data ) { return false; } } return true; }
+  bool operator>(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] <= data ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator==(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] != data ) { return false; } } return true; }
+  bool operator==(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] != data ) {
+        return false;
+      }
+    } return true;
+  }
 
-  bool operator!=(const array_datatype& data) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] == data ) { return false; } } return true; }
+  bool operator!=(const DataType& data) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] == data ) {
+        return false;
+      }
+    } return true;
+  }
 
-  /**
-   * Generic Object to Object operators.
-   */
-  bool operator<=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] > object._data[index] ) { return false; } } return true; }
-
-  bool operator<(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] >= object._data[index] ) { return false; } } return true; }
-
-  bool operator>=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] < object._data[index] ) { return false; } } return true; }
-
-  bool operator>(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] <= object._data[index] ) { return false; } } return true; }
-
-  bool operator==(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] != object._data[index] ) { return false; } } return true; }
-
-  bool operator!=(const Array& object) const { for( unsigned int index = 0; index < array_width; index++ )
-      { if( this->_data[index] == object._data[index] ) { return false; } } return true; }
-
-  /**
-   * Set all the values on the array to the specified single data parameter.
-   *
-   * @param `initial` the value to the used
-   */
-  void clear(const array_datatype initial = 0)
-  {
-    unsigned int column_index = 0;
-
-    for( ; column_index < array_width; column_index++ )
-    {
-      this->_data[column_index] = initial;
+  DerivedType operator-() const {
+    DerivedType new_array;
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      new_array._data[index] = -_data[index];
     }
+    return new_array;
+  }
+
+  DerivedType operator+(const big_double& data) {
+    DerivedType new_array;
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      new_array._data[index] = _data[index] + data;
+    }
+    return new_array;
+  }
+
+  DerivedType operator-(const big_double& data) {
+    DerivedType new_array;
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      new_array._data[index] = _data[index] - data;
+    }
+    return new_array;
+  }
+
+  DerivedType& operator+=(const big_double& data) {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      this->_data[index] += data;
+    }
+    return *static_cast<DerivedType*>(this);
+  }
+
+  DerivedType& operator-=(const big_double& data) {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      this->_data[index] -= data;
+    }
+    return *static_cast<DerivedType*>(this);
+  }
+
+  DerivedType operator/(const double& data) {
+    unsigned int column;
+    DerivedType new_array;
+
+    for(column = 0; column < array_width; column++) {
+      new_array._data[column] = _data[column] / data;
+    }
+    return new_array;
+  }
+
+  DerivedType divide(const double& data) {
+    DerivedType result = this->operator/(data);
+    _data = result._data;
+    return result;
+  }
+
+  /**
+   * Object to Object operators.
+   */
+  bool operator<=(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] > object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
+
+  bool operator<(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] >= object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
+
+  bool operator>=(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] < object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
+
+  bool operator>(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] <= object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
+
+  bool operator==(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] != object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
+
+  bool operator!=(const Array& object) const {
+    for( unsigned int index = 0; index < array_width; index++ ) {
+      if( this->_data[index] == object._data[index] ) {
+        return false;
+      }
+    } return true;
+  }
+
+  template<typename BaseClass>
+  DerivedType operator+(const Array< array_width, DataType, BaseClass >& array) {
+    unsigned int column;
+    DerivedType new_array;
+
+    for(column = 0; column < array_width; column++) {
+      new_array._data[column] = _data[column] + array._data[column];
+    }
+    return new_array;
+  }
+
+  template<typename BaseClass>
+  DerivedType operator-(const Array< array_width, DataType, BaseClass >& array) {
+    unsigned int column;
+    DerivedType new_array;
+
+    for(column = 0; column < array_width; column++) {
+      new_array._data[column] = _data[column] - array._data[column];
+    }
+    return new_array;
+  }
+
+  template<typename BaseClass>
+  DerivedType& operator+=(const Array< array_width, DataType, BaseClass >& array) {
+    unsigned int column;
+
+    for(column = 0; column < array_width; column++) {
+      _data[column] += array._data[column];
+    }
+    return *static_cast<DerivedType*>(this);
+  }
+
+  template<typename BaseClass>
+  DerivedType& operator-=(const Array< array_width, DataType, BaseClass >& array) {
+    unsigned int column;
+
+    for(column = 0; column < array_width; column++) {
+      _data[column] -= array._data[column];
+    }
+    return *static_cast<DerivedType*>(this);
+  }
+
+  template<typename BaseClass>
+  DerivedType operator*(const Array< array_width, DataType, BaseClass >& array) {
+    unsigned int column;
+    DerivedType new_array;
+
+    for(column = 0; column < array_width; column++) {
+      new_array._data[column] = _data[column] * array._data[column];
+    }
+    return new_array;
+  }
+
+  template<typename BaseClass>
+  DerivedType& multiply(const Array< array_width, DataType, BaseClass >& array) {
+    _data = this->operator*(array)._data;
+    return *static_cast<DerivedType*>(this);
   }
 
   /**
    * The Array<> type includes the Matrix<> type, because you can multiply a `Array` by an `Matrix`,
    * but not a vice-versa.
    */
-  void multiply(const Array< array_width, Array< array_width, array_datatype > > &matrix)
+  template<typename BaseClass>
+  DerivedType& multiply(const Array
+      <
+          array_width,
+          Array< array_width, DataType, BaseClass >,
+          Array< array_width, DataType, BaseClass >
+      > matrix)
   {
     unsigned int column;
     unsigned int step;
-
-    array_datatype old_array[array_width];
+    DataType old_array[array_width];
 
     for(column = 0; column < array_width; column++)
     {
@@ -169,24 +340,33 @@ struct Array
         this->_data[column] += old_array[step] * matrix._data[step][column];
       }
     }
-    // If you would like to preserve the original value, it can be returned here
-    // return old_array;
+    return *static_cast<DerivedType*>(this);
+  }
+
+  /**
+   * Set all the values on the array to the specified single data parameter.
+   *
+   * @param `initial` the value to the used
+   */
+  void clear(const DataType initial = 0) {
+    unsigned int column_index = 0;
+
+    for( ; column_index < array_width; column_index++ ) {
+      this->_data[column_index] = initial;
+    }
   }
 
   /**
    * Prints a more beauty version of the array when called on `std::cout << array << std::end;`
    */
-  friend std::ostream& operator<<( std::ostream &output, const Array &array )
-  {
+  friend std::ostream& operator<<( std::ostream &output, const Array &array ) {
     unsigned int column;
     output << "(";
 
-    for( column=0; column < array_width; column++ )
-    {
+    for( column=0; column < array_width; column++ ) {
       output << array._data[column];
 
-      if( column != array_width-1 )
-      {
+      if( column != array_width-1 ) {
         output << ", ";
       }
     }
