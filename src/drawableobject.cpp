@@ -27,6 +27,17 @@ DrawableObject::DrawableObject(
     throw std::runtime_error( error );
   }
 
+  if( name.empty() )
+  {
+    std::ostringstream contents;
+    for( auto value : _worldCoordinates ) contents << *value << ", ";
+
+    std::string error = tfm::format( "The loaded object has no name! \n%s", contents.str() );
+
+    LOG( 1, "%s", error );
+    throw std::runtime_error( error );
+  }
+
   for( auto coordinate : _worldCoordinates )
   {
     this->_windowCoordinates.push_back(new Coordinate(*coordinate));
