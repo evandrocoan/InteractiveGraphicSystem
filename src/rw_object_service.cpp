@@ -58,7 +58,7 @@ void RwObjectService::read(std::string file_path)
       // LOG( 8, "line: %s", line );
 
       // https://www.fileformat.info/format/wavefrontobj/egff.htm
-      else if( line.front() == 'o' )
+      else if( line.front() == 'o' || line.front() == 'g' )
       {
         name = line.substr(2, line.length());
         LOG( 8, "name: %s, ", name );
@@ -131,6 +131,17 @@ void RwObjectService::read(std::string file_path)
         for( auto value : segment_list ) LOGLN( 8, "%s, ", value ); LOGLN( 8, "\n" );
 
         std::vector<Coordinate*> vertexes = this->getFacetVertexes( segment_list, facets_count, coordinates );
+
+        if( name.empty() )
+        {
+          std::ostringstream contents;
+          for( auto value : vertexes ) contents << *value << ", ";
+
+          std::string error = tfm::format( "The loaded object has no name! \n%s", contents.str() );
+
+          LOG( 1, "%s", error );
+          throw std::runtime_error( error );
+        }
 
         this->facade.addPolyhedron( name, vertexes, segment_list, facets_count,
             _origin_coordinate_value, _origin_coordinate_value);

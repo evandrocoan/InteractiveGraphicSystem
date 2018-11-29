@@ -21,19 +21,15 @@ Polyhedron::Polyhedron(std::string name, std::vector<Coordinate*> _worldCoordina
   // f 1//2 3//2 7//2
   // f 1//6 4//6 3//6
   // ...
-  for( int facet_size : _facets_count )
-  {
-    if( facet_size < 3  )
-    {
-      std::string error = tfm::format(
-          "A Polyhedron should have facets with at least 3 sides, not %s.", facet_size );
+  unsigned int accumulated_facets_count = 0;
+  unsigned int facets_count_size = _facets_count.size();
+  int world_coordinates_size = _worldCoordinates.size();
 
-      LOG( 1, "%s", error );
-      throw std::runtime_error( error );
-    }
+  for( int unsigned index = 0; index < facets_count_size; ++index ) {
+    accumulated_facets_count += _facets_count[index];
   }
 
-  if( _worldCoordinates.size() < 4 )
+  if( _worldCoordinates.size() < 4 || _line_segments.size() != accumulated_facets_count )
   {
     std::ostringstream contents;
     for( auto value : _worldCoordinates ) contents << *value << ", ";
@@ -43,12 +39,28 @@ Polyhedron::Polyhedron(std::string name, std::vector<Coordinate*> _worldCoordina
     contents << "]";
 
     std::string error = tfm::format(
-        "A Polyhedron should have at least 4 coordinates or line segments, not %s.\n\n%s",
-        _worldCoordinates.size(), contents.str() );
+        "A Polyhedron should have at least 3 coordinates or line_segments %s == %s accumulated_facets_count, not %s.\n\n%s",
+        _line_segments.size(), _facets_count.size(), _worldCoordinates.size(), contents.str() );
 
     LOG( 1, "%s", error );
     throw std::runtime_error( error );
   }
+
+  for( auto line_segment : _line_segments )
+  {
+    if( line_segment > world_coordinates_size || line_segment < 1)
+    {
+      std::string error = tfm::format(
+          "A Polyhedron facets vertex index %s cannot be largest than world_coordinates_size %s.",
+          line_segment, world_coordinates_size );
+
+      LOG( 1, "%s", error );
+      throw std::runtime_error( error );
+    }
+  }
+
+  LOG( 8, "accumulated_facets_count: %s, world_coordinates_size: %s, _line_segments_size: %s",
+      accumulated_facets_count, world_coordinates_size, _line_segments.size() );
 }
 
 Polyhedron::~Polyhedron()
@@ -82,24 +94,30 @@ void Polyhedron::updateWindowCoordinates(const Transformation& transformation)
   DrawableObject::destroyList(this->_polygons);
 
   auto facets_count = this->facetsCount();
-  auto facets_count_end = facets_count.end();
-  auto facets_count_iterator = facets_count.begin();
-  int facets_count_now = *facets_count_iterator;
+  auto facets_count_end = facets_count.rend();
+  auto facets_count_iterator = facets_count.rbegin();
+  int facets_count_now = 0;
 
   std::ostringstream contents0;
   for( auto value : facets_count ) contents0 << value << ", ";
+
+  unsigned int accumulated_facets_count = 0;
   LOG( 8, "facets_count %s: %s", facets_count.size(), contents0.str() );
 
-  for( int slice = _line_segments.size(); slice > 0; slice -= facets_count_now )
+  for( int slice = _line_segments.size(); ; slice -= facets_count_now )
   {
-    LOG( 8, "slice: %s, facets_count_now: %s", slice, facets_count_now );
+    if( facets_count_iterator == facets_count_end ) {
+      break;
+    }
+    else {
+      facets_count_now = *facets_count_iterator;
+    }
+
+    LOG( 8, "slice: %s, facets_count_now: %s, accumulated_facets_count: %s", slice, facets_count_now, accumulated_facets_count );
+    accumulated_facets_count += facets_count_now;
     std::vector<int> facets( _line_segments.begin() + slice - facets_count_now, _line_segments.begin() + slice );
 
     ++facets_count_iterator;
-
-    if( facets_count_iterator != facets_count_end ) {
-      facets_count_now = *facets_count_iterator;
-    }
 
     std::ostringstream contents1;
     for( auto value : facets ) contents1 << value << ", ";
@@ -109,7 +127,7 @@ void Polyhedron::updateWindowCoordinates(const Transformation& transformation)
     sides.reserve(facets_count_now);
 
     for( auto index : facets ) {
-      LOG( 8, "coordinate: %s", *coordinates[index-1] );
+      LOG( 8, "index: %s, coordinate: %s", index, *coordinates[index-1] );
       sides.push_back( coordinates[index-1] );
     }
 

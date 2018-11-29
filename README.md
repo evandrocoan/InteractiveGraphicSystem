@@ -28,7 +28,7 @@ make run
 
 In case of segmentation fault, you need to run the program from the command line with:
 ```
-$ gdb binaries/main.exe
+$ gdb ../binaries/main.exe
 gdb $ run
 gdb $ bt
 ```

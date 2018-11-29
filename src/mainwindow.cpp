@@ -872,6 +872,7 @@ void MainWindow::add_test_objects()
   this->rw_object_service.read("./simple_line_polygon_test.obj");
   this->rw_object_service.read("./simple_bezier_polygon.obj");
   this->rw_object_service.read("./simple_polyhedron.obj");
+  // this->rw_object_service.read("D:\\User\\Downloads\\basicman.obj");
 
   // std::vector<big_double> point_list;
   // point_list.clear();
