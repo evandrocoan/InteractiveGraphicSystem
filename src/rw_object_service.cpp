@@ -132,17 +132,6 @@ void RwObjectService::read(std::string file_path)
 
         std::vector<Coordinate*> vertexes = this->getFacetVertexes( segment_list, facets_count, coordinates );
 
-        if( name.empty() )
-        {
-          std::ostringstream contents;
-          for( auto value : vertexes ) contents << *value << ", ";
-
-          std::string error = tfm::format( "The loaded object has no name! \n%s", contents.str() );
-
-          LOG( 1, "%s", error );
-          throw std::runtime_error( error );
-        }
-
         this->facade.addPolyhedron( name, vertexes, segment_list, facets_count,
             _origin_coordinate_value, _origin_coordinate_value);
       }
