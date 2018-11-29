@@ -30,11 +30,16 @@
 
 inline void errorMessage(const std::runtime_error& error)
 {
-  LOG( 1, "%s", error.what() );
+  std::string error_text = error.what();
+  LOG( 1, "%s", error_text );
+
+  if( error_text.size() > 1000 ) {
+    error_text = error_text.substr(0, 1000);
+  }
 
   // https://stackoverflow.com/questions/18554282/destroy-gtkmm-message-dialog
   Gtk::MessageDialog dialog("Error message", false, Gtk::MESSAGE_QUESTION, Gtk::BUTTONS_OK);
-  dialog.set_secondary_text( error.what() );
+  dialog.set_secondary_text( error_text );
   dialog.set_default_response( Gtk::RESPONSE_OK );
   dialog.run();
 }
