@@ -33,6 +33,9 @@ bool Polygon::_sutherlandHodgmanPolygonClip(const Axes& axes)
   this->_sutherlandHodgmanClipBottom(axes, temporary, clippingResult);
 
   if( clippingResult.size() == 0 ) {
+    this->destroyList(input);
+    this->destroyList(temporary);
+    this->destroyList(clippingResult);
     return false;
   }
 
@@ -41,6 +44,11 @@ bool Polygon::_sutherlandHodgmanPolygonClip(const Axes& axes)
   for( auto coordinate : clippingResult ) {
     this->_clippingCoordinates.push_back( new Coordinate(*coordinate) );
   }
+
+  this->destroyList(input);
+  this->destroyList(temporary);
+  this->destroyList(clippingResult);
+
   return true;
 }
 
