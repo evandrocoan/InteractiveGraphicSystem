@@ -101,15 +101,15 @@ ifeq ($J,)
 		FIND_EXEC := /bin/find
 	else
 		ifeq ($(UNAME),Darwin)
-		  NPROCS := $(shell sysctl -n hw.ncpu)
-		  FIND_EXEC := /usr/bin/find
+			NPROCS := $(shell sysctl -n hw.ncpu)
+			FIND_EXEC := /usr/bin/find
 		else
-		  NPROCS := $(shell grep -c ^processor /proc/cpuinfo)
-		  FIND_EXEC := /usr/bin/find
+			NPROCS := $(shell grep -c ^processor /proc/cpuinfo)
+			FIND_EXEC := /usr/bin/find
 		endif
 	endif
 else
-  NPROCS := ""
+	NPROCS := ""
 endif
 
 CURRENT_DIR := $(shell pwd)
