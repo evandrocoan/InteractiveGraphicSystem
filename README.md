@@ -7,7 +7,7 @@ An Interactive Graphic System with basic modeling forms using C++ GTKmm API.
 
 To download it, you need to use the `git clone` with the `--recursive` option:
 ```
-git clone --recursive https://github.com/evandrocoan/Trabalho01CG
+git clone --recursive https://github.com/evandrocoan/InteractiveGraphicSystem
 ```
 
 If you had already cloned it without the `--recursive` option, you need to run the command:
